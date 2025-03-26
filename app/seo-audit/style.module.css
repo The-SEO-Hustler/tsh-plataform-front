@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
 }
+
 @media (min-width: 768px) {
   .dashboard {
     display: grid;
@@ -9,16 +10,24 @@
     grid-template-columns: 80px 1fr;
   }
 }
+
 .card {
-  padding: 20px;
-  height: 180px;
-  background-color: #ffffffaa;
-  border-radius: 1.5rem;
-  max-width: 100%;
-  width: 300px;
-  transition: box-shadow 0.25s ease;
-  position: relative;
-  z-index: 1;
+  background: #ffffffbb;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  border: 1px solid #f1f1f1;
+  border-width: 2px; /* Added for consistency with changes */
+  border-color: transparent; /* Added for consistency with changes */
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-color: #e1e1e1;
 }
 
 .overlay {
@@ -30,8 +39,10 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
   opacity: 0;
-  transition: opacity 0.25s ease; /* transition for fade in/out */
-  pointer-events: none; /* prevent clicks when hidden */
+  transition: opacity 0.25s ease;
+  /* transition for fade in/out */
+  pointer-events: none;
+  /* prevent clicks when hidden */
 }
 
 /* Active state: overlay is visible */
@@ -39,7 +50,9 @@
   opacity: 1;
   pointer-events: auto;
 }
+
 .focused {
-  z-index: 1000; /* Ensure it's above the overlay */
+  z-index: 1000;
+  /* Ensure it's above the overlay */
   /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); */
 }

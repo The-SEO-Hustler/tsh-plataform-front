@@ -1,16 +1,27 @@
-// components/Sidebar.js
-import React from "react";
-import { Tag, Tags, Bookmark } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
   TooltipProvider,
+  Tooltip,
   TooltipTrigger,
+  TooltipContent,
 } from "@/components/ui/tooltip";
+import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
+import {
+  DollarSign,
+  Globe,
+  ImageIcon,
+  Lock,
+  Server,
+  Share2,
+  Gauge,
+  Code,
+} from "lucide-react";
 import s from "./style.module.css";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
+const statusClasses = {
+  error: "!bg-red-100 !text-red-500 hover:!bg-red-200",
+  warning: "!bg-yellow-100 !text-yellow-700 hover:!bg-yellow-200",
+  normal: "!bg-white/90 !hover:bg-white",
+};
+
 function Sidebar({ setFocusedCardId }) {
   const handleFocusCard = (id) => {
     setFocusedCardId(id);
@@ -38,85 +49,137 @@ function Sidebar({ setFocusedCardId }) {
 
   const buttons = [
     {
-      id: "title",
-      tooltip: "Title",
-      Icon: <Tag strokeWidth={1.5} />,
+      id: "headings",
+      tooltip: "Heading Structure",
+      Icon: <Code strokeWidth={1.5} />,
+      status: "normal",
     },
     {
-      id: "description",
-      tooltip: "Description",
-      Icon: <Tags strokeWidth={1.5} />,
+      id: "links",
+      tooltip: "Links Distribution",
+      Icon: <Share2 strokeWidth={1.5} />,
+      status: "warning",
     },
     {
-      id: "keywords",
-      tooltip: "Keywords",
-      Icon: <Bookmark strokeWidth={1.5} />,
-    },
-
-    { id: "title", tooltip: "Title", Icon: <Tag strokeWidth={1.5} /> },
-    {
-      id: "description",
-      tooltip: "Description",
-      Icon: <Tags strokeWidth={1.5} />,
+      id: "meta",
+      tooltip: "Meta Information",
+      Icon: <Globe strokeWidth={1.5} />,
+      status: "error",
     },
     {
       id: "keywords",
-      tooltip: "Keywords",
-      Icon: <Bookmark strokeWidth={1.5} />,
-    },
-
-    { id: "title", tooltip: "Title", Icon: <Tag strokeWidth={1.5} /> },
-    {
-      id: "description",
-      tooltip: "Description",
-      Icon: <Tags strokeWidth={1.5} />,
+      tooltip: "Top Keywords",
+      Icon: <Gauge strokeWidth={1.5} />,
+      status: "normal",
     },
     {
-      id: "keywords",
-      tooltip: "Keywords",
-      Icon: <Bookmark strokeWidth={1.5} />,
-    },
-
-    { id: "title", tooltip: "Title", Icon: <Tag strokeWidth={1.5} /> },
-    {
-      id: "description",
-      tooltip: "Description",
-      Icon: <Tags strokeWidth={1.5} />,
+      id: "metaRobots",
+      tooltip: "Meta Robots / Directives",
+      Icon: <Lock strokeWidth={1.5} />,
+      status: "normal",
     },
     {
-      id: "keywords",
-      tooltip: "Keywords",
-      Icon: <Bookmark strokeWidth={1.5} />,
-    },
-
-    { id: "title", tooltip: "Title", Icon: <Tag strokeWidth={1.5} /> },
-    {
-      id: "description",
-      tooltip: "Description",
-      Icon: <Tags strokeWidth={1.5} />,
+      id: "sitemap",
+      tooltip: "Sitemap Presence",
+      Icon: <Server strokeWidth={1.5} />,
+      status: "normal",
     },
     {
-      id: "keywords",
-      tooltip: "Keywords",
-      Icon: <Bookmark strokeWidth={1.5} />,
+      id: "socialTags",
+      tooltip: "Social Tags",
+      Icon: <ImageIcon strokeWidth={1.5} />,
+      status: "normal",
     },
-    // Add additional button data here...
+    {
+      id: "searchPreview",
+      tooltip: "Google Search Preview",
+      Icon: <Globe strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "keywordDensity",
+      tooltip: "Keyword Density",
+      Icon: <Gauge strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "competitors",
+      tooltip: "Competitor Domains",
+      Icon: <DollarSign strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "urlStructure",
+      tooltip: "URL Structure",
+      Icon: <Globe strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "imageAnalysis",
+      tooltip: "Image Analysis",
+      Icon: <ImageIcon strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "inlineCSS",
+      tooltip: "Inline CSS / Deprecated Tags",
+      Icon: <Code strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "gaTracking",
+      tooltip: "Analytics & Tracking",
+      Icon: <Server strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "favicon",
+      tooltip: "Favicon",
+      Icon: <Globe strokeWidth={1.5} />,
+      status: "normal",
+    },
   ];
 
+  // compute prioritizedButtons before rendering the mobile SpeedDial
+  const errorWarningButtons = buttons.filter(
+    (button) => button.status === "error" || button.status === "warning"
+  );
+
+  const normalButtons = buttons.filter(
+    (button) => !button.status || button.status === "normal"
+  );
+
+  let prioritizedButtons = [];
+  if (errorWarningButtons.length >= 6) {
+    prioritizedButtons = errorWarningButtons.slice(0, 6);
+  } else {
+    prioritizedButtons = [
+      ...errorWarningButtons,
+      ...normalButtons.slice(0, 6 - errorWarningButtons.length),
+    ];
+  }
+
   return (
-    <div>
+    <>
       <div className="md:hidden fixed bottom-0 right-0">
         <SpeedDial
-          ariaLabel="SpeedDial basic example"
+          ariaLabel="SEO Navigation"
           icon={<SpeedDialIcon />}
           direction="up"
-          sx={{ position: "absolute", top: 0, left: 0 }}
+          sx={{ position: "absolute", bottom: 16, right: 16 }}
         >
-          {buttons.slice(0, 6).map((button, id) => (
+          {prioritizedButtons.map((button, id) => (
             <SpeedDialAction
               key={`${button.id}-${id}`}
               icon={button.Icon}
-              tooltipTitle={button.title}
+              classes={statusClasses[button.status] || ""}
+              slotProps={{
+                fab: {
+                  className: statusClasses[button.status] || "",
+                },
+              }}
+              tooltipTitle={button.tooltip}
+              onClick={() => handleFocusCard(button.id)}
             />
           ))}
         </SpeedDial>
@@ -129,27 +192,42 @@ function Sidebar({ setFocusedCardId }) {
             tooltipText={btn.tooltip}
             Icon={btn.Icon}
             onFocusCard={handleFocusCard}
+            status={btn.status}
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }
 
-function SidebarButton({ id, tooltipText, Icon, onFocusCard }) {
+function SidebarButton({
+  id,
+  tooltipText,
+  Icon,
+  onFocusCard,
+  status = "success",
+}) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            className="rounded-full p-3 bg-[#ffffff90]"
+            className={`rounded-full p-3 shadow-sm ${statusClasses[status]}`}
             onClick={() => onFocusCard(id)}
           >
             {Icon}
           </button>
         </TooltipTrigger>
         <TooltipContent side="right">
-          <div>{tooltipText}</div>
+          <div className="flex items-center gap-2">
+            {status === "error" && (
+              <span className="w-2 h-2 rounded-full bg-red-500" />
+            )}
+            {status === "warning" && (
+              <span className="w-2 h-2 rounded-full bg-yellow-500" />
+            )}
+            {tooltipText}
+          </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
