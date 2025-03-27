@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Container from "@/components/container";
 import s from "./style.module.css";
 import Sidebar from "@/components/sidebar";
@@ -27,8 +27,8 @@ import {
   Gauge,
   Code,
 } from "lucide-react";
-import { useSearchParams } from 'next/navigation';
-import LoadingScreen from '../components/LoadingScreen';
+import { useSearchParams } from "next/navigation";
+import LoadingScreen from "../components/LoadingScreen";
 
 // Register Chart.js modules
 ChartJS.register(
@@ -86,7 +86,9 @@ function getCardDescription(data, cardId) {
     case "metaRobots":
       return "Robots directives are properly set for search engine crawling.";
     case "sitemap":
-      return data ? "Sitemap is present and properly configured." : "Warning: Missing sitemap. This may affect search engine indexing.";
+      return data
+        ? "Sitemap is present and properly configured."
+        : "Warning: Missing sitemap. This may affect search engine indexing.";
     case "socialTags":
       return "Social media tags are properly configured for optimal sharing.";
     case "searchPreview":
@@ -96,13 +98,17 @@ function getCardDescription(data, cardId) {
     case "competitors":
       return "Competitor analysis shows good market positioning.";
     case "urlStructure":
-      return data.friendly ? "URL structure is SEO-friendly." : "Warning: URL structure could be more SEO-friendly.";
+      return data.friendly
+        ? "URL structure is SEO-friendly."
+        : "Warning: URL structure could be more SEO-friendly.";
     case "imageAnalysis":
       return "Images are properly optimized with alt tags.";
     case "inlineCSS":
       return "Code structure analysis shows some inline styles that could be moved to external CSS.";
     case "gaTracking":
-      return data.exists ? "Analytics tracking is properly configured." : "Warning: Missing analytics tracking.";
+      return data.exists
+        ? "Analytics tracking is properly configured."
+        : "Warning: Missing analytics tracking.";
     case "favicon":
       return data.exists ? "Favicon is present." : "Warning: Missing favicon.";
     default:
@@ -118,45 +124,42 @@ const statusClasses = {
   normal: "[& .cardHeading]:border-b-gray-300",
 };
 
-export default function SEOAudit() {
+function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const score = 75;
   const [analysisData, setAnalysisData] = useState(null);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-  const url = searchParams.get('url');
+  const url = searchParams.get("url");
 
   useEffect(() => {
-    
-  const fetchAnalysisData = async () => {
-    console.log('hello',url);
-    try {
-      const response = await fetch(`/api/analyze`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url })
-      });
-      
-      const data = await response.json();
-      console.log('hello',data);
-      // setAnalysisData(data);
-      // localStorage.setItem('seoAnalysisData', JSON.stringify(data));
-    } catch (error) {
-      console.error('Error fetching analysis:', error);
-      // Handle error
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchAnalysisData = async () => {
+      console.log("hello", url);
+      try {
+        const response = await fetch(`/api/analyze`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url }),
+        });
+
+        const data = await response.json();
+        console.log("hello", data);
+        // setAnalysisData(data);
+        // localStorage.setItem('seoAnalysisData', JSON.stringify(data));
+      } catch (error) {
+        console.error("Error fetching analysis:", error);
+        // Handle error
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchAnalysisData();
-    
   }, [url]);
 
-
   // Existing mock data
-  
+
   const headingData = [
     { name: "H1", count: 1 },
     { name: "H2", count: 5 },
@@ -295,19 +298,19 @@ export default function SEOAudit() {
   const commonOptions = {
     maintainAspectRatio: false,
     plugins: {
-      legend: { 
+      legend: {
         display: true,
-        position: 'bottom'
+        position: "bottom",
       },
-      tooltip: { 
+      tooltip: {
         bodyFont: { size: 12 },
         callbacks: {
-          label: function(context) {
-            const label = context.label || '';
+          label: function (context) {
+            const label = context.label || "";
             const value = context.raw || 0;
             return `${label}: ${value}`;
-          }
-        }
+          },
+        },
       },
     },
     layout: {
@@ -365,17 +368,16 @@ export default function SEOAudit() {
               id="headings"
             >
               <div>
-
-              <div
-                className={`flex items-center gap-3 pb-3 mb-3 border-b border-gray-100 cardHeading`}
-              >
-                <Code className="w-5 h-5" />
-                <h3 className="font-semibold">Headings Structure</h3>
-              </div>
-              <div className="w-full h-[200px] mt-4">
-                <Bar data={headingsChartData} options={commonOptions} />
-              </div>
+                <div
+                  className={`flex items-center gap-3 pb-3 mb-3 border-b border-gray-100 cardHeading`}
+                >
+                  <Code className="w-5 h-5" />
+                  <h3 className="font-semibold">Headings Structure</h3>
                 </div>
+                <div className="w-full h-[200px] mt-4">
+                  <Bar data={headingsChartData} options={commonOptions} />
+                </div>
+              </div>
               <p className="mt-2 text-sm text-gray-600">
                 {getCardDescription(headingData, "headings")}
               </p>
@@ -389,17 +391,17 @@ export default function SEOAudit() {
               id="links"
             >
               <div>
-              <div
-                className={`flex items-center gap-3 pb-3 mb-3 border-bborder-gray-100 cardHeading`}
-              >
-                <Share2 className="w-5 h-5" />
-                <h3 className="font-semibold">Links Distribution</h3>
+                <div
+                  className={`flex items-center gap-3 pb-3 mb-3 border-bborder-gray-100 cardHeading`}
+                >
+                  <Share2 className="w-5 h-5" />
+                  <h3 className="font-semibold">Links Distribution</h3>
+                </div>
+                <div className="w-full h-[200px] mt-4">
+                  <Pie data={linksChartData} options={commonOptions} />
+                </div>
               </div>
-              <div className="w-full h-[200px] mt-4">
-                <Pie data={linksChartData} options={commonOptions} />
-              </div>
-              </div>
-              
+
               <p className="mt-2 text-sm text-gray-600">
                 {getCardDescription(linkData, "links")}
               </p>
@@ -563,7 +565,9 @@ export default function SEOAudit() {
             {/* Keyword Density (Usage) */}
             <div
               className={`${s.card} ${
-                statusClasses[getStatusForData(keywordDensityData, "keywordDensity")]
+                statusClasses[
+                  getStatusForData(keywordDensityData, "keywordDensity")
+                ]
               } ${focusedCardId === "keywordDensity" ? s.focused : ""}`}
               id="keywordDensity"
             >
@@ -647,7 +651,9 @@ export default function SEOAudit() {
             {/* Image Analysis */}
             <div
               className={`${s.card} ${
-                statusClasses[getStatusForData(imageAnalysisData, "imageAnalysis")]
+                statusClasses[
+                  getStatusForData(imageAnalysisData, "imageAnalysis")
+                ]
               } ${focusedCardId === "imageAnalysis" ? s.focused : ""}`}
               id="imageAnalysis"
             >
@@ -763,5 +769,13 @@ export default function SEOAudit() {
         </div>
       </div>
     </Container>
+  );
+}
+
+export default function SEOAuditPage() {
+  return (
+    <Suspense>
+      <SEOAudit />
+    </Suspense>
   );
 }
