@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Container from "@/components/container";
 import s from "./style.module.css";
 import Sidebar from "@/components/sidebar";
@@ -26,6 +27,8 @@ import {
   Gauge,
   Code,
 } from "lucide-react";
+import { useSearchParams } from 'next/navigation';
+import LoadingScreen from '../components/LoadingScreen';
 
 // Register Chart.js modules
 ChartJS.register(
@@ -60,19 +63,100 @@ function getStatusForData(data, cardId) {
   }
 }
 
+function getCardDescription(data, cardId) {
+  switch (cardId) {
+    case "headings":
+      if (!data.find((item) => item.name === "H1")) {
+        return "Warning: Missing H1 heading. This is crucial for SEO as it indicates the main topic of the page.";
+      }
+      return "Heading structure looks good with proper hierarchy.";
+    case "links":
+      const externalLinks = data.find((item) => item.name === "External").value;
+      if (externalLinks > 20) {
+        return `Warning: High number of external links (${externalLinks}). This might dilute your page's authority.`;
+      }
+      return "Link distribution is balanced between internal and external links.";
+    case "meta":
+      if (!data.ogDescription) {
+        return "Error: Missing Open Graph description. This affects social media sharing appearance.";
+      }
+      return "Meta information is properly configured.";
+    case "keywords":
+      return "Top keywords are well-distributed throughout the content.";
+    case "metaRobots":
+      return "Robots directives are properly set for search engine crawling.";
+    case "sitemap":
+      return data ? "Sitemap is present and properly configured." : "Warning: Missing sitemap. This may affect search engine indexing.";
+    case "socialTags":
+      return "Social media tags are properly configured for optimal sharing.";
+    case "searchPreview":
+      return "Search result preview looks good with proper title and description.";
+    case "keywordDensity":
+      return "Keyword density is within optimal range.";
+    case "competitors":
+      return "Competitor analysis shows good market positioning.";
+    case "urlStructure":
+      return data.friendly ? "URL structure is SEO-friendly." : "Warning: URL structure could be more SEO-friendly.";
+    case "imageAnalysis":
+      return "Images are properly optimized with alt tags.";
+    case "inlineCSS":
+      return "Code structure analysis shows some inline styles that could be moved to external CSS.";
+    case "gaTracking":
+      return data.exists ? "Analytics tracking is properly configured." : "Warning: Missing analytics tracking.";
+    case "favicon":
+      return data.exists ? "Favicon is present." : "Warning: Missing favicon.";
+    default:
+      return "";
+  }
+}
+
 const statusClasses = {
   error:
-    "!bg-red-100 text-red-500 hover:bg-red-200 [&>.cardHeading]:border-b-red-500",
+    "!bg-red-100 text-red-500 hover:bg-red-200 [& .cardHeading]:border-b-red-500",
   warning:
-    "!bg-yellow-100 text-yellow-700 hover:bg-yellow-200 [&>.cardHeading]:border-b-yellow-700",
-  normal: "[&>.cardHeading]:border-b-gray-300",
+    "!bg-yellow-100 text-yellow-700 hover:bg-yellow-200 [& .cardHeading]:border-b-yellow-700",
+  normal: "[& .cardHeading]:border-b-gray-300",
 };
 
-function Page() {
+export default function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const score = 75;
+  const [analysisData, setAnalysisData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const url = searchParams.get('url');
+
+  useEffect(() => {
+    
+  const fetchAnalysisData = async () => {
+    console.log('hello',url);
+    try {
+      const response = await fetch(`/api/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url })
+      });
+      
+      const data = await response.json();
+      console.log('hello',data);
+      // setAnalysisData(data);
+      // localStorage.setItem('seoAnalysisData', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error fetching analysis:', error);
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  };
+    fetchAnalysisData();
+    
+  }, [url]);
+
 
   // Existing mock data
+  
   const headingData = [
     { name: "H1", count: 1 },
     { name: "H2", count: 5 },
@@ -211,18 +295,34 @@ function Page() {
   const commonOptions = {
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
-      tooltip: { bodyFont: { size: 12 } },
+      legend: { 
+        display: true,
+        position: 'bottom'
+      },
+      tooltip: { 
+        bodyFont: { size: 12 },
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            return `${label}: ${value}`;
+          }
+        }
+      },
     },
     layout: {
       padding: {
         left: 0,
         right: 0,
         top: 0,
-        bottom: 0,
+        bottom: 20,
       },
     },
   };
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Container>
@@ -264,6 +364,8 @@ function Page() {
               } ${focusedCardId === "headings" ? s.focused : ""}`}
               id="headings"
             >
+              <div>
+
               <div
                 className={`flex items-center gap-3 pb-3 mb-3 border-b border-gray-100 cardHeading`}
               >
@@ -273,6 +375,10 @@ function Page() {
               <div className="w-full h-[200px] mt-4">
                 <Bar data={headingsChartData} options={commonOptions} />
               </div>
+                </div>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(headingData, "headings")}
+              </p>
             </div>
 
             {/* Links Analysis */}
@@ -282,8 +388,9 @@ function Page() {
               } ${focusedCardId === "links" ? s.focused : ""}`}
               id="links"
             >
+              <div>
               <div
-                className={`flex items-center gap-3 pb-3 mb-3 border-b border-gray-100 cardHeading`}
+                className={`flex items-center gap-3 pb-3 mb-3 border-bborder-gray-100 cardHeading`}
               >
                 <Share2 className="w-5 h-5" />
                 <h3 className="font-semibold">Links Distribution</h3>
@@ -291,6 +398,11 @@ function Page() {
               <div className="w-full h-[200px] mt-4">
                 <Pie data={linksChartData} options={commonOptions} />
               </div>
+              </div>
+              
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(linkData, "links")}
+              </p>
             </div>
 
             {/* Meta Information */}
@@ -309,7 +421,6 @@ function Page() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Title Tag</span>
-
                   <span className="text-green-500">✓</span>
                 </div>
                 <div className="flex justify-between">
@@ -321,12 +432,15 @@ function Page() {
                   <span className="text-green-500">✓</span>
                 </div>
               </div>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(metaRobots, "meta")}
+              </p>
             </div>
 
             {/* Top Keywords */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(keywordData, "keywords")]
+                statusClasses[getStatusForData(keywordData, "keywords")]
               } ${focusedCardId === "keywords" ? s.focused : ""}`}
               id="keywords"
             >
@@ -339,11 +453,14 @@ function Page() {
               <div className="w-full h-[200px] mt-4">
                 <Bar data={keywordsChartData} options={commonOptions} />
               </div>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(keywordData, "keywords")}
+              </p>
             </div>
             {/* Meta Robots / Directives */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(metaRobots, "metaRobots")]
+                statusClasses[getStatusForData(metaRobots, "metaRobots")]
               } ${focusedCardId === "metaRobots" ? s.focused : ""}`}
               id="metaRobots"
             >
@@ -363,12 +480,15 @@ function Page() {
                   </tr>
                 </tbody>
               </table>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(metaRobots, "metaRobots")}
+              </p>
             </div>
 
             {/* Sitemap Presence */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(sitemapPresence, "sitemap")]
+                statusClasses[getStatusForData(sitemapPresence, "sitemap")]
               } ${focusedCardId === "sitemap" ? s.focused : ""}`}
               id="sitemap"
             >
@@ -379,12 +499,15 @@ function Page() {
               <p className="text-center text-lg">
                 {sitemapPresence ? "Present ✓" : "Missing ✕"}
               </p>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(sitemapPresence, "sitemap")}
+              </p>
             </div>
 
             {/* Social Tags */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(socialTags, "socialTags")]
+                statusClasses[getStatusForData(socialTags, "socialTags")]
               } ${focusedCardId === "socialTags" ? s.focused : ""}`}
               id="socialTags"
             >
@@ -412,12 +535,15 @@ function Page() {
                   </tr>
                 </tbody>
               </table>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(socialTags, "socialTags")}
+              </p>
             </div>
 
             {/* Google Search Results Preview */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(searchPreview, "searchPreview")]
+                statusClasses[getStatusForData(searchPreview, "searchPreview")]
               } ${focusedCardId === "searchPreview" ? s.focused : ""}`}
               id="searchPreview"
             >
@@ -430,11 +556,14 @@ function Page() {
                 <p className="text-sm">{searchPreview.description}</p>
                 <p className="text-xs text-gray-500">{searchPreview.url}</p>
               </div>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(searchPreview, "searchPreview")}
+              </p>
             </div>
             {/* Keyword Density (Usage) */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(keywordDensityData, "keywordDensity")]
+                statusClasses[getStatusForData(keywordDensityData, "keywordDensity")]
               } ${focusedCardId === "keywordDensity" ? s.focused : ""}`}
               id="keywordDensity"
             >
@@ -447,12 +576,15 @@ function Page() {
               <div className="w-full h-[200px] mt-4">
                 <Line data={keywordDensityChartData} options={commonOptions} />
               </div>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(keywordDensityData, "keywordDensity")}
+              </p>
             </div>
 
             {/* Competitor Domains */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(competitorData, "competitors")]
+                statusClasses[getStatusForData(competitorData, "competitors")]
               } ${focusedCardId === "competitors" ? s.focused : ""}`}
               id="competitors"
             >
@@ -478,12 +610,15 @@ function Page() {
                   ))}
                 </tbody>
               </table>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(competitorData, "competitors")}
+              </p>
             </div>
 
             {/* SEO-friendly URL Structure */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(technicalUrl, "urlStructure")]
+                statusClasses[getStatusForData(technicalUrl, "urlStructure")]
               } ${focusedCardId === "urlStructure" ? s.focused : ""}`}
               id="urlStructure"
             >
@@ -504,12 +639,15 @@ function Page() {
                   ? "SEO-friendly ✓"
                   : "Not SEO-friendly ✕"}
               </p>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(technicalUrl, "urlStructure")}
+              </p>
             </div>
 
             {/* Image Analysis */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(imageAnalysisData, "imageAnalysis")]
+                statusClasses[getStatusForData(imageAnalysisData, "imageAnalysis")]
               } ${focusedCardId === "imageAnalysis" ? s.focused : ""}`}
               id="imageAnalysis"
             >
@@ -537,12 +675,15 @@ function Page() {
                   ))}
                 </tbody>
               </table>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(imageAnalysisData, "imageAnalysis")}
+              </p>
             </div>
 
             {/* Inline CSS & Deprecated HTML Tags */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(inlineCssData, "inlineCSS")]
+                statusClasses[getStatusForData(inlineCssData, "inlineCSS")]
               } ${focusedCardId === "inlineCSS" ? s.focused : ""}`}
               id="inlineCSS"
             >
@@ -570,12 +711,15 @@ function Page() {
                   ))}
                 </tbody>
               </table>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(inlineCssData, "inlineCSS")}
+              </p>
             </div>
 
             {/* Google Analytics & Tracking Code */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(gaTracking, "gaTracking")]
+                statusClasses[getStatusForData(gaTracking, "gaTracking")]
               } ${focusedCardId === "gaTracking" ? s.focused : ""}`}
               id="gaTracking"
             >
@@ -590,12 +734,15 @@ function Page() {
                   ? "Tracking Code Found ✓"
                   : "Missing Tracking Code ✕"}
               </p>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(gaTracking, "gaTracking")}
+              </p>
             </div>
 
             {/* Favicon Presence */}
             <div
               className={`${s.card} ${
-                s[getStatusForData(favicon, "favicon")]
+                statusClasses[getStatusForData(favicon, "favicon")]
               } ${focusedCardId === "favicon" ? s.focused : ""}`}
               id="favicon"
             >
@@ -608,6 +755,9 @@ function Page() {
               <p className="text-center text-lg">
                 {favicon.exists ? "Favicon Present ✓" : "Favicon Missing ✕"}
               </p>
+              <p className="mt-2 text-sm text-gray-600">
+                {getCardDescription(favicon, "favicon")}
+              </p>
             </div>
           </div>
         </div>
@@ -615,5 +765,3 @@ function Page() {
     </Container>
   );
 }
-
-export default Page;
