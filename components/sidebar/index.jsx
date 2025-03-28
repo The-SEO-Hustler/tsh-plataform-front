@@ -179,7 +179,12 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
           ariaLabel="SEO Navigation"
           icon={<SpeedDialIcon />}
           direction="up"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          sx={{
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+            zIndex: "2147483647",
+          }}
         >
           {prioritizedButtons.map((button, id) => (
             <SpeedDialAction

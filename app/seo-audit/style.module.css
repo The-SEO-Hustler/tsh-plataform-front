@@ -25,8 +25,12 @@
   border-color: transparent; /* Added for consistency with changes */
 }
 
+@media (min-width: 768px) {
+  .card:hover {
+    transform: translateY(-3px);
+  }
+}
 .card:hover {
-  transform: translateY(-3px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   border-color: #e1e1e1;
 }

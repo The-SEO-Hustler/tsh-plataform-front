@@ -21,7 +21,7 @@ import Link from "next/link";
 
 function Header() {
   return (
-    <header className="border-b relative z-[999999] bg-[#dcdcdc]">
+    <header className="border-b relative z-[999] bg-[#dcdcdc]">
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
