@@ -57,3 +57,20 @@
   /* Ensure it's above the overlay */
   /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); */
 }
+.cardError .cardHeading {
+  border-bottom: 1px solid oklch(0.637 0.237 25.331);
+}
+.cardWarning .cardHeading {
+  border-bottom: 1px solid oklch(0.554 0.135 66.442);
+}
+.cardNormal .cardHeading {
+  border-bottom: 1px solid #c3c3c3;
+}
+
+.card:not(.cardWarning):not(.cardError) .cardDescription {
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+.card:hover .cardDescription {
+  opacity: 1 !important;
+}

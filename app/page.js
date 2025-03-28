@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import LoadingScreen from "./components/LoadingScreen";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function Home() {
   const [url, setUrl] = useState("");

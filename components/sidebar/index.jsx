@@ -14,15 +14,22 @@ import {
   Share2,
   Gauge,
   Code,
+  Type,
+  FileText,
+  Heading1,
+  Heading2,
+  Link,
 } from "lucide-react";
 import s from "./style.module.css";
+import { useState } from "react";
+
 const statusClasses = {
   error: "!bg-red-100 !text-red-500 hover:!bg-red-200",
   warning: "!bg-yellow-100 !text-yellow-700 hover:!bg-yellow-200",
   normal: "!bg-white/90 !hover:bg-white",
 };
 
-function Sidebar({ setFocusedCardId }) {
+function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
   const handleFocusCard = (id) => {
     setFocusedCardId(id);
     const cardEl = document.getElementById(id);
@@ -74,68 +81,74 @@ function Sidebar({ setFocusedCardId }) {
     },
     {
       id: "metaRobots",
-      tooltip: "Meta Robots / Directives",
+      tooltip: "Meta Robots",
       Icon: <Lock strokeWidth={1.5} />,
       status: "normal",
     },
     {
       id: "sitemap",
-      tooltip: "Sitemap Presence",
+      tooltip: "Sitemap",
       Icon: <Server strokeWidth={1.5} />,
       status: "normal",
     },
     {
+      id: "title",
+      tooltip: "Page Title",
+      Icon: <Type strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "meta-description",
+      tooltip: "Meta Description",
+      Icon: <FileText strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "h1",
+      tooltip: "H1 Tags",
+      Icon: <Heading1 strokeWidth={1.5} />,
+      status: "warning",
+    },
+    {
       id: "socialTags",
-      tooltip: "Social Tags",
-      Icon: <ImageIcon strokeWidth={1.5} />,
+      tooltip: "Social Media Tags",
+      Icon: <Share2 strokeWidth={1.5} />,
       status: "normal",
     },
     {
-      id: "searchPreview",
-      tooltip: "Google Search Preview",
-      Icon: <Globe strokeWidth={1.5} />,
+      id: "h2Tags",
+      tooltip: "H2 Tags",
+      Icon: <Heading2 strokeWidth={1.5} />,
+      status: "warning",
+    },
+    {
+      id: "robotsTxt",
+      tooltip: "Robots.txt",
+      Icon: <Lock strokeWidth={1.5} />,
       status: "normal",
     },
     {
-      id: "keywordDensity",
-      tooltip: "Keyword Density",
+      id: "sitemapCheck",
+      tooltip: "Sitemap Check",
+      Icon: <Server strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "brokenLinksCheck",
+      tooltip: "Broken Links",
+      Icon: <Link strokeWidth={1.5} />,
+      status: "normal",
+    },
+    {
+      id: "keywordAnalysis",
+      tooltip: "Keyword Analysis",
       Icon: <Gauge strokeWidth={1.5} />,
       status: "normal",
     },
     {
-      id: "competitors",
-      tooltip: "Competitor Domains",
-      Icon: <DollarSign strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "urlStructure",
-      tooltip: "URL Structure",
-      Icon: <Globe strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "imageAnalysis",
-      tooltip: "Image Analysis",
+      id: "image-alt",
+      tooltip: "Image Alt Text",
       Icon: <ImageIcon strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "inlineCSS",
-      tooltip: "Inline CSS / Deprecated Tags",
-      Icon: <Code strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "gaTracking",
-      tooltip: "Analytics & Tracking",
-      Icon: <Server strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "favicon",
-      tooltip: "Favicon",
-      Icon: <Globe strokeWidth={1.5} />,
       status: "normal",
     },
   ];
@@ -178,6 +191,7 @@ function Sidebar({ setFocusedCardId }) {
                   className: statusClasses[button.status] || "",
                 },
               }}
+              // tooltipOpen
               tooltipTitle={button.tooltip}
               onClick={() => handleFocusCard(button.id)}
             />
@@ -193,6 +207,7 @@ function Sidebar({ setFocusedCardId }) {
             Icon={btn.Icon}
             onFocusCard={handleFocusCard}
             status={btn.status}
+            alwaysShowTooltips={alwaysShowTooltips}
           />
         ))}
       </div>
@@ -206,19 +221,24 @@ function SidebarButton({
   Icon,
   onFocusCard,
   status = "success",
+  alwaysShowTooltips,
 }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <TooltipProvider>
-      <Tooltip>
+    <TooltipProvider delayDuration={0}>
+      <Tooltip open={alwaysShowTooltips || isHovered}>
         <TooltipTrigger asChild>
           <button
             className={`rounded-full p-3 shadow-sm ${statusClasses[status]}`}
             onClick={() => onFocusCard(id)}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
             {Icon}
           </button>
         </TooltipTrigger>
-        <TooltipContent side="right">
+        <TooltipContent side="right" className="select-none">
           <div className="flex items-center gap-2">
             {status === "error" && (
               <span className="w-2 h-2 rounded-full bg-red-500" />

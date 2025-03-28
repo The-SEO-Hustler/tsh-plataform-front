@@ -1,7 +1,7 @@
 export async function POST(request) {
   const data = await request.json();
 
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  // await new Promise((resolve) => setTimeout(resolve, 10000));
 
   try {
     // const response = await fetch('/my-backend', {
