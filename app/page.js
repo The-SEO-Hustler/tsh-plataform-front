@@ -71,7 +71,7 @@ export default function Home() {
                   Get comprehensive insights and actionable recommendations to
                   improve your website&apos;s search engine rankings.
                 </p>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4 ">
                   <div className="relative">
                     <input
                       type="url"
@@ -91,7 +91,7 @@ export default function Home() {
                     </Button>
                   </div>
                 </form>
-                <div className="flex items-center gap-4 text-sm ">
+                <div className="flex items-center gap-4">
                   <CheckCircle2 className="h-5 w-5 text-green-500" />
                   <span>Free analysis - No registration required</span>
                 </div>
@@ -100,7 +100,7 @@ export default function Home() {
               {/* Right Column - Feature Preview */}
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-                <div className="bg-white p-8 rounded-2xl shadow-lg">
+                <div className="bg-white p-8 rounded-2xl shadow-xl">
                   <div className="space-y-6">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">

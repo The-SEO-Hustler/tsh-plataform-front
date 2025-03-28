@@ -24,9 +24,9 @@ import s from "./style.module.css";
 import { useState } from "react";
 
 const statusClasses = {
-  error: "!bg-red-100 !text-red-500 hover:!bg-red-200",
-  warning: "!bg-yellow-100 !text-yellow-700 hover:!bg-yellow-200",
-  normal: "!bg-white/90 !hover:bg-white",
+  error: "!bg-red-100/70 !text-red-500 hover:!bg-red-200",
+  warning: "!bg-yellow-100/70 !text-yellow-700 hover:!bg-yellow-200",
+  normal: "!bg-white/70 !hover:bg-white",
 };
 
 function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
@@ -230,7 +230,7 @@ function SidebarButton({
       <Tooltip open={alwaysShowTooltips || isHovered}>
         <TooltipTrigger asChild>
           <button
-            className={`rounded-full p-3 shadow-sm ${statusClasses[status]}`}
+            className={`rounded-xl p-3 shadow-sm ${statusClasses[status]}`}
             onClick={() => onFocusCard(id)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}

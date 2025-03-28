@@ -104,7 +104,7 @@ function SEOAudit() {
         </div>
         <div className="py-4">
           {/* Header */}
-          <div className="flex flex-col gap-2 md:flex-row items-center justify-between mb-4">
+          <div className="flex flex-col gap-5 md:gap-2 md:flex-row md:items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center">
