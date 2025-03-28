@@ -24,9 +24,10 @@ import s from "./style.module.css";
 import { useState } from "react";
 
 const statusClasses = {
-  error: "!bg-red-100/70 !text-red-500 hover:!bg-red-200",
-  warning: "!bg-yellow-100/70 !text-yellow-700 hover:!bg-yellow-200",
-  normal: "!bg-white/70 !hover:bg-white",
+  error: "!bg-red-100 md:!bg-red-100/70 !text-red-500 hover:!bg-red-200",
+  warning:
+    "!bg-yellow-100 md:!bg-yellow-100/70 !text-yellow-700 hover:!bg-yellow-200",
+  normal: "!bg-white md:!bg-white/70 !hover:bg-white",
 };
 
 function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
