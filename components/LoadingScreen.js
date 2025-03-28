@@ -37,7 +37,7 @@ export default function LoadingScreen() {
   const CurrentIcon = loadingSteps[currentStep].icon;
 
   return (
-    <div className="fixed inset-0 bg-white bg-opacity-95 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-white bg-opacity-95 z-[2147483647] flex items-center justify-center">
       <div className="text-center space-y-8">
         <div className="relative w-24 h-24 mx-auto">
           <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
