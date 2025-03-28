@@ -15,6 +15,8 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
@@ -94,13 +96,13 @@ function SEOAudit() {
         onClick={() => setFocusedCardId(null)}
       ></div>
       <div className={s.dashboard}>
-        <div className="pt-4">
+        <div className="">
           <Sidebar
             setFocusedCardId={setFocusedCardId}
             alwaysShowTooltips={alwaysShowTooltips}
           />
         </div>
-        <div className="md:p-4">
+        <div className="py-4">
           {/* Header */}
           <div className="flex flex-col gap-2 md:flex-row items-center justify-between mb-4">
             <div className="flex items-center gap-4">
@@ -145,63 +147,67 @@ function SEOAudit() {
 
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="normal"
                       checked={statusFilters.normal}
-                      onChange={() => handleFilterChange("normal")}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
+                      onCheckedChange={() => handleFilterChange("normal")}
                     />
-                    <span className="flex items-center gap-1">
+                    <label
+                      htmlFor="normal"
+                      className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
                       <span className="w-2 h-2 rounded-full bg-green-500"></span>
                       Normal
-                    </span>
-                  </label>
+                    </label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="warning"
                       checked={statusFilters.warning}
-                      onChange={() => handleFilterChange("warning")}
-                      className="rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
+                      onCheckedChange={() => handleFilterChange("warning")}
                     />
-                    <span className="flex items-center gap-1">
+                    <label
+                      htmlFor="warning"
+                      className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
                       <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
                       Warning
-                    </span>
-                  </label>
+                    </label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="error"
                       checked={statusFilters.error}
-                      onChange={() => handleFilterChange("error")}
-                      className="rounded border-gray-300 text-red-500 focus:ring-red-500"
+                      onCheckedChange={() => handleFilterChange("error")}
                     />
-                    <span className="flex items-center gap-1">
+                    <label
+                      htmlFor="error"
+                      className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
                       Error
-                    </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="hidden md:block md:border-l md:pl-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={alwaysShowTooltips}
-                      onChange={() => setAlwaysShowTooltips((prev) => !prev)}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                    <span className="flex items-center gap-1">
-                      {alwaysShowTooltips ? (
-                        <Eye className="w-4 h-4" />
-                      ) : (
-                        <EyeOff className="w-4 h-4" />
-                      )}
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2 h-auto p-0 hover:bg-transparent"
+                    onClick={() => setAlwaysShowTooltips((prev) => !prev)}
+                  >
+                    {alwaysShowTooltips ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
+                    <span className="text-sm font-medium">
                       Always Show Tooltips
                     </span>
-                  </label>
+                  </Button>
                 </div>
               </div>
             </div>
