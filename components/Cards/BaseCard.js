@@ -15,7 +15,7 @@ export default function BaseCard({
   title,
   icon: Icon,
   children,
-  description,
+  analysis,
   className = "",
 }) {
   return (
@@ -36,7 +36,7 @@ export default function BaseCard({
         {children}
       </div>
       <p className={`mt-2 text-sm text-gray-600 ${s.cardDescription}`}>
-        {description}
+        {analysis}
       </p>
     </div>
   );

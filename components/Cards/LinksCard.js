@@ -14,7 +14,7 @@ export default function LinksCard({
   status,
   isFocused,
   onFocus,
-  description,
+  analysis,
 }) {
   const chartData = {
     labels: data.map((d) => d.name),
@@ -35,7 +35,7 @@ export default function LinksCard({
       onFocus={onFocus}
       title="Links Distribution"
       icon={Share2}
-      description={description}
+      analysis={analysis}
     >
       <div className="w-full h-[200px] mt-4">
         <Pie data={chartData} options={commonOptions} />

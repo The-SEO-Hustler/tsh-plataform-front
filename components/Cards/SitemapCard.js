@@ -1,8 +1,14 @@
-import React from 'react';
-import { Server } from 'lucide-react';
-import BaseCard from './BaseCard';
+import React from "react";
+import { Server } from "lucide-react";
+import BaseCard from "./BaseCard";
 
-export default function SitemapCard({ data, status, isFocused, onFocus, description }) {
+export default function SitemapCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   return (
     <BaseCard
       id="sitemap"
@@ -11,11 +17,9 @@ export default function SitemapCard({ data, status, isFocused, onFocus, descript
       onFocus={onFocus}
       title="Sitemap Presence"
       icon={Server}
-      description={description}
+      analysis={analysis}
     >
-      <p className="text-center text-lg">
-        {data ? "Present ✓" : "Missing ✕"}
-      </p>
+      <p className="text-center text-lg">{data ? "Present ✓" : "Missing ✕"}</p>
     </BaseCard>
   );
-} 
+}

@@ -3,20 +3,20 @@ import { Bar } from "react-chartjs-2";
 import { Code } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { commonOptions } from "@/app/lib/commonOptions";
-
+import { iconMapping } from "@/app/seo-audit/config";
 export default function HeadingsCard({
   data,
   status,
   isFocused,
   onFocus,
-  description,
+  analysis,
 }) {
   const chartData = {
-    labels: data.map((d) => d.name),
+    labels: ["h3", "h4", "h5", "h6"],
     datasets: [
       {
         label: "Count",
-        data: data.map((d) => d.count),
+        data: [data.h3.count, data.h4.count, data.h5.count, data.h6.count],
         backgroundColor: "#8884d8",
       },
     ],
@@ -29,8 +29,8 @@ export default function HeadingsCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="Headings Structure"
-      icon={Code}
-      description={description}
+      icon={iconMapping.headings}
+      analysis={`H3: ${analysis.h3} | H4: ${analysis.h4} | H5: ${analysis.h5} | H6: ${analysis.h6} `}
     >
       <div className="w-full h-[200px] mt-4">
         <Bar data={chartData} options={commonOptions} />

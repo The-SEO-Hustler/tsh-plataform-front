@@ -139,7 +139,6 @@
   body {
     @apply text-foreground;
     background: linear-gradient(#dcdcdc, #b2bcdc);
-    background-color: #b2bcdc;
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;

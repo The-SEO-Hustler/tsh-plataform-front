@@ -31,6 +31,7 @@ function SEOAudit() {
     error: true,
   });
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
+  const [data, setData] = useState(mockData);
 
   useEffect(() => {
     const fetchAnalysisData = async () => {
@@ -48,6 +49,7 @@ function SEOAudit() {
         console.log("hello", data);
         // setAnalysisData(data);
         // localStorage.setItem('seoAnalysisData', JSON.stringify(data));
+        // setData(data);
       } catch (error) {
         console.error("Error fetching analysis:", error);
         // Handle error
@@ -100,6 +102,7 @@ function SEOAudit() {
           <Sidebar
             setFocusedCardId={setFocusedCardId}
             alwaysShowTooltips={alwaysShowTooltips}
+            data={data}
           />
         </div>
         <div className="py-4">
@@ -196,7 +199,7 @@ function SEOAudit() {
                 <div className="hidden md:block md:border-l md:pl-4">
                   <Button
                     variant="ghost"
-                    className="flex items-center gap-2 h-auto p-0 hover:bg-transparent"
+                    className="flex items-center justify-start !pl-0 gap-2 h-auto p-0 hover:bg-transparent"
                     onClick={() => setAlwaysShowTooltips((prev) => !prev)}
                   >
                     {alwaysShowTooltips ? (
@@ -214,7 +217,7 @@ function SEOAudit() {
           </div>
 
           {/* Grid Layout */}
-          <div className="gap-2.5 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+          <div className="gap-2.5 grid xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
             {mockData
               .filter((card) => statusFilters[card.status])
               .map((card, index) => {
@@ -228,7 +231,7 @@ function SEOAudit() {
                     status={card.status}
                     isFocused={focusedCardId === card.type}
                     onFocus={setFocusedCardId}
-                    description={card.description}
+                    analysis={card.analysis}
                   />
                 );
               })}

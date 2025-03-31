@@ -65,36 +65,36 @@ export default function Home() {
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
                 Analyze Your Website&apos;s
                 <span className="text-primary"> SEO Performance</span>
-              </h1>
+          </h1>
               <p className="text-xl ">
                 Get comprehensive insights and actionable recommendations to
                 improve your website&apos;s search engine rankings.
-              </p>
+          </p>
               <form onSubmit={handleSubmit} className="space-y-4 ">
-                <div className="relative">
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="Enter your website URL"
+            <div className="relative">
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Enter your website URL"
                     className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-                    required
-                  />
+                required
+              />
                   <Button
-                    type="submit"
+                type="submit"
                     size="lg"
                     className="absolute right-3 top-1/2 -translate-y-1/2"
-                  >
-                    Analyze
+              >
+                Analyze
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
-                </div>
-              </form>
+            </div>
+          </form>
               <div className="flex items-center gap-4">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
                 <span>Free analysis - No registration required</span>
-              </div>
-            </div>
+        </div>
+      </div>
 
             {/* Right Column - Feature Preview */}
             <div className="relative">

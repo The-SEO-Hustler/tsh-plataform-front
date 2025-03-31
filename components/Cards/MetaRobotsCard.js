@@ -1,8 +1,14 @@
-import React from 'react';
-import { Lock } from 'lucide-react';
-import BaseCard from './BaseCard';
+import React from "react";
+import { Lock } from "lucide-react";
+import BaseCard from "./BaseCard";
 
-export default function MetaRobotsCard({ data, status, isFocused, onFocus, description }) {
+export default function MetaRobotsCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   return (
     <BaseCard
       id="metaRobots"
@@ -11,7 +17,7 @@ export default function MetaRobotsCard({ data, status, isFocused, onFocus, descr
       onFocus={onFocus}
       title="Meta Robots / Directives"
       icon={Lock}
-      description={description}
+      analysis={analysis}
     >
       <table className="w-full text-sm">
         <tbody>
@@ -27,4 +33,4 @@ export default function MetaRobotsCard({ data, status, isFocused, onFocus, descr
       </table>
     </BaseCard>
   );
-} 
+}

@@ -28,7 +28,7 @@ export default function KeywordsCard({
   status,
   isFocused,
   onFocus,
-  description,
+  analysis,
 }) {
   const chartData = {
     labels: data.map((d) => d.keyword),
@@ -49,7 +49,7 @@ export default function KeywordsCard({
       onFocus={onFocus}
       title="Top Keywords"
       icon={Gauge}
-      description={description}
+      analysis={analysis}
     >
       <div className="w-full h-[200px] mt-4">
         <Bar data={chartData} options={commonOptions} />

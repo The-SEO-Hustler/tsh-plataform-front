@@ -5,23 +5,9 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
-import {
-  DollarSign,
-  Globe,
-  ImageIcon,
-  Lock,
-  Server,
-  Share2,
-  Gauge,
-  Code,
-  Type,
-  FileText,
-  Heading1,
-  Heading2,
-  Link,
-} from "lucide-react";
 import s from "./style.module.css";
 import { useState } from "react";
+import { getIconComponent } from "@/app/seo-audit/config";
 
 const statusClasses = {
   error: "!bg-red-100 md:!bg-red-100/70 !text-red-500 hover:!bg-red-200",
@@ -30,7 +16,7 @@ const statusClasses = {
   normal: "!bg-white md:!bg-white/70 !hover:bg-white",
 };
 
-function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
+function Sidebar({ setFocusedCardId, alwaysShowTooltips, data }) {
   const handleFocusCard = (id) => {
     setFocusedCardId(id);
     const cardEl = document.getElementById(id);
@@ -55,104 +41,13 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
     }
   };
 
-  const buttons = [
-    {
-      id: "headings",
-      tooltip: "Heading Structure",
-      Icon: <Code strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "links",
-      tooltip: "Links Distribution",
-      Icon: <Share2 strokeWidth={1.5} />,
-      status: "warning",
-    },
-    {
-      id: "meta",
-      tooltip: "Meta Information",
-      Icon: <Globe strokeWidth={1.5} />,
-      status: "error",
-    },
-    {
-      id: "keywords",
-      tooltip: "Top Keywords",
-      Icon: <Gauge strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "metaRobots",
-      tooltip: "Meta Robots",
-      Icon: <Lock strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "sitemap",
-      tooltip: "Sitemap",
-      Icon: <Server strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "title",
-      tooltip: "Page Title",
-      Icon: <Type strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "meta-description",
-      tooltip: "Meta Description",
-      Icon: <FileText strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "h1",
-      tooltip: "H1 Tags",
-      Icon: <Heading1 strokeWidth={1.5} />,
-      status: "warning",
-    },
-    {
-      id: "socialTags",
-      tooltip: "Social Media Tags",
-      Icon: <Share2 strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "h2Tags",
-      tooltip: "H2 Tags",
-      Icon: <Heading2 strokeWidth={1.5} />,
-      status: "warning",
-    },
-    {
-      id: "robotsTxt",
-      tooltip: "Robots.txt",
-      Icon: <Lock strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "sitemapCheck",
-      tooltip: "Sitemap Check",
-      Icon: <Server strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "brokenLinksCheck",
-      tooltip: "Broken Links",
-      Icon: <Link strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "keywordAnalysis",
-      tooltip: "Keyword Analysis",
-      Icon: <Gauge strokeWidth={1.5} />,
-      status: "normal",
-    },
-    {
-      id: "image-alt",
-      tooltip: "Image Alt Text",
-      Icon: <ImageIcon strokeWidth={1.5} />,
-      status: "normal",
-    },
-  ];
+  // Generate buttons from data
+  const buttons = data.map((item) => ({
+    id: item.type,
+    tooltipText: item?.type?.replace(/([A-Z])/g, " $1").trim(),
+    Icon: getIconComponent(item?.type),
+    status: item.status || "normal",
+  }));
 
   // compute prioritizedButtons before rendering the mobile SpeedDial
   const errorWarningButtons = buttons.filter(
@@ -197,8 +92,7 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
                   className: statusClasses[button.status] || "",
                 },
               }}
-              // tooltipOpen
-              tooltipTitle={button.tooltip}
+              tooltipTitle={button.tooltipText}
               onClick={() => handleFocusCard(button.id)}
             />
           ))}
@@ -209,7 +103,7 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips }) {
           <SidebarButton
             key={`${btn.id}-${id}`}
             id={btn.id}
-            tooltipText={btn.tooltip}
+            tooltipText={btn.tooltipText}
             Icon={btn.Icon}
             onFocusCard={handleFocusCard}
             status={btn.status}

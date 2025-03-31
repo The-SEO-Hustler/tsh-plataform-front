@@ -1,8 +1,14 @@
-import React from 'react';
-import { Globe } from 'lucide-react';
-import BaseCard from './BaseCard';
+import React from "react";
+import { Globe } from "lucide-react";
+import BaseCard from "./BaseCard";
 
-export default function MetaCard({ data, status, isFocused, onFocus, description }) {
+export default function MetaCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   return (
     <BaseCard
       id="meta"
@@ -11,7 +17,7 @@ export default function MetaCard({ data, status, isFocused, onFocus, description
       onFocus={onFocus}
       title="Meta Information"
       icon={Globe}
-      description={description}
+      analysis={analysis}
     >
       <div className="space-y-2 text-sm">
         <div className="flex justify-between">
@@ -29,4 +35,4 @@ export default function MetaCard({ data, status, isFocused, onFocus, description
       </div>
     </BaseCard>
   );
-} 
+}

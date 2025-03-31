@@ -1,8 +1,14 @@
-import React from 'react';
-import { Link } from 'lucide-react';
-import BaseCard from './BaseCard';
+import React from "react";
+import { Link } from "lucide-react";
+import BaseCard from "./BaseCard";
 
-export default function BrokenLinksCheckCard({ data, status, isFocused, onFocus, description }) {
+export default function BrokenLinksCheckCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   return (
     <BaseCard
       id="brokenLinksCheck"
@@ -11,7 +17,7 @@ export default function BrokenLinksCheckCard({ data, status, isFocused, onFocus,
       onFocus={onFocus}
       title="Broken Links Check"
       icon={Link}
-      description={description}
+      analysis={analysis}
     >
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
@@ -32,7 +38,7 @@ export default function BrokenLinksCheckCard({ data, status, isFocused, onFocus,
             <ul className="mt-1 space-y-1">
               {data.brokenLinks.map((link, index) => (
                 <li key={index} className="break-words">
-                  {link}
+                  {link.anchor}
                 </li>
               ))}
             </ul>
@@ -40,11 +46,13 @@ export default function BrokenLinksCheckCard({ data, status, isFocused, onFocus,
         )}
         {data.non200Links && data.non200Links.length > 0 && (
           <div className="mt-2">
-            <span className="font-medium text-yellow-500">Non-200 Status Links:</span>
+            <span className="font-medium text-yellow-500">
+              Non-200 Status Links:
+            </span>
             <ul className="mt-1 space-y-1">
               {data.non200Links.map((link, index) => (
                 <li key={index} className="break-words">
-                  {link}
+                  {link.anchor}
                 </li>
               ))}
             </ul>
@@ -53,4 +61,4 @@ export default function BrokenLinksCheckCard({ data, status, isFocused, onFocus,
       </div>
     </BaseCard>
   );
-} 
+}

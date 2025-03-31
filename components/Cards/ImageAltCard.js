@@ -1,8 +1,14 @@
-import React from 'react';
-import { Image } from 'lucide-react';
-import BaseCard from './BaseCard';
+import React from "react";
+import { Image } from "lucide-react";
+import BaseCard from "./BaseCard";
 
-export default function ImageAltCard({ data, status, isFocused, onFocus, description }) {
+export default function ImageAltCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   return (
     <BaseCard
       id="image-alt"
@@ -11,7 +17,7 @@ export default function ImageAltCard({ data, status, isFocused, onFocus, descrip
       onFocus={onFocus}
       title="Image Alt Text"
       icon={Image}
-      description={description}
+      analysis={analysis}
     >
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
@@ -24,11 +30,18 @@ export default function ImageAltCard({ data, status, isFocused, onFocus, descrip
         </div>
         {data.imagesWithoutAlt && data.imagesWithoutAlt.length > 0 && (
           <div className="mt-2">
-            <span className="font-medium text-yellow-500">Images Without Alt Text:</span>
-            <ul className="mt-1 space-y-1">
+            <span className="font-medium text-yellow-500">
+              Images Without Alt Text:
+            </span>
+            <ul className="mt-1 grid-cols-2 grid items-center gap-1">
               {data.imagesWithoutAlt.map((image, index) => (
-                <li key={index} className="break-words">
-                  {image}
+                <li
+                  key={index}
+                  className="break-words border border-black rounded-md overflow-hidden
+                   h-full flex items-center"
+                >
+                  <img src={image.src} />
+                  {/* {image.src.slice()} */}
                 </li>
               ))}
             </ul>
@@ -37,4 +50,4 @@ export default function ImageAltCard({ data, status, isFocused, onFocus, descrip
       </div>
     </BaseCard>
   );
-} 
+}

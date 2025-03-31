@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Lock, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
-
+import { iconMapping } from "@/app/seo-audit/config";
 export default function RobotsTxtCard({
   data,
   status,
   isFocused,
   onFocus,
-  description,
+  analysis,
 }) {
   const [showAll, setShowAll] = useState(false);
 
@@ -22,8 +22,8 @@ export default function RobotsTxtCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="Robots.txt"
-      icon={Lock}
-      description={description}
+      icon={iconMapping.robotsTxt}
+      analysis={analysis}
     >
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">

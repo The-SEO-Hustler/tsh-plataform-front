@@ -1,18 +1,20 @@
 import React from "react";
 import { Share2 } from "lucide-react";
 import BaseCard from "./BaseCard";
-
+import { iconMapping } from "@/app/seo-audit/config";
 export default function SocialTagsCard({
   data,
   status,
   isFocused,
   onFocus,
-  description,
+  analysis,
 }) {
   const renderSocialTag = (tag, value) => (
     <div key={tag} className="flex justify-between items-start py-1 gap-1">
-      <span className="font-medium">{tag}:</span>
-      <span className="break-words text-right truncate">{value}</span>
+      <span className="font-medium">{JSON.stringify(tag)}:</span>
+      <span className="break-words text-right truncate">
+        {JSON.stringify(value)}
+      </span>
     </div>
   );
 
@@ -23,8 +25,8 @@ export default function SocialTagsCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="Social Media Tags"
-      icon={Share2}
-      description={description}
+      icon={iconMapping.socialTags}
+      analysis={`OpenGraph: ${analysis?.openGraph} | TwitterCard: ${analysis?.twitterCard}`}
     >
       <div className="space-y-1 text-sm">
         <div>

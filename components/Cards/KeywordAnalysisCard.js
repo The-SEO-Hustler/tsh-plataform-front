@@ -1,17 +1,23 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Gauge } from 'lucide-react';
-import BaseCard from './BaseCard';
-import { commonOptions } from '@/app/lib/commonOptions';
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import { Gauge } from "lucide-react";
+import BaseCard from "./BaseCard";
+import { commonOptions } from "@/app/lib/commonOptions";
 
-export default function KeywordAnalysisCard({ data, status, isFocused, onFocus, description }) {
+export default function KeywordAnalysisCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   const chartData = {
     labels: data.topKeywords.map((k) => k.word),
     datasets: [
       {
-        label: 'Count',
+        label: "Count",
         data: data.topKeywords.map((k) => k.count),
-        backgroundColor: '#8884d8',
+        backgroundColor: "#8884d8",
       },
     ],
   };
@@ -24,7 +30,7 @@ export default function KeywordAnalysisCard({ data, status, isFocused, onFocus, 
       onFocus={onFocus}
       title="Keyword Analysis"
       icon={Gauge}
-      description={description}
+      analysis={analysis}
     >
       <div className="space-y-4 text-sm">
         <div className="grid grid-cols-2 gap-4">
@@ -58,4 +64,4 @@ export default function KeywordAnalysisCard({ data, status, isFocused, onFocus, 
       </div>
     </BaseCard>
   );
-} 
+}

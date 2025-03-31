@@ -7,7 +7,7 @@ export default function SitemapCheckCard({
   status,
   isFocused,
   onFocus,
-  description,
+  analysis,
 }) {
   return (
     <BaseCard
@@ -17,7 +17,7 @@ export default function SitemapCheckCard({
       onFocus={onFocus}
       title="Sitemap Check"
       icon={Map}
-      description={description}
+      analysis={analysis}
     >
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">

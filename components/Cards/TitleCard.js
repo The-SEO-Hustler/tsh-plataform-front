@@ -1,8 +1,14 @@
-import React from 'react';
-import { Type } from 'lucide-react';
-import BaseCard from './BaseCard';
+import React from "react";
+import { Type } from "lucide-react";
+import BaseCard from "./BaseCard";
 
-export default function TitleCard({ data, status, isFocused, onFocus, description }) {
+export default function TitleCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
   return (
     <BaseCard
       id="title"
@@ -11,7 +17,7 @@ export default function TitleCard({ data, status, isFocused, onFocus, descriptio
       onFocus={onFocus}
       title="Page Title"
       icon={Type}
-      description={description}
+      analysis={analysis}
     >
       <div className="space-y-2 text-sm">
         <div className="break-words">
@@ -19,11 +25,15 @@ export default function TitleCard({ data, status, isFocused, onFocus, descriptio
         </div>
         <div className="flex justify-between items-center">
           <span>Length:</span>
-          <span className={`${data.length > 60 ? 'text-yellow-500' : 'text-green-500'}`}>
+          <span
+            className={`${
+              data.length > 60 ? "text-yellow-500" : "text-green-500"
+            }`}
+          >
             {data.length} characters
           </span>
         </div>
       </div>
     </BaseCard>
   );
-} 
+}
