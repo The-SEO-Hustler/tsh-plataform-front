@@ -1,5 +1,5 @@
-import React from "react";
-import { Heading2 } from "lucide-react";
+import React, { useState } from "react";
+import { Heading2, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { iconMapping } from "@/app/seo-audit/config";
 
@@ -10,6 +10,9 @@ export default function H2TagsCard({
   onFocus,
   analysis,
 }) {
+  const [showAll, setShowAll] = useState(false);
+  const displayedHeaders = showAll ? data.headers : data.headers.slice(0, 10);
+
   return (
     <BaseCard
       id="h2Tags"
@@ -24,14 +27,14 @@ export default function H2TagsCard({
         <div className="flex justify-between items-center">
           <span>Total H2 Tags:</span>
           <span
-            className={data.count > 20 ? "text-yellow-500" : "text-green-500"}
+            className={data.count > 20 ? "text-yellow-700" : "text-green-700"}
           >
             {data.count}
           </span>
         </div>
         <div className="flex justify-between items-center">
           <span>Status:</span>
-          <span className={data.hasH2 ? "text-green-500" : "text-red-500"}>
+          <span className={data.hasH2 ? "text-green-700" : "text-red-500"}>
             {data.hasH2 ? "Present ✓" : "Missing ✕"}
           </span>
         </div>
@@ -39,12 +42,34 @@ export default function H2TagsCard({
           <div className="mt-2">
             <span className="font-medium">H2 Values:</span>
             <ul className="mt-1 space-y-1">
-              {data.headers.map((header, index) => (
+              {displayedHeaders.map((header, index) => (
                 <li key={index} className="break-words">
                   {header.text}
                 </li>
               ))}
             </ul>
+            {data.headers.length > 10 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="w-4 h-4" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Show Less
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Show {data.headers.length - 10} More
+                    </span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         )}
       </div>

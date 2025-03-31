@@ -14,6 +14,10 @@ import {
   Settings,
   Eye,
   EyeOff,
+  LayoutGrid,
+  LayoutPanelLeft,
+  LayoutPanelTop,
+  Rows2,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -32,7 +36,7 @@ function SEOAudit() {
   });
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
   const [data, setData] = useState(mockData);
-
+  const [layout, setLayout] = useState("grid");
   useEffect(() => {
     const fetchAnalysisData = async () => {
       console.log("hello", url);
@@ -103,6 +107,7 @@ function SEOAudit() {
             setFocusedCardId={setFocusedCardId}
             alwaysShowTooltips={alwaysShowTooltips}
             data={data}
+            statusFilters={statusFilters}
           />
         </div>
         <div className="py-4">
@@ -149,18 +154,41 @@ function SEOAudit() {
               </div>
 
               <div className="flex flex-wrap gap-4">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setLayout("grid")}
+                    aria-label="grid layout"
+                    className="cursor-pointer"
+                  >
+                    <LayoutGrid
+                      size={22}
+                      color={layout === "grid" ? "black" : "gray"}
+                    />
+                  </button>
+                  <button
+                    className="cursor-pointer"
+                    aria-label="row layout"
+                    onClick={() => setLayout("row")}
+                  >
+                    <Rows2
+                      size={22}
+                      color={layout === "row" ? "black" : "gray"}
+                    />
+                  </button>
+                </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center space-x-2">
                     <Checkbox
+                    className="cursor-pointer"
                       id="normal"
                       checked={statusFilters.normal}
                       onCheckedChange={() => handleFilterChange("normal")}
                     />
                     <label
                       htmlFor="normal"
-                      className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="flex cursor-pointer items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-green-600"></span>
                       Normal
                     </label>
                   </div>
@@ -168,12 +196,13 @@ function SEOAudit() {
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="warning"
+                      className="cursor-pointer"
                       checked={statusFilters.warning}
                       onCheckedChange={() => handleFilterChange("warning")}
                     />
                     <label
                       htmlFor="warning"
-                      className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="flex cursor-pointer items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
                       Warning
@@ -182,13 +211,14 @@ function SEOAudit() {
 
                   <div className="flex items-center space-x-2">
                     <Checkbox
+                    className="cursor-pointer"
                       id="error"
                       checked={statusFilters.error}
                       onCheckedChange={() => handleFilterChange("error")}
                     />
                     <label
                       htmlFor="error"
-                      className="flex items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="flex items-center cursor-pointer gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
                       <span className="w-2 h-2 rounded-full bg-red-500"></span>
                       Error
@@ -217,11 +247,18 @@ function SEOAudit() {
           </div>
 
           {/* Grid Layout */}
-          <div className="gap-2.5 grid xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+          <div
+            className={`gap-2.5 grid ${
+              layout === "grid"
+                ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
+                : "grid-cols-1 max-w-[700px] m-auto"
+            } `}
+          >
             {mockData
               .filter((card) => statusFilters[card.status])
               .map((card, index) => {
                 const CardComponent = cardComponents[card.type];
+                console.log("search for card: ", card.type, CardComponent);
                 if (!CardComponent) return null;
 
                 return (

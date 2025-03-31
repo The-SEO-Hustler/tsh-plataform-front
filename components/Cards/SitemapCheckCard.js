@@ -1,7 +1,7 @@
 import React from "react";
 import { Map } from "lucide-react";
 import BaseCard from "./BaseCard";
-
+import { iconMapping } from "@/app/seo-audit/config";
 export default function SitemapCheckCard({
   data,
   status,
@@ -16,7 +16,7 @@ export default function SitemapCheckCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="Sitemap Check"
-      icon={Map}
+      icon={iconMapping.sitemapCheck}
       analysis={analysis}
     >
       <div className="space-y-2 text-sm">
@@ -24,7 +24,7 @@ export default function SitemapCheckCard({
           <span>Found in Robots.txt:</span>
           <span
             className={
-              data.foundInRobots ? "text-green-500" : "text-yellow-500"
+              data.foundInRobots ? "text-green-700" : "text-yellow-700"
             }
           >
             {data.foundInRobots ? "Yes ✓" : "No ✕"}

@@ -1,8 +1,14 @@
 import React from "react";
 import BaseCard from "./BaseCard";
-import { Network } from "lucide-react";
+import { iconMapping } from "@/app/seo-audit/config";
 
-export default function DomSizeCheckCard({ data, status, analysis, onFocus, isFocused }) {
+export default function DomSizeCheckCard({
+  data,
+  status,
+  analysis,
+  onFocus,
+  isFocused,
+}) {
   const { totalNodes, maxDepth } = data;
 
   return (
@@ -12,7 +18,7 @@ export default function DomSizeCheckCard({ data, status, analysis, onFocus, isFo
       isFocused={isFocused}
       onFocus={onFocus}
       title="DOM Size Check"
-      icon={Network}
+      icon={iconMapping.domSizeCheck}
       analysis={analysis}
     >
       <div className="space-y-4">
@@ -25,9 +31,7 @@ export default function DomSizeCheckCard({ data, status, analysis, onFocus, isFo
           </div>
           <div className="p-4 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-600 mb-1">Max Depth</div>
-            <div className="text-lg font-medium text-gray-900">
-              {maxDepth}
-            </div>
+            <div className="text-lg font-medium text-gray-900">{maxDepth}</div>
           </div>
         </div>
 
@@ -41,4 +45,4 @@ export default function DomSizeCheckCard({ data, status, analysis, onFocus, isFo
       </div>
     </BaseCard>
   );
-} 
+}

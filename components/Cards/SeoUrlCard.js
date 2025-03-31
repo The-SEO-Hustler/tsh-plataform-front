@@ -1,6 +1,6 @@
 import React from "react";
 import BaseCard from "./BaseCard";
-import { Globe } from "lucide-react";
+import { iconMapping } from "@/app/seo-audit/config";
 
 export default function SeoUrlCard({
   data,
@@ -18,7 +18,7 @@ export default function SeoUrlCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="SEO URL Check"
-      icon={Globe}
+      icon={iconMapping["seo-url"]}
       analysis={analysis}
     >
       <div className="space-y-4">

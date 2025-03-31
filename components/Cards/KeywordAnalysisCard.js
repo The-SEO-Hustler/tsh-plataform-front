@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { Gauge } from "lucide-react";
+import { Gauge, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { commonOptions } from "@/app/lib/commonOptions";
+import { iconMapping } from "@/app/seo-audit/config";
 
 export default function KeywordAnalysisCard({
   data,
@@ -11,6 +12,11 @@ export default function KeywordAnalysisCard({
   onFocus,
   analysis,
 }) {
+  const [showAll, setShowAll] = useState(false);
+  const displayedKeywords = showAll 
+    ? data.keywordUsage 
+    : data.keywordUsage.slice(0, 3);
+
   const chartData = {
     labels: data.topKeywords.map((k) => k.word),
     datasets: [
@@ -29,7 +35,7 @@ export default function KeywordAnalysisCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="Keyword Analysis"
-      icon={Gauge}
+      icon={iconMapping.keywordAnalysis}
       analysis={analysis}
     >
       <div className="space-y-4 text-sm">
@@ -50,7 +56,7 @@ export default function KeywordAnalysisCard({
           <div>
             <span className="font-medium">Keyword Usage:</span>
             <ul className="mt-1 space-y-1">
-              {data.keywordUsage.map((keyword, index) => (
+              {displayedKeywords.map((keyword, index) => (
                 <li key={index} className="flex justify-between items-center">
                   <span>{keyword.word}</span>
                   <span className="text-gray-500">
@@ -59,6 +65,26 @@ export default function KeywordAnalysisCard({
                 </li>
               ))}
             </ul>
+            {data.keywordUsage.length > 3 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="w-4 h-4" />
+                    <span className="text-sm font-medium text-gray-700">Show Less</span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Show {data.keywordUsage.length - 3} More
+                    </span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         )}
       </div>

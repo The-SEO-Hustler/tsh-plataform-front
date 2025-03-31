@@ -1,7 +1,6 @@
 import React from "react";
 import { Server } from "lucide-react";
 import BaseCard from "./BaseCard";
-
 export default function SitemapCard({
   data,
   status,

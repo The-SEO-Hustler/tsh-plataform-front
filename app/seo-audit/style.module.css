@@ -62,13 +62,20 @@
   /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); */
 }
 .cardError .cardHeading {
-  border-bottom: 1px solid oklch(0.637 0.237 25.331);
+  border-bottom: 1px solid oklch(0.637 0.237 25.331) !important;
+  color: oklch(0.637 0.237 25.331) !important;
 }
 .cardWarning .cardHeading {
-  border-bottom: 1px solid oklch(0.554 0.135 66.442);
+  border-bottom: 1px solid oklch(0.554 0.135 66.442) !important;
+  color: oklch(0.554 0.135 66.442) !important;
 }
 .cardNormal .cardHeading {
   border-bottom: 1px solid #c3c3c3;
+}
+.cardNormal,
+.cardError,
+.cardWarning {
+  color: oklch(0.446 0.03 256.802);
 }
 
 .card:not(.cardWarning):not(.cardError) .cardDescription {

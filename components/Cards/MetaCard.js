@@ -22,7 +22,7 @@ export default function MetaCard({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between">
           <span>Title Tag</span>
-          <span className="text-green-500">✓</span>
+          <span className="text-green-700">✓</span>
         </div>
         <div className="flex justify-between">
           <span>Meta Description</span>
@@ -30,7 +30,7 @@ export default function MetaCard({
         </div>
         <div className="flex justify-between">
           <span>Robots.txt</span>
-          <span className="text-green-500">✓</span>
+          <span className="text-green-700">✓</span>
         </div>
       </div>
     </BaseCard>

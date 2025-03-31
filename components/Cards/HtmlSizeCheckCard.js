@@ -1,8 +1,15 @@
 import React from "react";
 import BaseCard from "./BaseCard";
 import { FileText } from "lucide-react";
+import { iconMapping } from "@/app/seo-audit/config";
 
-export default function HtmlSizeCheckCard({ data, status, analysis, onFocus, isFocused }) {
+export default function HtmlSizeCheckCard({
+  data,
+  status,
+  analysis,
+  onFocus,
+  isFocused,
+}) {
   const { sizeInBytes, sizeInKB } = data;
 
   return (
@@ -12,7 +19,7 @@ export default function HtmlSizeCheckCard({ data, status, analysis, onFocus, isF
       isFocused={isFocused}
       onFocus={onFocus}
       title="HTML Size Check"
-      icon={FileText}
+      icon={iconMapping.htmlSizeCheck}
       analysis={analysis}
     >
       <div className="space-y-4">
@@ -41,4 +48,4 @@ export default function HtmlSizeCheckCard({ data, status, analysis, onFocus, isF
       </div>
     </BaseCard>
   );
-} 
+}

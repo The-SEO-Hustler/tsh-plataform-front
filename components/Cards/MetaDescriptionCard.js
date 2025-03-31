@@ -27,7 +27,7 @@ export default function MetaDescriptionCard({
           <span>Length:</span>
           <span
             className={`${
-              data.length > 160 ? "text-yellow-500" : "text-green-500"
+              data.length > 160 ? "text-yellow-700" : "text-green-700"
             }`}
           >
             {data.length} characters
@@ -35,7 +35,7 @@ export default function MetaDescriptionCard({
         </div>
         <div className="flex justify-between items-center">
           <span>Status:</span>
-          <span className={data.isPresent ? "text-green-500" : "text-red-500"}>
+          <span className={data.isPresent ? "text-green-700" : "text-red-700"}>
             {data.isPresent ? "Present ✓" : "Missing ✕"}
           </span>
         </div>

@@ -34,7 +34,7 @@ export default function FaviconCheckCard({
             <div className="flex items-center justify-center gap-2">
               <span
                 className={`w-2 h-2 rounded-full ${
-                  faviconPresent ? "bg-green-500" : "bg-red-500"
+                  faviconPresent ? "bg-green-700" : "bg-red-500"
                 }`}
               />
               <span className="text-sm font-medium text-gray-700">

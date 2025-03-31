@@ -28,7 +28,7 @@ export default function RobotsTxtCard({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
           <span>Status:</span>
-          <span className={data.exists ? "text-green-500" : "text-red-500"}>
+          <span className={data.exists ? "text-green-700" : "text-red-500"}>
             {data.exists ? "Present ✓" : "Missing ✕"}
           </span>
         </div>

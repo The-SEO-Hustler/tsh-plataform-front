@@ -1,6 +1,7 @@
-import React from "react";
-import { Image } from "lucide-react";
+import React, { useState } from "react";
+import { Image, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
+import { iconMapping } from "@/app/seo-audit/config";
 
 export default function ImageAltCard({
   data,
@@ -9,6 +10,11 @@ export default function ImageAltCard({
   onFocus,
   analysis,
 }) {
+  const [showAll, setShowAll] = useState(false);
+  const displayedImages = showAll
+    ? data.imagesWithoutAlt
+    : data.imagesWithoutAlt.slice(0, 6);
+
   return (
     <BaseCard
       id="image-alt"
@@ -16,7 +22,7 @@ export default function ImageAltCard({
       isFocused={isFocused}
       onFocus={onFocus}
       title="Image Alt Text"
-      icon={Image}
+      icon={iconMapping["image-alt"]}
       analysis={analysis}
     >
       <div className="space-y-2 text-sm">
@@ -26,25 +32,44 @@ export default function ImageAltCard({
         </div>
         <div className="flex justify-between items-center">
           <span>Images with Alt:</span>
-          <span className="text-green-500">{data.imagesWithAlt}</span>
+          <span className="text-green-700">{data.imagesWithAlt}</span>
         </div>
         {data.imagesWithoutAlt && data.imagesWithoutAlt.length > 0 && (
           <div className="mt-2">
-            <span className="font-medium text-yellow-500">
-              Images Without Alt Text:
-            </span>
-            <ul className="mt-1 grid-cols-2 grid items-center gap-1">
-              {data.imagesWithoutAlt.map((image, index) => (
+            <span className="font-medium ">Images Without Alt Text:</span>
+            <ul className="mt-2 grid grid-cols-3 gap-1">
+              {displayedImages.map((image, index) => (
                 <li
                   key={index}
                   className="break-words border border-black rounded-md overflow-hidden
-                   h-full flex items-center"
+                   h-full flex items-center aspect-square"
                 >
-                  <img src={image.src} />
-                  {/* {image.src.slice()} */}
+                  <img src={image.src} alt={`Image ${index + 1}`} />
                 </li>
               ))}
             </ul>
+            {data.imagesWithoutAlt.length > 6 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="w-4 h-4" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Show Less
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Show {data.imagesWithoutAlt.length - 6} More
+                    </span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         )}
       </div>

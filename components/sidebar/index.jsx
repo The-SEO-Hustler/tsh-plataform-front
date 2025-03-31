@@ -16,7 +16,7 @@ const statusClasses = {
   normal: "!bg-white md:!bg-white/70 !hover:bg-white",
 };
 
-function Sidebar({ setFocusedCardId, alwaysShowTooltips, data }) {
+function Sidebar({ setFocusedCardId, alwaysShowTooltips, data, statusFilters }) {
   const handleFocusCard = (id) => {
     setFocusedCardId(id);
     const cardEl = document.getElementById(id);
@@ -41,13 +41,15 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips, data }) {
     }
   };
 
-  // Generate buttons from data
-  const buttons = data.map((item) => ({
-    id: item.type,
-    tooltipText: item?.type?.replace(/([A-Z])/g, " $1").trim(),
-    Icon: getIconComponent(item?.type),
-    status: item.status || "normal",
-  }));
+  // Generate buttons from data and filter based on statusFilters
+  const buttons = data
+    .filter((item) => statusFilters[item.status || "normal"])
+    .map((item) => ({
+      id: item.type,
+      tooltipText: item?.type?.replace(/([A-Z])/g, " $1").trim(),
+      Icon: getIconComponent(item?.type),
+      status: item.status || "normal",
+    }));
 
   // compute prioritizedButtons before rendering the mobile SpeedDial
   const errorWarningButtons = buttons.filter(
@@ -144,7 +146,7 @@ function SidebarButton({
               <span className="w-2 h-2 rounded-full bg-red-500" />
             )}
             {status === "warning" && (
-              <span className="w-2 h-2 rounded-full bg-yellow-500" />
+              <span className="w-2 h-2 rounded-full bg-yellow-700" />
             )}
             {tooltipText}
           </div>

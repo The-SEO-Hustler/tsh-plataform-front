@@ -2,8 +2,8 @@ import React from "react";
 import s from "@/app/seo-audit/style.module.css";
 
 const statusClasses = {
-  error: `!bg-red-100/90 text-red-500 hover:bg-red-200  ${s.cardError}`,
-  warning: `!bg-yellow-100/90 text-yellow-700 hover:bg-yellow-200  ${s.cardWarning}`,
+  error: `!bg-red-100/90  hover:bg-red-200  ${s.cardError}`,
+  warning: `!bg-yellow-100/90  hover:bg-yellow-200  ${s.cardWarning}`,
   normal: `${s.cardNormal}`,
 };
 
@@ -24,7 +24,6 @@ export default function BaseCard({
         isFocused ? s.focused : ""
       } ${className}`}
       id={id}
-      onClick={() => onFocus(id)}
     >
       <div>
         <div

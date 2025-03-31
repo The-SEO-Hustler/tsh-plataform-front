@@ -1,9 +1,12 @@
-import React from "react";
-import { Heading1 } from "lucide-react";
+import React, { useState } from "react";
+import { Heading1, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { iconMapping } from "@/app/seo-audit/config";
 
 export default function H1Card({ data, status, isFocused, onFocus, analysis }) {
+  const [showAll, setShowAll] = useState(false);
+  const displayedValues = showAll ? data.value : data.value.slice(0, 10);
+
   return (
     <BaseCard
       id="h1"
@@ -18,7 +21,7 @@ export default function H1Card({ data, status, isFocused, onFocus, analysis }) {
         <div className="flex justify-between items-center">
           <span>Total H1 Tags:</span>
           <span
-            className={data.length > 1 ? "text-yellow-500" : "text-green-500"}
+            className={data.length > 1 ? "text-yellow-700" : "text-green-700"}
           >
             {data.length}
           </span>
@@ -26,12 +29,34 @@ export default function H1Card({ data, status, isFocused, onFocus, analysis }) {
         <div className="mt-2">
           <span className="font-medium">H1 Values:</span>
           <ul className="mt-1 space-y-1">
-            {/* {data.values.map((value, index) => (
+            {displayedValues.map((value, index) => (
               <li key={index} className="break-words">
                 {value || "(empty)"}
               </li>
-            ))} */}
+            ))}
           </ul>
+          {data.value.length > 10 && (
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+            >
+              {showAll ? (
+                <>
+                  <ChevronUp className="w-4 h-4" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Show Less
+                  </span>
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Show {data.value.length - 10} More
+                  </span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </BaseCard>
