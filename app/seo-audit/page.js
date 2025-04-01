@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import Container from "@/components/container";
 import s from "./style.module.css";
 import Sidebar from "@/components/sidebar";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { cardComponents, mockData } from "./config";
 import {
@@ -21,53 +21,67 @@ import {
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
-  const score = 75;
   const [analysisData, setAnalysisData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const searchParams = useSearchParams();
-  const url = searchParams.get("url");
+  const router = useRouter();
+  const docId = searchParams.get("id");
   const [statusFilters, setStatusFilters] = useState({
     normal: true,
     warning: true,
     error: true,
   });
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
-  const [data, setData] = useState(mockData);
   const [layout, setLayout] = useState("grid");
-  useEffect(() => {
-    const fetchAnalysisData = async () => {
-      console.log("hello", url);
-      try {
-        const response = await fetch(`/api/analyze`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url }),
-        });
 
-        const data = await response.json();
-        console.log("hello", data);
-        // setAnalysisData(data);
-        // localStorage.setItem('seoAnalysisData', JSON.stringify(data));
-        // setData(data);
-      } catch (error) {
-        console.error("Error fetching analysis:", error);
-        // Handle error
-      } finally {
+  useEffect(() => {
+    if (!docId) {
+      router.push("/");
+      return;
+    }
+
+    // Listen for changes to the document
+    const unsubscribe = onSnapshot(doc(db, "seoAnalyses", docId), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+
+        if (data.status === "completed") {
+          setAnalysisData(data.data);
+          setLoading(false);
+          unsubscribe();
+        } else if (data.status === "failed") {
+          setError(data.error || "Analysis failed. Please try again.");
+          setLoading(false);
+          unsubscribe();
+        } else {
+          // Status is 'pending'
+          setLoading(true);
+        }
+      } else {
+        setError("Analysis document not found");
         setLoading(false);
+        unsubscribe();
       }
-    };
-    fetchAnalysisData();
-  }, [url]);
+    });
+    // Optionally, implement a timeout to auto-unsubscribe after a period of inactivity
+    const timeout = setTimeout(() => {
+      setError("Timeout");
+      unsubscribe();
+    }, 600000); // 600 seconds timeout, adjust as needed
+
+    return () => unsubscribe();
+  }, [docId, router]);
 
   const handleExportReport = () => {
     const exportData = {
       timestamp: new Date().toISOString(),
-      score: score,
+      score: 75,
       cards: mockData, // This comes from your config.js
     };
 
@@ -91,6 +105,22 @@ function SEOAudit() {
     }));
   };
 
+  if (error) {
+    return (
+      <Container>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+            <p className="text-gray-600">{error}</p>
+            <Button onClick={() => router.push("/")} className="mt-4">
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -106,7 +136,7 @@ function SEOAudit() {
           <Sidebar
             setFocusedCardId={setFocusedCardId}
             alwaysShowTooltips={alwaysShowTooltips}
-            data={data}
+            data={analysisData}
             statusFilters={statusFilters}
           />
         </div>
@@ -119,7 +149,7 @@ function SEOAudit() {
                   <Award className="w-8 h-8 text-white" />
                 </div>
                 <div className="absolute -bottom-3 bg-white rounded-full px-2 py-1 text-sm font-bold border shadow-sm">
-                  {score}/100
+                  75/100
                 </div>
               </div>
               <div>
@@ -179,7 +209,7 @@ function SEOAudit() {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                    className="cursor-pointer"
+                      className="cursor-pointer"
                       id="normal"
                       checked={statusFilters.normal}
                       onCheckedChange={() => handleFilterChange("normal")}
@@ -211,7 +241,7 @@ function SEOAudit() {
 
                   <div className="flex items-center space-x-2">
                     <Checkbox
-                    className="cursor-pointer"
+                      className="cursor-pointer"
                       id="error"
                       checked={statusFilters.error}
                       onCheckedChange={() => handleFilterChange("error")}

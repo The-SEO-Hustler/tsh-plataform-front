@@ -1,21 +1,50 @@
+import { NextResponse } from "next/server";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
 export async function POST(request) {
-  const data = await request.json();
-
-  // await new Promise((resolve) => setTimeout(resolve, 10000));
-
   try {
-    // const response = await fetch('/my-backend', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ url })
-    // });
+    const { url } = await request.json();
 
-    // const result = await response.json();
-    const result = { message: "URL analyzed successfully" };
-    return Response.json(result);
+    // Create document in Firebase
+    const docRef = await addDoc(collection(db, "seoAnalyses"), {
+      url,
+      status: "pending",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    // Here you would call your backend service
+
+    const body = JSON.stringify({
+      url: url,
+      docId: docRef.id,
+    });
+
+    console.log("will request with ", body);
+
+    const backendResponse = await fetch(
+      `${process.env.API_ENDPOINT}/seo-check`,
+      {
+        method: "POST",
+        body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const response = await backendResponse.json();
+    console.log("response from back ", response);
+    return NextResponse.json({
+      docId: docRef.id,
+      ...response,
+    });
   } catch (error) {
-    return Response.json({ error: "Failed to analyze URL" }, { status: 500 });
+    console.error("Error in analyze route:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to start analysis" },
+      { status: 500 }
+    );
   }
 }

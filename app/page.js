@@ -12,18 +12,37 @@ import {
   Shield,
 } from "lucide-react";
 import Container from "@/components/container";
+
 export default function Home() {
   const [url, setUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
 
+    setIsLoading(true);
     try {
-      router.push(`/seo-audit?url=${encodeURIComponent(url)}`);
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        router.push(`/seo-audit?id=${data.docId}`);
+      } else {
+        throw new Error(data.error);
+      }
     } catch (error) {
-      console.error("Error analyzing URL:", error);
+      console.error("Error starting analysis:", error);
+      setIsLoading(false);
+      // Show error message to user
     }
   };
 
@@ -70,7 +89,7 @@ export default function Home() {
                 Get comprehensive insights and actionable recommendations to
                 improve your website&apos;s search engine rankings.
               </p>
-              <form onSubmit={handleSubmit} className="space-y-4 ">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="relative">
                   <input
                     type="url"
@@ -79,13 +98,15 @@ export default function Home() {
                     placeholder="Enter your website URL"
                     className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                     required
+                    disabled={isLoading}
                   />
                   <Button
                     type="submit"
                     size="lg"
                     className="absolute right-3 top-1/2 -translate-y-1/2"
+                    disabled={isLoading}
                   >
-                    Analyze
+                    {isLoading ? "Starting Analysis..." : "Analyze"}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
