@@ -9,15 +9,12 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { cardComponents } from "./config";
 import {
   Download,
-  RefreshCw,
   Award,
-  Settings,
   Eye,
   EyeOff,
   LayoutGrid,
-  LayoutPanelLeft,
-  LayoutPanelTop,
   Rows2,
+  Search,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -25,11 +22,13 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFReport from "@/components/PDFReport";
+import { Input } from "@/components/ui/input";
 
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const [analysisData, setAnalysisData] = useState([]);
   const [status, setStatus] = useState('initializing');
+  const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
@@ -42,6 +41,8 @@ function SEOAudit() {
   });
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
   const [layout, setLayout] = useState("grid");
+  const [isPdfGenerating, setIsPdfGenerating] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!docId) {
@@ -58,6 +59,7 @@ function SEOAudit() {
           setAnalysisData(data.data);
           setStatus(data.status);
           setLoading(false);
+          setUrl(data.url);
           unsubscribe();
         } else if (data.status === "failed") {
           setStatus(data.status);
@@ -77,12 +79,14 @@ function SEOAudit() {
     });
     // Optionally, implement a timeout to auto-unsubscribe after a period of inactivity
     const timeout = setTimeout(() => {
+      if(status !== 'completed'){
       setError("Timeout");
+      }
       unsubscribe();
     }, 600000); // 600 seconds timeout, adjust as needed
 
     return () => unsubscribe();
-  }, [docId, router]);
+  }, [docId, router, status]);
 
   const handleExportReport = () => {
     // Export JSON
@@ -105,17 +109,43 @@ function SEOAudit() {
     URL.revokeObjectURL(url);
   };
 
-  // Add a new function for PDF export
-  const handleExportPDF = () => {
-    // This will be handled by the PDFDownloadLink component
-  };
-
   const handleFilterChange = (status) => {
     setStatusFilters((prev) => ({
       ...prev,
       [status]: !prev[status],
     }));
   };
+
+  const filterDataBySearch = (data) => {
+    if (!searchQuery.trim()) return data;
+    
+    const query = searchQuery.toLowerCase();
+    return data.filter(item => {
+      // Check if the type contains the query
+      if (item.type.toLowerCase().includes(query)) return true;
+      
+      // Check if the analysis contains the query
+      // if (item.analysis && item.analysis.toLowerCase().includes(query)) return true;
+      
+      // Check if any data properties contain the query
+      if (item.data) {
+        // For objects, check if any string values contain the query
+        if (typeof item.data === 'object') {
+          return Object.values(item.data).some(value => 
+            typeof value === 'string' && value.toLowerCase().includes(query)
+          );
+        }
+      }
+      
+      return false;
+    });
+  };
+
+  const filteredData = filterDataBySearch(
+    analysisData.filter(card => statusFilters[card.status || 'normal'])
+  );
+
+ 
 
   if (error) {
     return (
@@ -148,7 +178,7 @@ function SEOAudit() {
           <Sidebar
             setFocusedCardId={setFocusedCardId}
             alwaysShowTooltips={alwaysShowTooltips}
-            data={analysisData}
+            data={filteredData}
             statusFilters={statusFilters}
           />
         </div>
@@ -166,7 +196,7 @@ function SEOAudit() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold mb-1">
-                  SEO Analysis Dashboard
+                  {url}
                 </h1>
                 <p className="text-muted-foreground text-sm">
                   Last updated: {new Date().toLocaleDateString()}
@@ -181,21 +211,16 @@ function SEOAudit() {
                 <Download className="w-4 h-4" />
                 <span className="hidden md:inline">Export JSON</span>
               </button>
-
               <PDFDownloadLink
                 document={<PDFReport data={analysisData} score={75} />}
                 fileName={`seo-report-${new Date().toLocaleDateString()}.pdf`}
                 className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors pointer"
               >
-                {({ blob, url, loading, error }) =>
-                  loading ? "Generating PDF..." : "Export PDF"
-                }
+                <Download className="w-4 h-4" />
+                <span className="hidden md:inline">Export PDF</span>
               </PDFDownloadLink>
 
-              <button className="px-4 py-2 border rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors pointer">
-                <RefreshCw className="w-4 h-4" />
-                <span className="hidden md:inline">Refresh Analysis</span>
-              </button>
+              
             </div>
           </div>
 
@@ -203,11 +228,20 @@ function SEOAudit() {
           <div className="mb-6 bg-gray-50 p-4 rounded-lg sticky top-0 z-[10]">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="lg:flex items-center gap-2 hidden">
-                <Settings className="w-5 h-5 text-gray-500" />
-                <span className="font-medium">Display Settings</span>
+              <div className="relative w-full md:w-64">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <Input
+                    type="text"
+                    placeholder="Search..."
+                    className="pl-10"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-4">
+               
                 <div className="hidden md:flex gap-2">
                   <button
                     onClick={() => setLayout("grid")}
@@ -308,24 +342,22 @@ function SEOAudit() {
                 : "grid-cols-1 max-w-[700px] m-auto"
             } `}
           >
-            {analysisData
-              .filter((card) => statusFilters[card.status])
-              .map((card, index) => {
-                const CardComponent = cardComponents[card.type];
-                console.log("search for card: ", card.type, CardComponent);
-                if (!CardComponent) return null;
+            {filteredData.map((card, index) => {
+              const CardComponent = cardComponents[card.type];
+              console.log("search for card: ", card.type, CardComponent);
+              if (!CardComponent) return null;
 
-                return (
-                  <CardComponent
-                    key={card.type}
-                    data={card.data}
-                    status={card.status}
-                    isFocused={focusedCardId === card.type}
-                    onFocus={setFocusedCardId}
-                    analysis={card.analysis}
-                  />
-                );
-              })}
+              return (
+                <CardComponent
+                  key={card.type}
+                  data={card.data}
+                  status={card.status}
+                  isFocused={focusedCardId === card.type}
+                  onFocus={setFocusedCardId}
+                  analysis={card.analysis}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

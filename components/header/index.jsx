@@ -46,11 +46,7 @@ function Header() {
         {/* Desktop Navigation */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <Link href="/seo-audit" legacyBehavior passHref>
-                <NavigationMenuLink>SEO Audit</NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
+            
             <NavigationMenuItem>
               <Link href="/reports" legacyBehavior passHref>
                 <NavigationMenuLink>Reports</NavigationMenuLink>
