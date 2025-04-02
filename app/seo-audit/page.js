@@ -23,10 +23,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PDFReport from "@/components/PDFReport";
 
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
-  const [analysisData, setAnalysisData] = useState(null);
+  const [analysisData, setAnalysisData] = useState([]);
+  const [status, setStatus] = useState('initializing');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
@@ -53,14 +56,17 @@ function SEOAudit() {
 
         if (data.status === "completed") {
           setAnalysisData(data.data);
+          setStatus(data.status);
           setLoading(false);
           unsubscribe();
         } else if (data.status === "failed") {
+          setStatus(data.status);
           setError(data.error || "Analysis failed. Please try again.");
           setLoading(false);
           unsubscribe();
         } else {
           // Status is 'pending'
+          setStatus(data.status);
           setLoading(true);
         }
       } else {
@@ -79,10 +85,11 @@ function SEOAudit() {
   }, [docId, router]);
 
   const handleExportReport = () => {
+    // Export JSON
     const exportData = {
       timestamp: new Date().toISOString(),
       score: 75,
-      cards: mockData, // This comes from your config.js
+      cards: analysisData,
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
@@ -96,6 +103,11 @@ function SEOAudit() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  // Add a new function for PDF export
+  const handleExportPDF = () => {
+    // This will be handled by the PDFDownloadLink component
   };
 
   const handleFilterChange = (status) => {
@@ -122,7 +134,7 @@ function SEOAudit() {
   }
 
   if (loading) {
-    return <LoadingScreen />;
+    return <LoadingScreen status={status} />;
   }
 
   return (
@@ -167,16 +179,28 @@ function SEOAudit() {
                 className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors pointer"
               >
                 <Download className="w-4 h-4" />
+                <span className="hidden md:inline">Export JSON</span>
               </button>
+
+              <PDFDownloadLink
+                document={<PDFReport data={analysisData} score={75} />}
+                fileName={`seo-report-${new Date().toLocaleDateString()}.pdf`}
+                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors pointer"
+              >
+                {({ blob, url, loading, error }) =>
+                  loading ? "Generating PDF..." : "Export PDF"
+                }
+              </PDFDownloadLink>
+
               <button className="px-4 py-2 border rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors pointer">
                 <RefreshCw className="w-4 h-4" />
-                Refresh Analysis
+                <span className="hidden md:inline">Refresh Analysis</span>
               </button>
             </div>
           </div>
 
           {/* Filter Section */}
-          <div className="mb-6 bg-gray-50 p-4 rounded-lg">
+          <div className="mb-6 bg-gray-50 p-4 rounded-lg sticky top-0 z-[10]">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="lg:flex items-center gap-2 hidden">
                 <Settings className="w-5 h-5 text-gray-500" />
@@ -184,7 +208,7 @@ function SEOAudit() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <div className="flex gap-2">
+                <div className="hidden md:flex gap-2">
                   <button
                     onClick={() => setLayout("grid")}
                     aria-label="grid layout"
@@ -206,8 +230,8 @@ function SEOAudit() {
                     />
                   </button>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center space-x-2">
+                <div className="flex items-center md:gap-4 gap-2">
+                  <div className="flex items-center space-x-1 md:space-x-2">
                     <Checkbox
                       className="cursor-pointer"
                       id="normal"
@@ -223,7 +247,7 @@ function SEOAudit() {
                     </label>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1 md:space-x-2">
                     <Checkbox
                       id="warning"
                       className="cursor-pointer"
@@ -239,7 +263,7 @@ function SEOAudit() {
                     </label>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1 md:space-x-2">
                     <Checkbox
                       className="cursor-pointer"
                       id="error"
