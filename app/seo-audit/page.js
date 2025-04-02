@@ -6,7 +6,7 @@ import s from "./style.module.css";
 import Sidebar from "@/components/sidebar";
 import { useSearchParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
-import { cardComponents, mockData } from "./config";
+import { cardComponents } from "./config";
 import {
   Download,
   RefreshCw,
@@ -284,7 +284,7 @@ function SEOAudit() {
                 : "grid-cols-1 max-w-[700px] m-auto"
             } `}
           >
-            {mockData
+            {analysisData
               .filter((card) => statusFilters[card.status])
               .map((card, index) => {
                 const CardComponent = cardComponents[card.type];
