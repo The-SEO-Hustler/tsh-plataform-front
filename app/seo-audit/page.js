@@ -77,15 +77,21 @@ function SEOAudit() {
         unsubscribe();
       }
     });
-    // Optionally, implement a timeout to auto-unsubscribe after a period of inactivity
+    
+    // Set a timeout to handle cases where the analysis takes too long
     const timeout = setTimeout(() => {
-      if(status !== 'completed'){
-      setError("Timeout");
+      // Only set error if status is not completed after timeout
+      if (status !== 'completed') {
+        setError("Analysis is taking longer than expected. Please try again later.");
+        setLoading(false);
+        unsubscribe();
       }
-      unsubscribe();
-    }, 600000); // 600 seconds timeout, adjust as needed
+    }, 600000); // 600 seconds timeout
 
-    return () => unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      unsubscribe();
+    };
   }, [docId, router, status]);
 
   const handleExportReport = () => {
