@@ -15,6 +15,9 @@ import {
   LayoutGrid,
   Rows2,
   Search,
+  Trophy,
+  Medal,
+  AlertCircle,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -31,6 +34,8 @@ function SEOAudit() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [score, setScore] = useState(0);
+  const [updatedAt, setUpdatedAt] = useState('');
   const searchParams = useSearchParams();
   const router = useRouter();
   const docId = searchParams.get("id");
@@ -41,7 +46,6 @@ function SEOAudit() {
   });
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
   const [layout, setLayout] = useState("grid");
-  const [isPdfGenerating, setIsPdfGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -60,7 +64,10 @@ function SEOAudit() {
           setStatus(data.status);
           setLoading(false);
           setUrl(data.url);
+          setScore(data?.score?.score);
+          setUpdatedAt(data?.updatedAt);
           unsubscribe();
+
         } else if (data.status === "failed") {
           setStatus(data.status);
           setError(data.error || "Analysis failed. Please try again.");
@@ -77,7 +84,7 @@ function SEOAudit() {
         unsubscribe();
       }
     });
-    
+
     // Set a timeout to handle cases where the analysis takes too long
     const timeout = setTimeout(() => {
       // Only set error if status is not completed after timeout
@@ -124,25 +131,25 @@ function SEOAudit() {
 
   const filterDataBySearch = (data) => {
     if (!searchQuery.trim()) return data;
-    
+
     const query = searchQuery.toLowerCase();
     return data.filter(item => {
       // Check if the type contains the query
       if (item.type.toLowerCase().includes(query)) return true;
-      
+
       // Check if the analysis contains the query
       // if (item.analysis && item.analysis.toLowerCase().includes(query)) return true;
-      
+
       // Check if any data properties contain the query
       if (item.data) {
         // For objects, check if any string values contain the query
         if (typeof item.data === 'object') {
-          return Object.values(item.data).some(value => 
+          return Object.values(item.data).some(value =>
             typeof value === 'string' && value.toLowerCase().includes(query)
           );
         }
       }
-      
+
       return false;
     });
   };
@@ -151,7 +158,44 @@ function SEOAudit() {
     analysisData.filter(card => statusFilters[card.status || 'normal'])
   );
 
- 
+  const getScoreAppearance = (score) => {
+    if (score >= 90) {
+      return {
+        icon: Trophy,
+        gradient: "from-emerald-500 to-emerald-400",
+        textColor: "text-emerald-600",
+        borderColor: "border-emerald-200",
+        bgColor: "bg-emerald-50",
+      };
+    } else if (score >= 75) {
+      return {
+        icon: Award,
+        gradient: "from-blue-500 to-blue-400",
+        textColor: "text-blue-600",
+        borderColor: "border-blue-200",
+        bgColor: "bg-blue-50",
+      };
+    } else if (score >= 50) {
+      return {
+        icon: Medal,
+        gradient: "from-amber-500 to-amber-400",
+        textColor: "text-amber-600",
+        borderColor: "border-amber-200",
+        bgColor: "bg-amber-50",
+      };
+    } else {
+      return {
+        icon: AlertCircle,
+        gradient: "from-red-500 to-red-400",
+        textColor: "text-red-600",
+        borderColor: "border-red-200",
+        bgColor: "bg-red-50",
+      };
+    }
+  };
+
+  const scoreAppearance = getScoreAppearance(score);
+  const ScoreIcon = scoreAppearance.icon;
 
   if (error) {
     return (
@@ -193,11 +237,11 @@ function SEOAudit() {
           <div className="flex flex-col gap-5 md:gap-2 md:flex-row md:items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center">
-                  <Award className="w-8 h-8 text-white" />
+                <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${scoreAppearance.gradient} flex items-center justify-center shadow-lg`}>
+                  <ScoreIcon className="w-8 h-8 text-white" />
                 </div>
-                <div className="absolute -bottom-3 bg-white rounded-full px-2 py-1 text-sm font-bold border shadow-sm">
-                  75/100
+                <div className={`absolute -bottom-3 ${scoreAppearance.bgColor} rounded-full px-3 py-1 text-sm font-bold border ${scoreAppearance.borderColor} shadow-sm ${scoreAppearance.textColor}`}>
+                  {score ? score : 'N/A'}/100
                 </div>
               </div>
               <div>
@@ -205,14 +249,20 @@ function SEOAudit() {
                   {url}
                 </h1>
                 <p className="text-muted-foreground text-sm">
-                  Last updated: {new Date().toLocaleDateString()}
+                  Last updated: {updatedAt ? new Date(updatedAt.seconds * 1000).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }) : 'N/A'}
                 </p>
               </div>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={handleExportReport}
-                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors pointer"
+                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span className="hidden md:inline">Export JSON</span>
@@ -220,13 +270,13 @@ function SEOAudit() {
               <PDFDownloadLink
                 document={<PDFReport data={analysisData} score={75} />}
                 fileName={`seo-report-${new Date().toLocaleDateString()}.pdf`}
-                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors pointer"
+                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span className="hidden md:inline">Export PDF</span>
               </PDFDownloadLink>
 
-              
+
             </div>
           </div>
 
@@ -234,7 +284,7 @@ function SEOAudit() {
           <div className="mb-6 bg-gray-50 p-4 rounded-lg sticky top-0 z-[10]">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="lg:flex items-center gap-2 hidden">
-              <div className="relative w-full md:w-64">
+                <div className="relative w-full md:w-64">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
                   <Input
                     type="text"
@@ -247,7 +297,7 @@ function SEOAudit() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-               
+
                 <div className="hidden md:flex gap-2">
                   <button
                     onClick={() => setLayout("grid")}
@@ -342,11 +392,10 @@ function SEOAudit() {
 
           {/* Grid Layout */}
           <div
-            className={`gap-2.5 grid ${
-              layout === "grid"
-                ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
-                : "grid-cols-1 max-w-[700px] m-auto"
-            } `}
+            className={`gap-2.5 grid ${layout === "grid"
+              ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
+              : "grid-cols-1 max-w-[700px] m-auto"
+              } `}
           >
             {filteredData.map((card, index) => {
               const CardComponent = cardComponents[card.type];

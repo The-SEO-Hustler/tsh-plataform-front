@@ -146,7 +146,11 @@ function SidebarButton({
               <span className="w-2 h-2 rounded-full bg-red-500" />
             )}
             {status === "warning" && (
-              <span className="w-2 h-2 rounded-full bg-yellow-700" />
+              <span className="w-2 h-2 rounded-full bg-yellow-500" />
+            )}
+            
+            {status === "normal" && (
+              <span className="w-2 h-2 rounded-full bg-green-500" />
             )}
             {tooltipText}
           </div>

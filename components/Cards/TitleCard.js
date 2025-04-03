@@ -25,7 +25,7 @@ export default function TitleCard({
         <div className="flex items-center justify-between ">
           <span className="text-sm text-gray-600">Title Length:</span>
           <span
-            className={` ${length > 60 ? "text-red-600" : "text-green-600"}`}
+            className={` ${length > 60 ? "text-red-600" : "text-green-700"}`}
           >
             {length} characters
           </span>

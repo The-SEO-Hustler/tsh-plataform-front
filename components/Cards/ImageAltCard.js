@@ -41,10 +41,10 @@ export default function ImageAltCard({
               {displayedImages.map((image, index) => (
                 <li
                   key={index}
-                  className="break-words border border-black rounded-md overflow-hidden
+                  className="break-words border rounded-md overflow-hidden
                    h-full flex items-center aspect-square"
                 >
-                  <img src={image.src} alt={`Image ${index + 1}`} />
+                  <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover" />
                 </li>
               ))}
             </ul>

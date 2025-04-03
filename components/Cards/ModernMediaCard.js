@@ -46,17 +46,25 @@ export default function ModernMediaCard({
           <h4 className="text-sm font-medium text-gray-700">Image Details:</h4>
           <div className="space-y-2">
             {displayedImages.map((image, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-700">
-                    Format: {image.extension || "Unknown"}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    {image.extension ? "Modern" : "Legacy"}
-                  </span>
+              <div key={index} className="p-3 bg-gray-50 rounded-lg flex items-center gap-2">
+
+                <div className="w-10 h-10">
+                  <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover rounded-xs" />
                 </div>
-                <div className="text-xs text-gray-600 truncate">
-                  {image.src}
+
+                <div>
+
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-700">
+                      Format: {image.extension || "Unknown"}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {image.extension === "webp" || image.extension === "avif" ? "Modern" : "Legacy"}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-600 truncate max-w-[200px]">
+                    {image.src}
+                  </div>
                 </div>
               </div>
             ))}
