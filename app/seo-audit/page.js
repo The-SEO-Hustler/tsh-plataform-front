@@ -281,7 +281,7 @@ function SEOAudit() {
           </div>
 
           {/* Filter Section */}
-          <div className="mb-6 bg-gray-50 p-4 rounded-lg sticky top-0 z-[10]">
+          <div className="mb-6 bg-gray-50 p-4 rounded-lg sticky top-1 border border-gray-300 shadow-sm z-[10]">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="lg:flex items-center gap-2 hidden">
                 <div className="relative w-full md:w-64">

@@ -52,7 +52,7 @@ export default function ModernMediaCard({
                   <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover rounded-xs" />
                 </div>
 
-                <div>
+                <div className="flex-1 min-w-0">
 
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-medium text-gray-700">
@@ -62,7 +62,7 @@ export default function ModernMediaCard({
                       {image.extension === "webp" || image.extension === "avif" ? "Modern" : "Legacy"}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600 truncate max-w-[200px]">
+                  <div className="text-xs text-gray-600 truncate w-full max-w-full">
                     {image.src}
                   </div>
                 </div>
