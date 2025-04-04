@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { statusMessages } from "@/app/lib/statusMessages";
 import { getScoreAppearance } from "@/app/lib/getScoreAppearance";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 export default function AnalysisStatusCard() {
   const { currentAnalysis, removeAnalysis } = useFirebase();
@@ -80,9 +82,21 @@ export default function AnalysisStatusCard() {
        
       </div>
       
+      <div className="flex items-center gap-2">
+
       <p className="text-sm text-gray-600 mb-3 truncate">
         {currentAnalysis.url}
       </p>
+      <button onClick={() => {
+        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${currentAnalysis.docId}`)
+        toast.success("Link to analysis copied to clipboard")
+      }
+      }
+      className="cursor-pointer mb-2"
+      >
+        <Copy className="h-4 w-4" color="#101828" />
+      </button>
+      </div>
       
       
       
@@ -117,9 +131,9 @@ export default function AnalysisStatusCard() {
       {(currentAnalysis.status === "completed" || currentAnalysis.status === "failed") && (
       <button 
         onClick={() => removeAnalysis()}
-        className="flex absolute top-0 left-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:bg-gray-100"
+        className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:bg-gray-100"
       >
-        <X className="h-4 w-4" color="gray"/> 
+        <X className="h-4 w-4" color="#101828"/> 
       </button>
       )}
     </div>

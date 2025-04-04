@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
             {children}
             <Footer />
             <AnalysisStatusCard />
-            <Toaster />
+            <Toaster position="top-right" />
           </FirebaseProvider>
         </AppRouterCacheProvider>
       </body>
