@@ -27,7 +27,7 @@ export default function LoadingScreen({ status = 'pending' }) {
       toast.info(
         <div className="flex flex-col gap-2">
           <p>You can leave this page while the process runs in the background.</p>
-          <p>You'll be notified when the process is complete.</p>
+          <p>You&apos;ll be notified when the process is complete.</p>
           <a href="/docs/seo-metrics" className="text-blue-500 underline">
             Learn more about SEO metrics
           </a>
