@@ -34,6 +34,8 @@ export const statusMessages = {
   'fetching': {
     title: 'Fetching Website Data',
     descriptions: [
+      'Launching the browser...',
+      'Opening the target website...',
       'Retrieving content from the target website...',
       'Downloading page resources...',
       'Crawling website structure...'
