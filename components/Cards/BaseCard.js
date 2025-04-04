@@ -20,9 +20,8 @@ export default function BaseCard({
 }) {
   return (
     <div
-      className={`${s.card} ${statusClasses[status]} ${
-        isFocused ? s.focused : ""
-      } ${className}`}
+      className={`${s.card} ${statusClasses[status]} ${isFocused ? s.focused : ""
+        } ${className}`}
       id={id}
     >
       <div>
@@ -34,7 +33,7 @@ export default function BaseCard({
         </div>
         {children}
       </div>
-      <p className={`mt-2 text-sm text-gray-600 ${s.cardDescription}`}>
+      <p className={`mt-2 text-sm text-gray-600 text-wrap word-break-all  overflow-hidden truncate ${s.cardDescription}`}>
         {analysis}
       </p>
     </div>
