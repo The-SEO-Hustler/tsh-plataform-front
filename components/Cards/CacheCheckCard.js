@@ -3,6 +3,7 @@ import BaseCard from "./BaseCard";
 import { CheckCircle } from "lucide-react";
 
 export default function CacheCheckCard({ data, status, analysis, onFocus, isFocused }) {
+  if (!data) return null;
   const { caching, headers } = data;
 
   return (

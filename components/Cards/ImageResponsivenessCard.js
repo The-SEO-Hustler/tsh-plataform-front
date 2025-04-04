@@ -20,7 +20,12 @@ export default function ImageResponsivenessCard({
   const [showAll, setShowAll] = useState(false);
 
 
-  const orderedDetails = details.sort((a, b) => a.score - b.score);
+  const orderedDetails = details.sort((a, b) => {
+    if (!a.score && b.score) return 1;
+    if (a.score && !b.score) return -1;
+    if (!a.score && !b.score) return 0;
+    return a.score - b.score;
+  });
   const displayedDetails = showAll ? orderedDetails : orderedDetails.slice(0, 2);
 
   const renderImageDetails = (detail) => (
@@ -100,7 +105,7 @@ export default function ImageResponsivenessCard({
                   >
                     {detail.score
                       ? `Score: ${detail.score}/100`
-                      : "Not initially loaded"}
+                      : "N/A"}
                   </span>
                   {/* Desktop Tooltip */}
                   <div className="hidden md:block">
