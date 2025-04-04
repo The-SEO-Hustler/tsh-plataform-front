@@ -49,7 +49,7 @@ export default function AnalysisStatusCard() {
       case "failed":
         return "Analysis failed";
       default:
-        return statusMessages[status].title;
+        return statusMessages[status]?.title;
     }
   };
 
@@ -71,23 +71,23 @@ export default function AnalysisStatusCard() {
     <div className="min-w-[275px] fixed bottom-4 right-4 bg-white rounded-lg shadow-lg py-5 px-7 max-w-md border border-gray-200 z-50">
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
-          <div className={`${currentAnalysis.status !== "completed" && currentAnalysis.status !== "failed" ? "animate-spin duration-2000" : ""}`}>
-            {getStatusIcon(currentAnalysis.status)}
+          <div className={`${currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed" ? "animate-spin duration-2000" : ""}`}>
+            {getStatusIcon(currentAnalysis?.status)}
           </div>
           <h3 className="font-medium text-gray-900">
-            {getStatusText(currentAnalysis.status)}
+            {getStatusText(currentAnalysis?.status)}
           </h3>
         </div>
       </div>
       
       <div className="flex items-center gap-2">
         <p className="text-sm text-gray-600 mb-3 truncate">
-          {currentAnalysis.url}
+          {currentAnalysis?.url}
         </p>
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${currentAnalysis.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${currentAnalysis?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}
@@ -97,20 +97,20 @@ export default function AnalysisStatusCard() {
         </button>
       </div>
       
-      {currentAnalysis.status === "failed" && currentAnalysis.error && (
+      {currentAnalysis?.status === "failed" && currentAnalysis?.error && (
         <div className="text-sm text-red-600 mb-3">
-          {currentAnalysis.error}
+          {currentAnalysis?.error}
         </div>
       )}
       
       <div className="flex justify-end items-center gap-2">
-        {currentAnalysis.status === "completed" && (
+        {currentAnalysis?.status === "completed" && (
           <div className="flex items-center gap-2 ">
             <div className={`text-xs font-medium px-2.5 py-0.5 rounded-md border ${scoreAppearance.borderColor} ${scoreAppearance.bgColor} ${scoreAppearance.textColor}`}>
               <div className={`${scoreAppearance.textColor} flex items-center gap-1`}>
                 <ScoreIcon size={14} />
                 <span>
-                  Score: {currentAnalysis.score || "N/A"}
+                  Score: {currentAnalysis?.score || "N/A"}
                 </span>
               </div>
             </div>
@@ -125,7 +125,7 @@ export default function AnalysisStatusCard() {
           <ExternalLink className="h-3 w-3" />
         </Button>
       </div>
-      {(currentAnalysis.status === "completed" || currentAnalysis.status === "failed") && (
+      {(currentAnalysis?.status === "completed" || currentAnalysis?.status === "failed") && (
         <button 
           onClick={() => removeAnalysis()}
           className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:bg-gray-100"
