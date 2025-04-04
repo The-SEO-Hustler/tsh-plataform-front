@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import Container from "../container";
 import { Button } from "@/components/ui/button";
@@ -18,8 +20,9 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
-
+import { useFirebase } from "@/lib/firebase-context";
 function Header() {
+  const { trackAnalysis, currentAnalysis } = useFirebase();
   return (
     <header className="border-b relative z-[999] bg-[#dcdcdc]">
       <Container className="h-16 flex items-center justify-between">
@@ -42,6 +45,9 @@ function Header() {
               ></path>
             </svg>
         </Link>
+        <div>
+          
+        </div>
 
         {/* Desktop Navigation */}
         <NavigationMenu className="hidden md:flex">

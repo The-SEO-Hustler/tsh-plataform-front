@@ -9,24 +9,22 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { cardComponents } from "./config";
 import {
   Download,
-  Award,
   Eye,
   EyeOff,
   LayoutGrid,
   Rows2,
   Search,
-  Trophy,
-  Medal,
-  AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFReport from "@/components/PDFReport";
 import { Input } from "@/components/ui/input";
-
+import { useFirebase } from "@/lib/firebase-context";
+import Link from "next/link";
+import { getScoreAppearance } from "../lib/getScoreAppearance";
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const [analysisData, setAnalysisData] = useState([]);
@@ -47,59 +45,101 @@ function SEOAudit() {
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
   const [layout, setLayout] = useState("grid");
   const [searchQuery, setSearchQuery] = useState('');
+  const { trackAnalysis, currentAnalysis } = useFirebase();
+
+
+  // useEffect(() => {
+  //   if (!docId) {
+  //     router.push("/");
+  //     return;
+  //   }
+
+  //   // Start tracking this analysis in the global context
+  //   trackAnalysis(docId, url);
+
+  //   // Set a timeout to show the browse message after 3 seconds
+  //   const browseMessageTimer = setTimeout(() => {
+  //     setShowBrowseMessage(true);
+  //   }, 3000);
+
+  //   // Listen for changes to the document
+  //   const unsubscribe = onSnapshot(doc(db, "seoAnalyses", docId), (doc) => {
+  //     if (doc.exists()) {
+  //       const data = doc.data();
+
+  //       if (data.status === "completed") {
+  //         setAnalysisData(data.data);
+  //         setStatus(data.status);
+  //         setLoading(false);
+  //         setUrl(data.url);
+  //         setScore(data?.score?.score);
+  //         data?.updatedAt ? setUpdatedAt(data?.updatedAt) : setUpdatedAt(data?.completedAt)
+  //         unsubscribe();
+
+  //       } else if (data.status === "failed") {
+  //         setStatus(data.status);
+  //         setError(data.error || "Analysis failed. Please try again.");
+  //         setLoading(false);
+  //         unsubscribe();
+  //       } else {
+  //         // Status is 'pending'
+  //         setStatus(data.status);
+  //         setLoading(true);
+  //       }
+  //     } else {
+  //       setError("Analysis document not found");
+  //       setLoading(false);
+  //       unsubscribe();
+  //     }
+  //   });
+
+  //   // Set a timeout to handle cases where the analysis takes too long
+  //   const timeout = setTimeout(() => {
+  //     // Only set error if status is not completed after timeout
+  //     if (status !== 'completed') {
+  //       setError("Analysis is taking longer than expected. Please try again later.");
+  //       setLoading(false);
+  //       unsubscribe();
+  //     }
+  //   }, 600000); // 600 seconds timeout
+
+  //   return () => {
+  //     clearTimeout(timeout);
+  //     clearTimeout(browseMessageTimer);
+  //     unsubscribe();
+  //   };
+  // }, [docId, router, status, trackAnalysis, url]);
 
   useEffect(() => {
     if (!docId) {
       router.push("/");
       return;
     }
+    // Start tracking this analysis in the global context.
+    // You can pass an initial URL if needed.
+    trackAnalysis(docId, url);
+  }, [docId, router, trackAnalysis, url]);
 
-    // Listen for changes to the document
-    const unsubscribe = onSnapshot(doc(db, "seoAnalyses", docId), (doc) => {
-      if (doc.exists()) {
-        const data = doc.data();
-
-        if (data.status === "completed") {
-          setAnalysisData(data.data);
-          setStatus(data.status);
-          setLoading(false);
-          setUrl(data.url);
-          setScore(data?.score?.score);
-          data?.updatedAt ? setUpdatedAt(data?.updatedAt) : setUpdatedAt(data?.completedAt)
-          unsubscribe();
-
-        } else if (data.status === "failed") {
-          setStatus(data.status);
-          setError(data.error || "Analysis failed. Please try again.");
-          setLoading(false);
-          unsubscribe();
-        } else {
-          // Status is 'pending'
-          setStatus(data.status);
-          setLoading(true);
-        }
+  // Listen for changes in the global analysis state.
+  useEffect(() => {
+    if (currentAnalysis) {
+      setStatus(currentAnalysis.status);
+      setAnalysisData(currentAnalysis.data || []);
+      setUrl(currentAnalysis.url || "");
+      setScore(currentAnalysis.score || 0);
+      setUpdatedAt(currentAnalysis.updatedAt || "");
+      // Stop loading when analysis is completed or failed.
+      if (currentAnalysis.status === "completed" || currentAnalysis.status === "failed") {
+        setLoading(false);
       } else {
-        setError("Analysis document not found");
-        setLoading(false);
-        unsubscribe();
+        setLoading(true);
       }
-    });
-
-    // Set a timeout to handle cases where the analysis takes too long
-    const timeout = setTimeout(() => {
-      // Only set error if status is not completed after timeout
-      if (status !== 'completed') {
-        setError("Analysis is taking longer than expected. Please try again later.");
-        setLoading(false);
-        unsubscribe();
+      if (currentAnalysis.error) {
+        setError(currentAnalysis.error);
       }
-    }, 600000); // 600 seconds timeout
+    }
+  }, [currentAnalysis]);
 
-    return () => {
-      clearTimeout(timeout);
-      unsubscribe();
-    };
-  }, [docId, router, status]);
 
   const handleExportReport = () => {
     // Export JSON
@@ -158,41 +198,7 @@ function SEOAudit() {
     analysisData.filter(card => statusFilters[card.status || 'normal'])
   );
 
-  const getScoreAppearance = (score) => {
-    if (score >= 90) {
-      return {
-        icon: Trophy,
-        gradient: "from-emerald-500 to-emerald-400",
-        textColor: "text-emerald-600",
-        borderColor: "border-emerald-200",
-        bgColor: "bg-emerald-50",
-      };
-    } else if (score >= 75) {
-      return {
-        icon: Award,
-        gradient: "from-blue-500 to-blue-400",
-        textColor: "text-blue-600",
-        borderColor: "border-blue-200",
-        bgColor: "bg-blue-50",
-      };
-    } else if (score >= 50) {
-      return {
-        icon: Medal,
-        gradient: "from-amber-500 to-amber-400",
-        textColor: "text-amber-600",
-        borderColor: "border-amber-200",
-        bgColor: "bg-amber-50",
-      };
-    } else {
-      return {
-        icon: AlertCircle,
-        gradient: "from-red-500 to-red-400",
-        textColor: "text-red-600",
-        borderColor: "border-red-200",
-        bgColor: "bg-red-50",
-      };
-    }
-  };
+
 
   const scoreAppearance = getScoreAppearance(score);
   const ScoreIcon = scoreAppearance.icon;
@@ -214,7 +220,10 @@ function SEOAudit() {
   }
 
   if (loading) {
-    return <LoadingScreen status={status} />;
+    return (
+      <LoadingScreen status={status} />
+
+    );
   }
 
   return (

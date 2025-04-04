@@ -3,6 +3,10 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { FirebaseProvider } from "@/lib/firebase-context";
+import { Toaster } from "sonner";
+import AnalysisStatusCard from "@/components/AnalysisStatusCard";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,10 +30,13 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppRouterCacheProvider>
-          <Header />
-
-          {children}
-          <Footer />
+          <FirebaseProvider>
+            <Header />
+            {children}
+            <Footer />
+            <AnalysisStatusCard />
+            <Toaster />
+          </FirebaseProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
