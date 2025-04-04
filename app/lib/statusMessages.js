@@ -1,7 +1,7 @@
 import { Settings, Globe, FileText, Image, Heading, Zap, Link, Key, BarChart2 } from "lucide-react";
 
 export const statusMessages = {
-  'Processing': {
+  'processing': {
     title: 'Processing the Request..',
     descriptions: [
       'Preparing to analyze your website...',
