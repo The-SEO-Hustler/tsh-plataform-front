@@ -55,6 +55,7 @@ function SEOAudit() {
     }
     // Start tracking this analysis in the global context.
     // You can pass an initial URL if needed.
+
     trackAnalysis(docId, url);
   }, [docId, router, trackAnalysis, url]);
 

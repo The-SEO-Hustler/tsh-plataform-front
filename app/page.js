@@ -12,15 +12,21 @@ import {
   Shield,
 } from "lucide-react";
 import Container from "@/components/container";
-
+import { useFirebase } from "@/lib/firebase-context";
+import { toast } from "sonner";
 export default function Home() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { trackAnalysis, currentAnalysis } = useFirebase();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
+    if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
+      toast.error("Please wait for the previous analysis to complete.");
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -35,6 +41,7 @@ export default function Home() {
       const data = await response.json();
 
       if (data.success) {
+        trackAnalysis(data.docId, url);
         router.push(`/seo-audit?id=${data.docId}`);
       } else {
         throw new Error(data.error);

@@ -1,6 +1,16 @@
 import { Settings, Globe, FileText, Image, Heading, Zap, Link, Key, BarChart2 } from "lucide-react";
 
 export const statusMessages = {
+  'Processing': {
+    title: 'Processing the Request..',
+    descriptions: [
+      'Preparing to analyze your website...',
+      'Setting up the analysis environment...',
+      'Initializing SEO check tools...'
+    ],
+    icon: Settings,
+    progress: 5
+  },
   'pending': {
     title: 'Analysis in Progress',
     descriptions: [
