@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFirebase } from "@/lib/firebase-context";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -22,18 +22,10 @@ export default function AnalysisStatusCard() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // If there are no pending analyses, don't render anything
-
-  if (!currentAnalysis || pathname === "/seo-audit") {
-    return null;
-  }
-
-
-
-  // Get the first pending analysis (we'll only show one at a time)
+  // If there are no pending analyses or we're on the /seo-audit page, don't render anything.
   
 
-  // Function to get the status icon based on the analysis status
+  // Function to get the status icon based on the analysis status.
   const getStatusIcon = (status) => {
     switch (status) {
       case "pending":
@@ -47,7 +39,7 @@ export default function AnalysisStatusCard() {
     }
   };
 
-  // Function to get the status text based on the analysis status
+  // Function to get the status text based on the analysis status.
   const getStatusText = (status) => {
     switch (status) {
       case "pending":
@@ -61,44 +53,49 @@ export default function AnalysisStatusCard() {
     }
   };
 
-  // Function to handle viewing the analysis
+  // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/seo-audit?id=${currentAnalysis.docId}`);
+    router.push(`/seo-audit?id=${currentAnalysis?.docId}`);
   };
-  const scoreAppearance = getScoreAppearance(currentAnalysis.score);
-  const ScoreIcon = scoreAppearance.icon;
+
+  const scoreAppearance = getScoreAppearance(currentAnalysis?.score);
+  const ScoreIcon = scoreAppearance?.icon;
+
+  
+
+  if (!currentAnalysis || pathname === "/seo-audit") {
+    return null;
+  }
 
   return (
     <div className="min-w-[275px] fixed bottom-4 right-4 bg-white rounded-lg shadow-lg py-5 px-7 max-w-md border border-gray-200 z-50">
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
           <div className={`${currentAnalysis.status !== "completed" && currentAnalysis.status !== "failed" ? "animate-spin duration-2000" : ""}`}>
-          {getStatusIcon(currentAnalysis.status)}
+            {getStatusIcon(currentAnalysis.status)}
           </div>
           <h3 className="font-medium text-gray-900">
             {getStatusText(currentAnalysis.status)}
           </h3>
         </div>
-       
       </div>
       
       <div className="flex items-center gap-2">
-
-      <p className="text-sm text-gray-600 mb-3 truncate">
-        {currentAnalysis.url}
-      </p>
-      <button onClick={() => {
-        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${currentAnalysis.docId}`)
-        toast.success("Link to analysis copied to clipboard")
-      }
-      }
-      className="cursor-pointer mb-2"
-      >
-        <Copy className="h-4 w-4" color="#101828" />
-      </button>
+        <p className="text-sm text-gray-600 mb-3 truncate">
+          {currentAnalysis.url}
+        </p>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${currentAnalysis.docId}`
+            );
+            toast.success("Link to analysis copied to clipboard");
+          }}
+          className="cursor-pointer mb-2"
+        >
+          <Copy className="h-4 w-4" color="#101828" />
+        </button>
       </div>
-      
-      
       
       {currentAnalysis.status === "failed" && currentAnalysis.error && (
         <div className="text-sm text-red-600 mb-3">
@@ -106,19 +103,19 @@ export default function AnalysisStatusCard() {
         </div>
       )}
       
-        <div className="flex justify-end items-center gap-2">
+      <div className="flex justify-end items-center gap-2">
         {currentAnalysis.status === "completed" && (
-        <div className="flex items-center gap-2 ">
-          <div className={` text-xs font-medium px-2.5 py-0.5 rounded-md border ${scoreAppearance.borderColor} ${scoreAppearance.bgColor} ${scoreAppearance.textColor}`}>
-            <div className={`${scoreAppearance.textColor} flex items-center gap-1`}>
-            <ScoreIcon className=""  size={14}/> 
-              <span>
-            Score: {currentAnalysis.score || "N/A"}
-              </span>
+          <div className="flex items-center gap-2 ">
+            <div className={`text-xs font-medium px-2.5 py-0.5 rounded-md border ${scoreAppearance.borderColor} ${scoreAppearance.bgColor} ${scoreAppearance.textColor}`}>
+              <div className={`${scoreAppearance.textColor} flex items-center gap-1`}>
+                <ScoreIcon size={14} />
+                <span>
+                  Score: {currentAnalysis.score || "N/A"}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
         <Button 
           size="sm"
           onClick={handleViewAnalysis}
@@ -129,13 +126,13 @@ export default function AnalysisStatusCard() {
         </Button>
       </div>
       {(currentAnalysis.status === "completed" || currentAnalysis.status === "failed") && (
-      <button 
-        onClick={() => removeAnalysis()}
-        className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:bg-gray-100"
-      >
-        <X className="h-4 w-4" color="#101828"/> 
-      </button>
+        <button 
+          onClick={() => removeAnalysis()}
+          className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:bg-gray-100"
+        >
+          <X className="h-4 w-4" color="#101828"/> 
+        </button>
       )}
     </div>
   );
-} 
+}

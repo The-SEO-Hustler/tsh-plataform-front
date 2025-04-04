@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { statusMessages } from '@/app/lib/statusMessages';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Copy } from 'lucide-react';
+import { toast } from 'sonner';
+import { useSearchParams } from 'next/navigation';
 
 // Status messages with their descriptions
 
@@ -10,10 +12,36 @@ import { Loader2 } from 'lucide-react';
 export default function LoadingScreen({ status = 'pending' }) {
   // Get the message for the current status, or use the default 'pending' message
   const message = statusMessages[status] || statusMessages['pending'];
+  const searchParams = useSearchParams();
 
   // State to track the progress bar animation
   const [progress, setProgress] = useState(0);
   const [currentDescriptionIndex, setCurrentDescriptionIndex] = useState(0);
+  const [toastShown, setToastShown] = useState(false);
+
+  // Show toaster notification after 3 seconds
+  useEffect(() => {
+    if (toastShown) return;
+
+    const timer = setTimeout(() => {
+      toast.info(
+        <div className="flex flex-col gap-2">
+          <p>You can leave this page while the process runs in the background.</p>
+          <p>You'll be notified when the process is complete.</p>
+          <a href="/docs/seo-metrics" className="text-blue-500 underline">
+            Learn more about SEO metrics
+          </a>
+        </div>,
+        {
+          duration: 10000, // Show for 10 seconds
+          position: "top-right",
+        }
+      );
+      setToastShown(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [toastShown]);
 
   // Animate the progress bar when status changes
   useEffect(() => {
@@ -77,8 +105,17 @@ export default function LoadingScreen({ status = 'pending' }) {
           ></div>
         </div>
 
-        <div className="mt-8 text-xs text-gray-500">
-          <p>This process may take a few minutes depending on the website size.</p>
+        <div className="mt-8 text-xs text-gray-500 flex items-center gap-2">
+          <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
+          <button onClick={() => {
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${searchParams.get('id')}`)
+            toast.success("Link to analysis copied to clipboard")
+          }
+          }
+            className="cursor-pointer"
+          >
+            <Copy className="h-4 w-4" color="#101828" />
+          </button>
         </div>
       </div>
     </div>

@@ -28,7 +28,6 @@ import { getScoreAppearance } from "../lib/getScoreAppearance";
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const [analysisData, setAnalysisData] = useState([]);
-  const [status, setStatus] = useState('initializing');
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,69 +45,8 @@ function SEOAudit() {
   const [layout, setLayout] = useState("grid");
   const [searchQuery, setSearchQuery] = useState('');
   const { trackAnalysis, currentAnalysis } = useFirebase();
+  const [status, setStatus] = useState(currentAnalysis ? currentAnalysis.status : 'initializing');
 
-
-  // useEffect(() => {
-  //   if (!docId) {
-  //     router.push("/");
-  //     return;
-  //   }
-
-  //   // Start tracking this analysis in the global context
-  //   trackAnalysis(docId, url);
-
-  //   // Set a timeout to show the browse message after 3 seconds
-  //   const browseMessageTimer = setTimeout(() => {
-  //     setShowBrowseMessage(true);
-  //   }, 3000);
-
-  //   // Listen for changes to the document
-  //   const unsubscribe = onSnapshot(doc(db, "seoAnalyses", docId), (doc) => {
-  //     if (doc.exists()) {
-  //       const data = doc.data();
-
-  //       if (data.status === "completed") {
-  //         setAnalysisData(data.data);
-  //         setStatus(data.status);
-  //         setLoading(false);
-  //         setUrl(data.url);
-  //         setScore(data?.score?.score);
-  //         data?.updatedAt ? setUpdatedAt(data?.updatedAt) : setUpdatedAt(data?.completedAt)
-  //         unsubscribe();
-
-  //       } else if (data.status === "failed") {
-  //         setStatus(data.status);
-  //         setError(data.error || "Analysis failed. Please try again.");
-  //         setLoading(false);
-  //         unsubscribe();
-  //       } else {
-  //         // Status is 'pending'
-  //         setStatus(data.status);
-  //         setLoading(true);
-  //       }
-  //     } else {
-  //       setError("Analysis document not found");
-  //       setLoading(false);
-  //       unsubscribe();
-  //     }
-  //   });
-
-  //   // Set a timeout to handle cases where the analysis takes too long
-  //   const timeout = setTimeout(() => {
-  //     // Only set error if status is not completed after timeout
-  //     if (status !== 'completed') {
-  //       setError("Analysis is taking longer than expected. Please try again later.");
-  //       setLoading(false);
-  //       unsubscribe();
-  //     }
-  //   }, 600000); // 600 seconds timeout
-
-  //   return () => {
-  //     clearTimeout(timeout);
-  //     clearTimeout(browseMessageTimer);
-  //     unsubscribe();
-  //   };
-  // }, [docId, router, status, trackAnalysis, url]);
 
   useEffect(() => {
     if (!docId) {
@@ -221,7 +159,7 @@ function SEOAudit() {
 
   if (loading) {
     return (
-      <LoadingScreen status={status} />
+      <LoadingScreen status={status} docId={docId} />
 
     );
   }
