@@ -41,14 +41,14 @@ export default function SEOMetricsDoc() {
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-2">Click-Through Rate (CTR)</h3>
             <p>
-              CTR measures the percentage of users who click on your website in search results. A high CTR indicates that your title tags and meta descriptions are compelling and relevant to users' search intent.
+              CTR measures the percentage of users who click on your website in search results. A high CTR indicates that your title tags and meta descriptions are compelling and relevant to users&apos; search intent.
             </p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-2">Bounce Rate</h3>
             <p>
-              Bounce rate shows the percentage of visitors who leave your site after viewing only one page. A high bounce rate might indicate that your content isn't meeting user expectations or that your site needs optimization.
+              Bounce rate shows the percentage of visitors who leave your site after viewing only one page. A high bounce rate might indicate that your content isn&apos;t meeting user expectations or that your site needs optimization.
             </p>
           </div>
 
@@ -78,7 +78,7 @@ export default function SEOMetricsDoc() {
         <div className="bg-primary/10 p-6 rounded-lg mt-8">
           <h3 className="text-xl font-semibold mb-2">Ready to Improve Your SEO?</h3>
           <p className="mb-4">
-            Our SEO analysis tool provides comprehensive insights into your website's performance and actionable recommendations for improvement.
+            Our SEO analysis tool provides comprehensive insights into your website&apos;s performance and actionable recommendations for improvement.
           </p>
           <Link
             href="/"
