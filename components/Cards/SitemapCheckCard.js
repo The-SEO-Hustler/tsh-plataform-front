@@ -39,11 +39,11 @@ export default function SitemapCheckCard({
             <span className="font-medium">Sitemaps:</span>
             <ul className="mt-1 space-y-1">
               {data.sitemaps.map((sitemap, index) => (
-                <li key={index} className="break-words">
-                  <div className="flex justify-between items-center">
+                <li key={index} className="break-words mb-2">
+                  <div className="flex justify-between items-center truncate">
                     <span>{sitemap.url}</span>
-                    <span className="text-gray-500">Level {sitemap.level}</span>
                   </div>
+                  <span className="text-gray-500">Level {sitemap.level}</span>
                   <div className="text-xs text-gray-500">
                     URLs: {sitemap.urlCount}
                   </div>

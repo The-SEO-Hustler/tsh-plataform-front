@@ -28,9 +28,9 @@ export default function CacheCheckCard({ data, status, analysis, onFocus, isFocu
           <div className="space-y-2">
             {Object.entries(headers).map(([key, value]) => (
               <div key={key} className="p-2 bg-gray-50 rounded-md">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">{key}:</span>
-                  <span className="text-sm text-gray-600">{value || "Not Set"}</span>
+                <div className="flex items-center justify-between flex-1 min-w-0 gap-1">
+                  <span className="text-sm font-medium text-gray-700 whitespace-nowrap">{key}:</span>
+                  <span className="text-sm text-gray-600 truncate">{value || "Not Set"}</span>
                 </div>
               </div>
             ))}

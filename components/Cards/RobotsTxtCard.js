@@ -36,10 +36,9 @@ export default function RobotsTxtCard({
           <div className="mt-2">
             <span className="font-medium">Disallowed Paths:</span>
             <div
-              className={`relative ${
-                !showAll &&
-                "after:absolute after:bottom-0 after:left-0 after:w-full after:h-12 after:bg-gradient-to-t after:from-[#eff1f6] after:to-transparent"
-              }`}
+              className={`relative ${!showAll &&
+                `after:absolute after:bottom-0 after:left-0 after:w-full after:h-12 after:bg-gradient-to-t ${status === "normal" ? "after:from-[#eff1f6]" : status === "warning" ? "after:from-[#f9f5c4]" : "after:from-[#f9dfe1]"} after:to-transparent`
+                }`}
             >
               <ul className="mt-1 space-y-1">
                 {displayedPaths.map((path, index) => (
@@ -71,7 +70,7 @@ export default function RobotsTxtCard({
         {data.content && (
           <div className="mt-2">
             <span className="font-medium">Content:</span>
-            <pre className="mt-1 p-2 bg-gray-50 rounded text-xs overflow-x-auto">
+            <pre className="mt-1 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-[300px]">
               {data.content}
             </pre>
           </div>

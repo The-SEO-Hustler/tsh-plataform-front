@@ -39,7 +39,7 @@ export default function DeprecatedHtmlCard({
                 <div key={index} className="p-3 bg-gray-50 rounded-lg">
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 text-yellow-700 mt-0.5" />
-                    <p className="text-sm text-gray-600">{element}</p>
+                    <p className="text-sm text-gray-600">{element?.tag}</p>
                   </div>
                 </div>
               ))}

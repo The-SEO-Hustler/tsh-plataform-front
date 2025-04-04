@@ -65,7 +65,7 @@ function SEOAudit() {
           setLoading(false);
           setUrl(data.url);
           setScore(data?.score?.score);
-          setUpdatedAt(data?.updatedAt);
+          data?.updatedAt ? setUpdatedAt(data?.updatedAt) : setUpdatedAt(data?.completedAt)
           unsubscribe();
 
         } else if (data.status === "failed") {
@@ -232,7 +232,7 @@ function SEOAudit() {
             statusFilters={statusFilters}
           />
         </div>
-        <div className="py-4">
+        <div className="py-4 overflow-hidden">
           {/* Header */}
           <div className="flex flex-col gap-5 md:gap-2 md:flex-row md:items-center justify-between mb-4">
             <div className="flex items-center gap-4">

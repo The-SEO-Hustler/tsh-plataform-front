@@ -37,8 +37,8 @@ export default function JsErrorsCheckCard({
             {displayedErrors.map((error, index) => (
               <div key={index} className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 text-yellow-700 mt-0.5" />
-                  <p className="text-sm text-gray-600">{error}</p>
+                  <AlertTriangle className="min-w-5 min-h-5 text-yellow-700 mt-0.5" size={14} />
+                  <p className="text-sm text-gray-600  line-clamp-5">{error}</p>
                 </div>
               </div>
             ))}

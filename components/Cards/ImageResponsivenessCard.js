@@ -19,7 +19,7 @@ export default function ImageResponsivenessCard({
   const { totalImages, score, details } = data;
   const [showAll, setShowAll] = useState(false);
 
-  const displayedDetails = showAll ? details : details.slice(0, 1);
+  const displayedDetails = showAll ? details : details.slice(0, 3);
 
   const renderImageDetails = (detail) => (
     <div className="space-y-2">
@@ -130,7 +130,7 @@ export default function ImageResponsivenessCard({
           ))}
         </div>
 
-        {details.length > 1 && (
+        {details.length > 3 && (
           <button
             onClick={() => setShowAll(!showAll)}
             className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
@@ -146,7 +146,7 @@ export default function ImageResponsivenessCard({
               <>
                 <ChevronDown className="w-4 h-4" />
                 <span className="text-sm font-medium text-gray-700">
-                  Show {details.length - 1} More
+                  Show {details.length - 3} More
                 </span>
               </>
             )}

@@ -37,8 +37,8 @@ export default function ConsoleErrorsCheckCard({
             {displayedErrors.map((error, index) => (
               <div key={index} className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-start gap-2">
-                  <Terminal className="w-4 h-4 text-gray-500 mt-0.5" />
-                  <p className="text-sm text-gray-600">{error}</p>
+                  <Terminal className="min-w-5 min-h-5 text-gray-500 mt-0.5" size={14} />
+                  <p className="text-sm text-gray-600 line-clamp-5">{error}</p>
                 </div>
               </div>
             ))}
