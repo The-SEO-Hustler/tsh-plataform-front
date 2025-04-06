@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { cn } from "@/lib/utils";
 import Container from '@/components/container';
 
 export default function Footer() {

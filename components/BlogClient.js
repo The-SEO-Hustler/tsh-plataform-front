@@ -77,7 +77,7 @@ export default function BlogClient({ categories, blogPosts }) {
                 There are no posts in this category yet. Please check back later.
               </p>
               <Button
-                variant="outline"
+                className="cursor-pointer"
                 onClick={() => setActiveCategory("all")}
               >
                 View All Posts
