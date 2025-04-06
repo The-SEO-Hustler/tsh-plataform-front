@@ -70,9 +70,7 @@ export default function BlogCard({
         </h3>
 
         {/* Excerpt */}
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-          {sanitizedExcerpt}
-        </p>
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }} />
 
         {/* Date and Read More */}
         <div className="flex items-center text-sm">
