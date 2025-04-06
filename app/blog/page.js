@@ -5,6 +5,10 @@ import BlogClient from '@/components/BlogClient';
 export const metadata = {
   title: 'Blog | SEO Check Tool',
   description: 'Latest SEO tips, strategies, and insights to help improve your website\'s search engine rankings.',
+  openGraph: {
+    title: 'Blog | SEO Check Tool',
+    description: 'Latest SEO tips, strategies, and insights to help improve your website\'s search engine rankings.',
+  },
 };
 
 export default async function Blog() {

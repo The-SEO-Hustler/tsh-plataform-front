@@ -1,37 +1,10 @@
-'use client'
+"use client";
 import { useState } from "react";
 import FeatureSection from "@/components/FeatureSection";
 import ToolCard from "@/components/ToolCard";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/container";
-import Image from 'next/image';
-
-import {
-  FileText,
-  Search,
-  BarChart,
-  Link,
-  File,
-  BookOpen,
-  Globe,
-  Zap,
-  Settings,
-  Code,
-  Smartphone,
-  Share2,
-  MapPin,
-  Building2,
-  BarChart2,
-  PieChart,
-  TrendingUp,
-  Users,
-  MessageSquare,
-  Video,
-  FileQuestion,
-  HelpCircle,
-  Rocket,
-  Brain
-} from 'lucide-react';
+import Image from "next/image";
 
 export default function Tools() {
   // State for category filter
@@ -51,7 +24,15 @@ export default function Tools() {
       title: "SEO Page Checker",
       description:
         "Check your on page SEO score and get real-time suggestions to improve your website.",
-      Icon: <Image src="/on-page-checker-logo.png" alt="Keyword Explorer" width={124} height={124} className="w-24 h-24 rounded-md" />,
+      Icon: (
+        <Image
+          src="/on-page-checker-logo.png"
+          alt="Keyword Explorer"
+          width={124}
+          height={124}
+          className="w-24 h-24 rounded-md"
+        />
+      ),
       href: "/free-tools/seo-check",
       category: "On Page SEO Checker",
       featured: false,
@@ -89,8 +70,18 @@ export default function Tools() {
         <div className="absolute inset-0 opacity-30">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFDD00" strokeWidth="0.5" />
+              <pattern
+                id="grid"
+                width="40"
+                height="40"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke="#FFDD00"
+                  strokeWidth="0.5"
+                />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
@@ -103,7 +94,8 @@ export default function Tools() {
               Free SEO Tools
             </h1>
             <p className="text-xl text-white/80 mb-8">
-              Access professional-grade SEO tools to research keywords, analyze competitors, optimize content, and more - completely free.
+              Access professional-grade SEO tools to research keywords, analyze
+              competitors, optimize content, and more - completely free.
             </p>
           </div>
         </Container>
@@ -116,10 +108,13 @@ export default function Tools() {
             {categories.map((category, idx) => (
               <Button
                 key={category.id}
-                variant={activeCategory === category.label ? "default" : "ghost"}
+                variant={
+                  activeCategory === category.label ? "default" : "ghost"
+                }
                 size="sm"
                 onClick={() => setActiveCategory(category.label)}
-                className={`rounded-full cursor-pointer ${idx === 0 ? "ml-4 md:ml-0" : ""}`}
+                className={`rounded-full cursor-pointer ${idx === 0 ? "ml-4 md:ml-0" : ""
+                  }`}
               >
                 {category.label}
               </Button>
@@ -149,20 +144,16 @@ export default function Tools() {
             <div className="text-center py-12">
               <h3 className="text-2xl font-bold mb-4">No tools found</h3>
               <p className="text-muted-foreground mb-6">
-                There are no tools in this category yet. Please check back later.
+                There are no tools in this category yet. Please check back
+                later.
               </p>
-              <Button
-
-                onClick={() => setActiveCategory("all")}
-              >
+              <Button onClick={() => setActiveCategory("all")}>
                 View All Tools
               </Button>
             </div>
           )}
         </Container>
       </section>
-
-
     </>
   );
 }

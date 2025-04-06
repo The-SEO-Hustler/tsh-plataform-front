@@ -5,9 +5,18 @@ import BlogCard from '@/components/BlogCard';
 import ResourceCard from '@/components/ResourceCard';
 import FeatureSection from '@/components/FeatureSection';
 import Hero from '@/components/Hero';
-import { FileText, Search, BarChart, Link, File } from 'lucide-react';
 import { getAllPostsForHome } from '@/lib/wordpress/posts/getHomeCategories';
 import Image from 'next/image';
+
+export const metadata = {
+  title: 'The SEO Hustler',
+  description: "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
+  openGraph: {
+    title: 'The SEO Hustler',
+    description: "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
+  },
+};
+
 export default async function Home() {
   const latestPosts = await getAllPostsForHome();
   const blogPosts = latestPosts.map(({ node }) => {
