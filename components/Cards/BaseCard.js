@@ -1,5 +1,5 @@
 import React from "react";
-import s from "@/app/seo-audit/style.module.css";
+import s from "@/app/free-tools/seo-check/styles.module.css";
 
 const statusClasses = {
   error: `!bg-red-100/90  hover:bg-red-200  ${s.cardError}`,

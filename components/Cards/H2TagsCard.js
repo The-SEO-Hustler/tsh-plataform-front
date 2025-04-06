@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Heading2, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 
 export default function H2TagsCard({
   data,

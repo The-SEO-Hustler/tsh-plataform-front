@@ -7,8 +7,9 @@ import {
 import { SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import s from "./style.module.css";
 import { useState } from "react";
-import { getIconComponent } from "@/app/seo-audit/config";
-
+import { getIconComponent } from "@/lib/config";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 const statusClasses = {
   error: "!bg-red-100 md:!bg-red-100/70 !text-red-500 hover:!bg-red-200",
   warning:
@@ -101,6 +102,7 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips, data, statusFilters }) 
         </SpeedDial>
       </div>
       <div className={s.sidebar}>
+        <GoBackButton alwaysShowTooltips={alwaysShowTooltips} />
         {buttons.map((btn, id) => (
           <SidebarButton
             key={`${btn.id}-${id}`}
@@ -132,7 +134,7 @@ function SidebarButton({
       <Tooltip open={alwaysShowTooltips || isHovered}>
         <TooltipTrigger asChild>
           <button
-            className={`rounded-xl p-3 shadow-sm ${statusClasses[status]}`}
+            className={`rounded-xl p-3 shadow-sm cursor-pointer ${statusClasses[status]}`}
             onClick={() => onFocusCard(id)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -148,7 +150,7 @@ function SidebarButton({
             {status === "warning" && (
               <span className="w-2 h-2 rounded-full bg-yellow-500" />
             )}
-            
+
             {status === "normal" && (
               <span className="w-2 h-2 rounded-full bg-green-500" />
             )}
@@ -160,4 +162,30 @@ function SidebarButton({
   );
 }
 
+function GoBackButton({ alwaysShowTooltips
+
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <TooltipProvider delayDuration={0}>
+      <Tooltip open={alwaysShowTooltips || isHovered}>
+        <TooltipTrigger asChild>
+
+          <Link className={`rounded-xl p-3 shadow-sm`}
+            href="/free-tools/seo-check"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}>
+            <ArrowLeft size={20} />
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="right" className="select-none" hideWhenDetached>
+          Go Back
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
 export default Sidebar;
+
+

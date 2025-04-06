@@ -1,7 +1,7 @@
 import React from "react";
 import BaseCard from "./BaseCard";
 import { FileText } from "lucide-react";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 
 export default function HtmlSizeCheckCard({
   data,

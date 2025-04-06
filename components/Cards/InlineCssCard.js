@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import BaseCard from "./BaseCard";
 import { Code, ChevronDown, ChevronUp } from "lucide-react";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 
 export default function InlineCssCard({
   data,

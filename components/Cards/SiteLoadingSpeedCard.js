@@ -1,10 +1,10 @@
 import React from "react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 import { Clock, AlertCircle } from "lucide-react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { commonOptions } from "@/app/lib/commonOptions";
+import { commonOptions } from "@/lib/commonOptions";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 

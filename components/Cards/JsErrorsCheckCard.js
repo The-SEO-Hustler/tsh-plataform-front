@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 import { AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function JsErrorsCheckCard({

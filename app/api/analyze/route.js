@@ -21,7 +21,7 @@ export async function POST(request) {
       docId: docRef.id,
     });
 
-    console.log("will request with ", body);
+    // console.log("will request with ", body);
 
     const backendResponse = await fetch(
       `${process.env.API_ENDPOINT}/seo-check`,
@@ -35,7 +35,7 @@ export async function POST(request) {
     );
 
     const response = await backendResponse.json();
-    console.log("response from back ", response);
+    // console.log("response from back ", response);
     return NextResponse.json({
       docId: docRef.id,
       ...response,

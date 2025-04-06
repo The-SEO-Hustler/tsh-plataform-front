@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Gauge, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { commonOptions } from "@/app/lib/commonOptions";
-import { iconMapping } from "@/app/seo-audit/config";
+import { commonOptions } from "@/lib/commonOptions";
+import { iconMapping } from "@/lib/config";
 
 export default function KeywordAnalysisCard({
   data,
@@ -13,8 +13,8 @@ export default function KeywordAnalysisCard({
   analysis,
 }) {
   const [showAll, setShowAll] = useState(false);
-  const displayedKeywords = showAll 
-    ? data.keywordUsage 
+  const displayedKeywords = showAll
+    ? data.keywordUsage
     : data.keywordUsage.slice(0, 3);
 
   const chartData = {

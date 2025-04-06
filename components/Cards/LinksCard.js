@@ -3,7 +3,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Share2 } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { commonOptions } from "@/app/lib/commonOptions";
+import { commonOptions } from "@/lib/commonOptions";
 // Register required components for the Pie chart
 ChartJS.register(ArcElement, Tooltip, Legend);
 

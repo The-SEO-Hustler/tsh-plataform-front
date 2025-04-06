@@ -1,6 +1,6 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import { commonOptions } from "@/app/lib/commonOptions";
+import { commonOptions } from "@/lib/commonOptions";
 import {
   Chart as ChartJS,
   CategoryScale,

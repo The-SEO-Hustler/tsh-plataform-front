@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Lock, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 export default function RobotsTxtCard({
   data,
   status,

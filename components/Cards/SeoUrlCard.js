@@ -1,6 +1,6 @@
 import React from "react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 import { Check, X } from "lucide-react";
 export default function SeoUrlCard({
   data,
@@ -31,11 +31,11 @@ export default function SeoUrlCard({
           <h4 className="text-sm font-medium text-gray-700">URL Checks:</h4>
           <div className="flex flex-col gap-2">
             {Object.entries(checks).map(([check, value]) => (
-             
+
               <div className="flex justify-between items-center" key={check}>
-              <span>{check.replace(/([A-Z])/g, " $1").trim()}: {`${value}`}</span>
-              <span className="text-blue-500">{value ? <Check color="green"/> : <X color="red"/>}</span>
-            </div>
+                <span>{check.replace(/([A-Z])/g, " $1").trim()}: {`${value}`}</span>
+                <span className="text-blue-500">{value ? <Check color="green" /> : <X color="red" />}</span>
+              </div>
             ))}
           </div>
         </div>

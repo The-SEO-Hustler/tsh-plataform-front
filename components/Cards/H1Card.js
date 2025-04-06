@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Heading1, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 
 export default function H1Card({ data, status, isFocused, onFocus, analysis }) {
   const [showAll, setShowAll] = useState(false);

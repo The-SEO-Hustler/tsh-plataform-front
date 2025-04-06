@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { commonOptions } from "@/app/lib/commonOptions";
+import { commonOptions } from "@/lib/commonOptions";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function BrokenLinksCheckCard({
@@ -88,7 +88,7 @@ export default function BrokenLinksCheckCard({
                   <li key={index} className="break-words">
                     <a href={link.url} target="_blank" rel="noopener noreferrer">
 
-                    {link.anchor}
+                      {link.anchor}
                     </a>
                   </li>
                 ))}
@@ -105,7 +105,7 @@ export default function BrokenLinksCheckCard({
                   <li key={index} className="break-words">
                     <a href={link.url} target="_blank" rel="noopener noreferrer">
 
-                    {link.anchor}
+                      {link.anchor}
                     </a>
                   </li>
                 ))}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { statusMessages } from '@/app/lib/statusMessages';
+import { statusMessages } from '@/lib/statusMessages';
 import { Loader2, Copy } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
@@ -28,7 +28,7 @@ export default function LoadingScreen({ status = 'pending' }) {
         <div className="flex flex-col gap-2">
           <p>You can leave this page while the process runs in the background.</p>
           <p>You&apos;ll be notified when the process is complete.</p>
-          <a href="/docs/seo-metrics" className="text-blue-500 underline">
+          <a href="/blog" className="text-primary underline">
             Learn more about SEO metrics
           </a>
         </div>,
@@ -108,7 +108,7 @@ export default function LoadingScreen({ status = 'pending' }) {
         <div className="mt-8 text-xs text-gray-500 flex items-center gap-2">
           <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {
-            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/seo-audit?id=${searchParams.get('id')}`)
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/free-tools/seo-check?id=${searchParams.get('id')}`)
             toast.success("Link to analysis copied to clipboard")
           }
           }

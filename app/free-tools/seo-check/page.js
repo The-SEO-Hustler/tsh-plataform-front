@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import Container from "@/components/container";
-import s from "./style.module.css";
+import s from "./styles.module.css";
 import Sidebar from "@/components/sidebar";
 import { useSearchParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
-import { cardComponents } from "./config";
+import { cardComponents } from "@/lib/config";
+import SeoCheckHero from "@/components/seo-check-hero";
 import {
   Download,
   Eye,
@@ -14,7 +15,6 @@ import {
   LayoutGrid,
   Rows2,
   Search,
-  BookOpen,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -23,8 +23,8 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFReport from "@/components/PDFReport";
 import { Input } from "@/components/ui/input";
 import { useFirebase } from "@/lib/firebase-context";
-import Link from "next/link";
-import { getScoreAppearance } from "../lib/getScoreAppearance";
+import { getScoreAppearance } from "@/lib/getScoreAppearance";
+
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const [analysisData, setAnalysisData] = useState([]);
@@ -49,14 +49,12 @@ function SEOAudit() {
 
 
   useEffect(() => {
-    if (!docId) {
-      router.push("/");
-      return;
-    }
+
     // Start tracking this analysis in the global context.
     // You can pass an initial URL if needed.
-
-    trackAnalysis(docId, url);
+    if (docId) {
+      trackAnalysis(docId, url);
+    }
   }, [docId, router, trackAnalysis, url]);
 
   // Listen for changes in the global analysis state.
@@ -142,6 +140,12 @@ function SEOAudit() {
   const scoreAppearance = getScoreAppearance(score);
   const ScoreIcon = scoreAppearance.icon;
 
+  if (!docId) {
+    return (
+      <SeoCheckHero />
+    )
+  }
+
   if (error) {
     return (
       <Container>
@@ -166,7 +170,7 @@ function SEOAudit() {
   }
 
   return (
-    <Container>
+    <Container >
       <div
         className={`${s.overlay} ${focusedCardId ? s.active : ""}`}
         onClick={() => setFocusedCardId(null)}
@@ -210,7 +214,7 @@ function SEOAudit() {
             <div className="flex gap-2">
               <button
                 onClick={handleExportReport}
-                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-primary text-black  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span className="hidden md:inline">Export JSON</span>
@@ -218,7 +222,7 @@ function SEOAudit() {
               <PDFDownloadLink
                 document={<PDFReport data={analysisData} score={75} />}
                 fileName={`seo-report-${new Date().toLocaleDateString()}.pdf`}
-                className="px-4 py-2 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-primary text-black  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span className="hidden md:inline">Export PDF</span>

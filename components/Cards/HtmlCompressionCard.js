@@ -1,7 +1,7 @@
 import React from "react";
 import BaseCard from "./BaseCard";
 import { Component } from "lucide-react";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 
 export default function HtmlCompressionCard({
   data,
@@ -30,9 +30,8 @@ export default function HtmlCompressionCard({
             </div>
             <div className="flex items-center justify-center gap-2">
               <span
-                className={`w-2 h-2 rounded-full ${
-                  compressed ? "bg-green-700" : "bg-red-500"
-                }`}
+                className={`w-2 h-2 rounded-full ${compressed ? "bg-green-700" : "bg-red-500"
+                  }`}
               />
               <span className="text-sm font-medium text-gray-700">
                 {compressed ? "HTML is Compressed" : "HTML is Not Compressed"}

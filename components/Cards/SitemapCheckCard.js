@@ -1,7 +1,7 @@
 import React from "react";
 import { Map } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 export default function SitemapCheckCard({
   data,
   status,

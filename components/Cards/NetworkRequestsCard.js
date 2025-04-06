@@ -1,10 +1,10 @@
 import React from "react";
 import BaseCard from "./BaseCard";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 import { Download, AlertCircle, RefreshCw } from "lucide-react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { commonOptions } from "@/app/lib/commonOptions";
+import { commonOptions } from "@/lib/commonOptions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

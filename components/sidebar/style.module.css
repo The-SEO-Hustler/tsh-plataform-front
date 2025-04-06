@@ -16,7 +16,7 @@
   scrollbar-width: none; /* Firefox */
   display: none;
 }
-.sidebar button:first-of-type {
+.sidebar a:first-of-type {
   margin-top: 16px;
 }
 @media (min-width: 768px) {

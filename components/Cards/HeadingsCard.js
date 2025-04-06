@@ -2,8 +2,8 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import { Code } from "lucide-react";
 import BaseCard from "./BaseCard";
-import { commonOptions } from "@/app/lib/commonOptions";
-import { iconMapping } from "@/app/seo-audit/config";
+import { commonOptions } from "@/lib/commonOptions";
+import { iconMapping } from "@/lib/config";
 export default function HeadingsCard({
   data,
   status,

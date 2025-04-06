@@ -1,7 +1,7 @@
 import React from "react";
 import BaseCard from "./BaseCard";
 import { FileText } from "lucide-react";
-import { iconMapping } from "@/app/seo-audit/config";
+import { iconMapping } from "@/lib/config";
 
 export default function CharsetCheckCard({
   data,
@@ -30,9 +30,8 @@ export default function CharsetCheckCard({
             </div>
             <div className="flex items-center justify-center gap-2">
               <span
-                className={`w-2 h-2 rounded-full ${
-                  charsetDeclared ? "bg-green-700" : "bg-red-500"
-                }`}
+                className={`w-2 h-2 rounded-full ${charsetDeclared ? "bg-green-700" : "bg-red-500"
+                  }`}
               />
               <span className="text-sm font-medium text-gray-700">
                 {charsetDeclared
