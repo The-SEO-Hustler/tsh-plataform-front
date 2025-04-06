@@ -37,7 +37,7 @@ export default function RobotsTxtCard({
             <span className="font-medium">Disallowed Paths:</span>
             <div
               className={`relative ${!showAll &&
-                `after:absolute after:bottom-0 after:left-0 after:w-full after:h-12 after:bg-gradient-to-t ${status === "normal" ? "after:from-[#eff1f6]" : status === "warning" ? "after:from-[#f9f5c4]" : "after:from-[#f9dfe1]"} after:to-transparent`
+                `md:after:absolute md:after:bottom-0 md:after:left-0 md:after:w-full md:after:h-12 md:after:bg-gradient-to-t  ${status === "normal" ? "md:after:from-[#eff1f6]" : status === "warning" ? "md:after:from-[#f9f5c4]" : "md:after:from-[#f9dfe1]"} md:after:to-transparent`
                 }`}
             >
               <ul className="mt-1 space-y-1">

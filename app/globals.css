@@ -146,7 +146,9 @@
     min-height: 100vh; */
   }
 }
-
+button.MuiButtonBase-root.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-primary.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-primary.MuiSpeedDial-fab.mui-1usvvvc-MuiButtonBase-root-MuiFab-root-MuiSpeedDial-fab {
+  background-color: #ffcc00;
+}
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

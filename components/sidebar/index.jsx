@@ -77,11 +77,13 @@ function Sidebar({ setFocusedCardId, alwaysShowTooltips, data, statusFilters }) 
         <SpeedDial
           ariaLabel="SEO Navigation"
           icon={<SpeedDialIcon />}
+          color="primary"
           direction="up"
           sx={{
             position: "absolute",
             bottom: 16,
             right: 16,
+
             zIndex: "2147483647",
           }}
         >

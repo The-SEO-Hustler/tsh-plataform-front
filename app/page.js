@@ -182,7 +182,7 @@ export default async function Home() {
 
         <div className="mt-10 text-center">
           <Button
-            // variant="secondary"
+            variant="secondary"
             size="lg"
             href="/free-tools"
             className="cursor-pointer"

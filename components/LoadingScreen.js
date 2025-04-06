@@ -86,7 +86,7 @@ export default function LoadingScreen({ status = 'pending' }) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center ">
-      <div className="text-center max-w-md p-8 bg-white rounded-xl shadow-lg">
+      <div className="text-center md:max-w-md p-8 bg-white rounded-xl shadow-lg max-w-[90%]">
         <div className="flex justify-center relative h-20 w-20 mx-auto mb-6">
           <Loader2 className="h-20 w-20 animate-spin text-primary absolute top-0" />
           <IconComponent className="h-10 w-10 text-primary absolute top-5" />
