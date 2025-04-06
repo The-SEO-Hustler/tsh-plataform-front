@@ -70,7 +70,7 @@ export default function NotFoundLayout() {
                   <Button
                     variant="default"
                     size="lg"
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="bg-primary cursor-pointer text-primary-foreground hover:bg-primary/90"
                   >
                     Go to Homepage
                   </Button>
@@ -80,7 +80,7 @@ export default function NotFoundLayout() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-white text-white hover:bg-white/10"
+                    className="border-white cursor-pointer text-white hover:bg-white/10"
                   >
                     Try Free SEO Tools
                   </Button>
