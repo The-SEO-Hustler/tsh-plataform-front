@@ -98,7 +98,7 @@
 .content h2,
 .content h3,
 .content h4 {
-  color: var(--color-primary);
+  color: #0B0B0B !important;
   font-weight: 600;
   word-break: break-word;
 }

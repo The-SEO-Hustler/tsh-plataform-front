@@ -248,7 +248,7 @@ export default async function Home() {
       </FeatureSection>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary to-primary-container relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-primary to-[#ecefc7] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
