@@ -1,5 +1,5 @@
 import React from "react";
-import s from "@/app/free-tools/seo-check/styles.module.css";
+import s from "@/components/SeoCheck/styles.module.css";
 
 const statusClasses = {
   error: `!bg-red-100/90  hover:bg-red-200  ${s.cardError}`,
@@ -20,8 +20,9 @@ export default function BaseCard({
 }) {
   return (
     <div
-      className={`${s.card} ${statusClasses[status]} ${isFocused ? s.focused : ""
-        } ${className}`}
+      className={`${s.card} ${statusClasses[status]} ${
+        isFocused ? s.focused : ""
+      } ${className}`}
       id={id}
     >
       <div>
@@ -33,7 +34,9 @@ export default function BaseCard({
         </div>
         {children}
       </div>
-      <p className={`mt-2 text-sm text-gray-600 text-wrap word-break-all  overflow-hidden truncate ${s.cardDescription}`}>
+      <p
+        className={`mt-2 text-sm text-gray-600 text-wrap word-break-all  overflow-hidden truncate ${s.cardDescription}`}
+      >
         {analysis}
       </p>
     </div>
