@@ -9,6 +9,8 @@ import { getAllCategories } from '@/lib/wordpress/posts/getAllCategories';
 import { transformContentUrls, getSeoTerm, createPostSchema } from '@/lib/wordpress/utils';
 import BlogContentPage from '@/components/BlogContent';
 
+export const revalidate = 3600;
+
 // Generate static params for all blog posts
 export async function generateStaticParams() {
   const allPosts = await getAllPostsWithSlug();

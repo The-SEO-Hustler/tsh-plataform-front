@@ -7,6 +7,11 @@ import FeatureSection from "@/components/FeatureSection";
 import Hero from "@/components/Hero";
 import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
+import Container from "@/components/container";
+import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
+
+export const revalidate = 3600;
+
 
 export const metadata = {
   title: "The SEO Hustler",
@@ -21,6 +26,9 @@ export const metadata = {
 
 export default async function Home() {
   const latestPosts = await getAllPostsForHome();
+  let latestResources = await getAllResourcePage();
+  latestResources = latestResources.guides.concat(latestResources.spreadsheets, latestResources.ebooks);
+  console.log('latestResources', latestResources);
   // const latestPosts = [];
 
   const blogPosts = latestPosts.map(({ node }) => {
@@ -60,7 +68,7 @@ export default async function Home() {
           className="w-24 h-24 rounded-md"
         />
       ),
-      href: "/free-tools/seo-check",
+      href: "/seo-check",
       category: "On Page SEO Checker",
       featured: false,
     },
@@ -273,15 +281,10 @@ export default async function Home() {
         description="Download actionable resources to streamline your SEO workflow and get results faster."
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredResources.map((resource, index) => (
+          {latestResources.map((resource, index) => (
             <ResourceCard
               key={index}
-              title={resource.title}
-              description={resource.description}
-              type={resource.type}
-              format={resource.format}
-              href={resource.href}
-              premium={resource.premium}
+              {...resource}
             />
           ))}
         </div>
@@ -316,8 +319,8 @@ export default async function Home() {
           </svg>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+        <Container>
+          <div className="max-w-3xl mx-auto text-center relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-on-primary-container">
               Ready to Take Your SEO to the Next Level?
             </h2>
@@ -331,7 +334,7 @@ export default async function Home() {
               </Button>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Testimonials Section */}
@@ -342,15 +345,37 @@ export default async function Home() {
         description="Join thousands of SEO professionals and website owners who grow their businesses with The SEO Hustler."
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          {[1, 2, 3].map((testimonial) => (
+          {[
+            {
+              id: 1,
+              rating: 5,
+              text: "The tools and resources from The SEO Hustler have been a game-changer for my business. I was able to increase my organic traffic by 237% in just 3 months following their step-by-step guides.",
+              name: "Sarah Johnson",
+              role: "E-commerce Website Owner"
+            },
+            {
+              id: 2,
+              rating: 5,
+              text: "As a small business owner, I struggled with SEO until I found these resources. The spreadsheets helped me track my progress, and the guides provided actionable steps that actually worked. My local search rankings improved significantly!",
+              name: "Michael Chen",
+              role: "Local Business Owner"
+            },
+            {
+              id: 3,
+              rating: 5,
+              text: "The SEO ebooks were exactly what I needed to understand the fundamentals. I implemented the strategies in my content marketing plan and saw a 45% increase in conversions. Highly recommend for anyone serious about SEO.",
+              name: "Emily Rodriguez",
+              role: "Content Marketing Manager"
+            }
+          ].map((testimonial) => (
             <div
-              key={testimonial}
+              key={testimonial.id}
               className="bg-white p-6 rounded-shape-large shadow-elevation-1"
             >
               <div className="flex items-center mb-4">
-                {[1, 2, 3, 4, 5].map((star) => (
+                {[...Array(testimonial.rating)].map((_, index) => (
                   <svg
-                    key={star}
+                    key={index}
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 text-primary"
                     viewBox="0 0 20 20"
@@ -361,10 +386,7 @@ export default async function Home() {
                 ))}
               </div>
               <p className="text-on-surface-variant mb-4">
-                "The tools and resources from The SEO Hustler have been a
-                game-changer for my business. I was able to increase my organic
-                traffic by 237% in just 3 months following their step-by-step
-                guides."
+                "{testimonial.text}"
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center">
@@ -383,10 +405,10 @@ export default async function Home() {
                 </div>
                 <div className="ml-3">
                   <h4 className="text-sm font-bold text-on-surface">
-                    SEO Professional
+                    {testimonial.name}
                   </h4>
                   <p className="text-xs text-on-surface-variant">
-                    E-commerce Website Owner
+                    {testimonial.role}
                   </p>
                 </div>
               </div>

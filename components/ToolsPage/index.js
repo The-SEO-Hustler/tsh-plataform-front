@@ -33,7 +33,7 @@ export default function Tools() {
           className="w-24 h-24 rounded-md"
         />
       ),
-      href: "/free-tools/seo-check",
+      href: "/seo-check",
       category: "On Page SEO Checker",
       featured: false,
     },
@@ -63,8 +63,8 @@ export default function Tools() {
     activeCategory === "All Tools"
       ? tools
       : tools.filter(
-          (tool) => tool.category.toLowerCase() === activeCategory.toLowerCase()
-        );
+        (tool) => tool.category.toLowerCase() === activeCategory.toLowerCase()
+      );
 
   return (
     <>
@@ -116,9 +116,8 @@ export default function Tools() {
                 }
                 size="sm"
                 onClick={() => setActiveCategory(category.label)}
-                className={`rounded-full cursor-pointer ${
-                  idx === 0 ? "ml-4 md:ml-0" : ""
-                }`}
+                className={`rounded-full cursor-pointer ${idx === 0 ? "ml-4 md:ml-0" : ""
+                  }`}
               >
                 {category.label}
               </Button>

@@ -2,6 +2,8 @@ import { GET_POSTS } from '@/lib/wordpress/posts/getPosts';
 import { getAllCategories } from '@/lib/wordpress/posts/getAllCategories';
 import BlogClient from '@/components/BlogClient';
 
+export const revalidate = 3600;
+
 export const metadata = {
   title: 'Blog | SEO Check Tool',
   description: 'Latest SEO tips, strategies, and insights to help improve your website\'s search engine rankings.',

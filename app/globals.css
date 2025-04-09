@@ -131,7 +131,56 @@
   --input: oklch(0.3 0 0);
   --ring: oklch(0.6 0.15 250);
 }
+@theme {
+  --animate-slide-up: slideUp 1s ease-in-out forwards;
+  --animate-fade-in: fadeIn 1s ease-in-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-rotate: rotate 6s ease-in-out infinite;
 
+@keyframes rotate {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+  @keyframes slideUp {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -156,6 +205,6 @@ button.MuiButtonBase-root.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-pr
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

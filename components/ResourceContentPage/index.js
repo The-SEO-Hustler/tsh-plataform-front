@@ -1,13 +1,11 @@
 'use client'
 
 import React from 'react'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import styles from './styles.module.css'
+import s from './styles.module.css'
 import { LinkedinIcon, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
-function BlogContentPage({ post, blogPostsData }) {
+function ResourceContentPage({ post }) {
   // Function to handle social sharing
   const handleShare = (platform) => {
     const url = typeof window !== 'undefined' ? window.location.href : '';
@@ -144,7 +142,7 @@ function BlogContentPage({ post, blogPostsData }) {
             </div>
 
             {/* Main Article Content */}
-            <article className={styles.content}>
+            <article className={`${s.content}`}>
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </article>
 
@@ -197,33 +195,7 @@ function BlogContentPage({ post, blogPostsData }) {
               </div>
             </div>
 
-            {/* Related Posts */}
-            <div className="mt-16">
-              <h2 className="text-2xl font-bold mb-6 text-foreground">Related Articles</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {blogPostsData.map((relatedPost, index) => {
 
-                  return (
-                    <Link
-                      key={index}
-                      href={`/blog/${relatedPost.slug}`}
-                      className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all"
-                    >
-                      <div className="p-6">
-                        <h3 className="text-base font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
-                          {relatedPost.title}
-                        </h3>
-                        {relatedPost.date && (
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <span>{relatedPost.date}</span>
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -264,4 +236,4 @@ function BlogContentPage({ post, blogPostsData }) {
   )
 }
 
-export default BlogContentPage
+export default ResourceContentPage

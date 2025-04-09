@@ -174,7 +174,7 @@ function GoBackButton({ alwaysShowTooltips
         <TooltipTrigger asChild>
 
           <Link className={`rounded-xl p-3 shadow-sm`}
-            href="/free-tools/seo-check"
+            href="/seo-check"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}>
             <ArrowLeft size={20} />

@@ -45,7 +45,7 @@ export default function FeatureSection({
   };
 
   return (
-    <section className={`py-16 md:py-24 ${backgroundStyles[background]}`}>
+    <section className={`py-16 md:py-24 ${backgroundStyles[background]} `}>
       <Container>
         <div className={`max-w-4xl ${centered ? 'mx-auto text-center' : ''} mb-12 md:mb-16`}>
           {title && (

@@ -54,14 +54,14 @@ function AnalysisStatusCardContent() {
 
   // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/free-tools/seo-check?id=${currentAnalysis?.docId}`);
+    router.push(`/seo-check?id=${currentAnalysis?.docId}`);
   };
 
   const scoreAppearance = getScoreAppearance(currentAnalysis?.score);
   const ScoreIcon = scoreAppearance?.icon;
 
   // Do not render if there's no analysis or if we're already on the SEO check page with a docId.
-  if (!currentAnalysis || (pathname === "/free-tools/seo-check" && docId)) {
+  if (!currentAnalysis || (pathname === "/seo-check" && docId)) {
     return null;
   }
 
@@ -71,9 +71,9 @@ function AnalysisStatusCardContent() {
         <div className="flex items-center gap-2">
           <div
             className={`${currentAnalysis?.status !== "completed" &&
-                currentAnalysis?.status !== "failed"
-                ? "animate-spin duration-2000"
-                : ""
+              currentAnalysis?.status !== "failed"
+              ? "animate-spin duration-2000"
+              : ""
               }`}
           >
             {getStatusIcon(currentAnalysis?.status)}
@@ -91,7 +91,7 @@ function AnalysisStatusCardContent() {
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/free-tools/seo-check?id=${currentAnalysis?.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-check?id=${currentAnalysis?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}

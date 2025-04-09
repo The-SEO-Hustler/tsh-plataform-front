@@ -110,7 +110,7 @@ export default function Footer() {
         </div>
 
         {/* Newsletter */}
-        <div className="mt-12 py-6 border-t border-zinc-800">
+        {/* <div className="mt-12 py-6 border-t border-zinc-800">
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-bold text-primary mb-2">Subscribe to our newsletter</h3>
             <p className="text-zinc-300 text-sm mb-4">
@@ -131,7 +131,7 @@ export default function Footer() {
               </button>
             </form>
           </div>
-        </div>
+        </div> */}
 
         {/* Copyright */}
         <div className="mt-8 pt-6 border-t border-zinc-800 text-center">

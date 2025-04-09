@@ -40,7 +40,7 @@ export default function SeoCheckHero() {
 
       if (data.success) {
         trackAnalysis(data.docId, url);
-        router.push(`/free-tools/seo-check?id=${data.docId}`);
+        router.push(`/seo-check?id=${data.docId}`);
       } else {
         throw new Error(data.error);
       }
@@ -54,7 +54,7 @@ export default function SeoCheckHero() {
 
   return (
     <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white ">
-      {/* Hero Section */}
+      {/* Hero Section*/}
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Container from "../container";
@@ -35,71 +35,81 @@ function Header() {
       }
     };
 
-    document.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      document.removeEventListener('scroll', handleScroll);
+      document.removeEventListener("scroll", handleScroll);
     };
   }, [scrolled]);
   const checkPathname = () => {
-    if (pathname === '/' || pathname === '/free-tools' || pathname === '/blog') {
-      return true
+    if (
+      pathname === "/" ||
+      pathname === "/free-tools" ||
+      pathname === "/blog" ||
+      pathname === "/resources" ||
+      pathname === "/about" ||
+      pathname === "/contact"
+    ) {
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
+  const isSpecialPath = checkPathname();
   return (
-    <header className={`bg-white shadow-elevation-2 text-black border-b border-gray-200 ${checkPathname() ? 'fixed' : 'sticky'} ${checkPathname() && !scrolled ? '!text-primary !bg-transparent !border-b-0' : 'text-black'} z-[999] top-0 w-full font-bold 
-    }`}>
+    <header
+      className={`bg-white shadow-elevation-2 text-black border-b border-gray-200 ${isSpecialPath ? "fixed" : "sticky"
+        } ${isSpecialPath && !scrolled
+          ? "!text-primary !bg-transparent !border-b-0"
+          : "text-black"
+        } z-[999] top-0 w-full font-bold`}
+    >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
 
         <Link href="/" className="flex items-center relative space-x-2 h-full">
-          {
-
-            (checkPathname() && !scrolled) ?
-              <Image src="/the-seo-hustler-horizontal-white-logo.png" alt="The SEO Hustler logo"
-                priority={true}
-                width={180}
-                height={41.25} />
-              :
-
-              <Image src="/the-seo-hustler-horizontal-black.png" alt="The SEO Hustler logo"
-                priority={true}
-                width={180}
-                height={41.25} />
-
-          }
+          {isSpecialPath && !scrolled ? (
+            <Image
+              src="/the-seo-hustler-horizontal-white-logo.png"
+              alt="The SEO Hustler logo"
+              priority={true}
+              width={180}
+              height={41.25}
+            />
+          ) : (
+            <Image
+              src="/the-seo-hustler-horizontal-black.png"
+              alt="The SEO Hustler logo"
+              priority={true}
+              width={180}
+              height={41.25}
+            />
+          )}
         </Link>
-
 
         {/* Desktop Navigation */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-
-              <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink >Home</NavigationMenuLink>
+              <Link href="/about" legacyBehavior passHref>
+                <NavigationMenuLink>About</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-
-              <Link href="/free-tools/seo-check" legacyBehavior passHref>
-                <NavigationMenuLink >SEO Check On Page</NavigationMenuLink>
+              <Link href="/resources" legacyBehavior passHref>
+                <NavigationMenuLink>Resources</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/free-tools" legacyBehavior passHref>
-                <NavigationMenuLink >Free Tools</NavigationMenuLink>
+                <NavigationMenuLink>Free Tools</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/blog" legacyBehavior passHref>
-                <NavigationMenuLink >Blog</NavigationMenuLink>
+                <NavigationMenuLink>Blog</NavigationMenuLink>
               </Link>
-
             </NavigationMenuItem>
-
           </NavigationMenuList>
         </NavigationMenu>
 
@@ -125,16 +135,22 @@ function Header() {
               <Link href="/free-tools" className="text-sm font-medium">
                 Free Tools
               </Link>
-              <Link href="/free-tools/seo-check" className="text-sm font-medium">
+              <Link
+                href="/seo-check"
+                className="text-sm font-medium"
+              >
                 SEO Check On Page
               </Link>
               <Link href="/blog" className="text-sm font-medium">
                 Blog
               </Link>
+              <Link href="/resources" className="text-sm font-medium">
+                Resources
+              </Link>
+              <Link href="/about" className="text-sm font-medium">
+                About
+              </Link>
 
-              <div className="pt-4 border-t">
-                <Button className="w-full mt-2">Get Started</Button>
-              </div>
             </div>
           </SheetContent>
         </Sheet>

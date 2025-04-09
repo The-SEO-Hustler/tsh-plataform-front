@@ -6,20 +6,25 @@ import { cn } from "@/lib/utils";
  * 
  * @param {Object} props - Component props
  * @param {string} props.title - Resource title
- * @param {string} props.description - Resource description
- * @param {string} props.type - Resource type (ebook, cheatsheet, guide)
- * @param {string} props.format - Resource format (PDF, etc.)
- * @param {string} props.href - Link to the resource
+ * @param {string} props.excerpt - Resource excerpt
+ * @param {string} props.resourceTypes - Resource types
+ * @param {Object} props.author - Resource author
+ * @param {Object} props.featuredImage - Resource featured image
+ * @param {string} props.slug - Resource slug
  * @param {boolean} props.premium - Whether this is a premium resource
  */
 export default function ResourceCard({
   title,
-  description,
-  type,
-  format,
-  href,
+  excerpt,
+  resourceTypes,
+  author,
+  featuredImage,
+  slug,
   premium = false,
 }) {
+  // Determine resource type from the resourceTypes data
+  const resourceType = resourceTypes?.edges?.[0]?.node?.name || 'resource';
+
   // Determine icon based on resource type
   const getIconForType = (type) => {
     switch (type.toLowerCase()) {
@@ -30,7 +35,7 @@ export default function ResourceCard({
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
         );
-      case 'cheatsheet':
+      case 'spreadsheet':
         return (
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="8" y1="6" x2="21" y2="6"></line>
@@ -61,8 +66,16 @@ export default function ResourceCard({
     }
   };
 
+  // Get author information
+  const authorName = author?.node?.name || 'Unknown Author';
+  const authorAvatar = author?.node?.avatar?.url || null;
+
+  // Get featured image
+  const imageUrl = featuredImage?.node?.sourceUrl || null;
+  const imageAlt = featuredImage?.node?.altText || title;
+
   return (
-    <div className="rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full border border-border">
+    <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full border border-border">
       {/* Header */}
       <div className={cn(
         "p-4 flex items-center",
@@ -72,20 +85,14 @@ export default function ResourceCard({
           "w-8 h-8 rounded-full flex items-center justify-center",
           premium ? 'bg-primary-foreground/20' : 'bg-muted-foreground/10'
         )}>
-          {getIconForType(type)}
+          {getIconForType(resourceType)}
         </div>
         <div className="ml-2">
           <span className={cn(
             "text-xs font-medium uppercase",
             premium ? 'text-primary-foreground/80' : 'text-muted-foreground/80'
           )}>
-            {type}
-          </span>
-          <span className={cn(
-            "text-xs ml-2",
-            premium ? 'text-primary-foreground/60' : 'text-muted-foreground/60'
-          )}>
-            {format}
+            {resourceType}
           </span>
         </div>
         {premium && (
@@ -95,18 +102,39 @@ export default function ResourceCard({
         )}
       </div>
 
+      {/* Featured Image */}
+      {imageUrl && (
+        <div className="relative h-48 w-full">
+          <img
+            src={imageUrl}
+            alt={imageAlt}
+            className="object-cover w-full h-full"
+          />
+        </div>
+      )}
+
       {/* Content */}
       <div className="p-6">
         <h3 className="text-lg font-bold mb-2 text-foreground">
           {title}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-4">
-          {description}
+        <p className="text-sm text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: excerpt }}>
         </p>
 
-        <Link
-          href={href}
+        {/* Author info */}
+        <div className="flex items-center mb-4">
+          {authorAvatar && (
+            <img
+              src={authorAvatar}
+              alt={authorName}
+              className="w-6 h-6 rounded-full mr-2"
+            />
+          )}
+          <span className="text-xs text-muted-foreground">{authorName}</span>
+        </div>
+
+        <div
           className={cn(
             "inline-flex items-center text-sm font-medium transition-colors",
             premium
@@ -114,23 +142,10 @@ export default function ResourceCard({
               : 'text-foreground hover:text-primary'
           )}
         >
-          {premium ? 'Purchase Now' : 'Download Free'}
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            {premium ? (
-              <>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </>
-            ) : (
-              <>
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </>
-            )}
-          </svg>
-        </Link>
+          {premium ? 'Purchase Now' : 'View Resource'}
+
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
