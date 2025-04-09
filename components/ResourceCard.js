@@ -74,6 +74,8 @@ export default function ResourceCard({
   const imageUrl = featuredImage?.node?.sourceUrl || null;
   const imageAlt = featuredImage?.node?.altText || title;
 
+  const sanitizedExcerpt = excerpt ? excerpt.replace(/<[^>]*>/g, '') : '';
+
   return (
     <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full border border-border">
       {/* Header */}
@@ -119,7 +121,7 @@ export default function ResourceCard({
           {title}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: excerpt }}>
+        <p className="text-sm text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }}>
         </p>
 
         {/* Author info */}

@@ -7,21 +7,21 @@ export default function Footer() {
     {
       title: 'Resources',
       links: [
-        { name: 'Free SEO Tools', href: '/tools' },
+        { name: 'Free SEO Tools', href: '/free-tools' },
         { name: 'Blog', href: '/blog' },
-        { name: 'Guides', href: '/resources' },
-        { name: 'Cheatsheets', href: '/resources?type=cheatsheets' },
-        { name: 'Ebooks', href: '/resources?type=ebooks' },
+        { name: 'Guides', href: '/resources#guides' },
+        { name: 'Cheatsheets', href: '/resources#cheatsheets' },
+        { name: 'Ebooks', href: '/resources#ebooks' },
       ],
     },
     {
       title: 'Learn',
       links: [
-        { name: 'SEO Basics', href: '/blog/seo-basics' },
-        { name: 'Keyword Research', href: '/blog/keyword-research' },
-        { name: 'Link Building', href: '/blog/link-building' },
-        { name: 'Technical SEO', href: '/blog/technical-seo' },
-        { name: 'Content Strategy', href: '/blog/content-strategy' },
+        { name: 'SEO Basics', href: '/guides/seo-basics' },
+        { name: 'Keyword Research', href: '/guides/keyword-research' },
+        { name: 'Link Building', href: '/guides/link-building' },
+        { name: 'Technical SEO', href: '/guides/technical-seo' },
+        { name: 'Content Strategy', href: '/guides/content-strategy' },
       ],
     },
     {
@@ -37,9 +37,9 @@ export default function Footer() {
 
   // Social media links
   const socialLinks = [
-    { name: 'Twitter', href: 'https://twitter.com/theseohustler', icon: 'twitter' },
-    { name: 'LinkedIn', href: 'https://linkedin.com/company/theseohustler', icon: 'linkedin' },
-    { name: 'YouTube', href: 'https://youtube.com/theseohustler', icon: 'youtube' },
+    // { name: 'Twitter', href: 'https://twitter.com/theseohustler', icon: 'twitter' },
+    // { name: 'LinkedIn', href: 'https://linkedin.com/company/theseohustler', icon: 'linkedin' },
+    // { name: 'YouTube', href: 'https://youtube.com/theseohustler', icon: 'youtube' },
   ];
 
   return (

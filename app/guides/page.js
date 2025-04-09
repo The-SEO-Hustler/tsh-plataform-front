@@ -1,8 +1,7 @@
 import React from 'react';
 import { getAllResourcePage } from '@/lib/wordpress/resources/getAllResourcePage';
 import ResourceCard from '@/components/ResourceCard';
-import { Metadata } from 'next';
-
+import Container from '@/components/container';
 export const metadata = {
   title: 'SEO Guides | The SEO',
   description: 'Comprehensive SEO guides to help you improve your website\'s search engine rankings.',
@@ -15,7 +14,7 @@ async function GuidesPage() {
   const guides = resources.guides || [];
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <Container className="py-16">
       <div className="max-w-4xl mx-auto mb-12">
         <h1 className="text-4xl font-bold mb-4">SEO Guides</h1>
         <p className="text-xl text-muted-foreground">
@@ -43,7 +42,7 @@ async function GuidesPage() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 

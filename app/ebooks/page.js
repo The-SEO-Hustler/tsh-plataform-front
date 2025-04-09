@@ -2,7 +2,7 @@ import React from 'react';
 import { getAllResourcePage } from '@/lib/wordpress/resources/getAllResourcePage';
 import ResourceCard from '@/components/ResourceCard';
 import { Metadata } from 'next';
-
+import Container from '@/components/container';
 export const metadata = {
   title: 'SEO Ebooks | The SEO',
   description: 'Download our free SEO ebooks to learn more about search engine optimization.',
@@ -15,7 +15,7 @@ async function EbooksPage() {
   const ebooks = resources.ebooks || [];
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <Container className="py-16">
       <div className="max-w-4xl mx-auto mb-12">
         <h1 className="text-4xl font-bold mb-4">SEO Ebooks</h1>
         <p className="text-xl text-muted-foreground">
@@ -43,7 +43,7 @@ async function EbooksPage() {
           ))}
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 

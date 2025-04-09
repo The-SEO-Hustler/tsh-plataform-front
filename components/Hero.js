@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import Container from '@/components/container';
 export default function Hero() {
   return (
     <div className="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
@@ -19,15 +19,15 @@ export default function Hero() {
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full opacity-10 -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary rounded-full opacity-10 translate-y-1/2 -translate-x-1/3"></div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <Container className="relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="animate-fade-in text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+          <h1 className=" text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
             <span className="text-primary">DIY SEO</span> for the Go-Getters
           </h1>
-          <p className="animate-slide-up animation-delay-1 text-xl md:text-2xl text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className=" animation-delay-1 text-xl md:text-2xl text-white/80 mb-8 max-w-3xl mx-auto">
             Free tools, in-depth guides, and resources to help you learn and execute SEO and organic growth by yourself. No fluff, just results.
           </p>
-          <div className="animate-slide-up animation-delay-2 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className=" animation-delay-2 flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               href="/free-tools"
               // variant="filled"
@@ -56,7 +56,7 @@ export default function Hero() {
             ))}
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

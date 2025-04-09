@@ -68,9 +68,7 @@ export default async function BlogPost({ params }) {
         <div className="p-6 text-center">
           <h2 className="text-2xl font-bold mb-4">Article Not Found</h2>
           <p className="mb-6">The article you're looking for doesn't exist or has been moved.</p>
-          <Link href="/blog">
-            <Button variant="filled">Back to Blog</Button>
-          </Link>
+          <Button href="/blog">Back to Blog</Button>
         </div>
       </div>
     );
