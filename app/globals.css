@@ -137,17 +137,17 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-rotate: rotate 6s ease-in-out infinite;
 
-@keyframes rotate {
-  0% {
-    transform: rotate(-2deg);
+  @keyframes rotate {
+    0% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(4deg);
+    }
+    100% {
+      transform: rotate(-2deg);
+    }
   }
-  50% {
-    transform: rotate(4deg);
-  }
-  100% {
-    transform: rotate(-2deg);
-  }
-}
   @keyframes slideUp {
     0% {
       transform: translateY(20px);
@@ -178,8 +178,6 @@
       transform: translateY(0px);
     }
   }
-  
-  
 }
 @layer base {
   * {

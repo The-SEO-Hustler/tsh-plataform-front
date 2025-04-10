@@ -20,7 +20,7 @@ export default function FeatureSection({
   // Background variants
   const backgroundStyles = {
     light: 'bg-background',
-    dark: 'bg-[#FFE971] text-secondary-foreground',
+    dark: 'bg-[#ffcc00] text-secondary-foreground',
     primary: 'bg-primary text-primary-foreground',
     gradient: 'bg-gradient-to-br from-primary to-secondary',
     darkGradient: 'bg-gradient-to-br from-black to-gray-900',

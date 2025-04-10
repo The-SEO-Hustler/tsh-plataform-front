@@ -16,7 +16,7 @@ export default function SeoCheckHero() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { trackAnalysis, currentAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, removeContentPlanning } = useFirebase();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +39,7 @@ export default function SeoCheckHero() {
       const data = await response.json();
 
       if (data.success) {
+        removeContentPlanning();
         trackAnalysis(data.docId, url);
         router.push(`/seo-check?id=${data.docId}`);
       } else {

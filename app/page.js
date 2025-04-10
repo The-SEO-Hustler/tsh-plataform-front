@@ -9,7 +9,7 @@ import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
-
+import { Book } from 'lucide-react';
 export const revalidate = 3600;
 
 
@@ -70,6 +70,15 @@ export default async function Home() {
       ),
       href: "/seo-check",
       category: "On Page SEO Checker",
+      featured: false,
+    },
+    {
+      title: "Content Planning Tool",
+      description:
+        "Plan your content for your website with our content planning tool.",
+      Icon: <Book width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      href: "/content-planning",
+      category: "Content Planning Tool",
       featured: false,
     },
   ];

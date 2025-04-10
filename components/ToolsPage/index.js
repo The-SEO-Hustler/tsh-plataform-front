@@ -5,7 +5,7 @@ import ToolCard from "@/components/ToolCard";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/container";
 import Image from "next/image";
-
+import { Book } from 'lucide-react';
 export default function Tools() {
   // State for category filter
   const [activeCategory, setActiveCategory] = useState("All Tools");
@@ -35,6 +35,15 @@ export default function Tools() {
       ),
       href: "/seo-check",
       category: "On Page SEO Checker",
+      featured: false,
+    },
+    {
+      title: "Content Planning Tool",
+      description:
+        "Plan your content for your website with our content planning tool.",
+      Icon: <Book width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      href: "/content-planning",
+      category: "Content Planning Tool",
       featured: false,
     },
 

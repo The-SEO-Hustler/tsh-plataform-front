@@ -10,6 +10,7 @@ export async function POST(request) {
     const docRef = await addDoc(collection(db, "seoAnalyses"), {
       url,
       status: "pending",
+      type: 'seo-check',
       createdAt: new Date(),
       updatedAt: new Date(),
     });

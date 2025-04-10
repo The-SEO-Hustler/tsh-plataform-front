@@ -110,7 +110,7 @@ export default function About() {
       </section>
 
       {/* Intro Section with Bold Statement */}
-      <section className="py-16  bg-[#FFE971]">
+      <section className="py-16  bg-[#ffcc00]">
         <Container className="overflow-hidden !py-4">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-lg p-8 transform -rotate-1 shadow-lg animate-float">
@@ -304,7 +304,7 @@ export default function About() {
       </section>
 
       {/* Call To Action Section */}
-      <section className="py-20 bg-[#FFE971]">
+      <section className="py-20 bg-[#ffcc00]">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6 text-on-primary-container">

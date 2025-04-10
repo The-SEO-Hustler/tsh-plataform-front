@@ -58,11 +58,13 @@ function Header() {
   const isSpecialPath = checkPathname();
   return (
     <header
-      className={`bg-white shadow-elevation-2 text-black border-b border-gray-200 ${isSpecialPath ? "fixed" : "sticky"
-        } ${isSpecialPath && !scrolled
+      className={`bg-white shadow-elevation-2 text-black border-b border-gray-200 ${
+        isSpecialPath ? "fixed" : "sticky"
+      } ${
+        isSpecialPath && !scrolled
           ? "!text-primary !bg-transparent !border-b-0"
           : "text-black"
-        } z-[999] top-0 w-full font-bold`}
+      } z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
@@ -135,10 +137,7 @@ function Header() {
               <Link href="/free-tools" className="text-sm font-medium">
                 Free Tools
               </Link>
-              <Link
-                href="/seo-check"
-                className="text-sm font-medium"
-              >
+              <Link href="/seo-check" className="text-sm font-medium">
                 SEO Check On Page
               </Link>
               <Link href="/blog" className="text-sm font-medium">
@@ -150,7 +149,6 @@ function Header() {
               <Link href="/about" className="text-sm font-medium">
                 About
               </Link>
-
             </div>
           </SheetContent>
         </Sheet>

@@ -161,7 +161,7 @@ export default function Terms() {
                 <br />
                 Brazil
                 <br />
-                Email: contact@theseohustler.com
+                Email: <a href="mailto:contact@theseohustler.com">contact@theseohustler.com</a>
               </address>
             </div>
 

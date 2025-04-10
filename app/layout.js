@@ -6,7 +6,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { FirebaseProvider } from "@/lib/firebase-context";
 import { Toaster } from "sonner";
 import AnalysisStatusCard from "@/components/AnalysisStatusCard";
-
+import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -41,6 +41,7 @@ export default function RootLayout({ children }) {
             {children}
             <Footer />
             <AnalysisStatusCard />
+            <ContentPlanningStatusCard />
             <Toaster position="top-right" />
           </FirebaseProvider>
         </AppRouterCacheProvider>
