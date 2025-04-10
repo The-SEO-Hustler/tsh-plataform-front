@@ -92,36 +92,7 @@ export default async function Home() {
     },
   ];
 
-  // Featured resources
-  const featuredResources = [
-    {
-      title: "The Complete SEO Checklist 2023",
-      description:
-        "A comprehensive 100-point checklist to optimize your website for search engines.",
-      type: "Cheatsheet",
-      format: "PDF",
-      href: "/resources/seo-checklist-2023",
-      premium: false,
-    },
-    {
-      title: "Advanced Link Building Strategies",
-      description:
-        "Discover 15 white-hat link building tactics that still work in 2023.",
-      type: "Guide",
-      format: "PDF",
-      href: "/resources/link-building-strategies",
-      premium: false,
-    },
-    {
-      title: "The SEO Hustler's Playbook",
-      description:
-        "Our flagship guide to dominating search rankings in any niche, with case studies and actionable examples.",
-      type: "Ebook",
-      format: "120 Pages",
-      href: "/resources/seo-hustler-playbook",
-      premium: true,
-    },
-  ];
+
 
   // Features list
   const features = [
@@ -274,23 +245,25 @@ export default async function Home() {
       </FeatureSection>
 
       {/* Blog Section */}
-      <FeatureSection
-        background="light"
-        title="Latest from Our Blog"
-        description="Learn actionable SEO strategies and stay up-to-date with the latest industry trends."
-      >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {blogPosts.map((post, index) => (
-            <BlogCard key={index} post={post} />
-          ))}
-        </div>
+      {blogPosts.length > 0 && (
+        <FeatureSection
+          background="light"
+          title="Latest from Our Blog"
+          description="Learn actionable SEO strategies and stay up-to-date with the latest industry trends."
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {blogPosts.map((post, index) => (
+              <BlogCard key={index} post={post} />
+            ))}
+          </div>
 
-        <div className="mt-10 text-center">
-          <Button size="lg" href="/blog">
-            Read More Articles
-          </Button>
-        </div>
-      </FeatureSection>
+          <div className="mt-10 text-center">
+            <Button size="lg" href="/blog">
+              Read More Articles
+            </Button>
+          </div>
+        </FeatureSection>
+      )}
 
       {/* Resources Section */}
       <FeatureSection

@@ -58,13 +58,11 @@ function Header() {
   const isSpecialPath = checkPathname();
   return (
     <header
-      className={`bg-white shadow-elevation-2 text-black border-b border-gray-200 ${
-        isSpecialPath ? "fixed" : "sticky"
-      } ${
-        isSpecialPath && !scrolled
-          ? "!text-primary !bg-transparent !border-b-0"
+      className={`bg-white backdrop-blur-sm shadow-elevation-2 text-black border-b border-white/40 ${isSpecialPath ? "fixed" : "sticky"
+        } ${isSpecialPath && !scrolled
+          ? "!text-primary !backdrop-blur-none !bg-transparent !border-b-0"
           : "text-black"
-      } z-[999] top-0 w-full font-semibold`}
+        } z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}

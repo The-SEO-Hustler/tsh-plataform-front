@@ -121,6 +121,7 @@ function AdvancedKeywordAnalysis() {
       );
       setLoading(false);
     }
+    setLoading(false);
   };
 
   // Function to get color based on intent type
@@ -281,6 +282,11 @@ function AdvancedKeywordAnalysis() {
         </div>
 
         <Container className=" relative z-10">
+          <div className="flex items-center gap-3 text-gray-300 text-sm mb-4">
+            <span><Link href="/content-planning" className="hover:text-primary transition-colors"> Content Planning</Link></span>
+            <ChevronRight size={16} />
+            <span className="text-primary font-semibold">{contentData.keyword || 'New Content'}</span>
+          </div>
 
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
