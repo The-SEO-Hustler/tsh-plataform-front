@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { Search, TriangleAlert, LoaderCircle, ArrowLeft } from "lucide-react";
-import { ChevronRight, ChevronDown, Edit, FileText, User, Target, AlertTriangle, Clipboard, Link as LinkIcon, CheckCircle, ExternalLink, Copy, Download } from 'lucide-react';
+import { Search, TriangleAlert, LoaderCircle, ArrowLeft, Key } from "lucide-react";
+import { ChevronRight, ChevronDown, Edit, FileText, User, Target, AlertTriangle, Clipboard, Link as LinkIcon, CheckCircle, ExternalLink, Copy, Download, MessageCircleQuestion } from 'lucide-react';
 import Container from "@/components/container";
 import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -532,6 +532,55 @@ function ContentPlanning() {
                   ) : (
                     <p className="text-gray-400">No internal linking strategy available.</p>
                   )}
+                </div>
+
+                {/* FAQ Section Recommendations */}
+                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                  <h2 className="text-xl font-bold mb-4 flex items-center">
+                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                      <MessageCircleQuestion size={16} />
+                    </span>
+                    FAQ Section Recommendations
+                  </h2>
+                  {contentStructure.questions_to_answer?.length > 0 ? (
+                    <>
+                      <ul className="space-y-3">
+                        {contentStructure.questions_to_answer.map((question, index) => (
+                          <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                            <span className="text-gray-300">{question}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mt-4 text-gray-400">Tip: Use FAQ Schema markup to improve chances of appearing in featured snippets</p>
+                    </>
+                  ) : (
+                    <p className="text-gray-400">No FAQ section recommendations available.</p>
+                  )}
+
+                </div>
+
+                {/* Keywords to Target */}
+                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                  <h2 className="text-xl font-bold mb-4 flex items-center">
+                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                      <Key size={16} />
+                    </span>
+                    Keywords to Target
+                  </h2>
+                  {contentStructure.keywords_to_include?.length > 0 ? (
+                    <>
+                      <ul className="space-y-3">
+                        {contentStructure.keywords_to_include.map((keyword_to_include, index) => (
+                          <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                            <span className="text-gray-300">{keyword_to_include}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <p className="text-gray-400">No keywords to target available.</p>
+                  )}
+
                 </div>
               </div>
             </div>

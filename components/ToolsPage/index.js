@@ -1,11 +1,9 @@
 "use client";
 import { useState } from "react";
-import FeatureSection from "@/components/FeatureSection";
 import ToolCard from "@/components/ToolCard";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/container";
-import Image from "next/image";
-import { Book, Search } from 'lucide-react';
+import { ChartArea, NotebookPen } from 'lucide-react';
 export default function Tools() {
   // State for category filter
   const [activeCategory, setActiveCategory] = useState("All Tools");
@@ -19,19 +17,18 @@ export default function Tools() {
 
   // SEO Tools data
   const tools = [
-    // Keyword Research Tools
     {
       title: "SEO Page Checker",
       description:
         "Check your on page SEO score and get real-time suggestions to improve your website.",
       Icon: (
-        <Image
-          src="/on-page-checker-logo.png"
-          alt="Keyword Explorer"
-          width={124}
-          height={124}
-          className="w-24 h-24 rounded-md"
-        />
+        <svg width="56" height="56" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M26 29L28 31L32 27" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M39 39.0002L34.7 34.7002" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       ),
       href: "/seo-check",
       category: "On Page SEO Checker",
@@ -41,7 +38,7 @@ export default function Tools() {
       title: "Advanced Keyword Analysis",
       description:
         "Analyze your keyword data with our advanced keyword analysis tool.",
-      Icon: <Search width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      Icon: <ChartArea width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
       href: "/advanced-keyword-analysis",
       category: "Advanced Keyword Analysis",
       featured: false,
@@ -50,31 +47,12 @@ export default function Tools() {
       title: "Content Planning Tool",
       description:
         "Plan your content for your website with our content planning tool.",
-      Icon: <Book width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      Icon: <NotebookPen width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
       href: "/content-planning",
       category: "Content Planning Tool",
       featured: false,
     },
-
-    // // Future Tools
-    // {
-    //   title: "AI Content Generator",
-    //   description:
-    //     "Generate SEO-optimized content with our advanced AI technology. Coming soon!",
-    //   Icon: <Brain size={48} />,
-    //   href: "#",
-    //   category: "Future Tools",
-    //   featured: false,
-    // },
-    // {
-    //   title: "Voice Search Optimizer",
-    //   description:
-    //     "Optimize your content for voice search queries. Coming soon!",
-    //   Icon: <Rocket size={48} />,
-    //   href: "#",
-    //   category: "Future Tools",
-    // },
-  ];
+  ]
 
   // Filter tools based on active category
   const filteredTools =
