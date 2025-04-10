@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 // Status messages with their descriptions
 
 
-export default function LoadingScreenContentPlanning({ status = 'pending' }) {
+export default function LoadingScreenKeyword({ status = 'pending' }) {
   // Get the message for the current status, or use the default 'pending' message
   const message = statusMessages[status] || statusMessages['pending'];
   const searchParams = useSearchParams();
@@ -108,8 +108,8 @@ export default function LoadingScreenContentPlanning({ status = 'pending' }) {
         <div className="mt-8 text-xs text-gray-500 flex items-center gap-2">
           <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {
-            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/content-planning?id=${searchParams.get('id')}`)
-            toast.success("Link to content planning copied to clipboard")
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/advanced-keyword-analysis?id=${searchParams.get('id')}`)
+            toast.success("Link to keyword analysis copied to clipboard")
           }
           }
             className="cursor-pointer"

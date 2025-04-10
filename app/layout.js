@@ -7,6 +7,8 @@ import { FirebaseProvider } from "@/lib/firebase-context";
 import { Toaster } from "sonner";
 import AnalysisStatusCard from "@/components/AnalysisStatusCard";
 import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
+import KeywordAnalysisStatusCard from "@/components/KeywordAnalysisStatusCard";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,7 +28,7 @@ export const metadata = {
     description:
       "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
   },
-  robots: { index: "no-index" },
+  robots: { index: "index", follow: "follow" },
 };
 
 export default function RootLayout({ children }) {
@@ -40,6 +42,7 @@ export default function RootLayout({ children }) {
             <Header />
             {children}
             <Footer />
+            <KeywordAnalysisStatusCard />
             <AnalysisStatusCard />
             <ContentPlanningStatusCard />
             <Toaster position="top-right" />

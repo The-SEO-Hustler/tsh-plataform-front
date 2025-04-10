@@ -9,7 +9,7 @@ import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
-import { Book } from 'lucide-react';
+import { Book, Search } from 'lucide-react';
 export const revalidate = 3600;
 
 
@@ -70,6 +70,15 @@ export default async function Home() {
       ),
       href: "/seo-check",
       category: "On Page SEO Checker",
+      featured: false,
+    },
+    {
+      title: "Advanced Keyword Analysis",
+      description:
+        "Analyze your keyword data with our advanced keyword analysis tool.",
+      Icon: <Search width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      href: "/advanced-keyword-analysis",
+      category: "Advanced Keyword Analysis",
       featured: false,
     },
     {
