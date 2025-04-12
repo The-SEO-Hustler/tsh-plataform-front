@@ -285,7 +285,7 @@ function AdvancedKeywordAnalysis() {
           <div className="flex items-center gap-3 text-gray-300 text-sm mb-4">
             <span><Link href="/content-planning" className="hover:text-primary transition-colors"> Content Planning</Link></span>
             <ChevronRight size={16} />
-            <span className="text-primary font-semibold">{contentData.keyword || 'New Content'}</span>
+            <span className="text-primary font-semibold">{analysisData.keyword || 'New Content'}</span>
           </div>
 
 
