@@ -28,7 +28,7 @@ export default function SeoCheckHero() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch('/api/seo-check', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
