@@ -70,7 +70,7 @@
   --muted-foreground: oklch(0.5 0 0); /* Medium gray */
 
   /* Accent colors */
-  --accent: oklch(0.97 0.05 90); /* Very light yellow */
+  --accent: oklch(0.85 0.2 90); /* Very light yellow */
   --accent-foreground: oklch(0.2 0 0);
 
   /* Destructive/Error colors */
@@ -206,3 +206,8 @@ button.MuiButtonBase-root.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-pr
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.hide-badge .grecaptcha-badge {
+  visibility: hidden !important;
+}
+
+

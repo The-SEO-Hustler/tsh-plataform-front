@@ -11,6 +11,7 @@ import SeoCheckHero from "@/components/seo-check-hero";
 import { Download, Eye, EyeOff, LayoutGrid, Rows2, Search } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import RecaptchaProvider from "@/components/RecaptchaProvider";
 
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFReport from "@/components/PDFReport";
@@ -135,7 +136,13 @@ function SEOAudit() {
   const ScoreIcon = scoreAppearance.icon;
 
   if (!docId) {
-    return <SeoCheckHero />;
+    return (
+      <div className="hide-badge">
+        <RecaptchaProvider>
+          <SeoCheckHero />
+        </RecaptchaProvider>
+      </div>
+    );
   }
 
   if (error) {
@@ -195,15 +202,15 @@ function SEOAudit() {
                   Last updated:{" "}
                   {updatedAt
                     ? new Date(updatedAt.seconds * 1000).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    )
                     : "N/A"}
                 </p>
               </div>
@@ -338,11 +345,10 @@ function SEOAudit() {
 
           {/* Grid Layout */}
           <div
-            className={`gap-2.5 grid ${
-              layout === "grid"
-                ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
-                : "grid-cols-1 max-w-[700px] m-auto"
-            } `}
+            className={`gap-2.5 grid ${layout === "grid"
+              ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
+              : "grid-cols-1 max-w-[700px] m-auto"
+              } `}
           >
             {filteredData.map((card, index) => {
               const CardComponent = cardComponents[card.type];

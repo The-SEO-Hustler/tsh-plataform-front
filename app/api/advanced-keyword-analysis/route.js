@@ -18,26 +18,31 @@ export async function POST(request) {
       );
     }
 
-
     const docRef = await addDoc(collection(db, "keywordAnalysis"), {
       keyword,
-      type: 'advanced-keyword-analysis',
+      type: "advanced-keyword-analysis",
       status: "pending",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     // Forward the request to your dedicated Node.js service endpoint
-    const response = await fetch(`${process.env.API_ENDPOINT}/advanced-keyword-analysis`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        keyword: keyword,
-        docId: docRef.id,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.API_ENDPOINT}/advanced-keyword-analysis`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.BACK_API_KEY,
+          "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
+          "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
+        },
+        body: JSON.stringify({
+          keyword: keyword,
+          docId: docRef.id,
+        }),
+      }
+    );
 
     const data = await response.json();
     // const response = { ok: true, status: "ok" };

@@ -28,24 +28,30 @@ export async function POST(request) {
     const docRef = await addDoc(collection(db, "contentPlanning"), {
       keyword,
       contentType,
-      type: 'content-planning',
+      type: "content-planning",
       status: "pending",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     // Forward the request to your dedicated Node.js service endpoint
-    const response = await fetch(`${process.env.API_ENDPOINT}/content-planning`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        keyword: keyword,
-        content_type: contentType,
-        docId: docRef.id,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.API_ENDPOINT}/content-planning`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.BACK_API_KEY,
+          "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
+          "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
+        },
+        body: JSON.stringify({
+          keyword: keyword,
+          content_type: contentType,
+          docId: docRef.id,
+        }),
+      }
+    );
 
     const data = await response.json();
     // const response = { ok: true, status: "ok" };

@@ -32,7 +32,26 @@ export async function POST(req) {
       );
     }
 
-    const { name, email, message } = body;
+    const { name, email, message, token } = body;
+
+    // Verify reCAPTCHA token
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
+
+    const recaptchaResponse = await fetch(verificationUrl, {
+      method: "POST",
+    });
+
+    const recaptchaData = await recaptchaResponse.json();
+    console.log("reCAPTCHA verification response:", recaptchaData);
+
+    if (!recaptchaData.success) {
+      console.error("reCAPTCHA verification failed:", recaptchaData["error-codes"]);
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed" },
+        { status: 400 }
+      );
+    }
 
     // Validate required fields
     if (!name || !email || !message) {

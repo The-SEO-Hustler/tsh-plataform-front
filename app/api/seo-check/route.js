@@ -4,13 +4,34 @@ import { db } from "@/lib/firebase";
 
 export async function POST(request) {
   try {
-    const { url } = await request.json();
+    const { url, token } = await request.json();
+    // Verify reCAPTCHA token
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
+
+    const recaptchaResponse = await fetch(verificationUrl, {
+      method: "POST",
+    });
+
+    const recaptchaData = await recaptchaResponse.json();
+    console.log("reCAPTCHA verification response:", recaptchaData);
+
+    if (!recaptchaData.success) {
+      console.error(
+        "reCAPTCHA verification failed:",
+        recaptchaData["error-codes"]
+      );
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed" },
+        { status: 400 }
+      );
+    }
 
     // Create document in Firebase
     const docRef = await addDoc(collection(db, "seoAnalyses"), {
       url,
       status: "pending",
-      type: 'seo-check',
+      type: "seo-check",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -31,6 +52,9 @@ export async function POST(request) {
         body,
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.BACK_API_KEY,
+          "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
+          "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
         },
       }
     );

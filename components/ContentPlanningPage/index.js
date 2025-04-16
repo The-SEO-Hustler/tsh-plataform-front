@@ -10,12 +10,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import LoadingScreenContentPlanning from "@/components/LoadingScreenContentPlanning";
+import ContentPlanningHero from "../contentPlanningHero";
 
 function ContentPlanning() {
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
   const [loadingPage, setLoadingPage] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
@@ -96,61 +96,7 @@ function ContentPlanning() {
   };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    if (currentContentPlanning && (currentContentPlanning?.status !== "completed" && currentContentPlanning?.status !== "failed")) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
-
-    if (!keyword.trim()) {
-      setError("Please enter a keyword");
-      return;
-    }
-
-    if (
-      currentContentPlanning &&
-      currentContentPlanning?.status !== "completed" &&
-      currentContentPlanning?.status !== "failed"
-    ) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    setAnalysisData(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("keyword", keyword);
-      formData.append("content_type", contentType);
-
-      const response = await fetch("/api/content-planning", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch content analysis");
-      }
-
-      const data = await response.json();
-      if (data.success) {
-        removeAnalysis();
-        trackContentPlanning(data.docId, keyword);
-        router.push(`/content-planning?id=${data.docId}`);
-      }
-    } catch (err) {
-      setError(
-        err.message || "An error occurred while fetching content analysis"
-      );
-      setLoading(false);
-    }
-    setLoading(false);
-  };
 
   const renderHeadingStructure = (headings) => {
     return (
@@ -250,81 +196,7 @@ function ContentPlanning() {
   // If no docId, show the form
   if (!docId) {
     return (
-      <Container className="!py-16">
-        <h1 className="text-3xl font-bold mb-6">Content Planning</h1>
-
-        <div className="bg-white rounded-lg shadow-sm border border-border p-6 mb-6">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="keyword"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                Target Keyword
-              </label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                id="keyword"
-                placeholder="Enter a keyword..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="contentType"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                Content Type
-              </label>
-              <select
-                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                id="contentType"
-                value={contentType}
-                onChange={(e) => setContentType(e.target.value)}
-                disabled={loading}
-              >
-                <option value="blog_post">Blog Post</option>
-                <option value="product_page">Product Page</option>
-                <option value="service_page">Service Page</option>
-                <option value="landing_page">Landing Page</option>
-                <option value="comparison_page">Comparison Page</option>
-                <option value="guide">Complete Guide</option>
-                <option value="list_post">List Post</option>
-                <option value="tutorial">Tutorial/How-To</option>
-                <option value="faq_page">FAQ Page</option>
-              </select>
-            </div>
-
-            <button
-              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />{" "}
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-2 h-4 w-4" /> Analyze Content Structure
-                </>
-              )}
-            </button>
-          </form>
-
-          {error && (
-            <div className="mt-4 p-3 bg-destructive/10 text-destructive rounded-md flex items-center">
-              <TriangleAlert className="mr-2 h-4 w-4" />
-              {error}
-            </div>
-          )}
-        </div>
-      </Container>
+      <ContentPlanningHero />
     );
   }
 

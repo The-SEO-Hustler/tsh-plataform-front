@@ -27,7 +27,7 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
         <div className="flex items-start mb-4">
           <div className={cn(
             "w-24 h-24 rounded-md flex items-center justify-center",
-            featured ? 'bg-primary-foreground/20' : 'bg-accent'
+            featured ? 'bg-primary-foreground/20' : 'bg-accent/40'
           )}>
             {/* Display icon based on tool type */}
             {Icon && (

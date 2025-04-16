@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import FeatureSection from "@/components/FeatureSection";
 import Container from "../container";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+
 
 export default function Contact() {
   const initValues = { name: "", email: "", message: "" };
@@ -10,10 +12,11 @@ export default function Contact() {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
-  async function saveToNotion() {
+  async function saveToNotion(formDataWithToken) {
     try {
-      console.log("Sending form data:", JSON.stringify(formData));
+      console.log("Sending form data with token:", JSON.stringify(formDataWithToken));
 
       const response = await fetch("/api/submit-to-notion", {
         method: "POST",
@@ -21,7 +24,7 @@ export default function Contact() {
           "Content-Type": "application/json",
           "Accept": "application/json"
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataWithToken),
       });
 
       console.log("Response status:", response.status);
@@ -70,7 +73,20 @@ export default function Contact() {
     setFormError(null);
     setIsLoading(true);
 
-    await saveToNotion();
+    if (!executeRecaptcha) {
+      console.log("Execute recaptcha not yet available");
+      setFormError("Recaptcha not ready. Please try again later.");
+      setIsLoading(false);
+      return;
+    }
+
+    console.log("Executing reCAPTCHA...");
+    const token = await executeRecaptcha("contact_form");
+    console.log("reCAPTCHA token:", token);
+
+    const formDataWithToken = { ...formData, token };
+
+    await saveToNotion(formDataWithToken);
 
     setIsLoading(false);
   };
@@ -87,15 +103,11 @@ export default function Contact() {
       answer:
         "For the fastest response, please include the name of the tool or resource in your subject line. This helps us route your question to the right team member.",
     },
-    {
-      question: "Do you offer consulting services?",
-      answer:
-        "We don't offer traditional consulting, but we do offer personalized strategy sessions for our course members. These are intensive 1-hour calls focused on solving your specific SEO challenges.",
-    },
+
     {
       question: "Can I guest post on your blog?",
       answer:
-        'We selectively accept guest contributions from experts with proven experience. Please use the form with "Guest Post Pitch" as the subject and include your proposed topic and relevant writing samples.',
+        'We selectively accept guest contributions from experts with proven experience. Please use the form with "Guest Post Pitch" and include your proposed topic and relevant writing samples.',
     },
     {
       question: "I found a technical issue on your website.",
@@ -213,7 +225,7 @@ export default function Contact() {
                   Check out our comprehensive knowledge base for instant answers
                   to common questions.
                 </p>
-                <Button href="/blog" variant="secondary" size="default">
+                <Button href="/resources" variant="secondary" size="default">
                   Browse Knowledge Base
                 </Button>
               </div>
@@ -222,7 +234,7 @@ export default function Contact() {
 
           {/* Contact Form */}
           <div>
-            <div className="bg-white rounded-lg p-8 shadow-md">
+            <div className="bg-white rounded-lg md:p-8 p-6 shadow-md">
               <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
 
               {formSubmitted ? (

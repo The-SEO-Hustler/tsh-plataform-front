@@ -318,7 +318,7 @@ export default function About() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
 
-              <Button size="lg" href="/free-tools">
+              <Button size="lg" href="/free-tools" variant="ghost">
                 Start With Our Free Tools
               </Button>
               <Button variant="secondary" size="lg" href="/resources">

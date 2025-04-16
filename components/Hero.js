@@ -39,10 +39,10 @@ export default function Hero() {
             <Button
               variant="outline"
               size="lg"
-              href="/blog"
+              href="/resources"
               className="font-bold cursor-pointer"
             >
-              Browse Articles
+              Browse Resources
             </Button>
           </div>
 

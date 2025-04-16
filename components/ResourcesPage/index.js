@@ -5,6 +5,7 @@ import ResourceCard from "@/components/ResourceCard";
 import { Button } from "@/components/ui/button";
 import Container from "../container";
 import { useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function Resources({ resources }) {
 
@@ -13,6 +14,7 @@ export default function Resources({ resources }) {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { executeRecaptcha } = useGoogleReCaptcha();
   // State for type filter
 
   // Resource types
@@ -24,9 +26,9 @@ export default function Resources({ resources }) {
 
 
 
-  async function saveToNotion() {
+  async function saveToNotion(formDataWithToken) {
     try {
-      console.log("Sending form data:", JSON.stringify(formData));
+      console.log("Sending form data:", JSON.stringify(formDataWithToken));
 
       const response = await fetch("/api/submit-to-notion", {
         method: "POST",
@@ -34,7 +36,7 @@ export default function Resources({ resources }) {
           "Content-Type": "application/json",
           "Accept": "application/json"
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataWithToken),
       });
 
       console.log("Response status:", response.status);
@@ -82,8 +84,19 @@ export default function Resources({ resources }) {
     e.preventDefault();
     setFormError(null);
     setIsLoading(true);
+    if (!executeRecaptcha) {
+      console.log("Execute recaptcha not yet available");
+      setFormError("Recaptcha not ready. Please try again later.");
+      setIsLoading(false);
+      return;
+    }
 
-    await saveToNotion();
+    console.log("Executing reCAPTCHA...");
+    const token = await executeRecaptcha("contact_form");
+    console.log("reCAPTCHA token:", token);
+
+    const formDataWithToken = { ...formData, token };
+    await saveToNotion(formDataWithToken);
 
     setIsLoading(false);
   };
@@ -114,7 +127,7 @@ export default function Resources({ resources }) {
       </section>
 
       {/* Navigation */}
-      <nav className="sticky top-16 z-20 bg-white border-b border-gray-200 shadow-sm">
+      <nav className="sticky top-16 z-20 bg-white border-b border-gray-200 shadow-sm ">
         <Container>
           <div className="flex overflow-x-auto no-scrollbar gap-3 py-4">
             {types.map((type) => (

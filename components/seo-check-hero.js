@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ShieldCheck } from "lucide-react";
 import {
   ArrowRight,
   CheckCircle2,
@@ -11,13 +12,13 @@ import {
 import Container from "@/components/container";
 import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
-
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 export default function SeoCheckHero() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { trackAnalysis, currentAnalysis, removeContentPlanning } = useFirebase();
-
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
@@ -27,13 +28,26 @@ export default function SeoCheckHero() {
     }
 
     setIsLoading(true);
+
+    if (!executeRecaptcha) {
+      console.log("Execute recaptcha not yet available");
+      setFormError("Recaptcha not ready. Please try again later.");
+      setIsLoading(false);
+      return;
+    }
+
+    console.log("Executing reCAPTCHA...");
+    const token = await executeRecaptcha("contact_form");
+    console.log("reCAPTCHA token:", token);
+
+
     try {
       const response = await fetch('/api/seo-check', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, token }),
       });
 
       const data = await response.json();
@@ -52,9 +66,17 @@ export default function SeoCheckHero() {
     }
   };
 
+  useEffect(() => {
+    document.body.classList.add("hide-badge");
+    return () => {
+      document.body.classList.remove("hide-badge");
+    }
+
+  }, [])
+
 
   return (
-    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white ">
+    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white py-6 md:py-0">
       {/* Hero Section*/}
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -101,9 +123,17 @@ export default function SeoCheckHero() {
                   </Button>
                 </div>
               </form>
-              <div className="flex items-center gap-4">
-                <CheckCircle2 className="h-5 w-5 text-green-700" />
-                <span>Free analysis - No registration required</span>
+              <div className="flex gap-2 flex-col">
+                <div className="flex items-center gap-4">
+                  <CheckCircle2 className="h-5 w-5 text-green-700" />
+                  <span>Free analysis - No registration required</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <ShieldCheck className="h-5 w-5 text-gray-500" />
+                  <span className="text-xs text-gray-500">This site is protected by reCAPTCHA and the Google
+                    <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+                    <a href="https://policies.google.com/terms">Terms of Service</a> apply.</span>
+                </div>
               </div>
             </div>
 

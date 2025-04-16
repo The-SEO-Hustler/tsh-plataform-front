@@ -101,7 +101,7 @@ export default function Tools() {
       </section>
 
       {/* Filter Categories */}
-      <section className="py-2 md:py-6 bg-white border-b border-gray-200 sticky top-16 z-20">
+      <section className="py-2 md:py-6 bg-white border-b  border-gray-200 sticky top-16 z-20">
         <Container className="!px-0 md:!px-6">
           <div className="flex overflow-x-auto no-scrollbar gap-3 justify-start md:justify-center">
             {categories.map((category, idx) => (

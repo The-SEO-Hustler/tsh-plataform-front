@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { TriangleAlert, LoaderCircle, ArrowLeft } from "lucide-react";
 import Container from "@/components/container";
 import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import LoadingScreenKeyword from "@/components/LoadingScreenKeyword";
 import { Search, Eye, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink } from 'lucide-react';
@@ -17,12 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-
+import AdvancedKeywordAnalysisHero from "@/components/advanced-keyword-analysis-hero";
 function AdvancedKeywordAnalysis() {
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
   const [loadingPage, setLoadingPage] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
@@ -69,60 +66,7 @@ function AdvancedKeywordAnalysis() {
     }
   }, [currentAdvancedKeywordAnalysis]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    if (currentAdvancedKeywordAnalysis && (currentAdvancedKeywordAnalysis?.status !== "completed" && currentAdvancedKeywordAnalysis?.status !== "failed")) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
-
-    if (!keyword.trim()) {
-      setError("Please enter a keyword");
-      return;
-    }
-
-    if (
-      currentAdvancedKeywordAnalysis &&
-      currentAdvancedKeywordAnalysis?.status !== "completed" &&
-      currentAdvancedKeywordAnalysis?.status !== "failed"
-    ) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    setAnalysisData(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("keyword", keyword);
-
-      const response = await fetch("/api/advanced-keyword-analysis", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch content analysis");
-      }
-
-      const data = await response.json();
-      if (data.success) {
-        removeAdvancedKeywordAnalysis();
-        trackAdvancedKeywordAnalysis(data.docId, keyword);
-        router.push(`/advanced-keyword-analysis?id=${data.docId}`);
-      }
-    } catch (err) {
-      setError(
-        err.message || "An error occurred while fetching content analysis"
-      );
-      setLoading(false);
-    }
-    setLoading(false);
-  };
 
   // Function to get color based on intent type
   const getIntentColor = (intent) => {
@@ -190,57 +134,7 @@ function AdvancedKeywordAnalysis() {
 
   if (!docId) {
     return (
-      <Container className="!py-16">
-        <h1 className="text-3xl font-bold mb-6">Advanced Keyword Analysis</h1>
-
-        <div className="bg-white rounded-lg shadow-sm border border-border p-6 mb-6">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="keyword"
-                className="block text-sm font-medium text-foreground mb-2"
-              >
-                Target Keyword
-              </label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                id="keyword"
-                placeholder="Enter a keyword..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-
-
-
-            <button
-              className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />{" "}
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-2 h-4 w-4" /> Analyze Keyword
-                </>
-              )}
-            </button>
-          </form>
-
-          {error && (
-            <div className="mt-4 p-3 bg-destructive/10 text-destructive rounded-md flex items-center">
-              <TriangleAlert className="mr-2 h-4 w-4" />
-              {error}
-            </div>
-          )}
-        </div>
-      </Container>
+      <AdvancedKeywordAnalysisHero />
     );
   }
   if (error) {
@@ -283,7 +177,7 @@ function AdvancedKeywordAnalysis() {
 
         <Container className=" relative z-10">
           <div className="flex items-center gap-3 text-gray-300 text-sm mb-4">
-            <span><Link href="/content-planning" className="hover:text-primary transition-colors"> Content Planning</Link></span>
+            <span><Link href="/advanced-keyword-analysis" className="hover:text-primary transition-colors"> Advanced Keyword Analysis</Link></span>
             <ChevronRight size={16} />
             <span className="text-primary font-semibold">{analysisData.keyword || 'New Content'}</span>
           </div>
@@ -484,29 +378,31 @@ function AdvancedKeywordAnalysis() {
                         {result.domain}
                       </td>
                       <td className="py-4 px-4">
-                        <div className="flex space-x-2">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <button
-                                className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
-                                title="View Headings"
-                              >
-                                <AlignLeft size={16} />
-                              </button>
-                            </DialogTrigger>
-                            <DialogContent className="bg-[#1A1A1A] text-white border-gray-700 ">
-                              <DialogHeader>
-                                <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                                  <AlignLeft className="text-primary" size={20} />
-                                  Headings Structure
-                                </DialogTitle>
-                              </DialogHeader>
-                              <div className="mt-2 max-h-[500px] overflow-y-auto">
-                                <div className="text-sm text-gray-400 mb-4">{result.url}</div>
-                                {renderHeadings(analysisData.headings_by_url[result.url])}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
+                        <div className="flex space-x-2 justify-end">
+                          {analysisData.headings_by_url[result.url] && (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <button
+                                  className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
+                                  title="View Headings"
+                                >
+                                  <AlignLeft size={16} />
+                                </button>
+                              </DialogTrigger>
+                              <DialogContent className="bg-[#1A1A1A] text-white border-gray-700 ">
+                                <DialogHeader>
+                                  <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                                    <AlignLeft className="text-primary" size={20} />
+                                    Headings Structure
+                                  </DialogTitle>
+                                </DialogHeader>
+                                <div className="mt-2 max-h-[500px] overflow-y-auto">
+                                  <div className="text-sm text-gray-400 mb-4">{result.url}</div>
+                                  {renderHeadings(analysisData.headings_by_url[result.url])}
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          )}
 
                           <a
                             href={result.url}
@@ -544,12 +440,12 @@ function AdvancedKeywordAnalysis() {
             Use this keyword analysis to create content that ranks. Our SEO tools help you cut through the noise and focus on what matters.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-black hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-md transition-all">
+            <Button variant="ghost" size="lg" href="/advanced-keyword-analysis">
               Explore More Keywords
-            </button>
-            <button className="bg-white hover:bg-gray-100 text-black font-bold py-3 px-8 rounded-md transition-all">
+            </Button>
+            <Button size="lg" variant="secondary">
               Get the Full Report
-            </button>
+            </Button>
           </div>
         </Container>
       </section>
