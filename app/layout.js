@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -9,16 +9,8 @@ import AnalysisStatusCard from "@/components/AnalysisStatusCard";
 import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
 import KeywordAnalysisStatusCard from "@/components/KeywordAnalysisStatusCard";
 // import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import { Analytics } from '@vercel/analytics/react';
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { Analytics } from "@vercel/analytics/react";
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "The SEO Hustler",
@@ -35,9 +27,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.className} antialiased`}>
         <AppRouterCacheProvider>
           <Analytics />
           <FirebaseProvider>
