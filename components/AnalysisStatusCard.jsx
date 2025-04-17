@@ -54,14 +54,14 @@ function AnalysisStatusCardContent() {
 
   // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/seo-check?id=${currentAnalysis?.docId}`);
+    router.push(`/seo-check/analyzed?id=${currentAnalysis?.docId}`);
   };
 
   const scoreAppearance = getScoreAppearance(currentAnalysis?.score);
   const ScoreIcon = scoreAppearance?.icon;
 
   // Do not render if there's no analysis or if we're already on the SEO check page with a docId.
-  if (!currentAnalysis || (pathname === "/seo-check" && docId)) {
+  if (!currentAnalysis || (pathname === "/seo-check/analyzed" && docId)) {
     return null;
   }
 
@@ -91,7 +91,7 @@ function AnalysisStatusCardContent() {
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-check?id=${currentAnalysis?.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-check/analyzed?id=${currentAnalysis?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}

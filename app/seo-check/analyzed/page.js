@@ -1,5 +1,5 @@
 import React from "react";
-import SeoCheckHero from "@/components/seo-check-hero";
+import SEOAuditPage from "@/components/SeoCheck";
 
 export const metadata = {
   title: "Tool | SEO Check Tool",
@@ -11,11 +11,7 @@ export const metadata = {
   },
 };
 function Page() {
-  return (
-    <div className="hide-badge">
-      <SeoCheckHero />
-    </div>
-  );
+  return <SEOAuditPage />;
 }
 
 export default Page;

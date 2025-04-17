@@ -7,11 +7,9 @@ import Sidebar from "@/components/sidebar";
 import { useSearchParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { cardComponents } from "@/lib/config";
-import SeoCheckHero from "@/components/seo-check-hero";
 import { Download, Eye, EyeOff, LayoutGrid, Rows2, Search } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import RecaptchaProvider from "@/components/RecaptchaProvider";
 import Link from "next/link";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFReport from "@/components/PDFReport";
@@ -136,13 +134,7 @@ function SEOAudit() {
   const ScoreIcon = scoreAppearance.icon;
 
   if (!docId) {
-    return (
-      <div className="hide-badge">
-        <RecaptchaProvider>
-          <SeoCheckHero />
-        </RecaptchaProvider>
-      </div>
-    );
+    router.push("/seo-check");
   }
 
   if (error) {
