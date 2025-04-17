@@ -77,7 +77,7 @@ export default function ResourceCard({
   const sanitizedExcerpt = excerpt ? excerpt.replace(/<[^>]*>/g, '') : '';
 
   return (
-    <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full border border-border">
+    <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full border border-border !no-underline">
       {/* Header */}
       <div className={cn(
         "p-4 flex items-center",

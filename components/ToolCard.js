@@ -17,7 +17,7 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
     <Link
       href={href}
       className={cn(
-        "block group rounded-lg overflow-hidden h-full transition-all",
+        "block group rounded-lg overflow-hidden h-full transition-all !no-underline",
         featured
           ? 'bg-primary/70 text-primary-foreground shadow-md'
           : 'bg-white text-foreground shadow-sm hover:shadow-md'
