@@ -1,13 +1,63 @@
 'use client'
 
-import React from 'react'
-import { Button } from '@/components/ui/button'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import styles from './styles.module.css'
-import { LinkedinIcon, Mail } from 'lucide-react'
+import { LinkedinIcon, Mail, Check, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
 function BlogContentPage({ post, blogPostsData }) {
+  useEffect(() => {
+    const codeBlocks = document.querySelectorAll(".wp-block-kevinbatdorf-code-block-pro")
+    codeBlocks.forEach((block) => {
+      const existingButton = block.querySelector(".copy-button")
+      if (existingButton) return // avoid duplicates
+
+      const span = block.querySelector("span[data-code]")
+      if (!span) return
+
+      const code = span.getAttribute("data-code")
+      if (!code) return
+
+      const button = document.createElement("button")
+      button.className = "copy-button"
+      button.style.position = "absolute"
+      button.style.top = "0.5rem"
+      button.style.right = "0.5rem"
+      button.style.zIndex = "10"
+      button.style.background = "#fff"
+      button.style.border = "1px solid #ccc"
+      button.style.borderRadius = "4px"
+      button.style.padding = "0.25rem"
+      button.style.cursor = "pointer"
+      button.title = "Copy code"
+      button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`// default icon
+
+      let copied = false
+
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code)
+          copied = true
+          toast.success("Copied to clipboard!")
+          button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`
+
+          setTimeout(() => {
+            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`
+            copied = false
+          }, 2000)
+        } catch (err) {
+          toast.error("Failed to copy")
+        }
+      })
+
+      block.style.position = "relative"
+      block.appendChild(button)
+    })
+  }, [])
+
+
+
   // Function to handle social sharing
   const handleShare = (platform) => {
     const url = typeof window !== 'undefined' ? window.location.href : '';
@@ -103,11 +153,11 @@ function BlogContentPage({ post, blogPostsData }) {
           <div className="max-w-4xl mx-auto">
 
             {/* Social Sharing */}
-            <div className="sticky top-24 float-left -ml-16 hidden lg:block">
+            <div className="sticky top-24 float-left -ml-20 hidden lg:block">
               <div className="flex flex-col items-center space-y-4">
                 <button
                   onClick={() => handleShare('facebook')}
-                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
@@ -115,7 +165,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </button>
                 <button
                   onClick={() => handleShare('twitter')}
-                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
@@ -123,7 +173,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </button>
                 <button
                   onClick={() => handleShare('linkedin')}
-                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
@@ -133,7 +183,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </button>
                 <button
                   onClick={() => handleShare('copy')}
-                  className="w-10 h-10 rounded-full bg-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -175,7 +225,7 @@ function BlogContentPage({ post, blogPostsData }) {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-foreground">{post.author}</h3>
+                  <h3 className={`font-bold text-lg text-foreground ${styles.author}`}>{post.author}</h3>
                   <p className="text-muted-foreground">SEO Consultant & Founder</p>
                 </div>
               </div>
@@ -198,32 +248,34 @@ function BlogContentPage({ post, blogPostsData }) {
             </div>
 
             {/* Related Posts */}
-            <div className="mt-16">
-              <h2 className="text-2xl font-bold mb-6 text-foreground">Related Articles</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {blogPostsData.map((relatedPost, index) => {
+            {blogPostsData.length > 0 && (
+              <div className="mt-16">
+                <h2 className="text-2xl font-bold mb-6 text-foreground">Related Articles</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {blogPostsData.map((relatedPost, index) => {
 
-                  return (
-                    <Link
-                      key={index}
-                      href={`/blog/${relatedPost.slug}`}
-                      className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all"
-                    >
-                      <div className="p-6">
-                        <h3 className="text-base font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
-                          {relatedPost.title}
-                        </h3>
-                        {relatedPost.date && (
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <span>{relatedPost.date}</span>
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                  );
-                })}
+                    return (
+                      <Link
+                        key={index}
+                        href={`/blog/${relatedPost.slug}`}
+                        className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all"
+                      >
+                        <div className="p-6">
+                          <h3 className="text-base font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                            {relatedPost.title}
+                          </h3>
+                          {relatedPost.date && (
+                            <div className="flex items-center text-xs text-muted-foreground">
+                              <span>{relatedPost.date}</span>
+                            </div>
+                          )}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

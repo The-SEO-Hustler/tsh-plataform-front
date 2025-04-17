@@ -45,7 +45,7 @@ export default async function Blog() {
         month: 'long',
         day: 'numeric',
       }),
-      readTime: Math.ceil(excerpt.split(' ').length / 200), // Rough estimate
+      readTime: Math.ceil(excerpt.split(' ').length / 250), // Rough estimate
       featuredImage: node.featuredImage?.node?.sourceUrl || '/images/blog-placeholder.jpg',
       featuredImageAlt: node.featuredImage?.node?.altText || node.title,
     };
