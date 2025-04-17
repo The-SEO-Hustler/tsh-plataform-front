@@ -38,7 +38,7 @@ export default function FeatureSection({
   // Description text color based on background
   const descriptionStyles = {
     light: 'text-muted-foreground',
-    dark: 'text-secondary-foreground/70',
+    dark: 'text-secondary-foreground/90',
     primary: 'text-primary-foreground/80',
     gradient: 'text-primary-foreground/80',
     darkGradient: 'text-white/80',

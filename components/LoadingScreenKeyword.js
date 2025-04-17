@@ -28,8 +28,8 @@ export default function LoadingScreenKeyword({ status = 'pending' }) {
         <div className="flex flex-col gap-2">
           <p>You can leave this page while the process runs in the background.</p>
           <p>You&apos;ll be notified when the process is complete.</p>
-          <a href="/blog" className="text-primary underline">
-            Learn more about SEO metrics
+          <a href="/resources" className="text-primary font-bold underline">
+            Learn more about SEO
           </a>
         </div>,
         {

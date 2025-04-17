@@ -22,11 +22,21 @@ export const metadata = {
       "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
   },
   robots: { index: "index", follow: "follow" },
+  // script: [
+  //   {
+  //     src: "https://analytics.ahrefs.com/analytics.js",
+  //     key: "rBdYZW92wmxvaGrL9URAvg",
+  //     async: true,
+  //   },
+  // ],
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://analytics.ahrefs.com/analytics.js" data-key="rBdYZW92wmxvaGrL9URAvg" async></script>
+      </head>
       <body className={`${inter.className} antialiased`}>
         <AppRouterCacheProvider>
           <Analytics />
