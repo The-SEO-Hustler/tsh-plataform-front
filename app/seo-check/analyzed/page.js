@@ -11,7 +11,7 @@ export const metadata = {
   },
 };
 function Page() {
-  return <SEOAuditPage />;
+  return <div className="min-h-screen"><SEOAuditPage /></div>;
 }
 
 export default Page;
