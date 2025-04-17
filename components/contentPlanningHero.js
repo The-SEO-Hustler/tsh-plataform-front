@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import Container from '@/components/container'
 import { Button } from '@/components/ui/button'
@@ -62,7 +63,7 @@ function ContentPlanningHero() {
       if (data.success) {
         removeAnalysis();
         trackContentPlanning(data.docId, keyword);
-        router.push(`/content-planning?id=${data.docId}`);
+        router.push(`/content-planning/result?id=${data.docId}`);
       }
     } catch (err) {
       setError(
@@ -110,7 +111,7 @@ function ContentPlanningHero() {
                 </div>
                 <div className="relative">
                   <select
-                    className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                    className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 cursor-pointer"
                     id="contentType"
                     value={contentType}
                     onChange={(e) => setContentType(e.target.value)}

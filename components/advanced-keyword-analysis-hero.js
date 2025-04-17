@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import Container from '@/components/container'
 import { Input } from '@/components/ui/input'
@@ -62,7 +63,7 @@ function AdvancedKeywordAnalysisHero() {
       if (data.success) {
         removeAdvancedKeywordAnalysis();
         trackAdvancedKeywordAnalysis(data.docId, keyword);
-        router.push(`/advanced-keyword-analysis?id=${data.docId}`);
+        router.push(`/advanced-keyword-analysis/result?id=${data.docId}`);
       }
     } catch (err) {
       setError(

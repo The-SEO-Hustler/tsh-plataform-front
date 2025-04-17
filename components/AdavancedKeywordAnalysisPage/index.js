@@ -133,9 +133,7 @@ function AdvancedKeywordAnalysis() {
 
 
   if (!docId) {
-    return (
-      <AdvancedKeywordAnalysisHero />
-    );
+    router.push("/advanced-keyword-analysis");
   }
   if (error) {
     return (

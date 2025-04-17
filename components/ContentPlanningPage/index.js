@@ -10,7 +10,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import LoadingScreenContentPlanning from "@/components/LoadingScreenContentPlanning";
-import ContentPlanningHero from "../contentPlanningHero";
 
 function ContentPlanning() {
   const [keyword, setKeyword] = useState("");
@@ -195,9 +194,7 @@ function ContentPlanning() {
 
   // If no docId, show the form
   if (!docId) {
-    return (
-      <ContentPlanningHero />
-    );
+    router.push("/content-planning");
   }
 
   // If there's an error, show the error screen

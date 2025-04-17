@@ -9,6 +9,10 @@ export const metadata = {
     description:
       "Check your website's SEO score and get insights to improve your website's search engine rankings.",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 function Page() {
   return <div className="min-h-screen"><SEOAuditPage /></div>;

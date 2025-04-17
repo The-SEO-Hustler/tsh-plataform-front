@@ -1,4 +1,4 @@
-import AdvancedKeywordAnalysisPage from "@/components/AdavancedKeywordAnalysisPage";
+import AdvancedKeywordAnalysisHero from "@/components/advanced-keyword-analysis-hero";
 import React from "react";
 
 export const metadata = {
@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 function Page() {
-  return <AdvancedKeywordAnalysisPage />;
+  return <AdvancedKeywordAnalysisHero />
 }
 
 export default Page;

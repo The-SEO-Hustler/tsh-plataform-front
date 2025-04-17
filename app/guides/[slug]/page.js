@@ -54,7 +54,8 @@ export async function generateMetadata({ params }) {
 }
 
 async function Page({ params }) {
-  const resource = await getResourceBySlug(params.slug);
+  const param = await params
+  const resource = await getResourceBySlug(param.slug);
 
   if (!resource) {
     return (
@@ -65,9 +66,18 @@ async function Page({ params }) {
       </div>
     );
   }
+  const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/resources/${param.slug}?no_redirect=true`));
+  const html = await response.text();
+  const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+  const styles = styleMatches ? styleMatches.map((styleTag) => styleTag.replace(/<\/?style[^>]*>/g, '')).join('\n') : '';
 
   return (
-    <ResourceContentPage post={resource} />
+    <>
+      {styles && (
+        <style dangerouslySetInnerHTML={{ __html: styles }} />
+      )}
+      <ResourceContentPage post={resource} />
+    </>
   );
 }
 

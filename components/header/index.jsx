@@ -170,12 +170,12 @@ function Header() {
             </SheetHeader>
             <div className="flex flex-col space-y-4 mt-4 px-4">
               <SheetClose asChild>
-                <Link href="/free-tools" className="text-sm font-medium cursor-pointer !no-underline !font-bold">
+                <Link href="/free-tools" className="text-sm  cursor-pointer !no-underline !font-bold">
                   Free Tools
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/seo-check" className="text-sm font-medium flex items-center space-x-1 !no-underline !font-bold">
+                <Link href="/seo-check" className="text-sm  flex items-center space-x-1 !no-underline !font-bold">
                   <svg width="20" height="20" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -191,36 +191,36 @@ function Header() {
               <SheetClose asChild>
                 <Link
                   href="/advanced-keyword-analysis"
-                  className="text-sm font-medium flex items-center space-x-1"
+                  className="text-sm  flex items-center space-x-1"
                 >
                   <ChartArea width={20} height={20} strokeWidth={1.5} className=" rounded-md" />
                   <span>Advanced Keyword Analysis</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/content-planning" className="text-sm font-medium flex items-center space-x-1">
+                <Link href="/content-planning" className="text-sm  flex items-center space-x-1">
                   <NotebookPen width={20} height={20} strokeWidth={1.5} className=" rounded-md" />
                   <span>Content Planning</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/seo-check" className="text-sm font-medium !no-underline !font-bold">
+                <Link href="/seo-check" className="text-sm  !no-underline !font-bold">
 
                   <span>SEO Check On Page</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/blog" className="text-sm font-medium !no-underline !font-bold">
+                <Link href="/blog" className="text-sm  !no-underline !font-bold">
                   Blog
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/resources" className="text-sm font-medium !no-underline !font-bold">
+                <Link href="/resources" className="text-sm  !no-underline !font-bold">
                   Resources
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/about" className="text-sm font-medium !no-underline !font-bold">
+                <Link href="/about" className="text-sm  !no-underline !font-bold">
                   About
                 </Link>
               </SheetClose>
@@ -257,8 +257,8 @@ const ListItem = (
         >
           <div
             className={cn(
-              "text-sm whitespace-nowrap font-medium leading-none",
-              { "text-[#ffc000]": fullPath === href } // Compare full path (including hash) with href
+              "text-sm whitespace-nowrap  leading-none",
+              // Compare full path (including hash) with href
             )}
           >
             {title}{" "}

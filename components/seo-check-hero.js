@@ -59,7 +59,7 @@ function SeoCheckHeroContent() {
       if (data.success) {
         removeContentPlanning();
         trackAnalysis(data.docId, url);
-        router.push(`/seo-check/analyzed?id=${data.docId}`);
+        router.push(`/seo-check/result?id=${data.docId}`);
         setIsLoading(false);
       } else {
         throw new Error(data.error);
@@ -256,28 +256,28 @@ function SeoCheckHeroContent() {
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Title Tag Analysis</p>
-                    <p className="text-gray-400">Too long? Too short? Missing keywords? We'll tell you what's hurting your click-through rates.</p>
+                    <p className="text-gray-800">Too long? Too short? Missing keywords? We'll tell you what's hurting your click-through rates.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Meta Description Audit</p>
-                    <p className="text-gray-400">The tiny snippet that can double your traffic (or kill it if done poorly).</p>
+                    <p className="text-gray-800">The tiny snippet that can double your traffic (or kill it if done poorly).</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">H1-H6 Tag Structure</p>
-                    <p className="text-gray-400">The invisible framework that Google uses to understand what your page is about.</p>
+                    <p className="text-gray-800">The invisible framework that Google uses to understand what your page is about.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">URL Structure Check</p>
-                    <p className="text-gray-400">Messy URLs are conversion killers. We'll show you what to clean up.</p>
+                    <p className="text-gray-800">Messy URLs are conversion killers. We'll show you what to clean up.</p>
                   </div>
                 </li>
               </ul>
@@ -293,28 +293,28 @@ function SeoCheckHeroContent() {
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Keyword Usage Analysis</p>
-                    <p className="text-gray-400">Are you targeting the right terms, or wasting space on the wrong ones?</p>
+                    <p className="text-gray-800">Are you targeting the right terms, or wasting space on the wrong ones?</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Content Length Check</p>
-                    <p className="text-gray-400">Too thin? Too bloated? We'll tell you how your content stacks up against competitors.</p>
+                    <p className="text-gray-800">Too thin? Too bloated? We'll tell you how your content stacks up against competitors.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Readability Score</p>
-                    <p className="text-gray-400">Is your content actually readable by humans? (Hint: most isn't)</p>
+                    <p className="text-gray-800">Is your content actually readable by humans? (Hint: most isn't)</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Duplicate Content Detection</p>
-                    <p className="text-gray-400">Find the hidden content issues that can tank your rankings overnight.</p>
+                    <p className="text-gray-800">Find the hidden content issues that can tank your rankings overnight.</p>
                   </div>
                 </li>
               </ul>
@@ -330,28 +330,28 @@ function SeoCheckHeroContent() {
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Page Speed Analysis</p>
-                    <p className="text-gray-400">Every second of load time costs you 7% in conversions. How much are you losing?</p>
+                    <p className="text-gray-800">Every second of load time costs you 7% in conversions. How much are you losing?</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Mobile Responsiveness</p>
-                    <p className="text-gray-400">With Google's mobile-first indexing, this isn't optional anymore.</p>
+                    <p className="text-gray-800">With Google's mobile-first indexing, this isn't optional anymore.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Broken Link Detection</p>
-                    <p className="text-gray-400">Find and fix the broken links that are bleeding your site's authority.</p>
+                    <p className="text-gray-800">Find and fix the broken links that are bleeding your site's authority.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Image Optimization</p>
-                    <p className="text-gray-400">Discover if your images are secretly killing your page speed.</p>
+                    <p className="text-gray-800">Discover if your images are secretly killing your page speed.</p>
                   </div>
                 </li>
               </ul>
@@ -367,28 +367,28 @@ function SeoCheckHeroContent() {
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Schema Markup Validation</p>
-                    <p className="text-gray-400">Are you giving Google the extra data it needs to show rich snippets?</p>
+                    <p className="text-gray-800">Are you giving Google the extra data it needs to show rich snippets?</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Social Media Tag Analysis</p>
-                    <p className="text-gray-400">Make your content look perfect when shared on social media.</p>
+                    <p className="text-gray-800">Make your content look perfect when shared on social media.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">Robots.txt & Sitemap Check</p>
-                    <p className="text-gray-400">Ensure Google can properly crawl and index your site.</p>
+                    <p className="text-gray-800">Ensure Google can properly crawl and index your site.</p>
                   </div>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-primary text-black p-1 rounded-full mr-2 mt-1 min-w-8 min-h-8 flex items-center justify-center">✓</span>
                   <div>
                     <p className="font-bold">CDN Usage Detection</p>
-                    <p className="text-gray-400">Is your site being served from the fastest possible locations?</p>
+                    <p className="text-gray-800">Is your site being served from the fastest possible locations?</p>
                   </div>
                 </li>
               </ul>

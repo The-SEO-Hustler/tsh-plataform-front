@@ -54,14 +54,14 @@ function KeywordAnalysisStatusCardContent() {
 
   // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/advanced-keyword-analysis?id=${currentAdvancedKeywordAnalysis?.docId}`);
+    router.push(`/advanced-keyword-analysis/result?id=${currentAdvancedKeywordAnalysis?.docId}`);
   };
 
   const scoreAppearance = getScoreAppearance(currentAdvancedKeywordAnalysis?.score);
   const ScoreIcon = scoreAppearance?.icon;
 
   // Do not render if there's no analysis or if we're already on the SEO check page with a docId.
-  if (!currentAdvancedKeywordAnalysis || (pathname === "/advanced-keyword-analysis" && docId)) {
+  if (!currentAdvancedKeywordAnalysis || (pathname === "/advanced-keyword-analysis/result" && docId)) {
     return null;
   }
 
@@ -91,7 +91,7 @@ function KeywordAnalysisStatusCardContent() {
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/advanced-keyword-analysis?id=${currentAdvancedKeywordAnalysis?.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/advanced-keyword-analysis/result?id=${currentAdvancedKeywordAnalysis?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}

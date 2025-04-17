@@ -125,9 +125,16 @@ export default async function BlogPost({ params }) {
       }),
     };
   });
+  const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/${param.slug}?no_redirect=true`));
+  const html = await response.text();
+  const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+  const styles = styleMatches ? styleMatches.map((styleTag) => styleTag.replace(/<\/?style[^>]*>/g, '')).join('\n') : '';
 
   return (
     <>
+      {styles && (
+        <style dangerouslySetInnerHTML={{ __html: styles }} />
+      )}
       <BlogContentPage post={formattedPost} blogPostsData={blogPostsData} />
     </>
   );

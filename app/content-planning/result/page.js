@@ -1,4 +1,4 @@
-import ContentPlanningHero from "@/components/contentPlanningHero";
+import ContentPlanningPage from "@/components/ContentPlanningPage";
 import React from "react";
 
 export const metadata = {
@@ -10,10 +10,14 @@ export const metadata = {
     description:
       "Analyze your content for SEO optimization and get insights to improve your website's search engine rankings.",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 function Page() {
-  return <ContentPlanningHero />
+  return <ContentPlanningPage />;
 }
 
 export default Page;

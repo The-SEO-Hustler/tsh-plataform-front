@@ -25,7 +25,7 @@ export default function BlogCard({
   return (
     <Link
       href={`/blog/${slug}`}
-      className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full"
+      className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full !no-underline"
     >
       {/* Image Container */}
       {featuredImage && (
