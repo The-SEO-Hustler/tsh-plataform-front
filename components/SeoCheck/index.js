@@ -221,7 +221,7 @@ function SEOAudit() {
                 className="px-4 py-2 bg-primary text-black  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
               >
                 <Download className="w-4 h-4" />
-                <span className="hidden md:inline">Export PDF</span>
+                <span className="hidden md:inline ">Export PDF</span>
               </PDFDownloadLink>
             </div>
           </div>
@@ -942,7 +942,7 @@ function SEOAudit() {
 
                 {/* Action Button */}
                 <div className="text-center mt-12">
-                  <Link href="/seo-check" className="bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md flex items-center gap-2 transition-all mx-auto">
+                  <Link href="/seo-check" className="bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md flex items-center gap-2 transition-all mx-auto max-w-max">
                     Run Another SEO Check
                   </Link>
                 </div>
