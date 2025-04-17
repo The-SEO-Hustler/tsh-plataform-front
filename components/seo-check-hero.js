@@ -111,7 +111,7 @@ function SeoCheckHeroContent() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${isLoading ? "animate-pulse" : ""}`}
+                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 animate-pulse disabled:opacity-100  ${isLoading ? "animate-pulse !bg-primary " : ""}`}
                       disabled={isLoading}
                     >
                       {isLoading ? "Starting Analysis..." : "Analyze"}
