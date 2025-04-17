@@ -60,6 +60,7 @@ function SeoCheckHeroContent() {
         removeContentPlanning();
         trackAnalysis(data.docId, url);
         router.push(`/seo-check/analyzed?id=${data.docId}`);
+        setIsLoading(false);
       } else {
         throw new Error(data.error);
       }
@@ -128,8 +129,8 @@ function SeoCheckHeroContent() {
                   <div className="flex items-center gap-4">
                     <ShieldCheck className="min-h-5 min-w-5 text-gray-500" />
                     <span className="text-xs text-gray-500">This site is protected by reCAPTCHA and the Google
-                      <a href="https://policies.google.com/privacy">Privacy Policy</a> and
-                      <a href="https://policies.google.com/terms">Terms of Service</a> apply.</span>
+                      <a href="https://policies.google.com/privacy" className="text-primary ml-1  ">Privacy Policy</a> and
+                      <a href="https://policies.google.com/terms" className="text-primary ml-1">Terms of Service</a> apply.</span>
                   </div>
                 </div>
               </div>

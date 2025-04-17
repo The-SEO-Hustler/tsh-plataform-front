@@ -113,7 +113,7 @@ function AnalysisStatusCardContent() {
             <div
               className={`h-8 rounded-md gap-1.5 px-3 font-medium py-0.5 flex items-center border ${scoreAppearance.borderColor} ${scoreAppearance.bgColor} ${scoreAppearance.textColor}`}
             >
-              <div className={`${scoreAppearance.textColor} flex items-center gap-1`}>
+              <div className={`${scoreAppearance.textColor} flex items-center gap-1 text-sm md:text-base`}>
                 <ScoreIcon size={14} />
                 <span>
                   Score: {currentAnalysis?.score || "N/A"}
