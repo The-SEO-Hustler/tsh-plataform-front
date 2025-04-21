@@ -17,6 +17,7 @@ export const metadata = {
   title: "The SEO Hustler",
   description:
     "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
+  canonical: "https://theseohustler.com/",
   openGraph: {
     title: "The SEO Hustler",
     description:
