@@ -1,7 +1,6 @@
 import React from 'react';
 import { getAllResourcePage } from '@/lib/wordpress/resources/getAllResourcePage';
 import ResourceCard from '@/components/ResourceCard';
-import { Metadata } from 'next';
 import Container from '@/components/container';
 export const metadata = {
   title: 'SEO Ebooks | The SEO',

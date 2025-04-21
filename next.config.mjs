@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  trailingSlash: true,
+  // trailingSlash: true,
+  // skipTrailingSlashRedirect: false,
   compiler: {
     removeConsole: process.env.NODE_ENV === "development" ? false : true,
   },
@@ -20,6 +21,13 @@ const nextConfig = {
       },
     ],
   },
+  // redirects: async () => [
+  //   {
+  //     source: "/",
+  //     destination: "/free-tools",
+  //     permanent: true,
+  //   },
+  // ],
 };
 
 export default nextConfig;
