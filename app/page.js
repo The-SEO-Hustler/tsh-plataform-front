@@ -11,26 +11,19 @@ import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
 import { Search, NotebookPen, ChartArea } from 'lucide-react';
 export const revalidate = 3600;
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
+
+export const metadata = getMetadata(SEO_DATA.index);
 
 
-export const metadata = {
-  title: "The SEO Hustler",
-  description:
-    "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
-  canonical: "https://theseohustler.com/",
-  openGraph: {
-    title: "The SEO Hustler",
-    description:
-      "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
-  },
-};
 
 export default async function Home() {
   const latestPosts = await getAllPostsForHome();
   let latestResources = await getAllResourcePage();
   latestResources = latestResources.guides.concat(latestResources.spreadsheets, latestResources.ebooks);
 
-  console.log('latestResources', latestResources);
+  // console.log('latestResources', latestResources);
   // const latestPosts = [];
 
   const blogPosts = latestPosts.map(({ node }) => {

@@ -2,10 +2,11 @@ import React from 'react';
 import { getAllResourcePage } from '@/lib/wordpress/resources/getAllResourcePage';
 import ResourceCard from '@/components/ResourceCard';
 import Container from '@/components/container';
-export const metadata = {
-  title: 'SEO Ebooks | The SEO',
-  description: 'Download our free SEO ebooks to learn more about search engine optimization.',
-};
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
+
+export const metadata = getMetadata(SEO_DATA.ebooks);
+
 
 export const revalidate = 3600;
 

@@ -37,6 +37,9 @@ export async function generateMetadata({ params }) {
   return {
     title: resource.title,
     description: resource.excerpt,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/ebooks/${param.slug}`,
+    },
     openGraph: {
       title: resource.title,
       description: resource.excerpt,

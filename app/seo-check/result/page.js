@@ -1,19 +1,10 @@
 import React from "react";
 import SEOAuditPage from "@/components/SeoCheck";
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
 
-export const metadata = {
-  title: "Tool | SEO Check Tool",
-  description: "Check your website's SEO score and get insights to improve your website's search engine rankings. ",
-  openGraph: {
-    title: "Tool | SEO Check Tool",
-    description:
-      "Check your website's SEO score and get insights to improve your website's search engine rankings.",
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export const metadata = getMetadata({ ...SEO_DATA.seoCheckResult });
+
 function Page() {
   return <div className="min-h-screen"><SEOAuditPage /></div>;
 }

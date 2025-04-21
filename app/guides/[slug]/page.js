@@ -51,6 +51,9 @@ export async function generateMetadata({ params }) {
         }
       ] : [],
     },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/guides/${param.slug}`,
+    },
   };
 }
 

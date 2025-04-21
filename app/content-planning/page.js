@@ -1,16 +1,11 @@
 import ContentPlanningHero from "@/components/contentPlanningHero";
 import React from "react";
 
-export const metadata = {
-  title: "Tool | Content Planning Tool",
-  description:
-    "Analyze your content for SEO optimization and get insights to improve your website's search engine rankings.",
-  openGraph: {
-    title: "Tool | Content Planning Tool",
-    description:
-      "Analyze your content for SEO optimization and get insights to improve your website's search engine rankings.",
-  },
-};
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
+
+export const metadata = getMetadata({ ...SEO_DATA.contentPlanning });
+
 
 function Page() {
   return <ContentPlanningHero />

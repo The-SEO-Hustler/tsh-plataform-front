@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/container";
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
+
+export const metadata = getMetadata({ ...SEO_DATA.privacy });
+
 
 export default function Privacy() {
   // Last updated date for the Privacy Policy

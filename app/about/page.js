@@ -1,5 +1,7 @@
 import React from "react";
 import About from "@/components/AboutPage";
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
 // export const metadata = {
 //   title: "About Us",
 //   description: "About Us",
@@ -9,6 +11,9 @@ import About from "@/components/AboutPage";
 
 //   },
 // };
+
+export const metadata = getMetadata(SEO_DATA.about);
+
 function Page() {
   return <About />;
 }

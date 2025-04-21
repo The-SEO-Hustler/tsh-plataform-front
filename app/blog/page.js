@@ -1,17 +1,12 @@
 import { GET_POSTS } from '@/lib/wordpress/posts/getPosts';
 import { getAllCategories } from '@/lib/wordpress/posts/getAllCategories';
 import BlogClient from '@/components/BlogClient';
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
 
-export const revalidate = 3600;
+export const metadata = getMetadata(SEO_DATA.blog);
 
-export const metadata = {
-  title: 'Blog | SEO Check Tool',
-  description: 'Latest SEO tips, strategies, and insights to help improve your website\'s search engine rankings.',
-  openGraph: {
-    title: 'Blog | SEO Check Tool',
-    description: 'Latest SEO tips, strategies, and insights to help improve your website\'s search engine rankings.',
-  },
-};
+
 
 export default async function Blog() {
   // Fetch all posts

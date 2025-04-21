@@ -47,7 +47,7 @@ export async function POST(request) {
     const data = await response.json();
     // const response = { ok: true, status: "ok" };
     // const data = { keyword, contentType };
-    console.log("data", data);
+    // console.log("data", data);
 
     // Return the response from your Node.js service
     return NextResponse.json({ ...data, docId: docRef.id });

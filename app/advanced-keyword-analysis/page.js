@@ -1,16 +1,11 @@
 import AdvancedKeywordAnalysisHero from "@/components/advanced-keyword-analysis-hero";
 import React from "react";
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
 
-export const metadata = {
-  title: "Tool | Advanced Keyword Analysis Tool",
-  description:
-    "Analyze your content for SEO optimization and get insights to improve your website's search engine rankings.",
-  openGraph: {
-    title: "Tool | Advanced Keyword Analysis Tool",
-    description:
-      "Analyze your content for SEO optimization and get insights to improve your website's search engine rankings.",
-  },
-};
+export const metadata = getMetadata(SEO_DATA.advancedKeywordAnalysisHero);
+
+
 
 function Page() {
   return <AdvancedKeywordAnalysisHero />

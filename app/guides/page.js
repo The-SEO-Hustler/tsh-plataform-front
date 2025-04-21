@@ -2,10 +2,11 @@ import React from 'react';
 import { getAllResourcePage } from '@/lib/wordpress/resources/getAllResourcePage';
 import ResourceCard from '@/components/ResourceCard';
 import Container from '@/components/container';
-export const metadata = {
-  title: 'SEO Guides | The SEO',
-  description: 'Comprehensive SEO guides to help you improve your website\'s search engine rankings.',
-};
+import getMetadata from '@/lib/getMetadata';
+import SEO_DATA from '@/lib/seo-data';
+
+export const metadata = getMetadata(SEO_DATA.guides);
+
 
 export const revalidate = 3600;
 
