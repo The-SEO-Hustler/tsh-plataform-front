@@ -76,7 +76,7 @@ export default function NotFoundLayout() {
                   </Button>
                 </Link>
 
-                <Link href="/tools">
+                <Link href="/free-tools">
                   <Button
                     variant="outline"
                     size="lg"

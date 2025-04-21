@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { notFound } from 'next/navigation';
 import "@wordpress/block-library/build-style/common.css";
 import "@wordpress/block-library/build-style/style.css";
 import "@wordpress/block-library/build-style/theme.css";
@@ -63,15 +62,7 @@ export default async function BlogPost({ params }) {
   const data = await getPostAndMorePosts(param.slug);
 
   if (!data?.post) {
-    return (
-      <div className="flex justify-center items-center min-h-screen bg-surface">
-        <div className="p-6 text-center">
-          <h2 className="text-2xl font-bold mb-4">Article Not Found</h2>
-          <p className="mb-6">The article you're looking for doesn't exist or has been moved.</p>
-          <Button href="/blog">Back to Blog</Button>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   // Transform content URLs

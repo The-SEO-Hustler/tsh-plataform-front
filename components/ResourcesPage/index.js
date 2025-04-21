@@ -198,7 +198,7 @@ export default function Resources({ resources }) {
       </div>
 
       {/* Premium Resources Callout */}
-      <section className="py-16 bg-primary">
+      {/* <section className="py-16 bg-primary">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4 text-on-primary">
@@ -218,7 +218,7 @@ export default function Resources({ resources }) {
             </Button>
           </div>
         </Container>
-      </section>
+      </section> */}
 
       {/* Request Resources Section */}
       <FeatureSection

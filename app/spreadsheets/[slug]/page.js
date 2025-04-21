@@ -5,6 +5,7 @@ import ResourceContentPage from '@/components/ResourceContentPage';
 import "@wordpress/block-library/build-style/common.css";
 import "@wordpress/block-library/build-style/style.css";
 import "@wordpress/block-library/build-style/theme.css";
+import { notFound } from 'next/navigation';
 export const revalidate = 3600;
 
 
@@ -57,13 +58,7 @@ async function Page({ params }) {
   const resource = await getResourceBySlug(params.slug);
 
   if (!resource) {
-    return (
-      <div className="container mx-auto px-4 py-32 text-center">
-        <h1 className="text-3xl font-bold mb-4">Resource Not Found</h1>
-        <p className="text-muted-foreground mb-8">The resource you're looking for doesn't exist or has been moved.</p>
-        <a href="/spreadsheets" className="text-primary hover:underline">Back to Spreadsheets</a>
-      </div>
-    );
+    notFound();
   }
 
   const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/resources/${param.slug}?no_redirect=true`));

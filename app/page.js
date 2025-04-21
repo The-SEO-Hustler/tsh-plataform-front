@@ -28,6 +28,7 @@ export default async function Home() {
   const latestPosts = await getAllPostsForHome();
   let latestResources = await getAllResourcePage();
   latestResources = latestResources.guides.concat(latestResources.spreadsheets, latestResources.ebooks);
+
   console.log('latestResources', latestResources);
   // const latestPosts = [];
 
@@ -272,7 +273,7 @@ export default async function Home() {
         description="Download actionable resources to streamline your SEO workflow and get results faster."
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {latestResources.map((resource, index) => (
+          {latestResources.slice(0, 3).map((resource, index) => (
             <ResourceCard
               key={index}
               {...resource}

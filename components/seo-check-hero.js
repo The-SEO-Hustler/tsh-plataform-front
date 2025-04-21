@@ -614,7 +614,7 @@ function SeoCheckHeroContent() {
         </Container>
       </section>
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-100 border-t border-gray-100 text-black">
+      {/* <section className="py-16 bg-gray-100 border-t border-gray-100 text-black">
         <Container>
           <h2 className="text-3xl font-bold mb-12 text-center">
             FAQs About Our SEO Checker
@@ -666,7 +666,7 @@ function SeoCheckHeroContent() {
             </Link>
           </div>
         </Container>
-      </section>
+      </section> */}
 
     </main>
   );
