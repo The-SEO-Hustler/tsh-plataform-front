@@ -7,6 +7,8 @@ import { LinkedinIcon, Mail, Check, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
 import { replaceSeoAnalyzer } from '@/lib/replaceSeoAnalyzer'
+// import useStickyTableHeaders from '@/lib/useStickyTableHeaders'
+
 function BlogContentPage({ post, blogPostsData }) {
   useEffect(() => {
     const codeBlocks = document.querySelectorAll(".wp-block-kevinbatdorf-code-block-pro")
@@ -57,7 +59,7 @@ function BlogContentPage({ post, blogPostsData }) {
     })
   }, [])
 
-
+  // useStickyTableHeaders(`.${styles.content} table`);
 
   // Function to handle social sharing
   const handleShare = (platform) => {
