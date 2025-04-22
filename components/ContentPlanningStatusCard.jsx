@@ -78,7 +78,7 @@ function AnalysisStatusCardContent() {
           >
             {getStatusIcon(currentContentPlanning?.status)}
           </div>
-          <h3 className="font-medium text-gray-900">
+          <h3 className="font-medium text-gray-900 !text-base">
             {getStatusText(currentContentPlanning?.status)}
           </h3>
         </div>

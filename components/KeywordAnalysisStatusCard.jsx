@@ -78,7 +78,7 @@ function KeywordAnalysisStatusCardContent() {
           >
             {getStatusIcon(currentAdvancedKeywordAnalysis?.status)}
           </div>
-          <h3 className="font-medium text-gray-900">
+          <h3 className="font-medium text-gray-900 !text-base">
             {getStatusText(currentAdvancedKeywordAnalysis?.status)}
           </h3>
         </div>

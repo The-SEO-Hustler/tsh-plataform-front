@@ -19,7 +19,6 @@ function SeoCheckForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const { trackAnalysis, currentAnalysis, removeContentPlanning } = useFirebase();
-  const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const handleSubmit = async (e) => {
@@ -58,7 +57,7 @@ function SeoCheckForm() {
       if (data.success) {
         removeContentPlanning();
         trackAnalysis(data.docId, url);
-        router.push(`/seo-check/result?id=${data.docId}`);
+        // router.push(`/seo-check/result?id=${data.docId}`);
         setIsLoading(false);
       } else {
         throw new Error(data.error);
@@ -85,7 +84,7 @@ function SeoCheckForm() {
           disabled={isLoading}
         />
         <button type="submit"
-          className={`bg-black hover:bg-black/90 text-white font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""}`}
+          className={`bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""}`}
           disabled={isLoading}
         >
           {isLoading ? "Analyzing..." : "Analyze My Site Now"}

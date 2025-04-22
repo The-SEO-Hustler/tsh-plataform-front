@@ -5,6 +5,7 @@ import s from './styles.module.css'
 import { LinkedinIcon, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import { replaceSeoAnalyzer } from '@/lib/replaceSeoAnalyzer'
 function ResourceContentPage({ post }) {
 
   useEffect(() => {
@@ -193,8 +194,9 @@ function ResourceContentPage({ post }) {
             </div>
 
             {/* Main Article Content */}
-            <article className={`${s.content}`}>
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
+
+            <article className={s.content}>
+              {replaceSeoAnalyzer(post.content)}
             </article>
 
             {/* Tags */}

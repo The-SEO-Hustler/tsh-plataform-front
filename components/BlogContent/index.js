@@ -6,9 +6,7 @@ import styles from './styles.module.css'
 import { LinkedinIcon, Mail, Check, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
-import parse from 'html-react-parser'
-import SeoCheckForm from '../seoCheckForm'
-
+import { replaceSeoAnalyzer } from '@/lib/replaceSeoAnalyzer'
 function BlogContentPage({ post, blogPostsData }) {
   useEffect(() => {
     const codeBlocks = document.querySelectorAll(".wp-block-kevinbatdorf-code-block-pro")
@@ -59,15 +57,7 @@ function BlogContentPage({ post, blogPostsData }) {
     })
   }, [])
 
-  const replaceSeoAnalyzer = (htmlContent) => {
-    return parse(htmlContent, {
-      replace: ({ attribs, name }) => {
-        if (name === 'div' && attribs && attribs.id === 'seo-page-analyzer') {
-          return <SeoCheckForm />;
-        }
-      },
-    });
-  };
+
 
   // Function to handle social sharing
   const handleShare = (platform) => {

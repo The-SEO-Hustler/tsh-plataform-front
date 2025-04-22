@@ -38,26 +38,52 @@
   font-family: 'Inter', sans-serif !important;
   /* font-weight: 800; */
 }
+
+/* Reset styles for table elements to neutralize WordPress styles */
+.content table,
+.content th,
+.content td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+/* Apply Shadcn-like styles */
 .content table {
-  /* border-radius: 15px; */
-  overflow: hidden;
-  background-color: rgba(var(--color-background-rgb), 0.5);
-  border: 1px solid var(--color-background);
-  /* color: var(--color-primary); */
-  display: block;
-  overflow: auto;
+  width: 100%;
+  border-collapse: collapse;
+  /* background-color: #fff; */
+  /* border: 1px solid #e0e0e0; */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  min-width: 800px;
+}
+.content table thead{
+  border-bottom: 0 !important;
 }
 .content table th,
 .content table td {
-  padding: 10px;
+  padding: 12px 15px;
   text-align: left;
-  /* border: unset; */
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  vertical-align: middle;
 }
 
 .content table thead tr {
-  /* color: var(--color-primary); */
-  white-space: nowrap;
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: bold;
 }
+
+.content table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
 .content li {
   margin-bottom: 1rem;
 }
