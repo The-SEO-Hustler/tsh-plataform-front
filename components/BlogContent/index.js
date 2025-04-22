@@ -6,6 +6,9 @@ import styles from './styles.module.css'
 import { LinkedinIcon, Mail, Check, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import parse from 'html-react-parser'
+import SeoCheckForm from '../seoCheckForm'
+
 function BlogContentPage({ post, blogPostsData }) {
   useEffect(() => {
     const codeBlocks = document.querySelectorAll(".wp-block-kevinbatdorf-code-block-pro")
@@ -56,7 +59,15 @@ function BlogContentPage({ post, blogPostsData }) {
     })
   }, [])
 
-
+  const replaceSeoAnalyzer = (htmlContent) => {
+    return parse(htmlContent, {
+      replace: ({ attribs, name }) => {
+        if (name === 'div' && attribs && attribs.id === 'seo-page-analyzer') {
+          return <SeoCheckForm />;
+        }
+      },
+    });
+  };
 
   // Function to handle social sharing
   const handleShare = (platform) => {
@@ -195,7 +206,7 @@ function BlogContentPage({ post, blogPostsData }) {
 
             {/* Main Article Content */}
             <article className={styles.content}>
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              {replaceSeoAnalyzer(post.content)}
             </article>
 
             {/* Tags */}
@@ -246,7 +257,6 @@ function BlogContentPage({ post, blogPostsData }) {
                 </a>
               </div>
             </div>
-
             {/* Related Posts */}
             {blogPostsData.length > 0 && (
               <div className="mt-16">
@@ -260,8 +270,14 @@ function BlogContentPage({ post, blogPostsData }) {
                         href={`/blog/${relatedPost.slug}`}
                         className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all"
                       >
+
+                        {relatedPost.featuredImage.node.sourceUrl && (
+                          <div className='relative h-40 w-full'>
+                            <Image src={relatedPost.featuredImage.node.sourceUrl} alt={relatedPost.title} className="object-cover" fill />
+                          </div>
+                        )}
                         <div className="p-6">
-                          <h3 className="text-base font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                          <h3 className="!text-lg font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
                             {relatedPost.title}
                           </h3>
                           {relatedPost.date && (

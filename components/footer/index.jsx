@@ -88,17 +88,16 @@ export default function Footer() {
               ))}
             </div>
           </div>
-
           {/* Link Columns */}
           {sections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-lg font-bold text-primary mb-4">{section.title}</h3>
+              <h3 className="text-lg font-bold !text-primary mb-4">{section.title}</h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-zinc-300 hover:text-primary transition-colors text-sm"
+                      className="!text-zinc-300 hover:text-primary transition-colors text-sm"
                     >
                       {link.name}
                     </Link>
