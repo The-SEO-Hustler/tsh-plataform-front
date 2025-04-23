@@ -33,6 +33,7 @@ export async function generateMetadata({ params }) {
       description: 'The resource you\'re looking for doesn\'t exist or has been moved.',
     };
   }
+  console.log('resource', `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug} `);
 
   return {
     title: resource.title,
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }) {
       ] : [],
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/guides/${param.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug} `,
     },
   };
 }
@@ -64,7 +65,7 @@ async function Page({ params }) {
   if (!resource) {
     notFound();
   }
-  const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/resources/${param.slug}?no_redirect=true`));
+  const response = await fetch(String(`${process.env.BACK_SITE_URL} /blog/resources / ${param.slug}?no_redirect = true`));
   const html = await response.text();
   const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
   const styles = styleMatches ? styleMatches.map((styleTag) => styleTag.replace(/<\/?style[^>]*>/g, '')).join('\n') : '';

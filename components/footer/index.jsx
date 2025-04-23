@@ -20,7 +20,7 @@ export default function Footer() {
         { name: 'SEO Basics', href: '/guides/seo-basics' },
         { name: 'Keyword Research', href: '/guides/keyword-research' },
         { name: 'Link Building', href: '/guides/link-building' },
-        { name: 'Technical SEO', href: '/guides/technical-seo' },
+        { name: 'Technical SEO', href: '/guides/technical-seo-audit' },
         { name: 'Content Strategy', href: '/guides/content-strategy' },
       ],
     },

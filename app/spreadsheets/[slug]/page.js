@@ -38,7 +38,7 @@ export async function generateMetadata({ params }) {
     title: resource.title,
     description: resource.excerpt,
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/spreadsheets/${param.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/spreadsheets/${param.slug}`,
     },
     openGraph: {
       title: resource.title,
