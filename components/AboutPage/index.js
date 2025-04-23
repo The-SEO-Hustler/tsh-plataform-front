@@ -83,7 +83,8 @@ export default function About() {
   ];
 
   return (
-    <>
+    <div className="overflow-hidden">
+
 
 
       {/* Hero Section */}
@@ -142,7 +143,7 @@ export default function About() {
             </div>
           </div>
           <div className="relative">
-            <div className="absolute -inset-4 bg-primary/20 rounded-md transform md:rotate-3 md:animate-rotate"></div>
+            <div className="absolute -inset-4 bg-primary/20 rounded-md transform md:animate-rotate"></div>
             <div className="relative bg-black md:animate-float rounded-md shadow-md overflow-hidden p-8 text-white">
               <h3 className="font-black text-2xl mb-4 text-primary">Who We Are</h3>
               <p className="mb-4">
@@ -328,6 +329,6 @@ export default function About() {
           </div>
         </Container>
       </section>
-    </>
+    </div>
   );
 }

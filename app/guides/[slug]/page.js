@@ -33,7 +33,6 @@ export async function generateMetadata({ params }) {
       description: 'The resource you\'re looking for doesn\'t exist or has been moved.',
     };
   }
-  console.log('resource', `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug} `);
 
   return {
     title: resource.title,
@@ -53,7 +52,7 @@ export async function generateMetadata({ params }) {
       ] : [],
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug} `,
+      canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug}`,
     },
   };
 }
