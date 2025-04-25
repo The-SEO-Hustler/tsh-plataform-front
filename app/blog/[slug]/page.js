@@ -11,7 +11,7 @@ import {
   getSeoTerm,
   createPostSchema,
 } from "@/lib/wordpress/utils";
-import getReactContentWithLazyBlocks from "@/lib/get-react-content-with-lazy-blocks";
+// import getReactContentWithLazyBlocks from "@/lib/get-react-content-with-lazy-blocks";
 import BlogContentPage from "@/components/BlogContent";
 
 export const revalidate = 3600;
@@ -52,6 +52,7 @@ export async function generateMetadata({ params }) {
   return {
     title: data.post.title,
     description: excerptText,
+    publisher: "The SEO Hustler",
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/blog/${param.slug}`,
     },
@@ -59,7 +60,10 @@ export async function generateMetadata({ params }) {
       title: data.post.title,
       description: excerptText,
       type: "article",
+      url: `${process.env.NEXT_PUBLIC_FRONT_URL}/blog/${param.slug}`,
       publishedTime: data.post.date,
+      publisher: "The SEO Hustler",
+      author: [data.post.author?.node?.name],
       modifiedTime: data.post.modified,
       authors: [data.post.author?.node?.name],
       images: ogImageUrl

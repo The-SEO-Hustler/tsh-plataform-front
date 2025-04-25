@@ -47,6 +47,7 @@ export async function generateMetadata({ params }) {
       title: resource.title,
       description: resource.excerpt,
       type: 'article',
+      url: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug}`,
       publishedTime: resource.modified,
       modifiedTime: resource.modified,
       authors: [resource.author],
