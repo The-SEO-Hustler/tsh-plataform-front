@@ -84,7 +84,7 @@ export default function Contact() {
     const token = await executeRecaptcha("contact_form");
     console.log("reCAPTCHA token:", token);
 
-    const formDataWithToken = { ...formData, token };
+    const formDataWithToken = { ...formData, token, form: 'contact' };
 
     await saveToNotion(formDataWithToken);
 

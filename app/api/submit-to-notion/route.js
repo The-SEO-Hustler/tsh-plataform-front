@@ -1,5 +1,6 @@
-export const runtime = "edge";
+// export const runtime = "edge";
 import { NextResponse } from "next/server";
+import nodemailer from 'nodemailer';
 
 export async function POST(req) {
   try {
@@ -32,7 +33,7 @@ export async function POST(req) {
       );
     }
 
-    const { name, email, message, token } = body;
+    const { name, email, message, token, form } = body;
 
     // Verify reCAPTCHA token
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
@@ -77,6 +78,9 @@ export async function POST(req) {
       );
     }
 
+
+    const date = new Date().toISOString();
+
     const url = `https://api.notion.com/v1/pages`;
 
     const data = {
@@ -91,8 +95,27 @@ export async function POST(req) {
             },
           ],
         },
+        Date: {
+          date: {
+            start: date,
+          },
+        },
         Email: {
           email: email,
+        },
+        formType: {
+          rich_text: [
+            {
+              text: {
+                content: form,
+              },
+            },
+          ],
+        },
+        status: {
+          select: {
+            name: 'new',
+          },
         },
 
         Message: {
@@ -129,6 +152,24 @@ export async function POST(req) {
         }
       );
     }
+
+    // Send email notification
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // e.g., 'gmail'
+      auth: {
+        user: process.env.EMAIL_USER, // your email
+        pass: process.env.EMAIL_PASS, // your email password
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: 'contact@theseohustler.com',
+      subject: 'Form Submission The SEO Hustler',
+      text: `Name: ${name},\n\nMessage: "${message}".`,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     return NextResponse.json({
       message: "Thank you! we'll answer you shortly",

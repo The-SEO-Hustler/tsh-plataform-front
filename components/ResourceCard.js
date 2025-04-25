@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
+import Image from 'next/image';
 
 /**
  * Resource Card Component (for ebooks, cheatsheets, guides)
@@ -107,10 +108,11 @@ export default function ResourceCard({
       {/* Featured Image */}
       {imageUrl && (
         <div className="relative h-48 w-full">
-          <img
+          <Image
             src={imageUrl}
             alt={imageAlt}
             className="object-cover w-full h-full"
+            fill
           />
         </div>
       )}

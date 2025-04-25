@@ -33,6 +33,12 @@ export async function generateMetadata({ params }) {
       description: 'The resource you\'re looking for doesn\'t exist or has been moved.',
     };
   }
+  const rawUrl = resource.featuredImage?.node?.sourceUrl
+  const ogImageUrl = rawUrl
+    ? `${process.env.NEXT_PUBLIC_FRONT_URL}/_next/image` +
+    `?url=${encodeURIComponent(rawUrl)}` +
+    `&w=1200&q=85`
+    : null
 
   return {
     title: resource.title,
@@ -44,12 +50,16 @@ export async function generateMetadata({ params }) {
       publishedTime: resource.modified,
       modifiedTime: resource.modified,
       authors: [resource.author],
-      images: resource.featuredImage ? [
-        {
-          url: resource.featuredImage,
-          alt: resource.featuredImageAlt,
-        }
-      ] : [],
+      images: ogImageUrl
+        ? [
+          {
+            url: ogImageUrl,
+            alt:
+              resource.featuredImage.node.altText ||
+              resource.title,
+          },
+        ]
+        : [],
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug}`,

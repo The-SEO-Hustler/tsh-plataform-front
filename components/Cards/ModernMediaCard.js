@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import BaseCard from "./BaseCard";
-import { Image, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { iconMapping } from "@/lib/config";
+import Image from "next/image";
 
 export default function ModernMediaCard({
   data,
@@ -49,7 +50,7 @@ export default function ModernMediaCard({
               <div key={index} className="p-3 bg-gray-50 rounded-lg flex items-center gap-2">
 
                 <div className="w-10 h-10">
-                  <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover rounded-xs" />
+                  <Image src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover rounded-xs" fill />
                 </div>
 
                 <div className="flex-1 min-w-0">
