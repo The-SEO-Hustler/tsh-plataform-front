@@ -8,7 +8,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Image from "next/image";
 export default function ImageResponsivenessCard({
   data,
   status,
@@ -124,11 +123,10 @@ export default function ImageResponsivenessCard({
                   </div>
                 </div>
               </div>
-              <Image
+              <img
                 src={detail.src}
                 alt={`Image ${index + 1}`}
                 className="w-full h-auto max-h-[150px] object-cover rounded-md"
-                fill
               />
               {/* Mobile Details */}
               <div className="md:hidden mt-2">

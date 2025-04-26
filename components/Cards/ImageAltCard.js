@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { iconMapping } from "@/lib/config";
-import Image from "next/image";
 export default function ImageAltCard({
   data,
   status,
@@ -44,7 +43,7 @@ export default function ImageAltCard({
                   className="break-words border rounded-md overflow-hidden
                    h-full flex items-center aspect-square"
                 >
-                  <Image src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover" fill />
+                  <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover" />
                 </li>
               ))}
             </ul>
