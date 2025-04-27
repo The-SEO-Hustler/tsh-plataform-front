@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { useFirebase } from "@/lib/firebase-context";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import RecaptchaProvider from "@/components/RecaptchaProvider";
+import { useUsage } from "@/lib/usage-context";
 function SeoCheckEmbbed() {
   return (
     <RecaptchaProvider>
@@ -20,10 +20,15 @@ function SeoCheckForm() {
   const [formError, setFormError] = useState('');
   const { trackAnalysis, currentAnalysis, removeContentPlanning } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { usage, setUsage } = useUsage();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
+    if (usage?.remaining <= 0) {
+      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      return;
+    }
     if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -59,6 +64,10 @@ function SeoCheckForm() {
         trackAnalysis(data.docId, url);
         // router.push(`/seo-check/result?id=${data.docId}`);
         setIsLoading(false);
+        setUsage(prevUsage => ({
+          ...prevUsage,
+          remaining: prevUsage.remaining - 1
+        }));
       } else {
         throw new Error(data.error);
       }
@@ -84,8 +93,8 @@ function SeoCheckForm() {
           disabled={isLoading}
         />
         <button type="submit"
-          className={`bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""}`}
-          disabled={isLoading}
+          className={`bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+          disabled={isLoading || usage?.remaining <= 0 || usage === null}
         >
           {isLoading ? "Analyzing..." : "Analyze My Site Now"}
         </button>

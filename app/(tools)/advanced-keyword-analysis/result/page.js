@@ -7,7 +7,7 @@ export const metadata = getMetadata({ ...SEO_DATA.advancedKeywordAnalysisResult 
 
 
 function Page() {
-  return <AdvancedKeywordAnalysisPage />;
+  return <div className="min-h-screen"><AdvancedKeywordAnalysisPage /></div>;
 }
 
 export default Page;

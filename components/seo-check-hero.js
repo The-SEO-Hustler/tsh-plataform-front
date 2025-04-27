@@ -15,6 +15,7 @@ import Container from "@/components/container";
 import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useUsage } from "@/lib/usage-context";
 
 function SeoCheckHeroContent() {
   const [url, setUrl] = useState("");
@@ -23,9 +24,14 @@ function SeoCheckHeroContent() {
   const router = useRouter();
   const { trackAnalysis, currentAnalysis, removeContentPlanning } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
+    if (usage?.remaining <= 0) {
+      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      return;
+    }
     if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -61,6 +67,10 @@ function SeoCheckHeroContent() {
         trackAnalysis(data.docId, url);
         router.push(`/seo-check/result?id=${data.docId}`);
         setIsLoading(false);
+        setUsage(prevUsage => ({
+          ...prevUsage,
+          remaining: prevUsage.remaining - 1
+        }));
       } else {
         throw new Error(data.error);
       }
@@ -112,8 +122,8 @@ function SeoCheckHeroContent() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2  disabled:opacity-100  ${isLoading ? "animate-pulse !bg-primary " : ""}`}
-                      disabled={isLoading}
+                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300  ${isLoading ? "animate-pulse !bg-primary " : ""}`}
+                      disabled={isLoading || usage?.remaining <= 0 || usage === null}
                     >
                       {isLoading ? "Starting Analysis..." : "Analyze"}
                       <ArrowRight className="ml-2 h-4 w-4" />

@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { ArrowRight } from 'lucide-react'
-
+import { useUsage } from "@/lib/usage-context";
 function AdvancedKeywordAnalysisHero() {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,13 +19,19 @@ function AdvancedKeywordAnalysisHero() {
   const [analysisData, setAnalysisData] = useState(null);
   const router = useRouter();
   const { currentAdvancedKeywordAnalysis, trackAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis } = useFirebase();
+  const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (usage?.remaining <= 0) {
+      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      return;
+    }
 
     if (currentAdvancedKeywordAnalysis && (currentAdvancedKeywordAnalysis?.status !== "completed" && currentAdvancedKeywordAnalysis?.status !== "failed")) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
+
 
     if (!keyword.trim()) {
       setError("Please enter a keyword");
@@ -64,6 +70,10 @@ function AdvancedKeywordAnalysisHero() {
         removeAdvancedKeywordAnalysis();
         trackAdvancedKeywordAnalysis(data.docId, keyword);
         router.push(`/advanced-keyword-analysis/result?id=${data.docId}`);
+        setUsage(prevUsage => ({
+          ...prevUsage,
+          remaining: prevUsage.remaining - 1
+        }));
       }
     } catch (err) {
       setError(
@@ -111,8 +121,8 @@ function AdvancedKeywordAnalysisHero() {
                   <Button
                     type="submit"
                     size="lg"
-                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""}`}
-                    disabled={loading}
+                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                    disabled={loading || usage?.remaining <= 0 || usage === null}
                   >
                     {loading ? "Analyzing..." : "Analyze Keyword"}
                     <ArrowRight className="ml-2 h-4 w-4" />

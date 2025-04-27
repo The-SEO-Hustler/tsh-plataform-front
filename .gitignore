@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# ignore local sitemap
+public/sitemap.xml
+public/sitemap-0.xml
+public/sitemap-postgres.xml
+public/sitemap-postgres-0.xml
+public/robots.txt

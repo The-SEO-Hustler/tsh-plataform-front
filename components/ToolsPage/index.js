@@ -3,7 +3,7 @@ import { useState } from "react";
 import ToolCard from "@/components/ToolCard";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/container";
-import { ChartArea, NotebookPen } from 'lucide-react';
+import { ChartArea, NotebookPen, FileCode } from 'lucide-react';
 export default function Tools() {
   // State for category filter
   const [activeCategory, setActiveCategory] = useState("All Tools");
@@ -13,6 +13,7 @@ export default function Tools() {
     { id: "all", label: "All Tools" },
     { id: "on-page-seo-checker", label: "On Page SEO Checker" },
     { id: "future-tools", label: "Future Tools" },
+
   ];
 
   // SEO Tools data
@@ -34,6 +35,7 @@ export default function Tools() {
       category: "On Page SEO Checker",
       featured: false,
     },
+
     {
       title: "Advanced Keyword Analysis",
       description:
@@ -50,6 +52,15 @@ export default function Tools() {
       Icon: <NotebookPen width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
       href: "/content-planning",
       category: "Content Planning Tool",
+      featured: false,
+    },
+    {
+      title: "LLM Txt",
+      description:
+        "Provide a URL and get its LLM Txt, simple as that",
+      Icon: <FileCode width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      href: "/llmstxt",
+      category: "LLM Txt",
       featured: false,
     },
   ]

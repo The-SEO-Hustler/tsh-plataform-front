@@ -6,6 +6,7 @@ import { db } from "@/lib/firebase";
 
 export async function POST(request) {
   try {
+    const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
     // Read JSON data from the request
     const formData = await request.formData();
     const keyword = formData.get("keyword");
@@ -36,6 +37,7 @@ export async function POST(request) {
           "x-api-key": process.env.BACK_API_KEY,
           "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
           "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
+          "x-ip": ip,
         },
         body: JSON.stringify({
           keyword: keyword,

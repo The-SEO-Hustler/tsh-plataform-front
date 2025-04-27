@@ -7,7 +7,7 @@ export const metadata = getMetadata({ ...SEO_DATA.contentPlanningResult });
 
 
 function Page() {
-  return <ContentPlanningPage />;
+  return <div className="min-h-screen"><ContentPlanningPage /></div>;
 }
 
 export default Page;

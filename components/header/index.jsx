@@ -20,7 +20,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Menu, ChartArea, NotebookPen } from "lucide-react";
+import { Menu, ChartArea, NotebookPen, FileCode } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -97,7 +97,7 @@ function Header() {
         >
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="cursor-pointer">Free Tools</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="cursor-pointer"><Link href="/free-tools" className="!no-underline !font-bold">Free Tools</Link></NavigationMenuTrigger>
               <NavigationMenuContent orientation="ltr" dir="ltr" className="shadow-lg rounded-md">
                 <ul className="flex flex-col gap-3 p-2">
                   <ListItem href="/seo-check" title="SEO Check On Page" free>
@@ -116,6 +116,12 @@ function Header() {
                     <div className="flex items-center space-x-3">
                       <ChartArea width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="black" />
                       <span>Provide a keyword and get its SEO insights</span>
+                    </div>
+                  </ListItem>
+                  <ListItem href="/llmstxt" title="LLM Txt" free>
+                    <div className="flex items-center space-x-3">
+                      <FileCode width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="black" />
+                      <span>Provide a URL and get its LLM Txt, simple as that</span>
                     </div>
                   </ListItem>
                   <ListItem href="/content-planning" title="Content Planning" free>

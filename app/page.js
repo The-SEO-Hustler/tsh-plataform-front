@@ -9,7 +9,7 @@ import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
-import { Search, NotebookPen, ChartArea } from 'lucide-react';
+import { Search, NotebookPen, ChartArea, FileCode } from 'lucide-react';
 export const revalidate = 3600;
 import getMetadata from '@/lib/getMetadata';
 import SEO_DATA from '@/lib/seo-data';
@@ -83,6 +83,15 @@ export default async function Home() {
       Icon: <NotebookPen width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
       href: "/content-planning",
       category: "Content Planning Tool",
+      featured: false,
+    },
+    {
+      title: "LLM Txt",
+      description:
+        "Provide a URL and get its LLM Txt, simple as that",
+      Icon: <FileCode width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      href: "/llmstxt",
+      category: "LLM Txt",
       featured: false,
     },
   ];
@@ -213,7 +222,7 @@ export default async function Home() {
         title="Powerful SEO Tools, Completely Free"
         description="Access professional-grade SEO tools that help you research, analyze, and optimize without spending a dime."
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {featuredTools.map((tool, index) => (
             <ToolCard
               key={index}

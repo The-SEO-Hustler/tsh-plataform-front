@@ -4,6 +4,7 @@ import { db } from "@/lib/firebase";
 
 export async function POST(request) {
   try {
+    const ip = request.headers.get("x-forwarded-for");
     const { url, token } = await request.json();
     // Verify reCAPTCHA token
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
@@ -52,6 +53,7 @@ export async function POST(request) {
         body,
         headers: {
           "Content-Type": "application/json",
+          "x-ip": ip,
           "x-api-key": process.env.BACK_API_KEY,
           "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
           "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,

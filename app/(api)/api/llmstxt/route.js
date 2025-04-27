@@ -1,34 +1,28 @@
 // app/api/analysis/route.js
 
 import { NextResponse } from "next/server";
-import { collection, addDoc, doc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export async function POST(request) {
   try {
+    const ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
     // Read JSON data from the request
     const formData = await request.formData();
-    const keyword = formData.get("keyword");
-    const contentType = formData.get("content_type");
+    const url = formData.get("url");
 
     // Validate required fields if needed
-    if (!keyword) {
+    if (!url) {
       return NextResponse.json(
-        { error: "Keyword is required" },
-        { status: 400 }
-      );
-    }
-    if (!contentType) {
-      return NextResponse.json(
-        { error: "Content type is required" },
+        { error: "URL is required" },
         { status: 400 }
       );
     }
 
-    const docRef = await addDoc(collection(db, "contentPlanning"), {
-      keyword,
-      contentType,
-      type: "content-planning",
+
+    const docRef = await addDoc(collection(db, "llmstxt"), {
+      url,
+      type: "llmstxt",
       status: "pending",
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -36,7 +30,7 @@ export async function POST(request) {
 
     // Forward the request to your dedicated Node.js service endpoint
     const response = await fetch(
-      `${process.env.API_ENDPOINT}/content-planning`,
+      `${process.env.API_ENDPOINT}/llmstxt`,
       {
         method: "POST",
         headers: {
@@ -44,10 +38,10 @@ export async function POST(request) {
           "x-api-key": process.env.BACK_API_KEY,
           "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
           "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
+          "x-ip": ip,
         },
         body: JSON.stringify({
-          keyword: keyword,
-          content_type: contentType,
+          url: url,
           docId: docRef.id,
         }),
       }
@@ -63,7 +57,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error in analysis API route:", error);
 
-    await updateDoc(doc(db, "contentPlanning", docRef.id), {
+    await updateDoc(doc(db, "llmstxt", docRef.id), {
       status: "failed",
       error: error.message,
       updatedAt: new Date(),

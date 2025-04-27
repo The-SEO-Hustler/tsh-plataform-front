@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useFirebase } from '@/lib/firebase-context'
 import { useRouter } from 'next/navigation'
-
+import { useUsage } from "@/lib/usage-context";
 
 function ContentPlanningHero() {
 
@@ -17,10 +17,14 @@ function ContentPlanningHero() {
   const [error, setError] = useState(null);
   const router = useRouter();
   const { trackContentPlanning, currentContentPlanning, removeAnalysis } = useFirebase();
-
+  const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (usage?.remaining <= 0) {
+      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      return;
+    }
     if (currentContentPlanning && (currentContentPlanning?.status !== "completed" && currentContentPlanning?.status !== "failed")) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -64,6 +68,10 @@ function ContentPlanningHero() {
         removeAnalysis();
         trackContentPlanning(data.docId, keyword);
         router.push(`/content-planning/result?id=${data.docId}`);
+        setUsage(prevUsage => ({
+          ...prevUsage,
+          remaining: prevUsage.remaining - 1
+        }));
       }
     } catch (err) {
       setError(
@@ -131,8 +139,8 @@ function ContentPlanningHero() {
                 <Button
                   type="submit"
                   size="lg"
-                  className={`w-full ${loading ? "animate-pulse" : ""}`}
-                  disabled={loading}
+                  className={`w-full ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                  disabled={loading || usage?.remaining <= 0 || usage === null}
                 >
                   {loading ? "Analyzing..." : "Analyze Content Structure"}
                   <ArrowRight className="ml-2 h-4 w-4" />
