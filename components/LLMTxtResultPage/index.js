@@ -132,7 +132,7 @@ function LLMTxtResult() {
 
   // If no docId, show the form
   if (!docId) {
-    router.push("/llmstxt");
+    router.push("/llms-txt-generator");
   }
 
   // If there's an error, show the error screen
@@ -312,7 +312,7 @@ function LLMTxtResult() {
               Get expert recommendations on how to optimize your content for both users and search engines. Our SEO tools help you cut through the noise and focus on what matters.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/llmstxt" size="lg" className="bg-black hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-md transition-all">
+              <Button href="/llms-txt-generator" size="lg" className="bg-black hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-md transition-all">
                 Run Another Analysis
               </Button>
               <Button href="/free-tools" size="lg" className="bg-white hover:bg-gray-100 text-black font-bold py-3 px-8 rounded-md transition-all">

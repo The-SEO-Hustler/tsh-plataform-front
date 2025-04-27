@@ -166,7 +166,7 @@ export async function POST(req) {
       from: process.env.EMAIL_USER,
       to: 'contact@theseohustler.com',
       subject: 'Form Submission The SEO Hustler',
-      text: `Name: ${name},\n\nMessage: "${message}".`,
+      text: `Name: ${name},\nMessage: "${message}".\nEmail: ${email}`,
     };
 
     await transporter.sendMail(mailOptions);

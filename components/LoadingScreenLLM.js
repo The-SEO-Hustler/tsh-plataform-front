@@ -108,7 +108,7 @@ export default function LoadingScreenLLM({ status = 'pending' }) {
         <div className="mt-8 text-xs text-gray-500 flex items-center gap-2">
           <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {
-            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/llmstxt/result?id=${searchParams.get('id')}`)
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/llms-txt-generator/result?id=${searchParams.get('id')}`)
             toast.success("Link to LLM.TXT copied to clipboard")
           }
           }

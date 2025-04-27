@@ -54,12 +54,12 @@ function LLMStatusCardContent() {
 
   // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/llmstxt/result?id=${currentLLMTxt?.docId}`);
+    router.push(`/llms-txt-generator/result?id=${currentLLMTxt?.docId}`);
   };
 
 
 
-  if (!currentLLMTxt || (pathname === "/llmstxt/result" && docId)) {
+  if (!currentLLMTxt || (pathname === "/llms-txt-generator/result" && docId)) {
     return null;
   }
 
@@ -89,7 +89,7 @@ function LLMStatusCardContent() {
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/llmstxt/result?id=${currentLLMTxt?.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/llms-txt-generator/result?id=${currentLLMTxt?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}

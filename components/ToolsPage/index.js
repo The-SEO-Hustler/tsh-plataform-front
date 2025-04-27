@@ -55,12 +55,12 @@ export default function Tools() {
       featured: false,
     },
     {
-      title: "LLM Txt",
+      title: "LLMs.txt Generator",
       description:
-        "Provide a URL and get its LLM Txt, simple as that",
+        "Create optimized LLMs.txt files in minutes, not hours. Control how AI sees and represents your business.",
       Icon: <FileCode width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
-      href: "/llmstxt",
-      category: "LLM Txt",
+      href: "/llms-txt-generator",
+      category: "LLMs.txt Generator",
       featured: false,
     },
   ]
