@@ -2,7 +2,7 @@
 import React from 'react'
 import Container from '@/components/container'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Search } from 'lucide-react'
+import { ArrowRight, FileCode } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useFirebase } from '@/lib/firebase-context'
@@ -182,35 +182,34 @@ function LLMTxtHero() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Search className="w-6 h-6 text-primary" />
+                      <FileCode className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold">Website Analysis</h3>
+
+                      <h3 className="font-semibold text-lg">Generate a LLMs.txt file for your website</h3>
                       <p className="text-sm text-gray-500">
-                        Scrape and analyze web pages using LLMs to provide insights.
+                        Just input your homepage URL and we will do the rest, this is how it works:
                       </p>
                     </div>
                   </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Page Scraping</span>
-                      <span className="text-sm font-medium text-green-700">
-                        Automated
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">LLM Analysis</span>
-                      <span className="text-sm font-medium text-blue-700">
-                        In-depth
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Insight Delivery</span>
-                      <span className="text-sm font-medium text-purple-700">
-                        Downloadable TXT
-                      </span>
-                    </div>
-                  </div>
+
+                  <ul className="list-disc space-y-2 text-sm">
+                    <li className="flex justify-between">
+                      <span>Website Crawling and Extraction</span>
+                      <span className="text-sm font-medium text-green-700">~3 minutes</span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span>Content Analysis and Understanding</span>
+                      <span className="text-sm font-medium text-blue-700">~4 minutes</span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span>Downloadable LLMs.txt file ready</span>
+                      <span className="text-sm font-medium text-purple-700">7 to 10 minutes</span>
+                    </li>
+                  </ul>
+                  <p className="text-sm text-gray-500 italic">
+                    *Don't worry, you can browse around our website and we will notify you
+                  </p>
                 </div>
               </div>
             </div>
@@ -218,21 +217,7 @@ function LLMTxtHero() {
         </section>
 
       </Container>
-      <section className="py-16 relative overflow-hidden bg-gray-100 ">
 
-
-        <Container className="relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-black mb-6 text-black">
-              The Ultimate LLMs.txt Generator: Future-Proof Your Website for AI Search
-            </h1>
-            <p className="text-xl md:text-2xl text-black/80 mb-8">
-              Create optimized LLMs.txt files in minutes, not hours. Control how AI sees and represents your business.
-            </p>
-
-          </div>
-        </Container>
-      </section>
 
       {/* What is LLMs.txt Section */}
       <section className="py-16 bg-white">
@@ -394,17 +379,28 @@ function LLMTxtHero() {
               </Button>
             </div>
 
-            <div className="bg-[#f9f9f9] p-8 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between">
+            <div className="relative bg-[#f9f9f9] p-8 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between opacity-80 cursor-not-allowed">
+              {/* Coming Soon Badge */}
+              <div className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full">
+                Coming Soon
+              </div>
+
               <div>
                 <h3 className="text-2xl font-bold mb-4 text-primary">Advanced Mode</h3>
                 <p className="text-gray-700 mb-6">
                   Input your homepage plus up to 10 key pages you want to prioritize. Ideal for larger sites or when you have specific pages you want AI to focus on.
                 </p>
               </div>
-              <Button href="/llms-txt-generator#tool" className="w-full bg-primary hover:bg-primary/90 text-black font-bold py-3 rounded-md transition-all">
-                Use Advanced Mode
+              {/* Button disabled or styled */}
+              <Button
+                href="#"
+                disabled
+                className="w-full bg-primary/50 text-black font-bold py-3 rounded-md transition-all cursor-not-allowed"
+              >
+                Coming Soon
               </Button>
             </div>
+
           </div>
         </Container>
       </section>
