@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 
 export async function POST(request) {
   try {
-    const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+    const ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
     // Read JSON data from the request
     const formData = await request.formData();
     const keyword = formData.get("keyword");
