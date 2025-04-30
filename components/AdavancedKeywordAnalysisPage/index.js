@@ -1,13 +1,30 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import Container from "@/components/container";
+import { toast } from "sonner";
 import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox"
 import LoadingScreenKeyword from "@/components/LoadingScreenKeyword";
-import { Search, Eye, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink } from 'lucide-react';
+import { onSnapshot, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+
+import { Search, Info, Eye, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 import {
   Dialog,
   DialogContent,
@@ -16,13 +33,30 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import AdvancedKeywordAnalysisHero from "@/components/advanced-keyword-analysis-hero";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+
 function AdvancedKeywordAnalysis() {
+
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
   const [loadingPage, setLoadingPage] = useState(true);
   const [error, setError] = useState(null);
+  const [extractingPageIntent, setExtractingPageIntent] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
+  const [chartData, setChartData] = useState(null);
+  const [selectedKeyword, setSelectedKeyword] = useState(analysisData?.related_keywords?.[0] || "");
+  const listenerRef = useRef(null);
 
   const { trackAdvancedKeywordAnalysis, currentAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis } = useFirebase();
   const router = useRouter();
@@ -31,7 +65,29 @@ function AdvancedKeywordAnalysis() {
   const [status, setStatus] = useState(
     currentAdvancedKeywordAnalysis ? currentAdvancedKeywordAnalysis.status : "initializing"
   );
-  const [selectedSerp, setSelectedSerp] = useState(null);
+  const [open, setOpen] = useState(false)
+  const [selectedUrl, setSelectedUrl] = useState(null)
+
+  const handleRowClick = (url) => {
+    // only open if we have headings for that URL
+    if (analysisData.headings_by_url[url]) {
+      setSelectedUrl(url)
+      setOpen(true)
+    }
+  }
+
+  const [selectedUrls, setSelectedUrls] = useState([])
+  const [compareOpen, setCompareOpen] = useState(false)
+
+  const toggleSelect = (url) => {
+    setSelectedUrls((prev) =>
+      prev.includes(url)
+        ? prev.filter(u => u !== url)
+        : [...prev, url]
+    )
+  }
+
+
 
   useEffect(() => {
     // Start tracking this analysis in the global context.
@@ -46,6 +102,7 @@ function AdvancedKeywordAnalysis() {
     if (currentAdvancedKeywordAnalysis && currentAdvancedKeywordAnalysis.type === "advanced-keyword-analysis") {
       setStatus(currentAdvancedKeywordAnalysis.status);
       setAnalysisData(currentAdvancedKeywordAnalysis.data || null);
+      setSelectedKeyword(currentAdvancedKeywordAnalysis?.data?.related_keywords?.[0] || "");
       setKeyword(currentAdvancedKeywordAnalysis.keyword || "");
       setContentType(currentAdvancedKeywordAnalysis.contentType || "blog_post");
       setUpdatedAt(currentAdvancedKeywordAnalysis.updatedAt || "");
@@ -66,6 +123,105 @@ function AdvancedKeywordAnalysis() {
     }
   }, [currentAdvancedKeywordAnalysis]);
 
+  // Update chart data when selected keyword changes
+  useEffect(() => {
+    if (selectedKeyword?.monthly_searches) {
+      // Sort the data by year and month
+      const sortedData = [...selectedKeyword.monthly_searches].sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return a.month - b.month;
+      });
+
+      // Format the labels as 'Mon Year'
+      const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+      ];
+      const labels = sortedData.map(
+        (item) => `${months[item.month - 1]} ${item.year}`,
+      );
+
+      // Extract the search volumes
+      const searchVolumes = sortedData.map((item) => item.search_volume);
+
+      // Create the chart data
+      setChartData({
+        labels,
+        datasets: [
+          {
+            label: "Monthly Search Volume",
+            data: searchVolumes,
+            borderColor: "#FFDD00",
+            backgroundColor: "rgba(255, 221, 0, 0.2)",
+            tension: 0.3,
+            fill: true,
+          },
+        ],
+      });
+    }
+  }, [selectedKeyword]);
+
+  const handleExtractPageIntent = async (url) => {
+    // 1) Show loading toast and capture its ID
+    const toastId = toast.loading("Extracting page intent...");
+    setExtractingPageIntent(true);
+
+    // 2) Set up a timeout to bail after 30s
+    const timeoutId = setTimeout(() => {
+      listenerRef.current?.();                   // unsubscribe
+      listenerRef.current = null;
+      toast.dismiss(toastId);                    // remove loader
+      toast.info("Page intent extraction timed out.");
+      setExtractingPageIntent(false);
+    }, 30000);
+
+    // 3) Start listening for the Firestore update
+    listenerRef.current = onSnapshot(
+      doc(db, "keywordAnalysis", docId),
+      (docSnap) => {
+        if (!docSnap.exists()) return;
+        const data = docSnap.data()?.data || {};
+        if (data.page_classifications?.[url]) {
+          // Got our classification!
+          clearTimeout(timeoutId);
+          listenerRef.current?.();
+          listenerRef.current = null;
+          toast.success("Page intent extracted successfully", { id: toastId });
+          setExtractingPageIntent(false);
+        }
+      },
+      (error) => {
+        // Handle listener errors
+        clearTimeout(timeoutId);
+        listenerRef.current?.();
+        listenerRef.current = null;
+        toast.dismiss(toastId);
+        toast.error("Error listening for update.");
+        console.error("Firestore listener error:", error);
+        setExtractingPageIntent(false);
+      }
+    );
+
+    // 4) Kick off the API call
+    try {
+      const response = await fetch("/api/extract-page-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, docId }),
+      });
+      const result = await response.json();
+      console.log("Background job started:", result);
+    } catch (err) {
+      // If the POST itself fails, clean up immediately
+      clearTimeout(timeoutId);
+      listenerRef.current?.();
+      listenerRef.current = null;
+      toast.dismiss(toastId);
+      toast.error("Failed to start extraction API.");
+      console.error("Fetch error:", err);
+      setExtractingPageIntent(false);
+    }
+  };
 
 
   // Function to get color based on intent type
@@ -165,8 +321,18 @@ function AdvancedKeywordAnalysis() {
         <div className="absolute inset-0 opacity-20">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFDD00" strokeWidth="0.5" />
+              <pattern
+                id="grid"
+                width="40"
+                height="40"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke="#FFDD00"
+                  strokeWidth="0.5"
+                />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
@@ -175,11 +341,20 @@ function AdvancedKeywordAnalysis() {
 
         <Container className=" relative z-10">
           <div className="flex items-center gap-3 text-gray-300 text-sm mb-4">
-            <span><Link href="/advanced-keyword-analysis" className="hover:text-primary transition-colors"> Advanced Keyword Analysis</Link></span>
+            <span>
+              <Link
+                href="/advanced-keyword-analysis"
+                className="hover:text-primary transition-colors"
+              >
+                {" "}
+                Advanced Keyword Analysis
+              </Link>
+            </span>
             <ChevronRight size={16} />
-            <span className="text-primary font-semibold">{analysisData.keyword || 'New Content'}</span>
+            <span className="text-primary font-semibold">
+              {analysisData.keyword || "New Content"}
+            </span>
           </div>
-
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
             <div>
@@ -187,8 +362,10 @@ function AdvancedKeywordAnalysis() {
                 <Search className="text-primary h-10 w-10 mr-3" />
                 {analysisData.keyword}
               </h1>
-              <div className="flex items-center gap-3">
-                <div className={`${getIntentColor(analysisData.search_intent.primary)} px-4 py-1 rounded-full text-white font-bold`}>
+              <div className="flex gap-3 flex-col md:flex-row items-start md:items-center">
+                <div
+                  className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full text-white font-bold`}
+                >
                   {analysisData.search_intent.primary}
                 </div>
                 <span className="text-gray-300">
@@ -196,53 +373,69 @@ function AdvancedKeywordAnalysis() {
                 </span>
               </div>
             </div>
-
-
           </div>
         </Container>
       </section>
-
       {/* Overview Metrics */}
       <section className="py-10 bg-black border-b border-gray-800">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Search Volume */}
             <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-primary hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">Search Volume</h3>
+              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+                Search Volume
+              </h3>
               <div className="text-3xl font-black">
-                {analysisData.search_volume > 0 ? analysisData.search_volume.toLocaleString() : 'N/A'}
+                {analysisData.search_volume > 0
+                  ? analysisData.search_volume.toLocaleString()
+                  : "N/A"}
               </div>
               <p className="text-gray-400 text-sm mt-2">Monthly searches</p>
             </div>
 
             {/* CPC */}
             <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-blue-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">CPC</h3>
+              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+                CPC
+              </h3>
               <div className="text-3xl font-black">
-                {analysisData.cpc > 0 ? `$${analysisData.cpc.toFixed(2)}` : 'N/A'}
+                {analysisData.cpc > 0
+                  ? `$${analysisData.cpc.toFixed(2)}`
+                  : "N/A"}
               </div>
               <p className="text-gray-400 text-sm mt-2">Cost per click</p>
             </div>
 
             {/* Competition */}
             <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-green-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">Competition</h3>
+              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+                Competition
+              </h3>
               <div className="text-3xl font-black">
-                {analysisData.competition > 0 ? `${(analysisData.competition * 100).toFixed(0)}%` : 'N/A'}
+                {analysisData.competition ? analysisData.competition : "N/A"}
               </div>
-              <p className="text-gray-400 text-sm mt-2">Competitive density</p>
+              <p className="text-gray-400 text-sm mt-2">
+                Competitive density
+              </p>
             </div>
 
             {/* Difficulty */}
             <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-red-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">Difficulty</h3>
+              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+                Difficulty
+              </h3>
               <div className="flex items-center gap-3">
                 <span className="text-3xl font-black">
-                  {analysisData.difficulty > 0 ? analysisData.difficulty : 'N/A'}
+                  {analysisData.difficulty > 0
+                    ? analysisData.difficulty
+                    : "N/A"}
                 </span>
-                {analysisData.difficulty > 0 && getDifficultyBadge(analysisData.difficulty)}
+                {analysisData.difficulty > 0 &&
+                  getDifficultyBadge(analysisData.difficulty)}
               </div>
-              <p className="text-gray-400 text-sm mt-2">Ranking difficulty score</p>
+              <p className="text-gray-400 text-sm mt-2">
+                Ranking difficulty score
+              </p>
             </div>
           </div>
         </Container>
@@ -258,16 +451,39 @@ function AdvancedKeywordAnalysis() {
             Search Intent Analysis
           </h2>
 
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Primary Intent */}
             <div className="bg-[#1A1A1A] rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-4">Primary Intent</h3>
-              <div className={`${getIntentColor(analysisData.search_intent.primary)} px-4 py-2 rounded-md text-white font-bold inline-block mb-4`}>
+              <h3 className="text-xl font-bold mb-3">Primary Intent</h3>
+              <div
+                className={`${getIntentColor(
+                  analysisData.search_intent.primary
+                )} inline-block px-3 py-1 rounded-md text-white font-bold mb-3`}
+              >
                 {analysisData.search_intent.primary}
               </div>
-              <p className="text-gray-300">
-                {analysisData.search_intent.reasoning}
-              </p>
+
+              {/* Analysis Reasoning */}
+              <Tabs defaultValue="summary" className="w-full">
+                <TabsList className="mb-2 bg-[#2A2A2A]" >
+                  <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Summary</TabsTrigger>
+                  <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Analysis Reasoning</TabsTrigger>
+
+                </TabsList>
+                <TabsContent value="reasoning">
+                  <p className="text-gray-300 ">
+                    {analysisData.search_intent.reasoning}
+                  </p>
+                </TabsContent>
+                <TabsContent value="summary">
+                  <p className="text-gray-300 ">
+                    {analysisData.search_intent.summary}
+                  </p>
+                </TabsContent>
+              </Tabs>
+
+
             </div>
 
             {/* Intent Breakdown */}
@@ -277,41 +493,90 @@ function AdvancedKeywordAnalysis() {
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">Informational</span>
-                    <span className="text-sm font-medium text-primary">{analysisData.search_intent.intent_breakdown.informational}%</span>
+                    <span className="text-sm font-medium text-gray-300">
+                      Informational
+                    </span>
+                    <span className="text-sm font-medium text-primary">
+                      {
+                        analysisData.search_intent.intent_breakdown
+                          .informational
+                      }
+                      %
+                    </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{ width: `${analysisData.search_intent.intent_breakdown.informational}%` }}></div>
+                    <div
+                      className="bg-green-600 h-2 rounded-full"
+                      style={{
+                        width: `${analysisData.search_intent.intent_breakdown.informational}%`,
+                      }}
+                    ></div>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">Navigational</span>
-                    <span className="text-sm font-medium text-primary">{analysisData.search_intent.intent_breakdown.navigational}%</span>
+                    <span className="text-sm font-medium text-gray-300">
+                      Navigational
+                    </span>
+                    <span className="text-sm font-medium text-primary">
+                      {
+                        analysisData.search_intent.intent_breakdown
+                          .navigational
+                      }
+                      %
+                    </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${analysisData.search_intent.intent_breakdown.navigational}%` }}></div>
+                    <div
+                      className="bg-purple-600 h-2 rounded-full"
+                      style={{
+                        width: `${analysisData.search_intent.intent_breakdown.navigational}%`,
+                      }}
+                    ></div>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">Commercial</span>
-                    <span className="text-sm font-medium text-primary">{analysisData.search_intent.intent_breakdown.commercial}%</span>
+                    <span className="text-sm font-medium text-gray-300">
+                      Commercial
+                    </span>
+                    <span className="text-sm font-medium text-primary">
+                      {analysisData.search_intent.intent_breakdown.commercial}
+                      %
+                    </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${analysisData.search_intent.intent_breakdown.commercial}%` }}></div>
+                    <div
+                      className="bg-blue-600 h-2 rounded-full"
+                      style={{
+                        width: `${analysisData.search_intent.intent_breakdown.commercial}%`,
+                      }}
+                    ></div>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">Transactional</span>
-                    <span className="text-sm font-medium text-primary">{analysisData.search_intent.intent_breakdown.transactional}%</span>
+                    <span className="text-sm font-medium text-gray-300">
+                      Transactional
+                    </span>
+                    <span className="text-sm font-medium text-primary">
+                      {
+                        analysisData.search_intent.intent_breakdown
+                          .transactional
+                      }
+                      %
+                    </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className="bg-orange-600 h-2 rounded-full" style={{ width: `${analysisData.search_intent.intent_breakdown.transactional}%` }}></div>
+                    <div
+                      className="bg-orange-600 h-2 rounded-full"
+                      style={{
+                        width: `${analysisData.search_intent.intent_breakdown.transactional}%`,
+                      }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -320,20 +585,197 @@ function AdvancedKeywordAnalysis() {
             {/* PAA Questions */}
             <div className="bg-[#1A1A1A] rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">People Also Ask</h3>
-
-              {analysisData.paa_questions && analysisData.paa_questions.length > 0 ? (
+              {/* {JSON.stringify(analysisData.paa_questions)} */}
+              {analysisData.paa_questions &&
+                analysisData.paa_questions.length > 0 ? (
                 <ul className="space-y-3">
                   {analysisData.paa_questions.map((question, index) => (
                     <li key={index} className="flex items-start">
-                      <ChevronRight size={18} className="text-primary mt-1 mr-2 flex-shrink-0" />
+                      <ChevronRight
+                        size={18}
+                        className="text-primary mt-1 mr-2 flex-shrink-0"
+                      />
                       <span className="text-gray-300">{question}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">No "People Also Ask" questions available for this keyword.</p>
+                <p className="text-gray-400">
+                  No "People Also Ask" questions available for this keyword.
+                </p>
               )}
             </div>
+          </div>
+        </Container>
+      </section>
+      {/* {JSON.stringify(analysisData.page_classifications)} */}
+      {/* Key Topics & User Needs */}
+      {/* Related Keywords & Search Volume Trend */}
+      <section className="py-10 bg-black">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Related Keywords */}
+            <div className="md:col-span-1">
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
+                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                  <Tag size={16} />
+                </span>
+                Related Keywords
+              </h2>
+
+              <div className="bg-[#1A1A1A] rounded-lg p-6">
+                <div className="space-y-4 max-h-[370px] overflow-y-auto pr-2">
+                  {analysisData?.related_keywords?.map((keyword, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedKeyword(keyword)}
+                      className={`w-full p-3 rounded-lg flex items-center justify-between cursor-pointer ${selectedKeyword.keyword === keyword.keyword
+                        ? "bg-primary text-black"
+                        : "bg-[#2A2A2A] hover:bg-[#333333]"
+                        }`}
+                    >
+                      <div className="text-left">
+                        <div className="font-medium">{keyword.keyword}</div>
+                        <div className="text-xs opacity-80">
+                          {keyword.search_volume} monthly searches
+                        </div>
+                      </div>
+
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Search Volume Chart */}
+            <div className="md:col-span-2">
+              <h2 className="text-2xl font-bold mb-6 flex items-center">
+                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                  <BarChart2 size={16} />
+                </span>
+                Search Volume Trend
+              </h2>
+
+              <div className="bg-[#1A1A1A] rounded-lg p-6">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold">
+                    {selectedKeyword?.keyword}
+                  </h3>
+                  <div className="flex  gap-3 mt-2 flex-col md:flex-row items-start md:items-center">
+                    <span className="text-gray-400">
+                      {selectedKeyword?.search_volume} monthly searches
+                    </span>
+
+                    <span className="text-gray-300 text-sm px-2 py-1 bg-[#2A2A2A] rounded-md">
+                      ${selectedKeyword?.cpc?.toFixed(2)} CPC
+                    </span>
+                    <div className={`text-gray-400`}>
+                      Competition: {selectedKeyword?.competition}
+                    </div>
+                  </div>
+                </div>
+
+                {chartData ? (
+                  <div className="h-72">
+                    <Line
+                      data={chartData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                            grid: {
+                              color: "rgba(255, 255, 255, 0.1)",
+                            },
+                            ticks: {
+                              color: "rgba(255, 255, 255, 0.7)",
+                            },
+                          },
+                          x: {
+                            grid: {
+                              color: "rgba(255, 255, 255, 0.1)",
+                            },
+                            ticks: {
+                              color: "rgba(255, 255, 255, 0.7)",
+                            },
+                          },
+                        },
+                        plugins: {
+                          legend: {
+                            labels: {
+                              color: "rgba(255, 255, 255, 0.7)",
+                            },
+                          },
+                          tooltip: {
+                            backgroundColor: "rgba(0, 0, 0, 0.8)",
+                            bodyColor: "#fff",
+                            titleColor: "#FFDD00",
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-72 bg-[#0A0A0A] rounded-lg">
+                    <p className="text-gray-400">Loading chart data...</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Key Topics */}
+      <section className="py-10 bg-[#121212]">
+        <Container>
+          <h2 className="text-2xl font-bold mb-6 flex items-center">
+            <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+              <AlignLeft size={16} />
+            </span>
+            Key Topics
+          </h2>
+
+          <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="flex flex-wrap gap-2">
+              {analysisData.key_topics?.slice(0, 40).map((topic, index) => (
+                <span
+                  key={index}
+                  className="bg-[#2A2A2A] hover:bg-primary hover:text-black transition-colors px-3 py-1 rounded-md text-sm cursor-pointer"
+                >
+                  {topic}
+                </span>
+              ))}
+              {analysisData.key_topics?.length > 40 && (
+                <span className="text-gray-400 text-sm">
+                  +{analysisData.key_topics.length - 40} more topics
+                </span>
+              )}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* User Needs */}
+      <section className="py-10 bg-[#0A0A0A]">
+        <Container>
+          <h2 className="text-2xl font-bold mb-6 flex items-center">
+            <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+              <CheckCircle size={16} />
+            </span>
+            User Needs
+          </h2>
+
+          <div className="bg-[#1A1A1A] rounded-lg p-6 mb-8">
+            <ul className="space-y-3">
+              {analysisData.search_intent.user_needs?.map((need, index) => (
+                <li key={index} className="flex items-start mt-1 gap-3">
+                  <span className="bg-primary text-black p-1 rounded-full min-w-8 min-h-8 flex items-center justify-center ">✓</span>
+                  <p className="text-gray-300">{need}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </Container>
       </section>
@@ -341,104 +783,233 @@ function AdvancedKeywordAnalysis() {
       {/* SERP Analysis */}
       <section className="py-10 bg-[#0A0A0A]">
         <Container>
-          <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
-              <BarChart2 size={16} />
-            </span>
-            SERP Analysis
-          </h2>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
+            <h2 className="text-2xl font-bold mb-6 flex items-center">
+              <span className="bg-primary text-black min-h-8 min-w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <BarChart2 size={16} />
+              </span>
+              SERP Analysis
+            </h2>
+            {/* Compare button */}
+            <div className="mb-4 flex items-center space-x-2">
+              <Button
+                onClick={() => setCompareOpen(true)}
+                disabled={selectedUrls.length < 2}
+                className="flex items-center space-x-2"
+              >
+                <ArrowRightLeft size={16} />
+                <span>Compare {selectedUrls.length} Selected</span>
+              </Button>
+            </div>
+          </div>
 
+
+        </Container>
+        <div className="max-w-[1450px] mx-auto md:px-6">
           {analysisData.serp_data && analysisData.serp_data.length > 0 ? (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto px-4">
               <table className="w-full">
                 <thead className="bg-[#1A1A1A] border-b border-gray-800">
                   <tr>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">Rank</th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">Title & URL</th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">Domain</th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">Actions</th>
+                    <th className="p-2" />
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">
+                      Rank
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">
+                      Title & URL
+                    </th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">
+                      Domain
+                    </th>
+                    <th className="py-3 px-4 text-right text-sm font-semibold text-gray-300">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
-                  {analysisData.serp_data.map((result, index) => (
-                    <tr key={index} className="hover:bg-[#1E1E1E] transition-colors">
-                      <td className="py-4 px-4 font-mono text-lg font-bold text-primary">
-                        #{result.rank}
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="max-w-xl">
-                          <div className="font-bold text-white mb-1 line-clamp-1">{result.title}</div>
-                          <div className="text-sm text-gray-400 line-clamp-2">{result.description}</div>
-                          <div className="text-xs text-green-500 mt-1">{result.url}</div>
-                        </div>
-                      </td>
-                      <td className="py-4 px-4 text-gray-300">
-                        {result.domain}
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="flex space-x-2 justify-end">
-                          {analysisData.headings_by_url[result.url] && (
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <button
-                                  className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
-                                  title="View Headings"
-                                >
-                                  <AlignLeft size={16} />
-                                </button>
-                              </DialogTrigger>
-                              <DialogContent className="bg-[#1A1A1A] text-white border-gray-700 ">
-                                <DialogHeader>
-                                  <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                                    <AlignLeft className="text-primary" size={20} />
-                                    Headings Structure
-                                  </DialogTitle>
-                                </DialogHeader>
-                                <div className="mt-2 max-h-[500px] overflow-y-auto">
-                                  <div className="text-sm text-gray-400 mb-4">{result.url}</div>
-                                  {renderHeadings(analysisData.headings_by_url[result.url])}
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                          )}
+                  {analysisData.serp_data.map((result, idx) => {
 
-                          <a
-                            href={result.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
-                            title="Visit Page"
-                          >
-                            <ExternalLink size={16} />
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                    const headings = analysisData.headings_by_url[result.url];
+                    const url = result.url;
+                    const isSelected = selectedUrls.includes(url);
+                    return (
+                      <tr
+                        key={idx}
+                        className={`transition-colors ${isSelected ? "bg-primary/10" : "hover:bg-[#1E1E1E]"} cursor-pointer`}
+                        onClick={() => handleRowClick(result.url)}
+                      >
+                        {/* checkbox cell */}
+                        <td className="p-2 text-center">
+                          {headings && (
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={() => toggleSelect(url)}
+                              disabled={
+                                !isSelected && selectedUrls.length >= 3
+                              }
+                              onClick={(e) => e.stopPropagation()}
+                              className={`${isSelected ? "bg-primary" : "bg-gray-700"} cursor-pointer`}
+                              aria-label={`Select ${result.title} for comparison`}
+                            />
+                          )}
+                        </td>
+                        <td className="py-4 px-4 font-mono text-lg font-bold text-primary">
+                          #{idx + 1}
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="max-w-xl">
+                            <div className="font-bold text-white mb-1 line-clamp-1 flex items-start gap-2">
+                              <span className="text-white">
+                                {result.title}
+                              </span>
+                              {analysisData.page_classifications[
+                                result.url
+                              ] && (
+                                  <span
+                                    className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${getIntentColor(
+                                      analysisData.page_classifications[
+                                      result.url
+                                      ],
+                                    )}`}
+                                  >
+                                    {
+                                      analysisData.page_classifications[
+                                      result.url
+                                      ]
+                                    }
+                                  </span>
+                                )}
+                            </div>
+                            <div className="text-sm text-gray-400 line-clamp-2">
+                              {result.description}
+                            </div>
+                            <div className="text-xs text-green-500 mt-1">
+                              {result.url}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4 text-gray-300">
+                          {result.domain}
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex space-x-2 justify-end">
+                            {/* just an icon indicator; clicking it still opens the dialog */}
+                            {headings ? (
+                              <button
+                                className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
+                                title="View Headings"
+                              >
+                                <AlignLeft size={16} />
+                              </button>
+                            ) : (
+                              <button className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Extract page Intent"
+                                disabled={extractingPageIntent}
+                                onClick={() => handleExtractPageIntent(result.url)}
+                              >
+                                <Download size={16} />
+                              </button>
+                            )}
+                            {/* this link should NOT open the dialog */}
+                            <a
+                              href={result.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors"
+                              title="Visit Page"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ExternalLink size={16} />
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
+              {/* single Dialog instance */}
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="bg-[#1A1A1A] text-white border-gray-700">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                      <AlignLeft className="text-primary" size={20} />
+                      Headings Structure
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="mt-2 max-h-[500px] overflow-y-auto">
+                    <div className="text-sm text-gray-400 mb-4">
+                      {selectedUrl}
+                    </div>
+                    {selectedUrl &&
+                      renderHeadings(
+                        analysisData.headings_by_url[selectedUrl],
+                      )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+              {/* 3) Comparison Dialog */}
+              <Dialog open={compareOpen} onOpenChange={setCompareOpen}>
+                <DialogContent className="bg-[#1A1A1A] text-white border-gray-700 md:!max-w-2xl lg:!max-w-4xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                      <AlignLeft className="text-primary" size={20} />
+                      Heading Structure Comparison
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div
+                    className={`grid grid-cols-2 lg:grid-cols-${selectedUrls.length} gap-3 mt-2 max-h-[500px] overflow-y-auto `}
+                  >
+                    {selectedUrls.map((url) => (
+                      <div
+                        key={url}
+                        className="border p-4 rounded border-gray-800"
+                      >
+                        <h3 className="font-bold mb-2 line-clamp-1 text-primary">
+                          {url}
+                        </h3>
+                        {renderHeadings(analysisData.headings_by_url[url])}
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           ) : (
             <div className="bg-[#1A1A1A] rounded-lg p-8 text-center">
-              <AlertTriangle size={48} className="text-yellow-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">No SERP Data Available</h3>
+              <AlertTriangle
+                size={48}
+                className="text-yellow-500 mx-auto mb-4"
+              />
+              <h3 className="text-xl font-bold mb-2">
+                No SERP Data Available
+              </h3>
               <p className="text-gray-400 max-w-md mx-auto">
-                We couldn't find any search engine results for this keyword. This might be due to very low search volume or a highly specific query.
+                We couldn't find any search engine results for this keyword.
+                This might be due to very low search volume or a highly
+                specific query.
               </p>
             </div>
           )}
-        </Container>
+        </div>
       </section>
 
       {/* Action Section */}
       <section className="py-12 bg-gradient-to-r from-primary to-[#FFAA00]">
         <Container>
-          <h2 className="text-3xl font-black text-black mb-6">Ready to Dominate Search Results?</h2>
+          <h2 className="text-3xl font-black text-black mb-6">
+            Ready to Dominate Search Results?
+          </h2>
           <p className="text-lg text-black/80 max-w-3xl mx-auto mb-8">
-            Use this keyword analysis to create content that ranks. Our SEO tools help you cut through the noise and focus on what matters.
+            Use this keyword analysis to create content that ranks. Our SEO
+            tools help you cut through the noise and focus on what matters.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="ghost" size="lg" href="/advanced-keyword-analysis">
+            <Button
+              variant="ghost"
+              size="lg"
+              href="/advanced-keyword-analysis"
+            >
               Explore More Keywords
             </Button>
             <Button size="lg" variant="secondary">

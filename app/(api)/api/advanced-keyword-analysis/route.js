@@ -6,7 +6,12 @@ import { db } from "@/lib/firebase";
 
 export async function POST(request) {
   try {
-    const ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+    let ip;
+    if (process.env.NODE_ENV === "development") {
+      ip = "3434"
+    } else {
+      ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+    }
     // Read JSON data from the request
     const formData = await request.formData();
     const keyword = formData.get("keyword");
@@ -52,6 +57,7 @@ export async function POST(request) {
     // console.log("data", data);
 
     // Return the response from your Node.js service
+    console.log("data", data);
     return NextResponse.json({ ...data, docId: docRef.id });
   } catch (error) {
     console.error("Error in analysis API route:", error);

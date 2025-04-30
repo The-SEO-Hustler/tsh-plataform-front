@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req) {
-  const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+  let ip;
+  if (process.env.NODE_ENV === "development") {
+    ip = "3434"
+  } else {
+    ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
+  }
   console.log('ip', ip);
   try {
     const response = await fetch(
