@@ -9,7 +9,7 @@ export default function Footer() {
       links: [
         { name: 'Free SEO Tools', href: '/free-tools' },
         { name: 'Blog', href: '/blog' },
-        { name: 'Guides', href: '/resources#guides' },
+        { name: 'Playbooks', href: '/resources#playbooks' },
         { name: 'Cheatsheets', href: '/resources#cheatsheets' },
         { name: 'Ebooks', href: '/resources#ebooks' },
       ],
@@ -17,11 +17,11 @@ export default function Footer() {
     {
       title: 'Learn',
       links: [
-        { name: 'SEO Basics', href: '/guides/seo-basics' },
-        { name: 'Keyword Research', href: '/guides/keyword-research' },
-        { name: 'Link Building', href: '/guides/link-building' },
-        { name: 'Technical SEO', href: '/guides/technical-seo-audit' },
-        { name: 'Content Strategy', href: '/guides/content-strategy' },
+        { name: 'SEO Basics', href: '/playbooks/seo-basics' },
+        { name: 'Keyword Research', href: '/playbooks/keyword-research' },
+        { name: 'Link Building', href: '/playbooks/link-building' },
+        { name: 'Technical SEO', href: '/playbooks/technical-seo-audit' },
+        { name: 'Content Strategy', href: '/playbooks/content-strategy' },
       ],
     },
     {
@@ -54,7 +54,7 @@ export default function Footer() {
               </svg>
             </Link>
             <p className="mt-4 text-zinc-300 text-sm">
-              The SEO Hustler is a resource for anyone trying to learn and execute SEO and organic growth by themselves. Get sh*t done with our free tools, in-depth guides, and resources.
+              The SEO Hustler is a resource for anyone trying to learn and execute SEO and organic growth by themselves. Get sh*t done with our free tools, in-depth playbooks, and resources.
             </p>
             <div className="mt-6 flex space-x-4">
               {socialLinks.map((social) => (

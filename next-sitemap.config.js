@@ -1,7 +1,7 @@
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_FRONT_URL,
   generateRobotsTxt: true,
-  exclude: ['/content-planning/result', '/advanced-keyword-analysis/result', '/seo-check/result', '/blog/*', '/guides/*', '/spreadsheets/*', '/ebooks/*', '/llms-txt-generator/result'],
+  exclude: ['/content-planning/result', '/advanced-keyword-analysis/result', '/seo-check/result', '/blog/*', '/playbooks/*', '/spreadsheets/*', '/ebooks/*', '/llms-txt-generator/result'],
   robotsTxtOptions: {
     policies: [
       {

@@ -21,7 +21,7 @@ export const metadata = getMetadata(SEO_DATA.index);
 export default async function Home() {
   const latestPosts = await getAllPostsForHome();
   let latestResources = await getAllResourcePage();
-  latestResources = latestResources.guides.concat(latestResources.spreadsheets, latestResources.ebooks);
+  latestResources = latestResources.playbooks.concat(latestResources.spreadsheets, latestResources.ebooks);
 
   // console.log('latestResources', latestResources);
   // const latestPosts = [];

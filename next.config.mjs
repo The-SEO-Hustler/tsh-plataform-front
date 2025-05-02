@@ -21,13 +21,18 @@ const nextConfig = {
       },
     ],
   },
-  // redirects: async () => [
-  //   {
-  //     source: "/",
-  //     destination: "/free-tools",
-  //     permanent: true,
-  //   },
-  // ],
+  redirects: async () => [
+    {
+      source: '/guides/:slug*',
+      destination: '/playbooks/:slug*',
+      permanent: true,
+    },
+    {
+      source: '/guides',
+      destination: '/playbooks',
+      permanent: true,
+    },
+  ],
 };
 
 export default nextConfig;

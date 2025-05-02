@@ -25,7 +25,7 @@ export default function Hero() {
             <span className="text-primary">DIY SEO</span> for the Go-Getters
           </h1>
           <p className=" animation-delay-1 text-xl md:text-2xl text-white/80 mb-8 max-w-3xl mx-auto">
-            Free tools, in-depth guides, and resources to help you learn and execute SEO and organic growth by yourself. No fluff, just results.
+            Free tools, in-depth playbooks, and resources to help you learn and execute SEO and organic growth by yourself. No fluff, just results.
           </p>
           <div className=" animation-delay-2 flex flex-col sm:flex-row gap-4 justify-center">
             <Button

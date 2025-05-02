@@ -30,7 +30,7 @@ Resources: https://wordpress-429601-4091958.cloudwaysapps.com/wp-admin/edit.php?
 
 ### Resources Type
 
-Front end expects  types of resources [’guides’, ‘spreadsheets’, ‘ebooks’], you can choose which type of resource a post is by selecting its resource type in the wrdpress edit page,
+Front end expects  types of resources [’playbooks’, ‘spreadsheets’, ‘ebooks’], you can choose which type of resource a post is by selecting its resource type in the wrdpress edit page,
 
 Right now all resources types are displayed the same, but specific modifcations can be developed for each resource type
 
@@ -42,7 +42,7 @@ How nextjs incrementation static generation works: [https://remelehane.medium.co
 
 The project is set to update (revalidate) the articles and resources after 3600 seconds (1 hour) that a user visit the specific resource.
 
-Example: you have just edited [https://wordpress-429601-4091958.cloudwaysapps.com/wp-admin/post.php?post=2306&action=edit](https://wordpress-429601-4091958.cloudwaysapps.com/wp-admin/post.php?post=2306&action=edit), when a user visits the article on the frontend [https://theseohustler.com/guides/ai-for-seo](https://theseohustler.com/guides/ai-for-seo) nextjs will deliver the static page generated on build time and ater 1 hour will compare the page static page with the content in the source (wordpress), if it’s diferent it will build a new static page (incrementation static generation)
+Example: you have just edited [https://wordpress-429601-4091958.cloudwaysapps.com/wp-admin/post.php?post=2306&action=edit](https://wordpress-429601-4091958.cloudwaysapps.com/wp-admin/post.php?post=2306&action=edit), when a user visits the article on the frontend [https://theseohustler.com/playbooks/ai-for-seo](https://theseohustler.com/playbooks/ai-for-seo) nextjs will deliver the static page generated on build time and ater 1 hour will compare the page static page with the content in the source (wordpress), if it’s diferent it will build a new static page (incrementation static generation)
 
 this 3600 seconds number can be decreased, but this higher value is used to prevent too many requests to wordpress, since all the requests to the aticle within the one hour range will result in only one check in wordpress, if the revalidate number would be set in 3 seconds for example, almost every request to a resource or article would result in a check in wordpress
 

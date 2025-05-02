@@ -13,9 +13,9 @@ export async function generateStaticParams() {
   const allResources = await getAllResourcePage();
 
   // Filter only guide resources
-  const guideResources = allResources.guides || [];
+  const playbookResources = allResources.playbooks || [];
 
-  return guideResources.map((resource) => ({
+  return playbookResources.map((resource) => ({
     slug: resource.slug,
   }));
 }
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }) {
       title: resource.title,
       description: resource.excerpt,
       type: 'article',
-      url: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug}`,
+      url: `${process.env.NEXT_PUBLIC_FRONT_URL}/playbooks/${param.slug}`,
       publishedTime: resource.modified,
       modifiedTime: resource.modified,
       authors: [resource.author],
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }) {
         : [],
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/guides/${param.slug}`,
+      canonical: `${process.env.NEXT_PUBLIC_FRONT_URL}/playbooks/${param.slug}`,
     },
   };
 }

@@ -19,7 +19,7 @@ export default function Resources({ resources }) {
 
   // Resource types
   const types = [
-    { id: "guides", label: "Guides" },
+    { id: "playbooks", label: "Playbooks" },
     { id: "ebooks", label: "Ebooks" },
     { id: "cheatsheets", label: "Cheatsheets" },
   ];
@@ -121,7 +121,7 @@ export default function Resources({ resources }) {
             <span className="text-yellow-400">Free SEO Resources</span> & Templates
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Download actionable resources, cheatsheets, guides, and templates to streamline your SEO workflow and get results faster.
+            Download actionable resources, cheatsheets, playbooks, and templates to streamline your SEO workflow and get results faster.
           </p>
         </div>
       </section>
@@ -146,12 +146,12 @@ export default function Resources({ resources }) {
       {/* Resources Sections */}
       <div className="py-12 space-y-16">
         {/* General Resources Section */}
-        {resources.guides.length > 0 && (
-          <section id="guides" className="scroll-mt-24">
+        {resources.playbooks.length > 0 && (
+          <section id="playbooks" className="scroll-mt-24">
             <Container>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Guides</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Playbooks</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {resources.guides.map((resource, index) => (
+                {resources.playbooks.map((resource, index) => (
                   <ResourceCard
                     key={index}
                     {...resource}

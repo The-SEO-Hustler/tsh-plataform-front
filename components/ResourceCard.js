@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Image from 'next/image';
 
 /**
- * Resource Card Component (for ebooks, cheatsheets, guides)
+ * Resource Card Component (for ebooks, cheatsheets, playbooks)
  * 
  * @param {Object} props - Component props
  * @param {string} props.title - Resource title
