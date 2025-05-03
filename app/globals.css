@@ -285,3 +285,6 @@ body a {
 ::-webkit-scrollbar-thumb:hover {
   background: #999999;
 }
+[data-sonner-toast][data-y-position=top]{
+  top: 50px !important;
+}

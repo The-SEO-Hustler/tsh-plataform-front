@@ -104,7 +104,6 @@ export default function LoadingScreenKeyword({ status = 'pending' }) {
             style={{ width: `${progress}%` }}
           ></div>
         </div>
-
         <div className="mt-8 text-xs text-gray-500 flex items-center gap-2">
           <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {

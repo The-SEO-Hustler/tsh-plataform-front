@@ -8,7 +8,7 @@ export async function POST(request) {
   try {
     let ip;
     if (process.env.NODE_ENV === "development") {
-      ip = "3434"
+      ip = "3435"
     } else {
       ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense, useRef } from "react";
+import React, { useState, useEffect, Suspense, useRef, Fragment } from "react";
 import Link from "next/link";
 import Container from "@/components/container";
 import { toast } from "sonner";
@@ -11,8 +11,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import LoadingScreenKeyword from "@/components/LoadingScreenKeyword";
 import { onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-
-import { Search, Info, Eye, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Search, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download } from 'lucide-react';
+import TimestampDisplay from "@/components/TimestampDisplay";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Chart as ChartJS,
@@ -21,7 +22,7 @@ import {
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  Tooltip as ChartTooltip,
   Legend
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
@@ -30,9 +31,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import AdvancedKeywordAnalysisHero from "@/components/advanced-keyword-analysis-hero";
 
 ChartJS.register(
   CategoryScale,
@@ -40,7 +39,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   Title,
-  Tooltip,
+  ChartTooltip,
   Legend
 );
 
@@ -48,15 +47,20 @@ ChartJS.register(
 function AdvancedKeywordAnalysis() {
 
   const [keyword, setKeyword] = useState("");
-  const [contentType, setContentType] = useState("blog_post");
   const [loadingPage, setLoadingPage] = useState(true);
   const [error, setError] = useState(null);
   const [extractingPageIntent, setExtractingPageIntent] = useState(false);
+  const [searchIntentState, setSearchIntentState] = useState(false);
+  const [googleTrendsState, setGoogleTrendsState] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const [chartData, setChartData] = useState(null);
   const [selectedKeyword, setSelectedKeyword] = useState(analysisData?.related_keywords?.[0] || "");
   const listenerRef = useRef(null);
+  const toastIds = useRef({
+    searchIntent: null,
+    googleTrends: null,
+  });
 
   const { trackAdvancedKeywordAnalysis, currentAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis } = useFirebase();
   const router = useRouter();
@@ -102,15 +106,15 @@ function AdvancedKeywordAnalysis() {
     if (currentAdvancedKeywordAnalysis && currentAdvancedKeywordAnalysis.type === "advanced-keyword-analysis") {
       setStatus(currentAdvancedKeywordAnalysis.status);
       setAnalysisData(currentAdvancedKeywordAnalysis.data || null);
+      setSearchIntentState(currentAdvancedKeywordAnalysis.search_intent_state || false);
+      setGoogleTrendsState(currentAdvancedKeywordAnalysis.google_trends_state || false);
       setSelectedKeyword(currentAdvancedKeywordAnalysis?.data?.related_keywords?.[0] || "");
       setKeyword(currentAdvancedKeywordAnalysis.keyword || "");
-      setContentType(currentAdvancedKeywordAnalysis.contentType || "blog_post");
       setUpdatedAt(currentAdvancedKeywordAnalysis.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
       if (
-        currentAdvancedKeywordAnalysis.status === "completed" ||
-        currentAdvancedKeywordAnalysis.status === "failed"
+        currentAdvancedKeywordAnalysis.preview
       ) {
         setLoadingPage(false);
       } else {
@@ -119,11 +123,56 @@ function AdvancedKeywordAnalysis() {
 
       if (currentAdvancedKeywordAnalysis.error) {
         setError(currentAdvancedKeywordAnalysis.error);
+
       }
+
     }
   }, [currentAdvancedKeywordAnalysis]);
 
   // Update chart data when selected keyword changes
+
+  const getMonthName = (month) => {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return months[month - 1];
+  }
+
+  useEffect(() => {
+    // Show loading toasts
+    console.log('use effect toast ', searchIntentState, googleTrendsState, toastIds.searchIntent, toastIds.googleTrends)
+    if (searchIntentState === "loading" && !toastIds.current.searchIntent) {
+      toastIds.current.searchIntent = toast.loading(`Analyzing '${keyword}' search intent...`);
+    }
+    if (googleTrendsState === "loading" && !toastIds.current.googleTrends) {
+      toastIds.current.googleTrends = toast.loading(`Analyzing '${keyword}' Google Trends...`);
+    }
+
+    // 2) dismiss on completion
+    if (searchIntentState === "completed" && toastIds.current.searchIntent) {
+      toast.dismiss(toastIds.current.searchIntent);
+      toastIds.current.searchIntent = null;
+    }
+    if (googleTrendsState === "completed" && toastIds.current.googleTrends) {
+      toast.dismiss(toastIds.current.googleTrends);
+      toastIds.current.googleTrends = null;
+    }
+    // Cleanup on unmount (or before next effect run)
+    return () => {
+      if (toastIds.current.searchIntent) {
+        toast.dismiss(toastIds.current.searchIntent)
+        toastIds.current.searchIntent = null
+      }
+      if (toastIds.current.googleTrends) {
+        toast.dismiss(toastIds.current.googleTrends)
+        toastIds.current.googleTrends = null
+      }
+    }
+
+  }, [googleTrendsState, searchIntentState])
+
+
   useEffect(() => {
     if (selectedKeyword?.monthly_searches) {
       // Sort the data by year and month
@@ -195,6 +244,7 @@ function AdvancedKeywordAnalysis() {
         clearTimeout(timeoutId);
         listenerRef.current?.();
         listenerRef.current = null;
+
         toast.dismiss(toastId);
         toast.error("Error listening for update.");
         console.error("Firestore listener error:", error);
@@ -227,7 +277,7 @@ function AdvancedKeywordAnalysis() {
   // Function to get color based on intent type
   const getIntentColor = (intent) => {
     switch (intent) {
-      case 'Commercial Investigation':
+      case 'Commercial':
         return 'bg-blue-600';
       case 'Informational':
         return 'bg-green-600';
@@ -239,6 +289,21 @@ function AdvancedKeywordAnalysis() {
         return 'bg-gray-600';
     }
   };
+  useEffect(() => {
+    console.log('error effect', error)
+    if (error) {
+      console.log('removing analysis?')
+      removeAdvancedKeywordAnalysis();
+      if (toastIds.current.searchIntent) {
+        toast.dismiss(toastIds.current.searchIntent);
+        toastIds.current.searchIntent = null;
+      }
+      if (toastIds.current.googleTrends) {
+        toast.dismiss(toastIds.current.googleTrends);
+        toastIds.current.googleTrends = null;
+      }
+    }
+  }, [error, removeAdvancedKeywordAnalysis, toastIds])
 
   // Function to render difficulty badge
   const getDifficultyBadge = (difficulty) => {
@@ -246,16 +311,7 @@ function AdvancedKeywordAnalysis() {
     if (difficulty <= 60) return <span className="bg-yellow-500 text-white px-2 py-1 rounded-md text-xs font-bold">Medium</span>;
     return <span className="bg-red-600 text-white px-2 py-1 rounded-md text-xs font-bold">Hard</span>;
   };
-  const renderIntentBar = (intentBreakdown) => {
-    return (
-      <div className="flex h-2 w-full overflow-hidden rounded-full mt-2">
-        <div className="bg-green-600" style={{ width: `${intentBreakdown.informational}%` }}></div>
-        <div className="bg-purple-600" style={{ width: `${intentBreakdown.navigational}%` }}></div>
-        <div className="bg-blue-600" style={{ width: `${intentBreakdown.commercial}%` }}></div>
-        <div className="bg-orange-600" style={{ width: `${intentBreakdown.transactional}%` }}></div>
-      </div>
-    );
-  };
+
 
   // Function to render heading structure in dialog
   const renderHeadings = (headings) => {
@@ -292,13 +348,14 @@ function AdvancedKeywordAnalysis() {
     router.push("/advanced-keyword-analysis");
   }
   if (error) {
+
     return (
       <Container>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
             <p className="text-gray-600">{error}</p>
-            <Button onClick={() => router.push("/")} className="mt-4">
+            <Button onClick={() => router.push("/")} className="mt-4 cursor-pointer">
               Try Again
             </Button>
           </div>
@@ -340,7 +397,7 @@ function AdvancedKeywordAnalysis() {
         </div>
 
         <Container className=" relative z-10">
-          <div className="flex items-center gap-3 text-gray-300 text-sm mb-4">
+          <div className="flex items-center gap-1 md:gap-3 text-gray-300 text-sm mb-4 flex-wrap gap-y-0">
             <span>
               <Link
                 href="/advanced-keyword-analysis"
@@ -349,28 +406,44 @@ function AdvancedKeywordAnalysis() {
                 {" "}
                 Advanced Keyword Analysis
               </Link>
+
             </span>
             <ChevronRight size={16} />
             <span className="text-primary font-semibold">
               {analysisData.keyword || "New Content"}
             </span>
           </div>
-
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
             <div>
               <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center">
-                <Search className="text-primary h-10 w-10 mr-3" />
                 {analysisData.keyword}
               </h1>
               <div className="flex gap-3 flex-col md:flex-row items-start md:items-center">
-                <div
-                  className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full text-white font-bold`}
-                >
-                  {analysisData.search_intent.primary}
-                </div>
-                <span className="text-gray-300">
-                  {analysisData.search_intent.confidence}% Confidence
-                </span>
+                {searchIntentState === "completed" ?
+                  <>
+                    <div
+                      className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full text-white font-bold`}
+                    >
+                      {analysisData.search_intent.primary}
+                    </div>
+                    <span className="text-gray-300">
+                      {analysisData.search_intent.confidence}% Confidence
+                    </span>
+                  </> :
+                  <>
+                    <div
+                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 animate-pulse`}
+                    >
+                      loading intent
+                    </div>
+                    <span className="text-gray-300">
+                      Analyzing keyword search intent...
+                    </span>
+                  </>
+                }
+              </div>
+              <div className="text-gray-300 text-sm mt-2">
+                <TimestampDisplay ts={updatedAt} />
               </div>
             </div>
           </div>
@@ -385,12 +458,19 @@ function AdvancedKeywordAnalysis() {
               <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
                 Search Volume
               </h3>
-              <div className="text-3xl font-black">
-                {analysisData.search_volume > 0
-                  ? analysisData.search_volume.toLocaleString()
-                  : "N/A"}
+              <div className="text-3xl">
+                {analysisData?.related_keywords[0]?.monthly_searches[0]?.search_volume > 0
+                  ? <Fragment>
+                    <div className="text-3xl font-black">{analysisData?.related_keywords[0]?.monthly_searches[0]?.search_volume.toLocaleString()}</div>
+                    <div className="text-gray-400 text-sm mt-2">{getMonthName(analysisData?.related_keywords[0]?.monthly_searches[0]?.month)} {analysisData?.related_keywords[0]?.monthly_searches[0]?.year}</div>
+                  </Fragment>
+                  : analysisData?.search_volume > 0
+                    ? <Fragment>
+                      <div className="text-3xl font-black">{analysisData?.search_volume.toLocaleString()}</div>
+                      <div className="text-gray-400 text-sm mt-2"> monthly searches</div>
+                    </Fragment>
+                    : "N/A"}
               </div>
-              <p className="text-gray-400 text-sm mt-2">Monthly searches</p>
             </div>
 
             {/* CPC */}
@@ -452,134 +532,204 @@ function AdvancedKeywordAnalysis() {
           </h2>
 
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Primary Intent */}
             <div className="bg-[#1A1A1A] rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">Primary Intent</h3>
-              <div
-                className={`${getIntentColor(
-                  analysisData.search_intent.primary
-                )} inline-block px-3 py-1 rounded-md text-white font-bold mb-3`}
-              >
-                {analysisData.search_intent.primary}
-              </div>
+              {searchIntentState === "completed" ?
+                <>
+                  <div
+                    className={`${getIntentColor(
+                      analysisData.search_intent.primary
+                    )} inline-block px-3 py-1 rounded-md text-white font-bold mb-3`}
+                  >
+                    {analysisData.search_intent.primary}
+                  </div>
 
-              {/* Analysis Reasoning */}
-              <Tabs defaultValue="summary" className="w-full">
-                <TabsList className="mb-2 bg-[#2A2A2A]" >
-                  <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Summary</TabsTrigger>
-                  <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Analysis Reasoning</TabsTrigger>
+                  {/* Analysis Reasoning */}
+                  <Tabs defaultValue="summary" className="w-full">
+                    <TabsList className="mb-2 bg-[#2A2A2A]" >
+                      <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Summary</TabsTrigger>
+                      <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Analysis Reasoning</TabsTrigger>
 
-                </TabsList>
-                <TabsContent value="reasoning">
-                  <p className="text-gray-300 ">
-                    {analysisData.search_intent.reasoning}
-                  </p>
-                </TabsContent>
-                <TabsContent value="summary">
-                  <p className="text-gray-300 ">
-                    {analysisData.search_intent.summary}
-                  </p>
-                </TabsContent>
-              </Tabs>
+                    </TabsList>
+                    <TabsContent value="reasoning">
+                      <p className="text-gray-300 ">
+                        {analysisData.search_intent.reasoning}
+                      </p>
+                    </TabsContent>
+                    <TabsContent value="summary">
+                      <p className="text-gray-300 ">
+                        {analysisData.search_intent.summary}
+                      </p>
+                    </TabsContent>
+                  </Tabs>
+                </>
+                :
+                <>
+                  <div
+                    className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 animate-pulse mb-3 block max-w-[200px]`}
+                  >
+                    loading intent
+                  </div>
+                  <span className="text-gray-300 mb-3 block">
+                    Analyzing keyword search intent...
+                  </span>
+                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
 
+                </>
+              }
 
             </div>
 
             {/* Intent Breakdown */}
             <div className="bg-[#1A1A1A] rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">Intent Breakdown</h3>
-
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">
-                      Informational
-                    </span>
-                    <span className="text-sm font-medium text-primary">
-                      {
-                        analysisData.search_intent.intent_breakdown
-                          .informational
-                      }
-                      %
-                    </span>
+              {searchIntentState === "completed" ?
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Informational
+                      </span>
+                      <span className="text-sm font-medium text-primary">
+                        {
+                          analysisData.search_intent.intent_breakdown
+                            .informational
+                        }
+                        %
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div
+                        className="bg-green-600 h-2 rounded-full"
+                        style={{
+                          width: `${analysisData.search_intent.intent_breakdown.informational}%`,
+                        }}
+                      ></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-green-600 h-2 rounded-full"
-                      style={{
-                        width: `${analysisData.search_intent.intent_breakdown.informational}%`,
-                      }}
-                    ></div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Navigational
+                      </span>
+                      <span className="text-sm font-medium text-primary">
+                        {
+                          analysisData.search_intent.intent_breakdown
+                            .navigational
+                        }
+                        %
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div
+                        className="bg-purple-600 h-2 rounded-full"
+                        style={{
+                          width: `${analysisData.search_intent.intent_breakdown.navigational}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Commercial
+                      </span>
+                      <span className="text-sm font-medium text-primary">
+                        {analysisData.search_intent.intent_breakdown.commercial}
+                        %
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{
+                          width: `${analysisData.search_intent.intent_breakdown.commercial}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Transactional
+                      </span>
+                      <span className="text-sm font-medium text-primary">
+                        {
+                          analysisData.search_intent.intent_breakdown
+                            .transactional
+                        }
+                        %
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div
+                        className="bg-orange-600 h-2 rounded-full"
+                        style={{
+                          width: `${analysisData.search_intent.intent_breakdown.transactional}%`,
+                        }}
+                      ></div>
+                    </div>
                   </div>
                 </div>
+                :
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Informational
+                      </span>
 
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">
-                      Navigational
-                    </span>
-                    <span className="text-sm font-medium text-primary">
-                      {
-                        analysisData.search_intent.intent_breakdown
-                          .navigational
-                      }
-                      %
-                    </span>
+                    </div>
+                    <div className="w-full bg-gray-200 animate-pulse rounded-full h-2">
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-purple-600 h-2 rounded-full"
-                      style={{
-                        width: `${analysisData.search_intent.intent_breakdown.navigational}%`,
-                      }}
-                    ></div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Navigational
+                      </span>
+
+                    </div>
+                    <div className="w-full bg-gray-200 animate-pulse rounded-full h-2">
+
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Commercial
+                      </span>
+
+                    </div>
+                    <div className="w-full bg-gray-200 animate-pulse rounded-full h-2">
+
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-medium text-gray-300">
+                        Transactional
+                      </span>
+
+                    </div>
+                    <div className="w-full bg-gray-200 animate-pulse rounded-full h-2">
+
+                    </div>
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">
-                      Commercial
-                    </span>
-                    <span className="text-sm font-medium text-primary">
-                      {analysisData.search_intent.intent_breakdown.commercial}
-                      %
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{
-                        width: `${analysisData.search_intent.intent_breakdown.commercial}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-gray-300">
-                      Transactional
-                    </span>
-                    <span className="text-sm font-medium text-primary">
-                      {
-                        analysisData.search_intent.intent_breakdown
-                          .transactional
-                      }
-                      %
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-orange-600 h-2 rounded-full"
-                      style={{
-                        width: `${analysisData.search_intent.intent_breakdown.transactional}%`,
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
+              }
             </div>
 
             {/* PAA Questions */}
@@ -609,11 +759,10 @@ function AdvancedKeywordAnalysis() {
         </Container>
       </section>
       {/* {JSON.stringify(analysisData.page_classifications)} */}
-      {/* Key Topics & User Needs */}
       {/* Related Keywords & Search Volume Trend */}
       <section className="py-10 bg-black">
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Related Keywords */}
             <div className="md:col-span-1">
               <h2 className="text-2xl font-bold mb-6 flex items-center">
@@ -637,7 +786,8 @@ function AdvancedKeywordAnalysis() {
                       <div className="text-left">
                         <div className="font-medium">{keyword.keyword}</div>
                         <div className="text-xs opacity-80">
-                          {keyword.search_volume} monthly searches
+                          {keyword.monthly_searches[0]?.search_volume > 0 &&
+                            `${keyword.monthly_searches[0]?.search_volume.toLocaleString()} searches`}
                         </div>
                       </div>
 
@@ -698,6 +848,7 @@ function AdvancedKeywordAnalysis() {
                             },
                             ticks: {
                               color: "rgba(255, 255, 255, 0.7)",
+                              maxTicksLimit: 10,
                             },
                           },
                         },
@@ -726,59 +877,253 @@ function AdvancedKeywordAnalysis() {
           </div>
         </Container>
       </section>
-
-      {/* Key Topics */}
       <section className="py-10 bg-[#121212]">
         <Container>
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
-              <AlignLeft size={16} />
+              <Search size={16} />
             </span>
-            Key Topics
+            Keyword overview
           </h2>
 
-          <div className="bg-[#1A1A1A] rounded-lg p-6">
-            <div className="flex flex-wrap gap-2">
-              {analysisData.key_topics?.slice(0, 40).map((topic, index) => (
-                <span
-                  key={index}
-                  className="bg-[#2A2A2A] hover:bg-primary hover:text-black transition-colors px-3 py-1 rounded-md text-sm cursor-pointer"
-                >
-                  {topic}
-                </span>
-              ))}
-              {analysisData.key_topics?.length > 40 && (
-                <span className="text-gray-400 text-sm">
-                  +{analysisData.key_topics.length - 40} more topics
-                </span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Key Topics */}
+            <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">Key Topics</h3>
+              {searchIntentState === "completed" ?
+                <div className="flex flex-wrap gap-2">
+                  {analysisData.key_topics?.slice(0, 34).map((topic, index) => (
+                    <span
+                      key={index}
+                      className="bg-[#2A2A2A] hover:bg-primary hover:text-black transition-colors px-3 py-1 rounded-md text-sm "
+                    >
+                      {topic}
+                    </span>
+                  ))}
+                  {analysisData.key_topics?.length > 34 && (
+                    <span className="text-gray-400 text-sm">
+                      +{analysisData.key_topics.length - 34} more topics
+                    </span>
+                  )}
+                </div>
+                :
+                <>
+                  <div className="flex flex-wrap gap-2">
+                    <div className="w-[70px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[90px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[45px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[70px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[90px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[45px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[70px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[90px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[45px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[70px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[90px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+                    <div className="w-[45px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+
+                  </div>
+                  <p className="text-gray-400 mt-3">
+                    Analyzing key topics...
+                  </p>
+                </>
+              }
+            </div>
+
+            {/* User Needs */}
+            <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">User Needs</h3>
+              {searchIntentState === "completed" ?
+                <ul className="space-y-3">
+                  {analysisData.search_intent.user_needs?.map((need, index) => (
+                    <li key={index} className="flex items-start mt-1 gap-3">
+                      <span className="bg-primary text-black p-1 rounded-full min-w-8 min-h-8 flex items-center justify-center ">✓</span>
+                      <p className="text-gray-300">{need}</p>
+                    </li>
+                  ))}
+                </ul> :
+                <p className="text-gray-400">
+                  Analyzing user needs...
+                </p>
+              }
+            </div>
+
+            {/* AI Overview Section */}
+            <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">AI Overview</h3>
+
+
+              {analysisData.ai_overview && analysisData.ai_overview.length > 0 ? (
+                <div className="space-y-4">
+                  {analysisData.ai_overview.slice(0, 1).map((item, index) => (
+                    <div key={index} className="">
+                      <p className="text-gray-300 mb-3">{item.text}</p>
+                      {item.references && item.references.length > 0 && (
+                        <div className="flex flex-col gap-2">
+                          <p className="text-white">References</p>
+                          <div className="flex flex-wrap gap-2">
+                            {item.references.map((ref, refIndex) => {
+                              const url = new URL(ref.url);
+                              return (
+
+                                <a className="" href={ref.url} key={refIndex} target="_blank" rel="noopener noreferrer">
+
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex items-center gap-2 border border-gray-700 rounded-md px-2 py-1">
+                                          <img src={`https://icons.duckduckgo.com/ip3/${url.hostname}.ico`} alt={ref.url} className="w-5 h-5 min-w-5 min-h-5 rounded-sm" />
+                                          <span className=" text-gray-300 text-sm">
+                                            {url.hostname}
+                                          </span>
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent className="bg-[#121212] max-w-[300px] p-3 border-gray-700">
+                                        <div className="space-y-2">
+                                          <h4 className="text-lg font-semibold text-white">{ref.title}</h4>
+                                          <p className="text-gray-400">{ref.text}</p>
+                                        </div>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </a>
+                              )
+                              // <details key={refIndex} className="bg-[#2A2A2A] rounded-md p-3">
+                              //   <summary className="cursor-pointer text-primary">{ref.url}</summary>
+                              //   <div className="mt-2">
+                              //     <h4 className="text-lg font-semibold text-white">{ref.title}</h4>
+                              //     <p className="text-gray-400">{ref.text}</p>
+                              //   </div>
+                              // </details>
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400">No AI Overview data available.</p>
               )}
             </div>
           </div>
         </Container>
       </section>
 
-      {/* User Needs */}
+
+
+      {/* Google Trends Chart */}
       <section className="py-10 bg-[#0A0A0A]">
         <Container>
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
-              <CheckCircle size={16} />
+              <BarChart2 size={16} />
             </span>
-            User Needs
+            Google Trends
           </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="col-span-2">
 
-          <div className="bg-[#1A1A1A] rounded-lg p-6 mb-8">
-            <ul className="space-y-3">
-              {analysisData.search_intent.user_needs?.map((need, index) => (
-                <li key={index} className="flex items-start mt-1 gap-3">
-                  <span className="bg-primary text-black p-1 rounded-full min-w-8 min-h-8 flex items-center justify-center ">✓</span>
-                  <p className="text-gray-300">{need}</p>
-                </li>
-              ))}
-            </ul>
+              {googleTrendsState === "completed" ?
+                <div className="bg-[#1A1A1A] rounded-lg p-6">
+                  {analysisData.google_trends_data?.check_url && (
+                    <a href={analysisData?.google_trends_data?.check_url} target="__blank" className="text-primary">View Google Trends</a>
+                  )}
+                  {analysisData.google_trends_data ? (
+                    <div className="h-72">
+                      <Line
+                        data={{
+                          labels: analysisData.google_trends_data.interestOverTime.map(item => new Date(item.date).toLocaleDateString()),
+                          datasets: [
+                            {
+                              label: "Interest Over Time",
+                              data: analysisData.google_trends_data.interestOverTime.map(item => item.value),
+                              borderColor: "#FFDD00",
+                              backgroundColor: "rgba(255, 221, 0, 0.2)",
+                              tension: 0.3,
+                              fill: true,
+                            },
+                          ],
+                        }}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: true,
+                              grid: {
+                                color: "rgba(255, 255, 255, 0.1)",
+                              },
+                              ticks: {
+                                color: "rgba(255, 255, 255, 0.7)",
+                              },
+                            },
+                            x: {
+                              grid: {
+                                color: "rgba(255, 255, 255, 0.1)",
+                              },
+                              ticks: {
+                                color: "rgba(255, 255, 255, 0.7)",
+                                maxTicksLimit: 10,
+                              },
+                            },
+                          },
+                          plugins: {
+                            legend: {
+                              labels: {
+                                color: "rgba(255, 255, 255, 0.7)",
+                              },
+                            },
+                            tooltip: {
+                              backgroundColor: "rgba(0, 0, 0, 0.8)",
+                              bodyColor: "#fff",
+                              titleColor: "#FFDD00",
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-72 bg-[#0A0A0A] rounded-lg">
+                      <p className="text-gray-400">Loading Google Trends data...</p>
+                    </div>
+                  )}
+                </div>
+                :
+                <div className="flex items-center justify-center h-72 bg-[#0A0A0A] rounded-lg">
+                  <div className="flex flex-col items-center justify-center bg-[#1A1A1A] animate-pulse w-full h-full rounded-lg p-4">
+                    <p className="text-gray-400">Loading Google Trends data...</p>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div className="col-span-1">
+              <div className="bg-[#1A1A1A] rounded-lg p-6">
+                <h3 className="text-xl font-bold mb-4">People Also Search</h3>
+                <div className="flex flex-col gap-2">
+                  {analysisData?.related_searches && analysisData?.related_searches?.length > 0 ?
+                    analysisData?.related_searches?.map((item, index) => (
+                      <div key={index} className="text-gray-300 flex items-center gap-2">
+                        <a href={`https://www.google.com/search?q=${item}`} target="_blank" rel="noopener noreferrer" >
+                          {item}
+                        </a>
+                        <ExternalLink size={12} />
+                      </div>
+                    ))
+                    :
+                    <div className="text-gray-400">No related searches found.</div>
+                  }
+                </div>
+              </div>
+            </div>
           </div>
+
         </Container>
       </section>
+
+
 
       {/* SERP Analysis */}
       <section className="py-10 bg-[#0A0A0A]">
@@ -804,10 +1149,11 @@ function AdvancedKeywordAnalysis() {
           </div>
 
 
+
         </Container>
         <div className="max-w-[1450px] mx-auto md:px-6">
           {analysisData.serp_data && analysisData.serp_data.length > 0 ? (
-            <div className="overflow-x-auto px-4">
+            <div className="overflow-x-auto px-4 md:px-0">
               <table className="w-full">
                 <thead className="bg-[#1A1A1A] border-b border-gray-800">
                   <tr>
@@ -829,7 +1175,7 @@ function AdvancedKeywordAnalysis() {
                 <tbody className="divide-y divide-gray-800">
                   {analysisData.serp_data.map((result, idx) => {
 
-                    const headings = analysisData.headings_by_url[result.url];
+                    const headings = analysisData.headings_by_url?.[result.url] || false;
                     const url = result.url;
                     const isSelected = selectedUrls.includes(url);
                     return (
@@ -862,12 +1208,13 @@ function AdvancedKeywordAnalysis() {
                               <span className="text-white">
                                 {result.title}
                               </span>
-                              {analysisData.page_classifications[
+                              {searchIntentState === "completed" ?
+                                analysisData.page_classifications?.[
                                 result.url
-                              ] && (
+                                ] && (
                                   <span
                                     className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${getIntentColor(
-                                      analysisData.page_classifications[
+                                      analysisData.page_classifications?.[
                                       result.url
                                       ],
                                     )}`}
@@ -878,7 +1225,11 @@ function AdvancedKeywordAnalysis() {
                                       ]
                                     }
                                   </span>
-                                )}
+                                )
+                                :
+                                <div className="w-[70px] bg-gray-200 animate-pulse rounded-full h-6"></div>
+
+                              }
                             </div>
                             <div className="text-sm text-gray-400 line-clamp-2">
                               {result.description}
@@ -886,6 +1237,17 @@ function AdvancedKeywordAnalysis() {
                             <div className="text-xs text-green-500 mt-1">
                               {result.url}
                             </div>
+                            {
+                              result.links && result.links.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                  {result.links.map((link) => (
+                                    <a key={link.url} href={link.url} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer" className="text-xs border border-white rounded-lg px-2 py-1 !no-underline hover:bg-white hover:text-black transition-colors">
+                                      {link.title}
+                                    </a>
+                                  ))}
+                                </div>
+                              )
+                            }
                           </div>
                         </td>
                         <td className="py-4 px-4 text-gray-300">
@@ -894,22 +1256,27 @@ function AdvancedKeywordAnalysis() {
                         <td className="py-4 px-4">
                           <div className="flex space-x-2 justify-end">
                             {/* just an icon indicator; clicking it still opens the dialog */}
-                            {headings ? (
-                              <button
-                                className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
-                                title="View Headings"
-                              >
-                                <AlignLeft size={16} />
-                              </button>
-                            ) : (
-                              <button className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                title="Extract page Intent"
-                                disabled={extractingPageIntent}
-                                onClick={() => handleExtractPageIntent(result.url)}
-                              >
-                                <Download size={16} />
-                              </button>
-                            )}
+                            {searchIntentState === "completed" ?
+
+                              headings ? (
+                                <button
+                                  className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
+                                  title="View Headings"
+                                >
+                                  <AlignLeft size={16} />
+                                </button>
+                              ) : (
+                                <button className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                  title="Extract page Intent"
+                                  disabled={extractingPageIntent}
+                                  onClick={() => handleExtractPageIntent(result.url)}
+                                >
+                                  <Download size={16} />
+                                </button>
+                              ) :
+                              <div className=" bg-gray-200 animate-pulse rounded-md p-2"> <AlignLeft size={16} /></div>
+                            }
+
                             {/* this link should NOT open the dialog */}
                             <a
                               href={result.url}
@@ -993,6 +1360,8 @@ function AdvancedKeywordAnalysis() {
           )}
         </div>
       </section>
+
+
 
       {/* Action Section */}
       <section className="py-12 bg-gradient-to-r from-primary to-[#FFAA00]">

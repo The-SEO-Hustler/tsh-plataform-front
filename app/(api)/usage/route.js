@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req) {
   let ip;
   if (process.env.NODE_ENV === "development") {
-    ip = "3434"
+    ip = "3435"
   } else {
     ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
   }

@@ -1,11 +1,8 @@
 'use client'
 import React from 'react'
 import Container from '@/components/container'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { LoaderCircle } from 'lucide-react'
 import { Search } from 'lucide-react'
-import { TriangleAlert } from 'lucide-react'
 import { useFirebase } from "@/lib/firebase-context";
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -16,12 +13,20 @@ function AdvancedKeywordAnalysisHero() {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [analysisData, setAnalysisData] = useState(null);
   const router = useRouter();
   const { currentAdvancedKeywordAnalysis, trackAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const specialCharPattern = /[^a-zA-Z0-9 ]/;
+    if (specialCharPattern.test(keyword)) {
+      setError("Keyword should not contain special characters.");
+      return;
+    }
+    if (keyword.trim().length < 2) {
+      setError("Keyword must be at least two characters long.");
+      return;
+    }
     if (usage?.remaining <= 0) {
       toast.error("You have reached your daily limit. Please try again tomorrow.");
       return;
@@ -32,11 +37,6 @@ function AdvancedKeywordAnalysisHero() {
       return;
     }
 
-
-    if (!keyword.trim()) {
-      setError("Please enter a keyword");
-      return;
-    }
 
     if (
       currentAdvancedKeywordAnalysis &&
@@ -49,7 +49,6 @@ function AdvancedKeywordAnalysisHero() {
 
     setLoading(true);
     setError(null);
-    setAnalysisData(null);
 
     try {
       const formData = new FormData();

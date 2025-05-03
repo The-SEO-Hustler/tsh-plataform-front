@@ -8,7 +8,7 @@ export async function POST(request) {
   try {
     let ip;
     if (process.env.NODE_ENV === "development") {
-      ip = "3434"
+      ip = "3435"
     } else {
       ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0];
     }
@@ -27,7 +27,10 @@ export async function POST(request) {
     const docRef = await addDoc(collection(db, "keywordAnalysis"), {
       keyword,
       type: "advanced-keyword-analysis",
+      preview: false,
       status: "pending",
+      search_intent_state: false,
+      google_trends_state: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
