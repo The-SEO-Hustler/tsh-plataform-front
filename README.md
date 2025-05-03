@@ -60,6 +60,10 @@ add /seo-check-on-page pattern and this will display the seocheck form
 
 /advanced keyword analysis
 
+## FAQ Custom Block
+
+in gutenberg type /faq tsh and select the custom faq tsh block, this block will be properly displayed in the website with automatic json+ld schema
+
 ## Metadata
 
 Pages metadata can be edited here: https://github.com/The-SEO-Hustler/tsh-plataform-front/blob/main/lib/seo-data.js

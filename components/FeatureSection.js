@@ -20,28 +20,28 @@ export default function FeatureSection({
   // Background variants
   const backgroundStyles = {
     light: 'bg-background',
-    dark: 'bg-[#ffcc00] text-secondary-foreground',
+    dark: 'bg-primary text-black',
     primary: 'bg-primary text-primary-foreground',
     gradient: 'bg-gradient-to-br from-primary to-secondary',
-    darkGradient: 'bg-gradient-to-br from-black to-gray-900',
+    darkGradient: 'bg-black dark:bg-background/90',
   };
 
   // Title text color based on background
   const titleStyles = {
     light: 'text-foreground',
-    dark: 'text-secondary-foreground',
+    dark: 'text-primary-foreground',
     primary: 'text-primary-foreground',
     gradient: 'text-primary-foreground',
-    darkGradient: 'text-white',
+    darkGradient: 'text-white dark:text-foreground',
   };
 
   // Description text color based on background
   const descriptionStyles = {
-    light: 'text-muted-foreground',
-    dark: 'text-secondary-foreground/90',
+    light: 'text-foreground',
+    dark: 'text-primary-foreground',
     primary: 'text-primary-foreground/80',
     gradient: 'text-primary-foreground/80',
-    darkGradient: 'text-white/80',
+    darkGradient: 'text-white/80 dark:text-foreground/80',
   };
 
   return (

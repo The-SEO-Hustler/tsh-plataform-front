@@ -24,9 +24,11 @@ import { Menu, ChartArea, NotebookPen, FileCode } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+
 function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState('light');
 
   // Add scroll listener to apply elevation to header on scroll
   useEffect(() => {
@@ -43,6 +45,7 @@ function Header() {
       document.removeEventListener("scroll", handleScroll);
     };
   }, [scrolled]);
+
   const checkPathname = () => {
     if (
       pathname === "/" ||
@@ -58,19 +61,27 @@ function Header() {
     }
   };
   const isSpecialPath = checkPathname();
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  };
+
   return (
     <header
-      className={`bg-white backdrop-blur-sm shadow-elevation-2 text-black border-b border-gray-200 ${isSpecialPath ? "fixed" : "sticky"
+      className={`bg-background backdrop-blur-sm shadow-elevation-2 text-foreground border-b border-border ${isSpecialPath ? "fixed" : "sticky"
         } ${isSpecialPath && !scrolled
           ? "!text-primary !backdrop-blur-none !bg-transparent !border-b-0"
-          : "text-black"
+          : "text-foreground"
         } z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
 
         <Link href="/" className="flex items-center relative space-x-2 h-full">
-          {isSpecialPath && !scrolled ? (
+          {(isSpecialPath && !scrolled) || theme === 'dark' ? (
             <Image
               src="/the-seo-hustler-horizontal-white-logo.png"
               alt="The SEO Hustler logo"
@@ -89,6 +100,11 @@ function Header() {
           )}
         </Link>
 
+        {/* Theme Switch */}
+        <button onClick={toggleTheme} className="ml-4 p-2 bg-gray-200 rounded-full">
+          {theme === 'light' ? '🌞' : '🌜'}
+        </button>
+
         {/* Desktop Navigation */}
         <NavigationMenu
           className={`hidden md:flex 
@@ -103,30 +119,30 @@ function Header() {
                   <ListItem href="/seo-check" title="SEO Check On Page" free>
                     <div className="flex items-center space-x-3">
                       <svg width="20" height="20" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" className="min-w-5 min-h-5 rounded-md">
-                        <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                         <path d="M26 29L28 31L32 27" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M39 39.0002L34.7 34.7002" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M39 39.0002L34.7 34.7002" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                       <span>Provide an URL and get its SEO score</span>
                     </div>
                   </ListItem>
                   <ListItem href="/advanced-keyword-analysis" title="Advanced Keyword Analysis" free>
                     <div className="flex items-center space-x-3">
-                      <ChartArea width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="black" />
+                      <ChartArea width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="currentColor" />
                       <span>Provide a keyword and get its SEO insights</span>
                     </div>
                   </ListItem>
                   <ListItem href="/llms-txt-generator" title="LLMs.txt Generator" free>
                     <div className="flex items-center space-x-3">
-                      <FileCode width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="black" />
+                      <FileCode width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="currentColor" />
                       <span>Create optimized LLMs.txt files in minutes, not hours. Control how AI sees and represents your business.</span>
                     </div>
                   </ListItem>
                   <ListItem href="/content-planning" title="Content Planning" free>
                     <div className="flex items-center space-x-3">
-                      <NotebookPen width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="black" />
+                      <NotebookPen width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="currentColor" />
                       <span>Provide a keyword and we will give you a content plan</span>
                     </div>
                   </ListItem>
@@ -261,7 +277,7 @@ const ListItem = (
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none !no-underline !font-bold outline-none transition-colors bg-gray-100/50 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-md p-3 leading-none !no-underline !font-bold outline-none transition-colors bg-background hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className
           )}
           href={href}

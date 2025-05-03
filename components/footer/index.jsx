@@ -43,7 +43,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-zinc-900 text-zinc-100 pt-16 pb-8">
+    <footer className="bg-background border-t border-foreground text-foreground pt-16 pb-8">
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Column */}
@@ -53,7 +53,7 @@ export default function Footer() {
                 <text x="100" y="30" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" textAnchor="middle" fill="#FFDD00">THE SEO HUSTLER</text>
               </svg>
             </Link>
-            <p className="mt-4 text-zinc-300 text-sm">
+            <p className="mt-4  text-sm">
               The SEO Hustler is a resource for anyone trying to learn and execute SEO and organic growth by themselves. Get sh*t done with our free tools, in-depth playbooks, and resources.
             </p>
             <div className="mt-6 flex space-x-4">
@@ -97,7 +97,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="!text-zinc-300 hover:text-primary transition-colors text-sm"
+                      className="! hover:text-primary transition-colors text-sm"
                     >
                       {link.name}
                     </Link>
@@ -112,7 +112,7 @@ export default function Footer() {
         {/* <div className="mt-12 py-6 border-t border-zinc-800">
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-bold text-primary mb-2">Subscribe to our newsletter</h3>
-            <p className="text-zinc-300 text-sm mb-4">
+            <p className=" text-sm mb-4">
               Get the latest SEO tips, strategies, and resources delivered to your inbox.
             </p>
             <form className="flex flex-col sm:flex-row gap-2">
@@ -134,7 +134,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="mt-8 pt-6 border-t border-zinc-800 text-center">
-          <p className="text-zinc-300 text-sm">
+          <p className=" text-sm">
             © {new Date().getFullYear()} The SEO Hustler. All rights reserved.
           </p>
         </div>

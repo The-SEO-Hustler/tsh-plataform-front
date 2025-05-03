@@ -20,7 +20,7 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
         "block group rounded-lg overflow-hidden h-full transition-all !no-underline",
         featured
           ? 'bg-primary/70 text-primary-foreground shadow-md'
-          : 'bg-white text-foreground shadow-sm hover:shadow-md'
+          : 'bg-card text-foreground shadow-sm hover:shadow-md'
       )}
     >
       <div className="p-6">
@@ -33,11 +33,10 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
             {Icon && (
               typeof Icon === 'function' ? (
                 <Icon className={cn(
-                  "w-6 h-6",
-                  featured ? 'text-primary-foreground' : 'text-accent-foreground'
+                  "w-6 h-6 text-primary-foreground dark:text-white dark:fill-white"
                 )} />
               ) : (
-                <div className=" flex items-center justify-center">
+                <div className=" flex items-center justify-center text-primary-foreground dark:text-white dark:fill-white">
                   {Icon}
                 </div>
               )
@@ -56,14 +55,14 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
 
         <h3 className={cn(
           "text-lg font-bold mb-2",
-          featured ? 'text-primary-foreground' : 'text-foreground'
+          'text-foreground'
         )}>
           {title}
         </h3>
 
         <p className={cn(
           "text-sm",
-          featured ? 'text-primary-foreground/80' : 'text-muted-foreground'
+          'text-muted-foreground'
         )}>
           {description}
         </p>
@@ -71,7 +70,7 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
         <div className="mt-4 flex items-center">
           <span className={cn(
             "text-sm font-medium",
-            featured ? 'text-primary-foreground' : 'text-primary'
+            'text-primary'
           )}>
             Try now
           </span>

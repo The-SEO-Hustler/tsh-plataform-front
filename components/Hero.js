@@ -40,7 +40,7 @@ export default function Hero() {
               variant="outline"
               size="lg"
               href="/resources"
-              className="font-bold cursor-pointer"
+              className="font-bold cursor-pointer !border-white"
             >
               Browse Resources
             </Button>

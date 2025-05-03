@@ -56,11 +56,11 @@ export default async function Home() {
         "Check your on page SEO score and get real-time suggestions to improve your website.",
       Icon: (
         <svg width="56" height="56" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M26 29L28 31L32 27" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M39 39.0002L34.7 34.7002" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M26 29L28 31L32 27" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M39 39.0002L34.7 34.7002" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       ),
       href: "/seo-check",
@@ -204,13 +204,13 @@ export default async function Home() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex flex-col items-center text-center p-6 rounded-shape-large bg-white  shadow-lg m3-transition rounded-lg"
+              className="flex flex-col items-center text-center p-6 rounded-shape-large bg-card  shadow-lg m3-transition rounded-lg"
             >
               <div className="mb-4">{feature.icon}</div>
               <h3 className="text-xl font-bold mb-2 text-on-surface">
                 {feature.title}
               </h3>
-              <p className="text-on-surface-variant">{feature.description}</p>
+              <p className="text-foreground">{feature.description}</p>
             </div>
           ))}
         </div>
@@ -292,7 +292,7 @@ export default async function Home() {
       </FeatureSection>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary to-[#ecefc7] relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-primary to-[#ecefc7] dark:to-[#48483c] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -316,10 +316,10 @@ export default async function Home() {
 
         <Container>
           <div className="max-w-3xl mx-auto text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-on-primary-container">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">
               Ready to Take Your SEO to the Next Level?
             </h2>
-            <p className="text-xl mb-8 text-on-primary-container/80">
+            <p className="text-xl mb-8 text-black">
               Join thousands of website owners who are growing their traffic
               with The SEO Hustler's free tools and resources.
             </p>
@@ -365,7 +365,7 @@ export default async function Home() {
           ].map((testimonial) => (
             <div
               key={testimonial.id}
-              className="bg-white p-6 rounded-shape-large shadow-elevation-1"
+              className="bg-card p-6 rounded-shape-large shadow-elevation-1"
             >
               <div className="flex items-center mb-4">
                 {[...Array(testimonial.rating)].map((_, index) => (

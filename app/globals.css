@@ -107,31 +107,47 @@
 
 /* Dark mode overrides - if needed */
 [data-theme="dark"] {
-  --background: oklch(0.15 0 0);
-  --foreground: oklch(0.95 0 0);
+  /* Foundations */
+  --background: oklch(0.178 0.000 89.9);
+  --foreground: oklch(0.949 0.000 89.9);
 
-  --card: oklch(0.2 0 0);
-  --card-foreground: oklch(0.95 0 0);
+  /* Muted */
+  --muted: oklch(0.252 0.000 89.9);
+  --muted-foreground: oklch(0.770 0.000 89.9);
 
-  --popover: oklch(0.2 0 0);
-  --popover-foreground: oklch(0.95 0 0);
+  /* Popovers & cards */
+  --popover: oklch(0.213 0.000 89.9);
+  --popover-foreground: oklch(0.949 0.000 89.9);
+  --card: oklch(0.213 0.000 89.9);
+  --card-foreground: oklch(0.949 0.000 89.9);
 
-  --primary: oklch(0.6 0.15 250);
-  --primary-foreground: oklch(0.15 0 0);
+  /* Borders & inputs */
+  --border: oklch(0.235 0.011 90.4);
+  --input: oklch(0.402 0.000 89.9);
+  --ring: oklch(0.541 0.116 50.0);
 
-  --secondary: oklch(0.3 0.05 250);
-  --secondary-foreground: oklch(0.95 0 0);
+  /* YOUR BRAND PRIMARY */
+  --primary: #ffcc00;
+  --primary-foreground: #000000;
 
-  --muted: oklch(0.25 0 0);
-  --muted-foreground: oklch(0.7 0 0);
+  /* Secondary & accent (from original HSL) */
+  --secondary: oklch(0.258 0.045 60.8);
+  --secondary-foreground: oklch(0.925 0.052 66.2);
+  --accent: oklch(0.285 0.000 89.9);
+  --accent-foreground: oklch(0.949 0.000 89.9);
 
-  --accent: oklch(0.3 0.05 250);
-  --accent-foreground: oklch(0.95 0 0);
+  /* Destructive (red) */
+  --destructive: oklch(0.627 0.194 33.3);
+  --destructive-foreground: oklch(1.000 0.000 89.9);
 
-  --border: oklch(0.3 0 0);
-  --input: oklch(0.3 0 0);
-  --ring: oklch(0.6 0.15 250);
+  /* Charts */
+  --chart-1: oklch(0.689 0.190 45.2);
+  --chart-2: oklch(0.258 0.045 60.8);
+  --chart-3: oklch(0.285 0.000 89.9);
+  --chart-4: oklch(0.294 0.053 60.3);
+  --chart-5: oklch(0.693 0.195 44.6);
 }
+
 @theme {
   --animate-slide-up: slideUp 1s ease-in-out forwards;
   --animate-fade-in: fadeIn 1s ease-in-out forwards;
@@ -250,9 +266,9 @@ body a {
   box-sizing: border-box;
 }
 
-/* make the sticky headers “pop” on white background */
+/* make the sticky headers "pop" on white background */
 .sticky-table-clone thead th {
-  position: sticky;   /* already set in JS, but re‑stated here in case */
+  position: sticky;   /* already set in JS, but re-stated here in case */
   top: 0;
   background-color: #fff;
   z-index: 2;

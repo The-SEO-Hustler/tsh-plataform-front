@@ -78,22 +78,22 @@ export default function ResourceCard({
   const sanitizedExcerpt = excerpt ? excerpt.replace(/<[^>]*>/g, '') : '';
 
   return (
-    <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full border border-border !no-underline">
+    <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-card shadow-sm hover:shadow-md transition-all h-full border border-border !no-underline">
       {/* Header */}
       <div className={cn(
         "p-4 flex items-center",
-        premium ? 'bg-primary' : 'bg-muted'
+        'bg-card'
       )}>
         <div className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center",
-          premium ? 'bg-primary-foreground/20' : 'bg-muted-foreground/10'
+          'bg-primary text-primary-foreground'
         )}>
           {getIconForType(resourceType)}
         </div>
         <div className="ml-2">
           <span className={cn(
             "text-xs font-medium uppercase",
-            premium ? 'text-primary-foreground/80' : 'text-muted-foreground/80'
+            'text-muted-foreground'
           )}>
             {resourceType}
           </span>
