@@ -22,7 +22,7 @@ function SeoCheckHeroContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const router = useRouter();
-  const { trackAnalysis, currentAnalysis, removeContentPlanning } = useFirebase();
+  const { trackAnalysis, currentAnalysis, removeContentPlanning, removeLLMTxt, removeAdvancedKeywordAnalysis } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -64,6 +64,8 @@ function SeoCheckHeroContent() {
 
       if (data.success) {
         removeContentPlanning();
+        removeLLMTxt();
+        removeAdvancedKeywordAnalysis();
         trackAnalysis(data.docId, url);
         router.push(`/seo-check/result?id=${data.docId}`);
         setIsLoading(false);

@@ -6,7 +6,7 @@ import styles from "./styles.module.css";
 import { LinkedinIcon, Mail, Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
-import { replaceSeoAnalyzer } from "@/lib/replaceSeoAnalyzer";
+import { replaceComponents } from "@/lib/replaceComponents";
 import Content from "../content";
 // import useStickyTableHeaders from '@/lib/useStickyTableHeaders'
 
@@ -284,7 +284,7 @@ function BlogContentPage({ post, blogPostsData }) {
 
             {/* Main Article Content */}
             <article className={styles.content}>
-              {replaceSeoAnalyzer(post.content)}
+              {replaceComponents(post.content)}
             </article>
             {/* {content && <Content html={content} />} */}
 

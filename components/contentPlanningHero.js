@@ -16,7 +16,7 @@ function ContentPlanningHero() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { trackContentPlanning, currentContentPlanning, removeAnalysis } = useFirebase();
+  const { trackContentPlanning, currentContentPlanning, removeLLMTxt, removeAdvancedKeywordAnalysis, removeAnalysis } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +66,8 @@ function ContentPlanningHero() {
       const data = await response.json();
       if (data.success) {
         removeAnalysis();
+        removeLLMTxt();
+        removeAdvancedKeywordAnalysis();
         trackContentPlanning(data.docId, keyword);
         router.push(`/content-planning/result?id=${data.docId}`);
         setUsage(prevUsage => ({

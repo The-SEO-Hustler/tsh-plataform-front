@@ -14,7 +14,7 @@ function AdvancedKeywordAnalysisHero() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { currentAdvancedKeywordAnalysis, trackAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis } = useFirebase();
+  const { currentAdvancedKeywordAnalysis, trackAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis, removeLLMTxt, removeContentPlanning } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +66,8 @@ function AdvancedKeywordAnalysisHero() {
 
       const data = await response.json();
       if (data.success) {
+        removeLLMTxt();
+        removeContentPlanning();
         removeAdvancedKeywordAnalysis();
         trackAdvancedKeywordAnalysis(data.docId, keyword);
         router.push(`/advanced-keyword-analysis/result?id=${data.docId}`);
