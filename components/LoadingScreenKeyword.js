@@ -26,14 +26,13 @@ export default function LoadingScreenKeyword({ status = 'pending' }) {
     const timer = setTimeout(() => {
       toast.info(
         <div className="flex flex-col gap-2">
-          <p>You can leave this page while the process runs in the background.</p>
           <p>You&apos;ll be notified when the process is complete.</p>
           <a href="/resources" className="text-primary font-bold underline">
             Learn more about SEO
           </a>
         </div>,
         {
-          duration: 10000, // Show for 10 seconds
+          duration: 5000, // Show for 5 seconds
           position: "top-right",
         }
       );

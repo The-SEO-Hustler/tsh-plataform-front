@@ -48,7 +48,7 @@ export default function RootLayout({ children }) {
               <AnalysisStatusCard />
               <ContentPlanningStatusCard />
               <LLMStatusCard />
-              <Toaster position="top-left" richColors />
+              <Toaster position="top-left" />
               {/* </GoogleReCaptchaProvider> */}
             </UsageProvider>
           </FirebaseProvider>
