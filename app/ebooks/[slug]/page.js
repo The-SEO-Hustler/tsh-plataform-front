@@ -6,6 +6,9 @@ import "@wordpress/block-library/build-style/common.css";
 import "@wordpress/block-library/build-style/style.css";
 import "@wordpress/block-library/build-style/theme.css";
 import { notFound } from 'next/navigation';
+import { getFaqSchema } from '@/lib/getFaqSchema';
+import { transformContentUrls } from '@/lib/wordpress/utils';
+import Script from 'next/script';
 export const revalidate = 3600;
 
 
@@ -74,6 +77,12 @@ async function Page({ params }) {
   if (!resource) {
     notFound();
   }
+  let faqSchema = null;
+  // Transform content URLs
+  if (resource?.content) {
+    resource.content = transformContentUrls(resource.content);
+    faqSchema = getFaqSchema(resource.content);
+  }
 
   const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/resources/${param.slug}?no_redirect=true`));
   const html = await response.text();
@@ -84,6 +93,14 @@ async function Page({ params }) {
     <>
       {styles && (
         <style dangerouslySetInnerHTML={{ __html: styles }} />
+      )}
+      {faqSchema && (
+        <Script
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
+          {JSON.stringify(faqSchema)}
+        </Script>
       )}
       <ResourceContentPage post={resource} />
     </>

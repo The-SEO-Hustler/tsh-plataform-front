@@ -4,8 +4,9 @@ import "@wordpress/block-library/build-style/style.css";
 import "@wordpress/block-library/build-style/theme.css";
 import { getPostAndMorePosts } from "@/lib/wordpress/posts/getPostAndMorePosts";
 import { getAllPostsWithSlug } from "@/lib/wordpress/posts/getAllPostsWithSlug";
-import { getAllCategories } from "@/lib/wordpress/posts/getAllCategories";
 import { cleanExcerpt } from "@/lib/wordpress/cleanExcerpt";
+import Script from 'next/script'
+import { getFaqSchema } from "@/lib/getFaqSchema";
 import {
   transformContentUrls,
   getSeoTerm,
@@ -89,17 +90,13 @@ export default async function BlogPost({ params }) {
   if (!data?.post) {
     notFound();
   }
-
+  let faqSchema = null;
   // Transform content URLs
   if (data?.post?.content) {
     data.post.content = transformContentUrls(data.post.content);
+    faqSchema = getFaqSchema(data.post.content);
   }
 
-  // const contentWithLazyBlocks = getReactContentWithLazyBlocks(
-  //   data?.post?.content,
-  //   {},
-  //   true
-  // );
 
   // Transform related article URLs
   if (data?.post?.relatedArticle?.relatedArticles) {
@@ -110,8 +107,6 @@ export default async function BlogPost({ params }) {
       });
   }
 
-  // Get all categories
-  const allCategories = await getAllCategories();
 
   // Create schema markup
   data.post.seo = createPostSchema(data.post);
@@ -163,11 +158,21 @@ export default async function BlogPost({ params }) {
   return (
     <>
       {styles && <style dangerouslySetInnerHTML={{ __html: styles }} />}
+      {faqSchema && (
+        <Script
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
+          {JSON.stringify(faqSchema)}
+        </Script>
+      )}
+
       <BlogContentPage
         post={formattedPost}
         blogPostsData={blogPostsData}
       // content={contentWithLazyBlocks}
       />
+
     </>
   );
 }

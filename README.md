@@ -50,9 +50,15 @@ it’s also possible to trigger a new build deploy within the wordpress dashboar
 
 ## Embbed Content
 
-![/public/readme/image.png](/public/readme/image.png)
+In gutenberg always type /tool-name and select the pattern
 
-add /on-page-analyzer pattern and this will display the seocheck form  
+add /seo-check-on-page pattern and this will display the seocheck form  
+
+/llm.txt-generator
+
+/content-planning
+
+/advanced keyword analysis
 
 ## Metadata
 

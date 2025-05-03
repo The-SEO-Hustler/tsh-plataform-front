@@ -6,6 +6,9 @@ import "@wordpress/block-library/build-style/common.css";
 import "@wordpress/block-library/build-style/style.css";
 import "@wordpress/block-library/build-style/theme.css";
 import { notFound } from 'next/navigation';
+import { getFaqSchema } from '@/lib/getFaqSchema';
+import { transformContentUrls } from '@/lib/wordpress/utils';
+import Script from 'next/script';
 export const revalidate = 3600;
 
 
@@ -71,6 +74,12 @@ export async function generateMetadata({ params }) {
 async function Page({ params }) {
   const param = await params
   const resource = await getResourceBySlug(param.slug);
+  let faqSchema = null;
+  // Transform content URLs
+  if (resource?.content) {
+    resource.content = transformContentUrls(resource.content);
+    faqSchema = getFaqSchema(resource.content);
+  }
 
   if (!resource) {
     notFound();
@@ -84,6 +93,14 @@ async function Page({ params }) {
     <>
       {styles && (
         <style dangerouslySetInnerHTML={{ __html: styles }} />
+      )}
+      {faqSchema && (
+        <Script
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
+          {JSON.stringify(faqSchema)}
+        </Script>
       )}
       <ResourceContentPage post={resource} />
     </>

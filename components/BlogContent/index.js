@@ -7,7 +7,6 @@ import { LinkedinIcon, Mail, Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { replaceComponents } from "@/lib/replaceComponents";
-import Content from "../content";
 // import useStickyTableHeaders from '@/lib/useStickyTableHeaders'
 
 function BlogContentPage({ post, blogPostsData }) {
