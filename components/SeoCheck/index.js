@@ -7,7 +7,7 @@ import Sidebar from "@/components/sidebar";
 import { useSearchParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { cardComponents } from "@/lib/config";
-import { Download, Eye, EyeOff, LayoutGrid, Rows2, Search } from "lucide-react";
+import { Download, Eye, EyeOff, LayoutGrid, Rows2, Search, FileJson, FileText } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -143,7 +143,7 @@ function SEOAudit() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-            <p className="text-gray-600">{error}</p>
+            <p className="text-foreground/80">{error}</p>
             <Button onClick={() => router.push("/")} className="mt-4">
               Try Again
             </Button>
@@ -210,24 +210,24 @@ function SEOAudit() {
             <div className="flex gap-2">
               <button
                 onClick={handleExportReport}
-                className="px-4 py-2 bg-primary text-black  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-primary text-primary-foreground  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer !no-underline"
               >
-                <Download className="w-4 h-4" />
+                <FileJson className="w-4 h-4" />
                 <span className="hidden md:inline">Export JSON</span>
               </button>
               <PDFDownloadLink
                 document={<PDFReport data={analysisData} score={75} />}
                 fileName={`seo-report-${new Date().toLocaleDateString()}.pdf`}
-                className="px-4 py-2 bg-primary text-black  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-primary text-primary-foreground  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer !no-underline"
               >
-                <Download className="w-4 h-4" />
+                <FileText className="w-4 h-4" />
                 <span className="hidden md:inline ">Export PDF</span>
               </PDFDownloadLink>
             </div>
           </div>
 
           {/* Filter Section */}
-          <div className="mb-6 bg-gray-50 p-4 rounded-lg sticky top-1 border border-gray-300 shadow-sm z-[10]">
+          <div className="mb-6 bg-card p-4 rounded-lg sticky top-1 border border-foreground/10 shadow-sm z-[10]">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="lg:flex items-center gap-2 hidden">
                 <div className="relative w-full md:w-64">
@@ -251,7 +251,7 @@ function SEOAudit() {
                   >
                     <LayoutGrid
                       size={22}
-                      color={layout === "grid" ? "black" : "gray"}
+                      className={`${layout === "grid" ? "text-foreground" : "text-foreground/30"}`}
                     />
                   </button>
                   <button
@@ -261,7 +261,7 @@ function SEOAudit() {
                   >
                     <Rows2
                       size={22}
-                      color={layout === "row" ? "black" : "gray"}
+                      className={`${layout === "row" ? "text-foreground" : "text-foreground/30"}`}
                     />
                   </button>
                 </div>
@@ -316,9 +316,8 @@ function SEOAudit() {
                 </div>
 
                 <div className="hidden md:block md:border-l md:pl-4">
-                  <Button
-                    variant="ghost"
-                    className="flex items-center justify-start !pl-0 gap-2 h-auto p-0 hover:bg-transparent"
+                  <button
+                    className="flex items-center justify-start !pl-0 gap-2 h-auto p-0 hover:bg-transparent bg-card text-foreground"
                     onClick={() => setAlwaysShowTooltips((prev) => !prev)}
                   >
                     {alwaysShowTooltips ? (
@@ -329,7 +328,7 @@ function SEOAudit() {
                     <span className="text-sm font-medium">
                       Always Show Tooltips
                     </span>
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
@@ -365,7 +364,7 @@ function SEOAudit() {
 
               <div className="container mx-auto px-4 relative z-10">
                 <div className="max-w-4xl mx-auto">
-                  <h1 className="text-4xl md:text-6xl font-black mb-6 text-black">
+                  <h1 className="text-4xl md:text-6xl font-black mb-6 text-foreground">
                     Your SEO Check Results: The Real Deal
                   </h1>
                 </div>
@@ -375,36 +374,36 @@ function SEOAudit() {
             {/* Main Content */}
             <section className="py-16">
 
-              <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg mb-12">
+              <div className="max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg mb-12">
                 <h2 className="text-3xl font-bold mb-6 text-primary">Understanding Your SEO Score</h2>
 
-                <p className="text-lg text-black mb-4">
+                <p className="text-lg text-foreground mb-4">
                   Your overall SEO score isn't just a vanity metric — it's a business health indicator. Every point below 100 represents potential traffic, leads, and revenue you're leaving on the table.
                 </p>
-                <p className="text-lg text-black mb-4">
+                <p className="text-lg text-foreground mb-4">
                   Think of it like a credit score for your website's visibility. The higher the score, the more Google trusts and rewards your site.
                 </p>
               </div>
 
-              <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg mb-12">
+              <div className="max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg mb-12">
                 <h2 className="text-3xl font-bold mb-6 text-primary">Issue Priority Levels Explained</h2>
 
-                <p className="text-lg text-black mb-6">
+                <p className="text-lg text-foreground mb-6">
                   We categorize issues into three levels based on their impact on your rankings and business results:
                 </p>
 
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-red-500">Critical Issues (Red)</h3>
 
-                  <p className="text-lg text-black mb-3">
+                  <p className="text-lg text-foreground mb-3">
                     <span className="font-bold">What they are:</span> These are the SEO equivalent of a five-alarm fire. They actively damage your rankings, visibility, and user experience.
                   </p>
 
-                  <p className="text-lg text-black mb-3">
+                  <p className="text-lg text-foreground mb-3">
                     <span className="font-bold">Business impact:</span> Critical issues can tank your rankings overnight or prevent your site from ranking well regardless of other efforts.
                   </p>
 
-                  <p className="text-lg text-black">
+                  <p className="text-lg text-foreground">
                     <span className="font-bold">Timeline to fix:</span> ASAP — ideally within 7 days. Every day these issues persist, you're hemorrhaging potential traffic.
                   </p>
                 </div>
@@ -412,15 +411,15 @@ function SEOAudit() {
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-yellow-500">Warning Issues (Yellow)</h3>
 
-                  <p className="text-lg text-black mb-3">
+                  <p className="text-lg text-foreground mb-3">
                     <span className="font-bold">What they are:</span> These won't immediately tank your site, but they're putting a ceiling on how well you can rank.
                   </p>
 
-                  <p className="text-lg text-black mb-3">
+                  <p className="text-lg text-foreground mb-3">
                     <span className="font-bold">Business impact:</span> Warning issues limit your growth and make your SEO efforts less efficient — like driving with the parking brake on.
                   </p>
 
-                  <p className="text-lg text-black">
+                  <p className="text-lg text-foreground">
                     <span className="font-bold">Timeline to fix:</span> Within 30 days. Not emergencies, but addressing them will unlock significant ranking potential.
                   </p>
                 </div>
@@ -428,15 +427,15 @@ function SEOAudit() {
                 <div>
                   <h3 className="text-2xl font-bold mb-4 text-blue-500">Improvement Opportunities (Blue)</h3>
 
-                  <p className="text-lg text-black mb-3">
+                  <p className="text-lg text-foreground mb-3">
                     <span className="font-bold">What they are:</span> These are optimization opportunities that can give you an edge over similarly-ranked competitors.
                   </p>
 
-                  <p className="text-lg text-black mb-3">
+                  <p className="text-lg text-foreground mb-3">
                     <span className="font-bold">Business impact:</span> The difference between ranking #5 and #1 often comes down to who's addressed these optimizations.
                   </p>
 
-                  <p className="text-lg text-black">
+                  <p className="text-lg text-foreground">
                     <span className="font-bold">Timeline to fix:</span> Within 90 days as part of your ongoing SEO strategy.
                   </p>
                 </div>
@@ -446,20 +445,20 @@ function SEOAudit() {
                 <h2 className="text-3xl font-bold mb-8 text-center">Understanding Each SEO Check</h2>
 
                 {/* Title Tag */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Title Tag</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Length, keyword usage, uniqueness, and formatting of your page's title tag.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Your title tag is the #1 on-page ranking factor and what users see in search results. A weak title means weak rankings and poor click-through rates.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Too long (over 60 characters) — Google will truncate it</li>
                       <li>Too short (under 30 characters) — Wasted opportunity</li>
                       <li>Missing keywords — Google doesn't know what your page is about</li>
@@ -469,7 +468,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Keep titles between 50-60 characters</li>
                       <li>Include your primary keyword near the beginning</li>
                       <li>Add your brand name at the end</li>
@@ -479,20 +478,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Meta Description */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Meta Description</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence, length, keyword usage, and compelling nature of your description.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> While not a direct ranking factor, your meta description is your free ad in search results. A weak description kills click-through rates, which indirectly hurts rankings.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing entirely — Google will pull random text from your page</li>
                       <li>Too long (over 160 characters) — Gets cut off in results</li>
                       <li>Too short (under 70 characters) — Missed opportunity</li>
@@ -502,7 +501,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Write 120-160 character descriptions that sell the page</li>
                       <li>Include your primary keyword naturally</li>
                       <li>Add a clear call-to-action</li>
@@ -512,20 +511,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Heading Tags */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Heading Tags (H1, H2, H3)</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence, hierarchy, keyword usage, and formatting of heading tags.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Heading tags create a content hierarchy that helps Google understand your page's structure and main topics.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing H1 — Like a book without a title</li>
                       <li>Multiple H1s — Confuses search engines about your main topic</li>
                       <li>Improper hierarchy (skipping from H1 to H3) — Breaks content structure</li>
@@ -535,7 +534,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Use exactly ONE H1 tag containing your primary keyword</li>
                       <li>Use multiple H2s for main sections, including secondary keywords</li>
                       <li>Use H3s for subsections</li>
@@ -545,20 +544,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Image Optimization */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Image Optimization</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Alt text, file size, format, dimensions, and filenames of images.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Unoptimized images hurt page speed (a ranking factor) and miss opportunities to rank in image search.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing alt text — Google can't "see" what the image is about</li>
                       <li>Oversized images — Slow down page load</li>
                       <li>Non-descriptive filenames — Missed SEO opportunity</li>
@@ -568,7 +567,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Add descriptive alt text to every image</li>
                       <li>Compress images before uploading</li>
                       <li>Use modern formats like WebP</li>
@@ -578,20 +577,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Mobile Responsiveness */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Mobile Responsiveness</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> How well your site renders and functions on mobile devices.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Google now uses mobile-first indexing, meaning it primarily uses the mobile version of your site for ranking. Poor mobile experience = poor rankings.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Non-responsive design — Site doesn't adapt to screen size</li>
                       <li>Tiny tap targets — Links/buttons too small for fingers</li>
                       <li>Horizontal scrolling required — Poor user experience</li>
@@ -601,7 +600,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Implement fully responsive design</li>
                       <li>Ensure tap targets are at least 44x44 pixels</li>
                       <li>Make text readable without zooming (16px minimum)</li>
@@ -611,20 +610,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Page Speed */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Page Speed</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Load time, Core Web Vitals, render-blocking resources, and overall performance.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Page speed is a direct ranking factor. Each second of load time reduces conversions by ~7% and increases bounce rates.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Slow Largest Contentful Paint (LCP) — Main content takes too long to load</li>
                       <li>Poor Cumulative Layout Shift (CLS) — Page elements move around as page loads</li>
                       <li>High Total Blocking Time (TBT) — Page appears loaded but isn't interactive</li>
@@ -634,7 +633,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Optimize Core Web Vitals (LCP, CLS, TBT)</li>
                       <li>Minimize and defer JavaScript</li>
                       <li>Optimize and lazy-load images</li>
@@ -644,20 +643,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Content Quality */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Content Quality</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Length, readability, keyword usage, formatting, and originality of your content.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Content is the foundation of SEO. Thin or low-quality content rarely ranks well, especially after Google's helpful content updates.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Thin content (under 300 words) — Doesn't demonstrate expertise</li>
                       <li>Keyword stuffing — Looks spammy to Google</li>
                       <li>Poor readability — High bounce rates hurt rankings</li>
@@ -667,7 +666,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Create comprehensive content (aim for 1000+ words for important pages)</li>
                       <li>Use keywords naturally throughout</li>
                       <li>Improve readability with short paragraphs, subheadings, and bullet points</li>
@@ -677,20 +676,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Broken Links */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Broken Links</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Internal and external links that lead to 404 errors or other non-working pages.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Broken links waste crawl budget, create poor user experiences, and leak link equity.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Internal links to deleted pages — Wastes link equity</li>
                       <li>External links to dead sites — Poor user experience</li>
                       <li>Broken image links — Creates unprofessional appearance</li>
@@ -700,7 +699,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Fix or remove broken internal links</li>
                       <li>Update or remove broken external links</li>
                       <li>Set up 301 redirects for changed URLs</li>
@@ -710,20 +709,20 @@ function SEOAudit() {
                 </div>
 
                 {/* URL Structure */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">URL Structure</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Length, readability, keyword usage, and technical formatting of your URLs.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Clean, descriptive URLs help both users and search engines understand what a page is about before they even visit it.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Dynamic parameters (example.com/?p=123) — Hard for humans to understand</li>
                       <li>Excessive length — Gets truncated in search results</li>
                       <li>Missing keywords — Missed opportunity for relevance</li>
@@ -733,7 +732,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Use descriptive, keyword-rich URLs</li>
                       <li>Keep URLs short and simple</li>
                       <li>Use hyphens to separate words</li>
@@ -743,20 +742,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Schema Markup */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Schema Markup</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence and implementation of structured data.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Schema markup helps Google understand your content better and can earn rich snippets in search results (stars, prices, FAQs, etc.).
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing schema entirely — No chance for rich snippets</li>
                       <li>Incorrect implementation — Won't be recognized by Google</li>
                       <li>Wrong schema type — Mismatched with content purpose</li>
@@ -766,7 +765,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Implement appropriate schema for your content type</li>
                       <li>Use Google's Structured Data Testing Tool to validate</li>
                       <li>Include all required properties</li>
@@ -776,20 +775,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Social Media Tags */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Social Media Tags</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Open Graph and Twitter Card implementation.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> These tags control how your content appears when shared on social platforms, affecting click-through rates from social media.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing tags — Social platforms guessing what to display</li>
                       <li>Missing images — Plain text previews get fewer clicks</li>
                       <li>Incorrect dimensions — Images get cropped poorly</li>
@@ -799,7 +798,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Add Open Graph tags for Facebook, LinkedIn, etc.</li>
                       <li>Add Twitter Card markup</li>
                       <li>Use properly sized images (1200x630px for OG, 1200x675px for Twitter)</li>
@@ -809,20 +808,20 @@ function SEOAudit() {
                 </div>
 
                 {/* SSL Certificate */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">SSL Certificate</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence, validity, and implementation of HTTPS.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> HTTPS is a confirmed Google ranking factor and builds user trust. Sites without SSL certificates appear as "Not Secure" in browsers.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing SSL entirely — Rankings penalty and security warning</li>
                       <li>Mixed content — Secure and insecure elements on same page</li>
                       <li>Expired certificate — Creates security warnings</li>
@@ -832,7 +831,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Install an SSL certificate (many hosts offer free certificates)</li>
                       <li>Force HTTPS with proper redirects</li>
                       <li>Fix mixed content warnings</li>
@@ -842,20 +841,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Robots.txt */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Robots.txt</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence, formatting, and directives in your robots.txt file.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Controls which parts of your site search engines can access. Incorrect configuration can accidentally block important content.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Blocking important content — Prevents indexing</li>
                       <li>Too permissive — Allows indexing of low-value pages</li>
                       <li>Syntax errors — Can cause unpredictable crawling</li>
@@ -865,7 +864,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Create a proper robots.txt file if missing</li>
                       <li>Use proper syntax for directives</li>
                       <li>Don't block CSS and JavaScript files</li>
@@ -875,20 +874,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Sitemap */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Sitemap</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence, format, and content of your XML sitemap.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Helps search engines discover and understand all the pages on your site, especially for larger sites.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing entirely — Makes it harder for Google to find all pages</li>
                       <li>Including non-canonical URLs — Confuses search engines</li>
                       <li>Including noindexed pages — Wastes crawl budget</li>
@@ -898,7 +897,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Create an XML sitemap if missing</li>
                       <li>Include only indexable, canonical URLs</li>
                       <li>Keep under 50,000 URLs per sitemap file</li>
@@ -908,20 +907,20 @@ function SEOAudit() {
                 </div>
 
                 {/* Canonical Tags */}
-                <div className="bg-white p-8 rounded-lg shadow-lg mb-8">
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
                   <h3 className="text-2xl font-bold mb-4 text-primary">Canonical Tags</h3>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">What we check:</span> Presence and implementation of canonical tags.
                   </p>
 
-                  <p className="text-lg text-black mb-4">
+                  <p className="text-lg text-foreground mb-4">
                     <span className="font-bold">Why it matters:</span> Tells search engines which version of similar pages should be considered the "master" to prevent duplicate content issues.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing on duplicate/similar content — Can cause ranking dilution</li>
                       <li>Self-referencing canonicals missing — Best practice not followed</li>
                       <li>Incorrect implementation — Points to wrong URL</li>
@@ -931,7 +930,7 @@ function SEOAudit() {
 
                   <div>
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
-                    <ul className="list-disc pl-8 text-black space-y-1">
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Add canonical tags to all pages with similar/duplicate content</li>
                       <li>Add self-referencing canonicals to all other pages</li>
                       <li>Ensure the URL in the canonical tag is correct</li>
@@ -942,7 +941,7 @@ function SEOAudit() {
 
                 {/* Action Button */}
                 <div className="text-center mt-12">
-                  <Link href="/seo-check" className="bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md flex items-center gap-2 transition-all mx-auto max-w-max">
+                  <Link href="/seo-check" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-md flex items-center gap-2 transition-all mx-auto max-w-max">
                     Run Another SEO Check
                   </Link>
                 </div>

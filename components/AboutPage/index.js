@@ -114,7 +114,7 @@ export default function About() {
       <section className="py-16  bg-[#ffcc00]">
         <Container className="overflow-hidden !py-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg p-8 transform -rotate-1 shadow-lg animate-float">
+            <div className="bg-card rounded-lg p-8 transform -rotate-1 shadow-lg animate-float">
               <div className="transform rotate-1">
                 <p className="text-xl md:text-2xl font-bold mb-6 leading-relaxed">
                   Agencies charging $5K/month for "proprietary strategies" that are really just basic backlinks and keyword stuffing. Gurus peddling courses that teach outdated tactics. And a whole lot of people who talk big but can't actually move the needle on traffic or revenue.
@@ -144,7 +144,7 @@ export default function About() {
           </div>
           <div className="relative">
             <div className="absolute -inset-4 bg-primary/20 rounded-md transform md:animate-rotate"></div>
-            <div className="relative bg-black md:animate-float rounded-md shadow-md overflow-hidden p-8 text-white">
+            <div className="relative bg-foreground md:animate-float rounded-md shadow-md overflow-hidden p-8 text-background">
               <h3 className="font-black text-2xl mb-4 text-primary">Who We Are</h3>
               <p className="mb-4">
                 The SEO Hustler was founded by Zac Almeida, a search veteran with 15+ years of enterprise experience who's seen every algorithm update, AI breakthrough, and industry shift you can imagine. After helping enterprise clients and scrappy startups alike turn complex SEO challenges into growth engines, one thing became clear:
@@ -161,7 +161,7 @@ export default function About() {
       </FeatureSection>
 
       {/* What We're About Section */}
-      <section className="py-20 bg-gray-200">
+      <section className="py-20 bg-gray-200 dark:bg-background/70">
         <Container>
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold mb-6">What We're About</h2>
@@ -174,7 +174,7 @@ export default function About() {
             {values.map((value, index) => (
               <div
                 key={index}
-                className="bg-background rounded-lg p-8 shadow-md hover:shadow-lg transition-all duration-300"
+                className="bg-card rounded-lg p-8 shadow-md hover:shadow-lg transition-all duration-300"
               >
                 <div className="flex items-center gap-2 flex-col md:flex-row justify-center mb-4">
                   {index === 0 && <span className="text-primary text-2xl">🔥</span>}
@@ -201,7 +201,7 @@ export default function About() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
             <div className="h-2 bg-primary"></div>
             <div className="p-8">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-6 text-primary text-3xl font-bold">
@@ -213,7 +213,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
             <div className="h-2 bg-primary"></div>
             <div className="p-8">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-6 text-primary text-3xl font-bold">
@@ -225,7 +225,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
             <div className="h-2 bg-primary"></div>
             <div className="p-8">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-6 text-primary text-3xl font-bold">
@@ -261,7 +261,7 @@ export default function About() {
           {helpCategories.map((category, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
             >
               <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center">
                 <div className="p-6">
@@ -305,7 +305,7 @@ export default function About() {
       </section>
 
       {/* Call To Action Section */}
-      <section className="py-20 bg-[#ffcc00]">
+      <section className="py-20 bg-primary text-primary-foreground">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6 text-on-primary-container">

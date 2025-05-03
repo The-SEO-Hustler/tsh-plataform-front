@@ -27,14 +27,14 @@ export default function H2TagsCard({
         <div className="flex justify-between items-center">
           <span>Total H2 Tags:</span>
           <span
-            className={data.count > 20 ? "text-yellow-700" : "text-green-700"}
+            className={data.count > 20 ? "text-yellow-700 dark:text-yellow-500" : "text-green-700 dark:text-green-500"}
           >
             {data.count}
           </span>
         </div>
         <div className="flex justify-between items-center">
           <span>Status:</span>
-          <span className={data.hasH2 ? "text-green-700" : "text-red-500"}>
+          <span className={data.hasH2 ? "text-green-700 dark:text-green-500" : "text-red-500 dark:text-red-500"}>
             {data.hasH2 ? "Present ✓" : "Missing ✕"}
           </span>
         </div>
@@ -51,19 +51,19 @@ export default function H2TagsCard({
             {data.headers.length > 10 && (
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-card hover:bg-card/80 dark:bg-accent dark:hover:bg-accent/80 rounded-lg transition-colors duration-200 mt-2"
               >
                 {showAll ? (
                   <>
                     <ChevronUp className="w-4 h-4" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium ">
                       Show Less
                     </span>
                   </>
                 ) : (
                   <>
                     <ChevronDown className="w-4 h-4" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium ">
                       Show {data.headers.length - 10} More
                     </span>
                   </>

@@ -354,7 +354,7 @@ function AdvancedKeywordAnalysis() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-            <p className="text-gray-600">{error}</p>
+            <p className="text-foreground/80">{error}</p>
             <Button onClick={() => router.push("/")} className="mt-4 cursor-pointer">
               Try Again
             </Button>
@@ -372,9 +372,9 @@ function AdvancedKeywordAnalysis() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Hero Header with Keyword Info */}
-      <section className="pt-28 pb-12 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
+      <section className="pt-28 pb-12 bg-gradient-to-br from-[#ffcc00] dark:from-[#4e503a] to-background relative overflow-hidden text-foreground">
         <div className="absolute inset-0 opacity-20">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -397,7 +397,7 @@ function AdvancedKeywordAnalysis() {
         </div>
 
         <Container className=" relative z-10">
-          <div className="flex items-center gap-1 md:gap-3 text-gray-300 text-sm mb-4 flex-wrap gap-y-0">
+          <div className="flex items-center gap-1 md:gap-3 text-foreground/80 text-sm mb-4 flex-wrap gap-y-0">
             <span>
               <Link
                 href="/advanced-keyword-analysis"
@@ -409,40 +409,40 @@ function AdvancedKeywordAnalysis() {
 
             </span>
             <ChevronRight size={16} />
-            <span className="text-primary font-semibold">
+            <span className="dark:text-primary text-foreground/80 font-semibold">
               {analysisData.keyword || "New Content"}
             </span>
           </div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
             <div>
-              <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center">
+              <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center ">
                 {analysisData.keyword}
               </h1>
               <div className="flex gap-3 flex-col md:flex-row items-start md:items-center">
                 {searchIntentState === "completed" ?
                   <>
                     <div
-                      className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full text-white font-bold`}
+                      className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full  font-bold`}
                     >
                       {analysisData.search_intent.primary}
                     </div>
-                    <span className="text-gray-300">
+                    <span className="">
                       {analysisData.search_intent.confidence}% Confidence
                     </span>
                   </> :
                   <>
                     <div
-                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 animate-pulse`}
+                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold  animate-pulse`}
                     >
                       loading intent
                     </div>
-                    <span className="text-gray-300">
+                    <span className="">
                       Analyzing keyword search intent...
                     </span>
                   </>
                 }
               </div>
-              <div className="text-gray-300 text-sm mt-2">
+              <div className=" text-sm mt-2">
                 <TimestampDisplay ts={updatedAt} />
               </div>
             </div>
@@ -450,11 +450,11 @@ function AdvancedKeywordAnalysis() {
         </Container>
       </section>
       {/* Overview Metrics */}
-      <section className="py-10 bg-black border-b border-gray-800">
+      <section className="py-10 bg-background border-b border-gray-800">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Search Volume */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-primary hover:translate-y-[-5px] transition-all">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-primary hover:translate-y-[-5px] transition-all">
               <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
                 Search Volume
               </h3>
@@ -474,7 +474,7 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* CPC */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-blue-500 hover:translate-y-[-5px] transition-all">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-blue-500 hover:translate-y-[-5px] transition-all">
               <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
                 CPC
               </h3>
@@ -487,7 +487,7 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* Competition */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-green-500 hover:translate-y-[-5px] transition-all">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-green-500 hover:translate-y-[-5px] transition-all">
               <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
                 Competition
               </h3>
@@ -500,7 +500,7 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* Difficulty */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-red-500 hover:translate-y-[-5px] transition-all">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-red-500 hover:translate-y-[-5px] transition-all">
               <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
                 Difficulty
               </h3>
@@ -522,7 +522,7 @@ function AdvancedKeywordAnalysis() {
       </section>
 
       {/* Search Intent Section */}
-      <section className="py-10 bg-[#121212]">
+      <section className="py-10 bg-background">
         <Container>
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
@@ -534,7 +534,7 @@ function AdvancedKeywordAnalysis() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Primary Intent */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">Primary Intent</h3>
               {searchIntentState === "completed" ?
                 <>
@@ -548,18 +548,18 @@ function AdvancedKeywordAnalysis() {
 
                   {/* Analysis Reasoning */}
                   <Tabs defaultValue="summary" className="w-full">
-                    <TabsList className="mb-2 bg-[#2A2A2A]" >
-                      <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Summary</TabsTrigger>
-                      <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Analysis Reasoning</TabsTrigger>
+                    <TabsList className="mb-2 bg-card" >
+                      <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black  cursor-pointer">Summary</TabsTrigger>
+                      <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black   cursor-pointer">Analysis Reasoning</TabsTrigger>
 
                     </TabsList>
                     <TabsContent value="reasoning">
-                      <p className="text-gray-300 ">
+                      <p className="text-foreground/80 ">
                         {analysisData.search_intent.reasoning}
                       </p>
                     </TabsContent>
                     <TabsContent value="summary">
-                      <p className="text-gray-300 ">
+                      <p className="text-foreground/80 ">
                         {analysisData.search_intent.summary}
                       </p>
                     </TabsContent>
@@ -575,11 +575,11 @@ function AdvancedKeywordAnalysis() {
                   <span className="text-gray-300 mb-3 block">
                     Analyzing keyword search intent...
                   </span>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[360px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[330px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[300px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[360px]"></div>
 
                 </>
               }
@@ -587,16 +587,16 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* Intent Breakdown */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">Intent Breakdown</h3>
               {searchIntentState === "completed" ?
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Informational
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {
                           analysisData.search_intent.intent_breakdown
                             .informational
@@ -604,7 +604,7 @@ function AdvancedKeywordAnalysis() {
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-600 h-2 rounded-full"
                         style={{
@@ -616,10 +616,10 @@ function AdvancedKeywordAnalysis() {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Navigational
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {
                           analysisData.search_intent.intent_breakdown
                             .navigational
@@ -627,7 +627,7 @@ function AdvancedKeywordAnalysis() {
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-purple-600 h-2 rounded-full"
                         style={{
@@ -639,15 +639,15 @@ function AdvancedKeywordAnalysis() {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Commercial
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {analysisData.search_intent.intent_breakdown.commercial}
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
                         style={{
@@ -659,10 +659,10 @@ function AdvancedKeywordAnalysis() {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Transactional
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {
                           analysisData.search_intent.intent_breakdown
                             .transactional
@@ -670,7 +670,7 @@ function AdvancedKeywordAnalysis() {
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-orange-600 h-2 rounded-full"
                         style={{
@@ -733,7 +733,7 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* PAA Questions */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">People Also Ask</h3>
               {/* {JSON.stringify(analysisData.paa_questions)} */}
               {analysisData.paa_questions &&
@@ -745,12 +745,12 @@ function AdvancedKeywordAnalysis() {
                         size={18}
                         className="text-primary mt-1 mr-2 flex-shrink-0"
                       />
-                      <span className="text-gray-300">{question}</span>
+                      <span className="text-foreground/80">{question}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">
+                <p className="text-foreground/80">
                   No "People Also Ask" questions available for this keyword.
                 </p>
               )}

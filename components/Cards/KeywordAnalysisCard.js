@@ -68,17 +68,17 @@ export default function KeywordAnalysisCard({
             {data.keywordUsage.length > 3 && (
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 dark:bg-accent hover:bg-gray-100 dark:hover:bg-accent/80 rounded-lg transition-colors duration-200 mt-2"
               >
                 {showAll ? (
                   <>
                     <ChevronUp className="w-4 h-4" />
-                    <span className="text-sm font-medium text-gray-700">Show Less</span>
+                    <span className="text-sm font-medium ">Show Less</span>
                   </>
                 ) : (
                   <>
                     <ChevronDown className="w-4 h-4" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium ">
                       Show {data.keywordUsage.length - 3} More
                     </span>
                   </>

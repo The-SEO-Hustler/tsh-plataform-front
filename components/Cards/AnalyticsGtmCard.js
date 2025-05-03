@@ -21,11 +21,11 @@ export default function AnalyticsGtmCard({
       icon={BarChart}
       analysis={analysis}
     >
-      <div className="space-y-4">
+      <div className="space-y-4 dark:text-foreground">
         <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 bg-gray-50 rounded-lg flex flex-col justify-between">
+          <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2 gap-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium">
                 Google Analytics
               </span>
               <span
@@ -33,14 +33,14 @@ export default function AnalyticsGtmCard({
                   }`}
               />
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm">
               {googleAnalytics ? "Detected" : "Not Detected"}
             </p>
           </div>
 
-          <div className="p-4 bg-gray-50 rounded-lg flex flex-col justify-between">
+          <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2 gap-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium">
                 Google Tag Manager
               </span>
               <span
@@ -48,7 +48,7 @@ export default function AnalyticsGtmCard({
                   }`}
               />
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm">
               {googleTagManager ? "Detected" : "Not Detected"}
             </p>
           </div>

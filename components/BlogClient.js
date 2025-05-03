@@ -43,7 +43,7 @@ export default function BlogClient({ categories, blogPosts }) {
       </section>
 
       {/* Filter Categories */}
-      <section className="py-2 md:py-6 bg-white border-b border-gray-200 sticky top-16 z-20">
+      <section className="py-2 md:py-6 bg-background border-b border-foreground/10 sticky top-16 z-20">
         <Container className="!px-0 md:!px-6">
           <div className="flex overflow-x-auto no-scrollbar gap-3 justify-start md:justify-center">
             {categories.map((category, idx) => (
@@ -52,7 +52,7 @@ export default function BlogClient({ categories, blogPosts }) {
                 variant={activeCategory === category.id ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setActiveCategory(category.id)}
-                className={`  rounded-full cursor-pointer ${idx === 0 ? "ml-4 md:ml-0" : ""}`}
+                className={`  rounded-full ${activeCategory === category.id ? "bg-primary text-primary-foreground" : "bg-card text-foreground"} cursor-pointer ${idx === 0 ? "ml-4 md:ml-0" : ""}`}
               >
                 {category.label}
               </Button>

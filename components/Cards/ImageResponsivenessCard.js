@@ -47,10 +47,10 @@ export default function ImageResponsivenessCard({
           <p className="text-blue-600">Loading: {detail?.loading}</p>
         )}
         {detail?.alt && (
-          <p className="text-gray-600">Alt text: {detail?.alt}</p>
+          <p className="">Alt text: {detail?.alt}</p>
         )}
       </div>
-      <p className="text-sm text-gray-600 mt-2 break-words">{detail?.message}</p>
+      <p className="text-sm mt-2 break-words">{detail?.message}</p>
     </div>
   );
 
@@ -66,7 +66,7 @@ export default function ImageResponsivenessCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm ">
             Total Images: <span className="font-medium">{totalImages}</span>
           </div>
           <div className="text-sm">
@@ -86,9 +86,9 @@ export default function ImageResponsivenessCard({
 
         <div className="space-y-3">
           {displayedDetails.map((detail, index) => (
-            <div key={index} className="p-3 bg-gray-50 rounded-lg space-y-2">
+            <div key={index} className="p-3 bg-gray-50 dark:bg-accent rounded-lg space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium dark:text-foreground">
                   {detail.ratio}x
                 </span>
                 <div className="flex items-center gap-2">
@@ -111,7 +111,7 @@ export default function ImageResponsivenessCard({
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button className="text-gray-500 hover:text-gray-700">
+                          <button className="text-gray-500 hover:text-gray-700 dark:text-foreground dark:hover:text-foreground">
                             <Info className="w-4 h-4" />
                           </button>
                         </TooltipTrigger>
@@ -139,19 +139,19 @@ export default function ImageResponsivenessCard({
         {details.length > 2 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 dark:bg-accent hover:bg-gray-100 dark:text-foreground dark:hover:text-foreground rounded-lg transition-colors duration-200 cursor-pointer"
           >
             {showAll ? (
               <>
                 <ChevronUp className="w-4 h-4" />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium ">
                   Show Less
                 </span>
               </>
             ) : (
               <>
                 <ChevronDown className="w-4 h-4" />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium ">
                   Show {details.length - 2} More
                 </span>
               </>

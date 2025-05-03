@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block">
               <svg width="160" height="40" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="100" y="30" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" textAnchor="middle" fill="#FFDD00">THE SEO HUSTLER</text>
+                <text x="100" y="30" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" textAnchor="middle" fill="#FFcc00">THE SEO HUSTLER</text>
               </svg>
             </Link>
             <p className="mt-4  text-sm">

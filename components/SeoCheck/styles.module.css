@@ -12,7 +12,7 @@
 }
 
 .card {
-  background: #ffffffaa;
+  /* background: #ffffffaa; */
   border-radius: 16px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
@@ -61,7 +61,9 @@
   /* Ensure it's above the overlay */
   /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); */
 }
-.cardError .cardHeading {
+
+
+.cardError .cardHeading, [data-theme="dark"] .cardError .cardHeading {
   border-bottom: 1px solid oklch(0.637 0.237 25.331) !important;
   color: oklch(0.637 0.237 25.331) !important;
 }
@@ -76,6 +78,12 @@
 .cardError,
 .cardWarning {
   color: oklch(0.446 0.03 256.802);
+}
+[data-theme="dark"] .cardNormal{
+  color: oklch(0.949 0.000 89.9);
+}
+[data-theme="dark"] .cardError, [data-theme="dark"] .cardWarning{
+  color: #222;
 }
 
 .card:not(.cardWarning):not(.cardError) .cardDescription {

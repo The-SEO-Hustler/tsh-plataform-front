@@ -22,21 +22,21 @@ export default function RequestCountCheckCard({
       analysis={analysis}
     >
       <div className="space-y-4">
-        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <span className="text-sm text-gray-600">Total Requests:</span>
-          <span className="font-medium text-gray-900">{count}</span>
+        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
+          <span className="text-sm">Total Requests:</span>
+          <span className="font-medium">{count}</span>
         </div>
 
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">Resource Types:</h4>
+          <h4 className="text-sm font-medium">Resource Types:</h4>
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 bg-gray-50 rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
               CSS Files: {resources.filter((r) => r.endsWith(".css")).length}
             </div>
-            <div className="p-2 bg-gray-50 rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
               JS Files: {resources.filter((r) => r.endsWith(".js")).length}
             </div>
-            <div className="p-2 bg-gray-50 rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
               Images:{" "}
               {
                 resources.filter((r) =>
@@ -44,7 +44,7 @@ export default function RequestCountCheckCard({
                 ).length
               }
             </div>
-            <div className="p-2 bg-gray-50 rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
               Other:{" "}
               {
                 resources.filter(

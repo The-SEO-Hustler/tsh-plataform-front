@@ -85,7 +85,7 @@ function AdvancedKeywordAnalysisHero() {
     setLoading(false);
   };
   return (
-    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white py-6 md:py-0">
+    <main className="min-h-screen relative py-6 md:py-0 bg-background">
       {/* Hero Section*/}
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -98,11 +98,11 @@ function AdvancedKeywordAnalysisHero() {
         </svg>
       </div>
       <Container>
-        <section className="min-h-screen flex items-center">
+        <section className="min-h-screen  flex items-center">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Keyword Input */}
             <div className="space-y-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                 Advanced <span className="text-primary">Keyword Analysis</span>
               </h1>
               <p className="text-xl ">
@@ -140,7 +140,7 @@ function AdvancedKeywordAnalysisHero() {
             {/* Right Column - Feature Preview */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-              <div className="bg-white p-8 rounded-2xl shadow-xl">
+              <div className="bg-card p-8 rounded-2xl shadow-xl">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -148,7 +148,7 @@ function AdvancedKeywordAnalysisHero() {
                     </div>
                     <div>
                       <h3 className="font-semibold">Keyword Insights</h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm  text-foreground/80">
                         Detailed analysis of keyword performance
                       </p>
                     </div>
@@ -156,19 +156,19 @@ function AdvancedKeywordAnalysisHero() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Search Volume</span>
-                      <span className="text-sm font-medium text-green-700">
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         High
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Competition</span>
-                      <span className="text-sm font-medium text-yellow-700">
+                      <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">
                         Moderate
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Relevance</span>
-                      <span className="text-sm font-medium text-green-700">
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         Excellent
                       </span>
                     </div>

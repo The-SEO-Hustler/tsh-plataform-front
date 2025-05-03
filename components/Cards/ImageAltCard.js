@@ -27,11 +27,11 @@ export default function ImageAltCard({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
           <span>Total Images:</span>
-          <span className="text-blue-500">{data.totalImages}</span>
+          <span className="text-blue-500 dark:text-blue-500">{data.totalImages}</span>
         </div>
         <div className="flex justify-between items-center">
           <span>Images with Alt:</span>
-          <span className="text-green-700">{data.imagesWithAlt}</span>
+          <span className="text-green-700 dark:text-green-500">{data.imagesWithAlt}</span>
         </div>
         {data.imagesWithoutAlt && data.imagesWithoutAlt.length > 0 && (
           <div className="mt-2">
@@ -50,19 +50,19 @@ export default function ImageAltCard({
             {data.imagesWithoutAlt.length > 6 && (
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+                className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 dark:bg-accent hover:bg-gray-100 dark:hover:bg-accent/80 rounded-lg transition-colors duration-200 mt-2"
               >
                 {showAll ? (
                   <>
                     <ChevronUp className="w-4 h-4" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium ">
                       Show Less
                     </span>
                   </>
                 ) : (
                   <>
                     <ChevronDown className="w-4 h-4" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium ">
                       Show {data.imagesWithoutAlt.length - 6} More
                     </span>
                   </>

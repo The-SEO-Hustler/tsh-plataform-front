@@ -23,23 +23,23 @@ export default function TitleCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between ">
-          <span className="text-sm text-gray-600">Title Length:</span>
+          <span className="text-sm">Title Length:</span>
           <span
-            className={` ${length > 60 ? "text-red-600" : "text-green-700"}`}
+            className={` ${length > 60 ? "text-red-600 dark:text-red-500" : "text-green-700 dark:text-green-500"}`}
           >
             {length} characters
           </span>
         </div>
 
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">Title Content:</h4>
+          <h4 className="text-sm font-medium">Title Content:</h4>
           <div className="">
-            <p className="text-sm text-gray-600">{value}</p>
+            <p className="text-sm">{value}</p>
           </div>
         </div>
 
         <div className="">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm">
             {length > 60
               ? "Title is too long. Google typically displays 50-60 characters."
               : "Title length is within recommended limits."}

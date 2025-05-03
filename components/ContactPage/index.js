@@ -158,7 +158,7 @@ export default function Contact() {
           {/* Contact Information */}
           <div>
             <h2 className="text-3xl font-bold mb-6">How Can We Help?</h2>
-            <p className="mb-8 text-gray-600">
+            <p className="mb-8 text-foreground">
               Whether you need help with our tools, have questions about our
               courses, or want to explore partnership opportunities, we're here
               to assist. Fill out the form and we'll get back to you as soon as
@@ -184,7 +184,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">Email Us</h3>
-                  <p className="text-gray-600">
+                  <p className="text-foreground">
                     <a href="mailto:contact@theseohustler.com">
                       contact@theseohustler.com
                     </a>
@@ -209,19 +209,19 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">Live Chat</h3>
-                  <p className="text-gray-600">
+                  <p className="text-foreground">
                     Available Monday-Friday, 9am-5pm EST
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-yellow-400 p-6 rounded-lg transform -rotate-1">
+            <div className="bg-primary p-6 rounded-lg transform -rotate-1">
               <div className="transform rotate-1">
-                <h3 className="font-bold text-lg mb-2 text-gray-900">
+                <h3 className="font-bold text-lg mb-2 text-primary-foreground">
                   Need Immediate Help?
                 </h3>
-                <p className="text-gray-900 mb-4">
+                <p className="text-primary-foreground mb-4">
                   Check out our comprehensive knowledge base for instant answers
                   to common questions.
                 </p>
@@ -234,13 +234,13 @@ export default function Contact() {
 
           {/* Contact Form */}
           <div>
-            <div className="bg-white rounded-lg md:p-8 p-6 shadow-md">
+            <div className="bg-card rounded-lg md:p-8 p-6 shadow-md">
               <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
 
               {formSubmitted ? (
                 <div className="bg-yellow-400/20 p-6 rounded-lg mb-4">
                   <h3 className="font-bold text-lg mb-2">Message Sent!</h3>
-                  <p className="text-gray-600">
+                  <p className="text-foreground">
                     Thanks for reaching out. We've received your message and
                     will get back to you as soon as possible.
                   </p>
@@ -267,7 +267,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="name"
-                        className="block mb-2 font-medium text-gray-700"
+                        className="block mb-2 font-medium text-foreground"
                       >
                         Your Name
                       </label>
@@ -284,7 +284,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block mb-2 font-medium text-gray-700"
+                        className="block mb-2 font-medium text-foreground"
                       >
                         Email Address
                       </label>
@@ -302,7 +302,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="message"
-                        className="block mb-2 font-medium text-gray-700"
+                        className="block mb-2 font-medium text-foreground"
                       >
                         Message
                       </label>
@@ -335,7 +335,7 @@ export default function Contact() {
       </FeatureSection>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-[#ffcc00]">
+      <section className="py-20 bg-primary text-primary-foreground">
         <Container>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-8 text-center">
@@ -344,9 +344,9 @@ export default function Contact() {
 
             <div className="space-y-4">
               {faqItems.map((item, index) => (
-                <div key={index} className="bg-white rounded-md p-6 shadow-md">
-                  <h3 className="font-bold text-lg mb-2">{item.question}</h3>
-                  <p className="text-on-surface-variant">{item.answer}</p>
+                <div key={index} className="bg-card rounded-md p-6 shadow-md">
+                  <h3 className="font-bold text-lg mb-2 text-foreground">{item.question}</h3>
+                  <p className="text-foreground">{item.answer}</p>
                 </div>
               ))}
             </div>

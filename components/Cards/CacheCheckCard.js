@@ -17,21 +17,21 @@ export default function CacheCheckCard({ data, status, analysis, onFocus, isFocu
       analysis={analysis}
     >
       <div className="space-y-4">
-        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <span className="text-sm text-gray-600">Caching Status:</span>
+        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
+          <span className="text-sm">Caching Status:</span>
           <span className={`font-medium ${caching ? "text-green-600" : "text-red-600"}`}>
             {caching ? "Enabled" : "Disabled"}
           </span>
         </div>
 
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">Cache Headers:</h4>
+          <h4 className="text-sm font-medium">Cache Headers:</h4>
           <div className="space-y-2">
             {Object.entries(headers).map(([key, value]) => (
-              <div key={key} className="p-2 bg-gray-50 rounded-md">
+              <div key={key} className="p-2 bg-gray-50 dark:bg-accent rounded-md">
                 <div className="flex items-center justify-between flex-1 min-w-0 gap-1">
-                  <span className="text-sm font-medium text-gray-700 whitespace-nowrap">{key}:</span>
-                  <span className="text-sm text-gray-600 truncate">{value || "Not Set"}</span>
+                  <span className="text-sm font-medium whitespace-nowrap">{key}:</span>
+                  <span className="text-sm truncate">{value || "Not Set"}</span>
                 </div>
               </div>
             ))}

@@ -28,7 +28,7 @@ export default function RobotsTxtCard({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
           <span>Status:</span>
-          <span className={data.exists ? "text-green-700" : "text-red-500"}>
+          <span className={data.exists ? "text-green-700 dark:text-green-500" : "text-red-500 dark:text-red-500"}>
             {data.exists ? "Present ✓" : "Missing ✕"}
           </span>
         </div>
@@ -51,7 +51,7 @@ export default function RobotsTxtCard({
             {data.disallowedPaths.length > 3 && (
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="mt-2 text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors"
+                className="mt-2 text-blue-500 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-700 flex items-center gap-1 transition-colors"
               >
                 {showAll ? (
                   <>
@@ -70,7 +70,7 @@ export default function RobotsTxtCard({
         {data.content && (
           <div className="mt-2">
             <span className="font-medium">Content:</span>
-            <pre className="mt-1 p-2 bg-gray-50 rounded text-xs overflow-auto max-h-[300px]">
+            <pre className="mt-1 p-2 bg-gray-100 dark:bg-accent rounded text-xs overflow-auto max-h-[300px]">
               {data.content}
             </pre>
           </div>
