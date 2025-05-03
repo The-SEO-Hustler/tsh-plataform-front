@@ -21,13 +21,13 @@ export default function FAQAccordion({ title, description, items }) {
       )}
       <div className="space-y-4">
         {items.map((item, idx) => (
-          <div key={idx} className="border-b overflow-hidden">
+          <div key={idx} className="border-b overflow-hidden rounded-md">
             <button
               className="w-full text-left py-3 px-4 font-medium focus:outline-none flex justify-between items-center cursor-pointer bg-primary text-black"
               onClick={() => toggleIndex(idx)}
             >
-              <span>{item.question}</span>
-              <span className="transform transition-transform duration-500">
+              <h3 className="!text-base !py-0 !my-0 font-semibold">{item.question}</h3>
+              <span className="transform transition-transform duration-500 text-lg">
                 {openIndex === idx ? '-' : '+'}
               </span>
             </button>
