@@ -33,10 +33,10 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
             {Icon && (
               typeof Icon === 'function' ? (
                 <Icon className={cn(
-                  "w-6 h-6 text-primary-foreground dark:text-white dark:fill-white"
+                  "w-6 h-6 text-primary-foreground dark:text-foreground dark:fill-foreground"
                 )} />
               ) : (
-                <div className=" flex items-center justify-center text-primary-foreground dark:text-white dark:fill-white">
+                <div className=" flex items-center justify-center text-primary-foreground dark:text-foreground dark:fill-foreground">
                   {Icon}
                 </div>
               )
@@ -45,8 +45,8 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
 
           {category && (
             <span className={cn(
-              "ml-auto text-xs font-medium px-2 py-1 rounded-sm",
-              featured ? 'bg-primary-foreground/20' : 'bg-accent text-accent-foreground'
+              "ml-auto text-xs font-medium px-2 py-1 rounded-sm dark:!text-foreground",
+              'bg-accent text-accent-foreground '
             )}>
               {category}
             </span>
