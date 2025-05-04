@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense, useRef, Fragment } from "react";
+import React, { useState, useEffect, Suspense, useRef, Fragment, useMemo } from "react";
 import Link from "next/link";
 import Container from "@/components/container";
 import { toast } from "sonner";
@@ -42,7 +42,7 @@ ChartJS.register(
   ChartTooltip,
   Legend
 );
-
+import { useTheme } from 'next-themes'
 
 function AdvancedKeywordAnalysis() {
 
@@ -55,6 +55,7 @@ function AdvancedKeywordAnalysis() {
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const [chartData, setChartData] = useState(null);
+  const { theme } = useTheme();
   const [selectedKeyword, setSelectedKeyword] = useState(analysisData?.related_keywords?.[0] || "");
   const listenerRef = useRef(null);
   const toastIds = useRef({
@@ -71,6 +72,30 @@ function AdvancedKeywordAnalysis() {
   );
   const [open, setOpen] = useState(false)
   const [selectedUrl, setSelectedUrl] = useState(null)
+  const options = useMemo(() => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
+        ticks: { color: theme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)' }
+      },
+      x: {
+        grid: { color: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
+        ticks: { color: theme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)', maxTicksLimit: 10 }
+      }
+    },
+    plugins: {
+      legend: { labels: { color: theme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' } },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
+        titleColor: theme === 'dark' ? '#FFDD00' : '#000',
+        bodyColor: theme === 'dark' ? '#fff' : '#111',
+      }
+    }
+  }), [theme])
+
 
   const handleRowClick = (url) => {
     // only open if we have headings for that URL
@@ -448,7 +473,7 @@ function AdvancedKeywordAnalysis() {
         </Container>
       </section>
       {/* Overview Metrics */}
-      <section className="py-10 bg-background border-b border-gray-800">
+      <section className="py-10 bg-background border-b border-foreground/10">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Search Volume */}
@@ -778,7 +803,7 @@ function AdvancedKeywordAnalysis() {
                       onClick={() => setSelectedKeyword(keyword)}
                       className={`w-full p-3 rounded-lg flex items-center justify-between cursor-pointer ${selectedKeyword.keyword === keyword.keyword
                         ? "bg-primary text-black"
-                        : "dark:bg-accent hover:bg-accent/20 bg-gray-200"
+                        : "bg-gray-200 dark:bg-accent hover:bg-accent/20 "
                         }`}
                     >
                       <div className="text-left">
@@ -827,42 +852,8 @@ function AdvancedKeywordAnalysis() {
                   <div className="h-72">
                     <Line
                       data={chartData}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            grid: {
-                              color: "rgba(255, 255, 255, 0.1)",
-                            },
-                            ticks: {
-                              color: "rgba(255, 255, 255, 0.7)",
-                            },
-                          },
-                          x: {
-                            grid: {
-                              color: "rgba(255, 255, 255, 0.1)",
-                            },
-                            ticks: {
-                              color: "rgba(255, 255, 255, 0.7)",
-                              maxTicksLimit: 10,
-                            },
-                          },
-                        },
-                        plugins: {
-                          legend: {
-                            labels: {
-                              color: "rgba(255, 255, 255, 0.7)",
-                            },
-                          },
-                          tooltip: {
-                            backgroundColor: "rgba(0, 0, 0, 0.8)",
-                            bodyColor: "#fff",
-                            titleColor: "#FFDD00",
-                          },
-                        },
-                      }}
+                      options={options}
+
                     />
                   </div>
                 ) : (

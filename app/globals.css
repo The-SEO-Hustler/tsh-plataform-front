@@ -106,7 +106,7 @@
 }
 
 /* Dark mode overrides - if needed */
-[data-theme="dark"] {
+html.dark {
   /* Foundations */
   --background: oklch(0.178 0.000 89.9);
   --foreground: oklch(0.949 0.000 89.9);

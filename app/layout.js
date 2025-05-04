@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="rBdYZW92wmxvaGrL9URAvg" async></script>
       </head>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider attribute="data-theme" defaultTheme="system" >
+        <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange>
           <AppRouterCacheProvider>
             <Analytics />
             <FirebaseProvider>
