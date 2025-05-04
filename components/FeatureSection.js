@@ -23,7 +23,7 @@ export default function FeatureSection({
     dark: 'bg-primary text-black',
     primary: 'bg-primary text-primary-foreground',
     gradient: 'bg-gradient-to-br from-primary to-secondary',
-    darkGradient: 'bg-black dark:bg-background/90',
+    darkGradient: 'bg-gray-200 dark:bg-black',
   };
 
   // Title text color based on background
@@ -32,7 +32,7 @@ export default function FeatureSection({
     dark: 'text-primary-foreground',
     primary: 'text-primary-foreground',
     gradient: 'text-primary-foreground',
-    darkGradient: 'text-white dark:text-foreground',
+    darkGradient: 'text-foreground',
   };
 
   // Description text color based on background
@@ -41,7 +41,7 @@ export default function FeatureSection({
     dark: 'text-primary-foreground',
     primary: 'text-primary-foreground/80',
     gradient: 'text-primary-foreground/80',
-    darkGradient: 'text-white/80 dark:text-foreground/80',
+    darkGradient: 'text-foreground/80',
   };
 
   return (
