@@ -27,17 +27,17 @@ const ThemeSwitch = () => {
     <Button
       id="btn-mode"
       className=" bg-transparent hover:bg-transparent
-         hover:opacity-80 cursor-pointer"
+         hover:opacity-80 cursor-pointer text-foreground shadow-none"
       onClick={handMode}
 
     >
       {theme === "dark" ? (
         <span className="flex flex-row items-center gap-3">
-          <Sun className="text-foreground " />
+          <Sun className="" />
         </span>
       ) : (
         <span id="sunIcon" className="flex flex-row items-center gap-3">
-          <Moon className="text-foreground  " />
+          <Moon className=" " />
         </span>
       )}
     </Button>

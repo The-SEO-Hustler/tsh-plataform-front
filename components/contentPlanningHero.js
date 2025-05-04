@@ -8,6 +8,25 @@ import { toast } from 'sonner'
 import { useFirebase } from '@/lib/firebase-context'
 import { useRouter } from 'next/navigation'
 import { useUsage } from "@/lib/usage-context";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const options = [
+  { value: "blog_post", label: "Blog Post" },
+  { value: "product_page", label: "Product Page" },
+  { value: "service_page", label: "Service Page" },
+  { value: "landing_page", label: "Landing Page" },
+  { value: "comparison_page", label: "Comparison Page" },
+  { value: "guide", label: "Complete Guide" },
+  { value: "list_post", label: "List Post" },
+  { value: "tutorial", label: "Tutorial/How-To" },
+  { value: "faq_page", label: "FAQ Page" },
+]
 
 function ContentPlanningHero() {
 
@@ -84,7 +103,7 @@ function ContentPlanningHero() {
     setLoading(false);
   };
   return (
-    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white py-6 md:py-0">
+    <main className="min-h-screen relative bg-background py-6 md:py-0">
       {/* Hero Section*/}
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -101,7 +120,7 @@ function ContentPlanningHero() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Keyword Input */}
             <div className="space-y-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                 Content <span className="text-primary">Planning</span>
               </h1>
               <p className="text-xl ">
@@ -120,23 +139,26 @@ function ContentPlanningHero() {
                   />
                 </div>
                 <div className="relative">
-                  <select
-                    className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 cursor-pointer"
-                    id="contentType"
+                  <Select
                     value={contentType}
-                    onChange={(e) => setContentType(e.target.value)}
+                    onValueChange={setContentType}
                     disabled={loading}
                   >
-                    <option value="blog_post">Blog Post</option>
-                    <option value="product_page">Product Page</option>
-                    <option value="service_page">Service Page</option>
-                    <option value="landing_page">Landing Page</option>
-                    <option value="comparison_page">Comparison Page</option>
-                    <option value="guide">Complete Guide</option>
-                    <option value="list_post">List Post</option>
-                    <option value="tutorial">Tutorial/How-To</option>
-                    <option value="faq_page">FAQ Page</option>
-                  </select>
+                    <SelectTrigger size="lg" className="w-full px-6  text-lg border-2 border-gray-300 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200">
+                      <SelectValue placeholder="Select content type" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card text-foreground border border-border rounded-lg shadow-lg">
+                      {options.map((opt) => (
+                        <SelectItem
+                          key={opt.value}
+                          value={opt.value}
+                          className="px-4 py-2 cursor-pointer hover:bg-primary hover:text-primary-foreground rounded-md transition-colors"
+                        >
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <Button
                   type="submit"
@@ -158,7 +180,7 @@ function ContentPlanningHero() {
             {/* Right Column - Feature Preview */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-              <div className="bg-white p-8 rounded-2xl shadow-xl">
+              <div className="bg-card p-8 rounded-2xl shadow-xl">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -166,7 +188,7 @@ function ContentPlanningHero() {
                     </div>
                     <div>
                       <h3 className="font-semibold">Content Insights</h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         Detailed analysis of content strategy
                       </p>
                     </div>
@@ -174,19 +196,19 @@ function ContentPlanningHero() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Content Quality</span>
-                      <span className="text-sm font-medium text-green-700">
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         Excellent
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">SEO Optimization</span>
-                      <span className="text-sm font-medium text-yellow-700">
+                      <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">
                         Needs Improvement
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Engagement</span>
-                      <span className="text-sm font-medium text-green-700">
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         High
                       </span>
                     </div>

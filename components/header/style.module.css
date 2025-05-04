@@ -1,0 +1,33 @@
+.header a {
+  color: var(--foreground) !important;
+}
+
+.isSpecialPath.notScrolled a {
+  color: var(--primary) !important;
+}
+.isSpecialPath.notScrolled button {
+  color: var(--primary) !important;
+}
+
+.isSpecialPath.notScrolled button:hover svg,
+.isSpecialPath.notScrolled button:focus svg {
+  color: var(--primary-foreground) !important;
+}
+.isSpecialPath.notScrolled button:hover,
+.isSpecialPath.notScrolled button:focus {
+  background-color: var(--primary) !important;
+}
+
+.isSpecialPath.notScrolled a:hover,
+.isSpecialPath.notScrolled a:focus
+{
+  color: var(--foreground) !important;
+}
+.isSpecialPath.notScrolled,
+.isSpecialPath.notScrolled button:hover a,
+.isSpecialPath.notScrolled button:focus a,
+.isSpecialPath.notScrolled button:hover svg,
+.isSpecialPath.notScrolled button:focus svg {
+  color: var(--primary-foreground) !important;
+}
+

@@ -43,13 +43,13 @@ function LLMTxtResult() {
   const renderContent = (text) => {
     if (viewMode === 'text') {
       return (
-        <pre className="bg-[#fff] p-6 rounded-md text-black whitespace-pre-wrap text-sm font-mono overflow-auto max-h-[600px]">
+        <pre className="bg-gray-100 dark:bg-accent p-6 rounded-md text-foreground whitespace-pre-wrap text-sm font-mono overflow-auto max-h-[600px]">
           {text}
         </pre>
       );
     } else {
       return (
-        <div className="bg-[#fff] p-6 rounded-md text-black overflow-auto max-h-[600px]">
+        <div className="bg-gray-100 dark:bg-accent p-6 rounded-md text-foreground overflow-auto max-h-[600px]">
           <div className="prose prose-invert max-w-none">
             <ReactMarkdown
               components={{
@@ -57,19 +57,19 @@ function LLMTxtResult() {
                   <a {...props} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer" />
                 ),
                 h1: ({ node, ...props }) => (
-                  <h1 {...props} className="text-2xl font-bold mb-4 text-black" />
+                  <h1 {...props} className="text-2xl font-bold mb-4 text-foreground" />
                 ),
                 h2: ({ node, ...props }) => (
-                  <h2 {...props} className="text-xl font-bold mb-3 text-black" />
+                  <h2 {...props} className="text-xl font-bold mb-3 text-foreground" />
                 ),
                 h3: ({ node, ...props }) => (
-                  <h3 {...props} className="text-lg font-bold mb-2 text-black" />
+                  <h3 {...props} className="text-lg font-bold mb-2 text-foreground" />
                 ),
                 p: ({ node, ...props }) => (
-                  <p {...props} className="mb-4 text-black" />
+                  <p {...props} className="mb-4 text-foreground" />
                 ),
                 ul: ({ node, ...props }) => (
-                  <ul {...props} className="list-disc pl-6 mb-4 text-black" />
+                  <ul {...props} className="list-disc pl-6 mb-4 text-foreground" />
                 ),
                 li: ({ node, ...props }) => (
                   <li {...props} className="mb-1" />
@@ -142,7 +142,7 @@ function LLMTxtResult() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-            <p className="text-gray-600">{error}</p>
+            <p className="text-foreground/80">{error}</p>
             <Button onClick={() => router.push("/")} className="mt-4">
               Try Again
             </Button>
@@ -162,9 +162,9 @@ function LLMTxtResult() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-black ">
+    <main className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#ffcc0070] to-white py-16 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#ffcc0070] dark:from-[#ffcc00] to-background py-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -178,12 +178,12 @@ function LLMTxtResult() {
 
         <Container className="relative z-10">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-black mb-6 text-black">
+            <h1 className="text-4xl md:text-6xl font-black mb-6 text-foreground">
               LLMS Text Analysis Results
             </h1>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div>
-                <p className="text-lg text-gray-700 mb-2">
+                <p className="text-lg text-foreground/80 mb-2">
                   <span className="font-bold text-primary">URL:</span> {url}
                 </p>
                 {/* <p className="text-sm text-gray-400">
@@ -192,7 +192,7 @@ function LLMTxtResult() {
               </div>
               <div className="flex gap-3">
                 <button
-                  className="bg-[#f9f9f9] hover:bg-[#e0e0e0] text-black px-4 py-2 rounded-md flex items-center gap-2 transition-all cursor-pointer border "
+                  className="bg-card hover:bg-card/80 text-foreground px-4 py-2 rounded-md flex items-center gap-2 transition-all cursor-pointer border border-foreground/10"
                   onClick={() => copyToClipboard(activeTab === 'llmtxt' ? analysisData.llmstxt : analysisData.llmsfulltxt)}
                 >
                   <Copy size={16} />
@@ -217,7 +217,7 @@ function LLMTxtResult() {
       {/* Content Section */}
       <section className="py-12">
         <Container>
-          <div className="max-w-4xl mx-auto bg-[#f9f9f9] p-8 rounded-lg">
+          <div className="max-w-4xl mx-auto bg-card p-8 rounded-lg">
             <div className="flex justify-between items-center mb-6">
               <Tabs
                 defaultValue="llmtxt"
@@ -230,16 +230,16 @@ function LLMTxtResult() {
                 </TabsList>
 
                 <div className="flex justify-end mb-4">
-                  <div className="bg-[#f0f0f0] rounded-md p-1 flex">
+                  <div className="bg-gray-100 dark:bg-accent rounded-md p-1 flex">
                     <button
-                      className={`px-3 py-1 rounded-md flex items-center gap-1 cursor-pointer ${viewMode === 'text' ? 'bg-primary text-black' : 'text-gray-700'}`}
+                      className={`px-3 py-1 rounded-md flex items-center gap-1 cursor-pointer ${viewMode === 'text' ? 'bg-primary text-black' : 'text-foreground/80'}`}
                       onClick={() => setViewMode('text')}
                     >
                       <FileText size={16} />
                       <span>Text</span>
                     </button>
                     <button
-                      className={`px-3 py-1 rounded-md flex items-center gap-1 cursor-pointer ${viewMode === 'markdown' ? 'bg-primary text-black' : 'text-gray-700'}`}
+                      className={`px-3 py-1 rounded-md flex items-center gap-1 cursor-pointer ${viewMode === 'markdown' ? 'bg-primary text-black' : 'text-foreground/80'}`}
                       onClick={() => setViewMode('markdown')}
                     >
                       <FileCode size={16} />
@@ -262,7 +262,7 @@ function LLMTxtResult() {
       </section>
 
       {/* Results Explanation */}
-      <section className="py-12 bg-[#f0f0f0]">
+      <section className="py-12 dark:bg-black bg-[#f0f0f0] ">
         <Container>
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">
@@ -270,27 +270,27 @@ function LLMTxtResult() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              <div className="bg-[#f9f9f9] p-6 rounded-lg">
+              <div className="bg-card p-6 rounded-lg">
                 <h3 className="text-xl font-bold mb-3 text-primary">LLMS.txt (Shortened)</h3>
-                <p className="text-gray-700">
+                <p className="text-foreground/80">
                   The condensed version provides a quick overview of how search engines see your site. This representation focuses on the most important content and links.
                 </p>
               </div>
 
-              <div className="bg-[#f9f9f9] p-6 rounded-lg">
+              <div className="bg-card p-6 rounded-lg">
                 <h3 className="text-xl font-bold mb-3 text-primary">LLMS-Full.txt (Complete)</h3>
-                <p className="text-gray-700">
+                <p className="text-foreground/80">
                   The full LLMS text representation contains all the content search engines might index, including headings, links, and body text in a structured format.
                 </p>
               </div>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <h3 className="text-xl font-bold mb-3 text-primary">Why This Matters for SEO</h3>
-              <p className="text-gray-700 mb-4">
+              <p className="text-foreground/80 mb-4">
                 This text representation shows how search engines and AI systems might understand your website's content. Analyzing this can help you:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
+              <ul className="list-disc list-inside space-y-2 text-foreground/80">
                 <li>Identify content gaps and opportunities</li>
                 <li>Ensure your main topics and keywords are clearly represented</li>
                 <li>Check if your site structure is being correctly interpreted</li>

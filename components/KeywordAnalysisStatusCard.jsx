@@ -66,7 +66,7 @@ function KeywordAnalysisStatusCardContent() {
   }
 
   return (
-    <div className="min-w-[295px] fixed bottom-4 md:right-4 right-4 bg-white rounded-lg shadow-lg py-5 px-7 max-w-md border border-gray-200 z-50">
+    <div className="min-w-[295px] fixed bottom-4 md:right-4 right-4 bg-card rounded-lg shadow-lg py-5 px-7 max-w-md border !border-foreground/10 z-50">
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
           <div
@@ -78,14 +78,14 @@ function KeywordAnalysisStatusCardContent() {
           >
             {getStatusIcon(currentAdvancedKeywordAnalysis?.status)}
           </div>
-          <h3 className="font-medium text-gray-900 !text-base">
+          <h3 className="font-medium !text-foreground !text-base">
             {getStatusText(currentAdvancedKeywordAnalysis?.status)}
           </h3>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
-        <p className="text-sm text-gray-600 mb-3 truncate">
+        <p className="text-sm !text-foreground/80 mb-3 truncate">
           {currentAdvancedKeywordAnalysis?.keyword}
         </p>
         <button
@@ -97,12 +97,12 @@ function KeywordAnalysisStatusCardContent() {
           }}
           className="cursor-pointer mb-2"
         >
-          <Copy className="h-4 w-4" color="#101828" />
+          <Copy className="h-4 w-4 !text-foreground/80" />
         </button>
       </div>
 
       {currentAdvancedKeywordAnalysis?.status === "failed" && currentAdvancedKeywordAnalysis?.error && (
-        <div className="text-sm text-red-600 mb-3">
+        <div className="text-sm !text-red-600 mb-3">
           {currentAdvancedKeywordAnalysis?.error}
         </div>
       )}
@@ -112,7 +112,7 @@ function KeywordAnalysisStatusCardContent() {
         <Button
           size="sm"
           onClick={handleViewAnalysis}
-          className="flex items-center gap-1 cursor-pointer"
+          className="flex items-center gap-1 cursor-pointer !text-foreground"
         >
           View Results
           <ExternalLink className="h-3 w-3" />
@@ -122,9 +122,9 @@ function KeywordAnalysisStatusCardContent() {
         currentAdvancedKeywordAnalysis?.status === "failed") && (
           <button
             onClick={() => removeAdvancedKeywordAnalysis()}
-            className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:bg-gray-100"
+            className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:!bg-foreground/10"
           >
-            <X className="h-4 w-4" color="#101828" />
+            <X className="h-4 w-4 !text-foreground/80" />
           </button>
         )}
     </div>
@@ -133,8 +133,8 @@ function KeywordAnalysisStatusCardContent() {
 
 export default function KeywordAnalysisStatusCard() {
   return (
-    <Suspense fallback={<div className="min-w-[295px] fixed bottom-4 md:right-4 right-4 bg-white rounded-lg shadow-lg py-5 px-7 max-w-md border border-gray-200 z-50">
-      <p>
+    <Suspense fallback={<div className="min-w-[295px] fixed bottom-4 md:right-4 right-4 bg-card rounded-lg shadow-lg py-5 px-7 max-w-md border !border-foreground/10 z-50">
+      <p className="!text-foreground">
         Loading analysis status...
       </p>
     </div>}>

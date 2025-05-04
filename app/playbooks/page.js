@@ -15,7 +15,7 @@ async function PlaybooksPage() {
   const playbooks = resources.playbooks || [];
 
   return (
-    <Container className="!py-16">
+    <Container className="!py-16 text-foreground  bg-background">
       <div className="max-w-4xl mx-auto mb-12">
         <h1 className="text-4xl font-bold mb-4">SEO Playbooks</h1>
         <p className="text-xl text-muted-foreground">

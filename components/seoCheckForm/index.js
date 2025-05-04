@@ -86,7 +86,7 @@ function SeoCheckForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row">
         <input
-          className="bg-white text-black px-4 py-3 rounded-md w-full md:w-3/4 mb-3 md:mb-0 md:mr-3 focus:outline-none focus:ring-2 focus:ring-black"
+          className="bg-card text-foreground px-4 py-3 rounded-md w-full md:w-3/4 mb-3 md:mb-0 md:mr-3 focus:outline-none focus:ring-2 focus:ring-black"
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
@@ -95,7 +95,7 @@ function SeoCheckForm() {
           disabled={isLoading}
         />
         <button type="submit"
-          className={`bg-primary hover:bg-primary/90 text-black font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+          className={`bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
           disabled={isLoading || usage?.remaining <= 0 || usage === null}
         >
           {isLoading ? "Analyzing..." : "Analyze My Site Now"}

@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetClose,
+  SheetFooter,
 } from "@/components/ui/sheet";
 import {
   NavigationMenu,
@@ -26,7 +27,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import ThemeSwitch from "../ThemeSwitch";
 import { useTheme } from "next-themes";
-
+import styles from "./style.module.css";
 function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -71,9 +72,9 @@ function Header() {
 
   return (
     <header
-      className={`bg-background backdrop-blur-sm shadow-elevation-2 text-foreground border-b border-border ${isSpecialPath ? "fixed" : "sticky"
+      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${styles.header} ${isSpecialPath ? "fixed" : "sticky"
         } ${isSpecialPath && !scrolled
-          ? "!text-primary !backdrop-blur-none !bg-transparent !border-b-0"
+          ? `!text-primary !backdrop-blur-none !bg-transparent !border-b-0 ${styles.isSpecialPath} ${styles.notScrolled}`
           : "text-foreground"
         } z-[999] top-0 w-full font-semibold`}
     >
@@ -100,8 +101,7 @@ function Header() {
           ))}
         </Link>
 
-        {/* Theme Switch */}
-        <ThemeSwitch />
+
 
         {/* Desktop Navigation */}
         <NavigationMenu
@@ -111,8 +111,8 @@ function Header() {
         >
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="cursor-pointer"><Link href="/free-tools" className="!no-underline !font-bold">Free Tools</Link></NavigationMenuTrigger>
-              <NavigationMenuContent orientation="ltr" dir="ltr" className="shadow-lg rounded-md">
+              <NavigationMenuTrigger className="cursor-pointer"><Link href="/free-tools" className="!no-underline !font-bold ">Free Tools</Link></NavigationMenuTrigger>
+              <NavigationMenuContent orientation="ltr" dir="ltr" className="shadow-lg rounded-md ">
                 <ul className="flex flex-col gap-3 p-2">
                   <ListItem href="/seo-check" title="SEO Check On Page" free>
                     <div className="flex items-center space-x-3">
@@ -148,26 +148,28 @@ function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/about" legacyBehavior passHref className="!no-underline !font-bold">
-                <NavigationMenuLink>About</NavigationMenuLink>
+              <Link href="/about" legacyBehavior passHref className="!no-underline !font-bold ">
+                <NavigationMenuLink className="">About</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/resources" legacyBehavior passHref className="!no-underline !font-bold">
-                <NavigationMenuLink>Resources</NavigationMenuLink>
+              <Link href="/resources" legacyBehavior passHref className="!no-underline !font-bold ">
+                <NavigationMenuLink className="">Resources</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/contact" legacyBehavior passHref className="!no-underline !font-bold">
-                <NavigationMenuLink>Contact</NavigationMenuLink>
+              <Link href="/contact" legacyBehavior passHref className="!no-underline !font-bold ">
+                <NavigationMenuLink className="">Contact</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/blog" legacyBehavior passHref className="!no-underline !font-bold">
-                <NavigationMenuLink>Blog</NavigationMenuLink>
+              <Link href="/blog" legacyBehavior passHref className="!no-underline !font-bold ">
+                <NavigationMenuLink className="">Blog</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
+          <ThemeSwitch />
+
         </NavigationMenu>
 
         {/* Auth Buttons */}
@@ -180,28 +182,28 @@ function Header() {
         <Sheet>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5 w-5 " />
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle className="!text-foreground">Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col space-y-4 mt-4 px-4">
               <SheetClose asChild>
-                <Link href="/free-tools" className="text-sm  cursor-pointer !no-underline !font-bold">
+                <Link href="/free-tools" className="text-sm !text-foreground  cursor-pointer !no-underline !font-bold ">
                   Free Tools
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/seo-check" className="text-sm  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap">
+                <Link href="/seo-check" className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap">
                   <svg width="20" height="20" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M26 29L28 31L32 27" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M39 39.0002L34.7 34.7002" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M26 29L28 31L32 27" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M39 39.0002L34.7 34.7002" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <span>
                     SEO Check On Page
@@ -211,47 +213,52 @@ function Header() {
               <SheetClose asChild>
                 <Link
                   href="/advanced-keyword-analysis"
-                  className="text-sm  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
+                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
                 >
-                  <ChartArea width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" />
+                  <ChartArea width={20} height={20} strokeWidth={1.5} className="min-w-5 min-h-5 rounded-md" color="currentColor" />
                   <span>Advanced Keyword Analysis</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/content-planning" className="text-sm  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap">
-                  <NotebookPen width={20} height={20} strokeWidth={1.5} className=" rounded-md" />
+                <Link href="/content-planning" className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap">
+                  <NotebookPen width={20} height={20} strokeWidth={1.5} className=" rounded-md" color="currentColor" />
                   <span>Content Planning</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/llms-txt-generator" className="text-sm  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap">
-                  <FileCode width={20} height={20} strokeWidth={1.5} className=" rounded-md" />
+                <Link href="/llms-txt-generator" className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap">
+                  <FileCode width={20} height={20} strokeWidth={1.5} className=" rounded-md" color="currentColor" />
                   <span>LLMs.txt Generator</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/seo-check" className="text-sm  !no-underline !font-bold">
+                <Link href="/seo-check" className="text-sm !text-foreground  !no-underline !font-bold">
 
                   <span>SEO Check On Page</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/blog" className="text-sm  !no-underline !font-bold">
+                <Link href="/blog" className="text-sm !text-foreground  !no-underline !font-bold">
                   Blog
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/resources" className="text-sm  !no-underline !font-bold">
+                <Link href="/resources" className="text-sm !text-foreground  !no-underline !font-bold">
                   Resources
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/about" className="text-sm  !no-underline !font-bold">
+                <Link href="/about" className="text-sm !text-foreground  !no-underline !font-bold">
                   About
                 </Link>
               </SheetClose>
             </div>
+            <SheetFooter className="flex justify-center">
+              {/* Theme Switch */}
+              <ThemeSwitch />
+            </SheetFooter>
           </SheetContent>
+
         </Sheet>
       </Container>
     </header>
@@ -283,7 +290,7 @@ const ListItem = (
         >
           <div
             className={cn(
-              "text-sm whitespace-nowrap  leading-none",
+              "text-sm whitespace-nowrap  leading-none !text-foreground",
               // Compare full path (including hash) with href
             )}
           >

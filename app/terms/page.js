@@ -48,7 +48,7 @@ export default function Terms() {
       {/* Terms Content */}
       <section className="py-16 bg-background">
         <Container>
-          <div className="max-w-4xl mx-auto bg-gray-200 rounded-md p-8 md:p-12 shadow-md">
+          <div className="max-w-4xl mx-auto bg-card rounded-md p-8 md:p-12 shadow-md">
             <div className="prose max-w-none">
 
               <p className="lead text-lg mb-8">
@@ -180,7 +180,7 @@ export default function Terms() {
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button size="lg" className="bg-primary text-on-primary">
+                  <Button size="lg" className="bg-primary text-primary-foreground">
                     Contact Us
                   </Button>
                 </Link>

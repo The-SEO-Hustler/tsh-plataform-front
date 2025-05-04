@@ -7,7 +7,7 @@ export const metadata = getMetadata({ ...SEO_DATA.llmtxtResult });
 
 
 function Page() {
-  return <div className="min-h-screen"><LLMTxtResultPage /></div>;
+  return <div className="min-h-screen bg-background"><LLMTxtResultPage /></div>;
 }
 
 export default Page;

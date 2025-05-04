@@ -27,11 +27,12 @@ function BlogContentPage({ post, blogPostsData }) {
       const button = document.createElement("button");
       button.className = "copy-button";
       button.style.position = "absolute";
+      button.style.color = "#666";
       button.style.top = "0.5rem";
       button.style.right = "0.5rem";
       button.style.zIndex = "10";
       button.style.background = "#fff";
-      button.style.border = "1px solid #ccc";
+      button.style.border = "1px solid #666";
       button.style.borderRadius = "4px";
       button.style.padding = "0.25rem";
       button.style.cursor = "pointer";
@@ -198,7 +199,7 @@ function BlogContentPage({ post, blogPostsData }) {
               <div className="flex flex-col items-center space-y-4">
                 <button
                   onClick={() => handleShare("facebook")}
-                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-card text-foreground border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +217,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </button>
                 <button
                   onClick={() => handleShare("twitter")}
-                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-card text-foreground border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +235,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </button>
                 <button
                   onClick={() => handleShare("linkedin")}
-                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-card text-foreground border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +255,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </button>
                 <button
                   onClick={() => handleShare("copy")}
-                  className="w-10 h-10 rounded-full bg-white border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
+                  className="w-10 h-10 rounded-full bg-card text-foreground border border-muted flex items-center justify-center hover:bg-primary cursor-pointer hover:text-primary-foreground transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -302,7 +303,7 @@ function BlogContentPage({ post, blogPostsData }) {
             </div>
 
             {/* Author Bio */}
-            <div className="mt-12 p-6 bg-background rounded-lg border border-gray-200 shadow-sm">
+            <div className="mt-12 p-6 bg-card rounded-lg border border-border shadow-sm text-foreground">
               <div className="flex items-center">
                 <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center overflow-hidden mr-4 relative">
                   {post.authorAvatar && (
@@ -347,25 +348,25 @@ function BlogContentPage({ post, blogPostsData }) {
               <div className="mt-4 flex items-center space-x-4">
                 <a
                   href="mailto:zac@theseo.com"
-                  className="text-primary hover:text-primary/80"
+                  className="text-foreground hover:text-primary/80"
                 >
-                  <Mail />
+                  <Mail className="text-foreground" />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/zacalmeida/"
-                  className="text-primary hover:text-primary/80"
+                  className="text-foreground "
                 >
-                  <LinkedinIcon />
+                  <LinkedinIcon className="text-foreground" />
                 </a>
                 <a
                   href="https://substack.com/@zacalmeida"
-                  className=" text-primary hover:text-primary/80"
+                  className="text-foreground fill-foreground"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="inherit"
                     viewBox="0 0 16 16"
                   >
                     <path d="M15 3.604H1v1.891h14v-1.89ZM1 7.208V16l7-3.926L15 16V7.208zM15 0H1v1.89h14z" />
@@ -376,7 +377,7 @@ function BlogContentPage({ post, blogPostsData }) {
             {/* Related Posts */}
             {blogPostsData.length > 0 && (
               <div className="mt-16">
-                <h2 className="text-2xl font-bold mb-6 text-foreground">
+                <h2 className="text-2xl font-bold mb-6 !text-foreground">
                   Related Articles
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -385,7 +386,7 @@ function BlogContentPage({ post, blogPostsData }) {
                       <Link
                         key={index}
                         href={`/blog/${relatedPost.slug}`}
-                        className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all"
+                        className="block group rounded-lg overflow-hidden bg-card shadow-sm hover:shadow-md transition-all"
                       >
                         {relatedPost.featuredImage.node.sourceUrl && (
                           <div className="relative h-40 w-full">
@@ -398,11 +399,11 @@ function BlogContentPage({ post, blogPostsData }) {
                           </div>
                         )}
                         <div className="p-6">
-                          <h3 className="!text-lg font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                          <h3 className="!text-lg font-bold mb-2 !text-foreground group-hover:text-primary transition-colors">
                             {relatedPost.title}
                           </h3>
                           {relatedPost.date && (
-                            <div className="flex items-center text-xs text-muted-foreground">
+                            <div className="flex items-center text-xs !text-muted-foreground">
                               <span>{relatedPost.date}</span>
                             </div>
                           )}

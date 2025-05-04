@@ -109,7 +109,7 @@
 html.dark {
   /* Foundations */
   --background: oklch(0.178 0.000 89.9);
-  --foreground: oklch(0.949 0.000 89.9);
+  --foreground: oklch(0.949 0.000 89.9) /* oklch(0.93 0.043562 54.8861)*/;
 
   /* Muted */
   --muted: oklch(0.252 0.000 89.9);
@@ -201,8 +201,7 @@ html.dark {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply text-foreground;
-    background-color: #f8f8f8;
+    @apply text-foreground bg-background;
     /* background: linear-gradient(#FFF7D6, #FFE785);
     background-repeat: no-repeat;
     background-size: cover;
