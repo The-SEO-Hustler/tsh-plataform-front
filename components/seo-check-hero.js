@@ -93,7 +93,7 @@ function SeoCheckHeroContent() {
 
 
   return (
-    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-background py-6 md:py-0">
+    <main className="min-h-screen relative  py-6 md:py-0">
       {/* Hero Section*/}
 
       <section className="bg-background">
@@ -119,7 +119,7 @@ function SeoCheckHeroContent() {
                       placeholder="Enter your website URL"
                       required
                       disabled={isLoading}
-                      className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                     />
                     <Button
                       type="submit"
@@ -127,7 +127,7 @@ function SeoCheckHeroContent() {
                       className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300  ${isLoading ? "animate-pulse !bg-primary " : ""}`}
                       disabled={isLoading || usage?.remaining <= 0 || usage === null}
                     >
-                      {isLoading ? "Starting Analysis..." : "Analyze"}
+                      <span className='sm:block hidden'>{isLoading ? "Starting Analysis..." : "Analyze"}</span>
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>

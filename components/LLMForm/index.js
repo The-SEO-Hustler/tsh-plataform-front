@@ -82,7 +82,7 @@ function LLMForm() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Enter a URL..."
-            className="w-full px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
             required
             disabled={loading}
           />

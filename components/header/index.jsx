@@ -180,9 +180,9 @@ function Header() {
 
         {/* Mobile Menu */}
         <Sheet>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5 " />
+          <SheetTrigger asChild className="md:hidden !bg-card">
+            <Button variant="ghost" size="icon" className="border border-border">
+              <Menu className="h-5 w-5 !text-foreground" />
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
