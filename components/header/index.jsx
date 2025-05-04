@@ -24,12 +24,14 @@ import { Menu, ChartArea, NotebookPen, FileCode } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import ThemeSwitch from "../ThemeSwitch";
+import { useTheme } from "next-themes";
 
 function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState('light');
-
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   // Add scroll listener to apply elevation to header on scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +47,9 @@ function Header() {
       document.removeEventListener("scroll", handleScroll);
     };
   }, [scrolled]);
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const checkPathname = () => {
     if (
@@ -62,12 +67,7 @@ function Header() {
   };
   const isSpecialPath = checkPathname();
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
+
 
   return (
     <header
@@ -81,7 +81,7 @@ function Header() {
         {/* Logo */}
 
         <Link href="/" className="flex items-center relative space-x-2 h-full">
-          {(isSpecialPath && !scrolled) || theme === 'dark' ? (
+          {mounted && ((isSpecialPath && !scrolled) || theme === 'dark' ? (
             <Image
               src="/the-seo-hustler-horizontal-white-logo.png"
               alt="The SEO Hustler logo"
@@ -97,13 +97,11 @@ function Header() {
               width={180}
               height={41.25}
             />
-          )}
+          ))}
         </Link>
 
         {/* Theme Switch */}
-        <button onClick={toggleTheme} className="ml-4 p-2 bg-gray-200 rounded-full">
-          {theme === 'light' ? '🌞' : '🌜'}
-        </button>
+        <ThemeSwitch />
 
         {/* Desktop Navigation */}
         <NavigationMenu

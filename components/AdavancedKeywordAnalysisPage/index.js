@@ -91,8 +91,6 @@ function AdvancedKeywordAnalysis() {
     )
   }
 
-
-
   useEffect(() => {
     // Start tracking this analysis in the global context.
 
@@ -374,7 +372,7 @@ function AdvancedKeywordAnalysis() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Hero Header with Keyword Info */}
-      <section className="pt-28 pb-12 bg-gradient-to-br from-[#ffcc00] dark:from-[#4e503a] to-background relative overflow-hidden text-foreground">
+      <section className="pt-28 pb-12 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -401,7 +399,7 @@ function AdvancedKeywordAnalysis() {
             <span>
               <Link
                 href="/advanced-keyword-analysis"
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors text-white"
               >
                 {" "}
                 Advanced Keyword Analysis
@@ -409,11 +407,11 @@ function AdvancedKeywordAnalysis() {
 
             </span>
             <ChevronRight size={16} />
-            <span className="dark:text-primary text-foreground/80 font-semibold">
+            <span className="text-primary font-semibold ">
               {analysisData.keyword || "New Content"}
             </span>
           </div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 text-white">
             <div>
               <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center ">
                 {analysisData.keyword}
@@ -422,27 +420,27 @@ function AdvancedKeywordAnalysis() {
                 {searchIntentState === "completed" ?
                   <>
                     <div
-                      className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full  font-bold`}
+                      className={`${getIntentColor(analysisData.search_intent.primary)} whitespace-nowrap px-4 py-1 rounded-full text-white font-bold`}
                     >
                       {analysisData.search_intent.primary}
                     </div>
-                    <span className="">
+                    <span className="text-gray-300">
                       {analysisData.search_intent.confidence}% Confidence
                     </span>
                   </> :
                   <>
                     <div
-                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold  animate-pulse`}
+                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 animate-pulse`}
                     >
                       loading intent
                     </div>
-                    <span className="">
+                    <span className="text-gray-300">
                       Analyzing keyword search intent...
                     </span>
                   </>
                 }
               </div>
-              <div className=" text-sm mt-2">
+              <div className="text-gray-300 text-sm mt-2">
                 <TimestampDisplay ts={updatedAt} />
               </div>
             </div>
@@ -760,19 +758,19 @@ function AdvancedKeywordAnalysis() {
       </section>
       {/* {JSON.stringify(analysisData.page_classifications)} */}
       {/* Related Keywords & Search Volume Trend */}
-      <section className="py-10 bg-black">
+      <section className="py-10 bg-background text-foreground">
         <Container>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Related Keywords */}
             <div className="md:col-span-1">
               <h2 className="text-2xl font-bold mb-6 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <Tag size={16} />
                 </span>
                 Related Keywords
               </h2>
 
-              <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <div className="bg-card rounded-lg p-6">
                 <div className="space-y-4 max-h-[370px] overflow-y-auto pr-2">
                   {analysisData?.related_keywords?.map((keyword, index) => (
                     <button
@@ -780,7 +778,7 @@ function AdvancedKeywordAnalysis() {
                       onClick={() => setSelectedKeyword(keyword)}
                       className={`w-full p-3 rounded-lg flex items-center justify-between cursor-pointer ${selectedKeyword.keyword === keyword.keyword
                         ? "bg-primary text-black"
-                        : "bg-[#2A2A2A] hover:bg-[#333333]"
+                        : "dark:bg-accent hover:bg-accent/20 bg-gray-200"
                         }`}
                     >
                       <div className="text-left">
@@ -806,20 +804,20 @@ function AdvancedKeywordAnalysis() {
                 Search Volume Trend
               </h2>
 
-              <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <div className="bg-card rounded-lg p-6">
                 <div className="mb-4">
                   <h3 className="text-xl font-bold">
                     {selectedKeyword?.keyword}
                   </h3>
                   <div className="flex  gap-3 mt-2 flex-col md:flex-row items-start md:items-center">
-                    <span className="text-gray-400">
+                    <span className="text-foreground/80">
                       {selectedKeyword?.search_volume} monthly searches
                     </span>
 
-                    <span className="text-gray-300 text-sm px-2 py-1 bg-[#2A2A2A] rounded-md">
+                    <span className=" text-sm px-2 py-1 bg-gray-200 dark:bg-accent rounded-md">
                       ${selectedKeyword?.cpc?.toFixed(2)} CPC
                     </span>
-                    <div className={`text-gray-400`}>
+                    <div className={`text-foreground/80`}>
                       Competition: {selectedKeyword?.competition}
                     </div>
                   </div>
