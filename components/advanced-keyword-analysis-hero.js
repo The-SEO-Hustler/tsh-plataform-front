@@ -85,7 +85,7 @@ function AdvancedKeywordAnalysisHero() {
     setLoading(false);
   };
   return (
-    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white py-6 md:py-0">
+    <main className="min-h-screen relative py-6 md:py-0 bg-background">
       {/* Hero Section*/}
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -98,11 +98,11 @@ function AdvancedKeywordAnalysisHero() {
         </svg>
       </div>
       <Container>
-        <section className="min-h-screen flex items-center">
+        <section className="min-h-screen  flex items-center">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Keyword Input */}
             <div className="space-y-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                 Advanced <span className="text-primary">Keyword Analysis</span>
               </h1>
               <p className="text-xl ">
@@ -115,18 +115,18 @@ function AdvancedKeywordAnalysisHero() {
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     placeholder="Enter a keyword..."
-                    className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 sm:px-6 sm:pr-[240px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                     required
                     disabled={loading}
                   />
                   <Button
                     type="submit"
                     size="lg"
-                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
                     disabled={loading || usage?.remaining <= 0 || usage === null}
                   >
-                    {loading ? "Analyzing..." : "Analyze Keyword"}
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <span className='sm:block hidden'>{loading ? "Analyzing..." : "Analyze Keyword"}</span>
+                    <ArrowRight className="sm:ml-2 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
               </form>
@@ -140,7 +140,7 @@ function AdvancedKeywordAnalysisHero() {
             {/* Right Column - Feature Preview */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-              <div className="bg-white p-8 rounded-2xl shadow-xl">
+              <div className="bg-card p-8 rounded-2xl shadow-xl">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -148,7 +148,7 @@ function AdvancedKeywordAnalysisHero() {
                     </div>
                     <div>
                       <h3 className="font-semibold">Keyword Insights</h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm  text-foreground/80">
                         Detailed analysis of keyword performance
                       </p>
                     </div>
@@ -156,19 +156,19 @@ function AdvancedKeywordAnalysisHero() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Search Volume</span>
-                      <span className="text-sm font-medium text-green-700">
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         High
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Competition</span>
-                      <span className="text-sm font-medium text-yellow-700">
+                      <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">
                         Moderate
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Relevance</span>
-                      <span className="text-sm font-medium text-green-700">
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         Excellent
                       </span>
                     </div>

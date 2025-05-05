@@ -12,7 +12,7 @@
 }
 
 .card {
-  background: #ffffffaa;
+  /* background: #ffffffaa; */
   border-radius: 16px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
@@ -61,7 +61,9 @@
   /* Ensure it's above the overlay */
   /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); */
 }
-.cardError .cardHeading {
+
+
+.cardError .cardHeading, [data-theme="dark"] .cardError .cardHeading {
   border-bottom: 1px solid oklch(0.637 0.237 25.331) !important;
   color: oklch(0.637 0.237 25.331) !important;
 }
@@ -75,12 +77,21 @@
 .cardNormal,
 .cardError,
 .cardWarning {
-  color: oklch(0.446 0.03 256.802);
+  color: var(--foreground);
+}
+html.dark .cardNormal{
+  color: var(--foreground);
+}
+html.dark .cardError, html.dark .cardWarning{
+  color: #222;
 }
 
 .card:not(.cardWarning):not(.cardError) .cardDescription {
   opacity: 0;
   transition: all 0.3s ease-in-out;
+}
+.card.cardWarning .cardDescription, .card.cardError .cardDescription, .card.cardWarning, .card.cardError{
+  color: #333;
 }
 .card:hover .cardDescription {
   opacity: 1 !important;

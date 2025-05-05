@@ -11,11 +11,13 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 1.82;
-  color: #000;
+  color: var(--foreground);
   font-family: 'Inter', sans-serif !important;
 }
+
 .content h1, .content h2, .content h3, .content h4, .content h5, .content h6, .content p, .content ul, .content ol, .content blockquote,.content figcaption {
   font-family: 'Inter', sans-serif !important;
+  color: var(--foreground);
 }
 .title {
   font-family: 'Inter', sans-serif !important;
@@ -28,15 +30,15 @@
 .content blockquote {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #000;
+  color: var(--foreground);
 }
-.content pre {
-  background-color: rgba(var(--color-primary-rgb), 0.6);
-  /* border-radius: 5px; */
+.content hr {
+  border-color: var(--border);
 }
 .author {
   font-family: 'Inter', sans-serif !important;
   /* font-weight: 800; */
+  color: var(--foreground);
 }
 
 /* Reset styles for table elements to neutralize WordPress styles */
@@ -73,27 +75,30 @@
 .content table thead th {
   position: sticky;
   top: 0;
-  background-color: white; 
+  background-color: var(--card); 
   z-index: 2; /* to stay on top of content */
+}
+.content table tr:nth-child(odd) {
+  background-color: var(--card) !important;
 }
 .content table th,
 .content table td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #e0e0e0;
-  color: #333;
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
   vertical-align: middle;
   font-size: 15px;
 }
 
 .content table thead tr {
   /* background-color: #f5f5f5; */
-  color: #333;
+  color: var(--foreground);
   font-weight: bold;
 }
 
 .content table tbody tr:hover {
-  background-color: #f5f5f5;
+  background-color: var(--card);
 }
 
 .content li {
@@ -102,6 +107,7 @@
 .content a {
   position: relative;
   text-decoration: none !important;
+  color: var(--foreground);
 }
 
 .content a:not(.anchor):before {
@@ -149,12 +155,12 @@
 .content h2,
 .content h3,
 .content h4 {
-  color: #0B0B0B !important;
+  color: var(--foreground) !important;
   font-weight: 600;
   word-break: break-word;
 }
 .content strong {
-  color: #000;
+  color: var(--foreground) !important;
   font-weight: 700;
 }
 .content h2 {
@@ -194,8 +200,8 @@
   padding: 0.1rem 0.2rem;
   /* border-radius: 5px; */
 }
-.content pre {
-  background-color: white ;
+.content pre:not(:has(code)) {
+  background-color: var(--card) !important;
 }
 
 
@@ -212,7 +218,7 @@
   padding-bottom: 1rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  background-color: white;
+  background-color: var(--card) !important;
 }
 
 .content blockquote p {

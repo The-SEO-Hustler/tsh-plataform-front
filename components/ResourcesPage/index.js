@@ -102,7 +102,7 @@ export default function Resources({ resources }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-background">
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
@@ -117,24 +117,24 @@ export default function Resources({ resources }) {
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-foreground mb-6">
             <span className="text-yellow-400">Free SEO Resources</span> & Templates
           </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto dark:text-foreground/80">
             Download actionable resources, cheatsheets, playbooks, and templates to streamline your SEO workflow and get results faster.
           </p>
         </div>
       </section>
 
       {/* Navigation */}
-      <nav className="sticky top-16 z-20 bg-white border-b border-gray-200 shadow-sm ">
+      <nav className="sticky top-16 z-20 bg-background border-b border-foreground/10 shadow-sm ">
         <Container>
           <div className="flex overflow-x-auto no-scrollbar gap-3 py-4">
             {types.map((type) => (
               <a
                 key={type.id}
                 href={`#${type.id}`}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                className="px-4 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-primary/10 rounded-md transition-colors"
               >
                 {type.label}
               </a>
@@ -149,7 +149,7 @@ export default function Resources({ resources }) {
         {resources.playbooks.length > 0 && (
           <section id="playbooks" className="scroll-mt-24">
             <Container>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Playbooks</h2>
+              <h2 className="text-3xl font-bold mb-8">Playbooks</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.playbooks.map((resource, index) => (
                   <ResourceCard
@@ -228,13 +228,13 @@ export default function Resources({ resources }) {
       >
         <div className="max-w-xl mx-auto">
           <div>
-            <div className="bg-white rounded-lg p-8 shadow-md">
+            <div className="bg-card rounded-lg p-8 shadow-md">
               <h2 className="text-2xl font-bold mb-6">Send a Resource Request</h2>
 
               {formSubmitted ? (
                 <div className="bg-yellow-400/20 p-6 rounded-lg mb-4">
                   <h3 className="font-bold text-lg mb-2">Message Sent!</h3>
-                  <p className="text-gray-600">
+                  <p className="text-foreground">
                     Thanks for reaching out. We've received your message and
                     will get back to you as soon as possible.
                   </p>
@@ -261,7 +261,7 @@ export default function Resources({ resources }) {
                     <div>
                       <label
                         htmlFor="name"
-                        className="block mb-2 font-medium text-gray-700"
+                        className="block mb-2 font-medium text-foreground"
                       >
                         Your Name
                       </label>
@@ -271,14 +271,14 @@ export default function Resources({ resources }) {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       />
                     </div>
                     <div>
                       <label
                         htmlFor="email"
-                        className="block mb-2 font-medium text-gray-700"
+                        className="block mb-2 font-medium text-foreground"
                       >
                         Email Address
                       </label>
@@ -288,7 +288,7 @@ export default function Resources({ resources }) {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       />
                     </div>
@@ -296,7 +296,7 @@ export default function Resources({ resources }) {
                     <div>
                       <label
                         htmlFor="message"
-                        className="block mb-2 font-medium text-gray-700"
+                        className="block mb-2 font-medium text-foreground"
                       >
                         Message
                       </label>
@@ -307,7 +307,7 @@ export default function Resources({ resources }) {
                         onChange={handleInputChange}
                         placeholder="Describe the resource you'd like us to create..."
                         rows="4"
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       ></textarea>
                     </div>

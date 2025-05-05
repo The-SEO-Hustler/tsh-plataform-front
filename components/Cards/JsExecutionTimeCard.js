@@ -85,7 +85,7 @@ export default function JsExecutionTimeCard({
         </div>
 
         {jsErrors > 0 && (
-          <div className="p-3 bg-red-50 rounded-lg flex items-start gap-2">
+          <div className="p-3 bg-red-50 dark:bg-accent rounded-lg flex items-start gap-2">
             <AlertCircle className="w-5 h-5 text-red-500 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-red-700">JavaScript Errors</p>

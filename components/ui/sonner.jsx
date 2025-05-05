@@ -6,12 +6,12 @@ import { Toaster as Sonner } from "sonner";
 const Toaster = ({
   ...props
 }) => {
-  const { theme = "system" } = useTheme()
+  const { resolvedTheme } = useTheme()
 
   return (
     (<Sonner
-      theme={theme}
-      className="toaster group"
+      theme={resolvedTheme}
+      className="toaster group text-foreground"
       style={
         {
           "--normal-bg": "var(--popover)",

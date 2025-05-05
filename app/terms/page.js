@@ -36,10 +36,10 @@ export default function Terms() {
         </div>
 
         <Container className="text-center">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-black text-white dark:text-foreground mb-6">
             Terms of <span className="text-primary">Service</span>
           </h1>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-white/80 dark:text-foreground/80 mb-8 max-w-3xl mx-auto">
             Last Updated: {lastUpdated}
           </p>
         </Container>
@@ -48,7 +48,7 @@ export default function Terms() {
       {/* Terms Content */}
       <section className="py-16 bg-background">
         <Container>
-          <div className="max-w-4xl mx-auto bg-gray-200 rounded-md p-8 md:p-12 shadow-md">
+          <div className="max-w-4xl mx-auto bg-card rounded-md p-8 md:p-12 shadow-md">
             <div className="prose max-w-none">
 
               <p className="lead text-lg mb-8">
@@ -180,7 +180,7 @@ export default function Terms() {
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button size="lg" className="bg-primary text-on-primary">
+                  <Button size="lg" className="bg-primary text-primary-foreground">
                     Contact Us
                   </Button>
                 </Link>

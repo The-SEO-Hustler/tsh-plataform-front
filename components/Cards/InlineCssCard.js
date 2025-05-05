@@ -32,18 +32,18 @@ export default function InlineCssCard({
       analysis={analysis}
     >
       <div className="space-y-4">
-        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-          <span className="text-sm text-gray-600">Total Elements with Inline CSS:</span>
-          <span className="font-medium text-gray-900">{data.count}</span>
+        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
+          <span className="text-sm ">Total Elements with Inline CSS:</span>
+          <span className="font-medium">{data.count}</span>
         </div>
 
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">Sample Elements:</h4>
+          <h4 className="text-sm font-medium">Sample Elements:</h4>
           <div className="space-y-2">
             {displayedElements.map((element, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium dark:text-foreground ">
                     {element.tag}
                   </span>
                   <span className="text-xs text-gray-500">
@@ -51,7 +51,7 @@ export default function InlineCssCard({
                   </span>
                 </div>
                 <div className="relative">
-                  <code className="text-xs text-gray-600 block bg-gray-100 p-2 rounded-md overflow-x-auto">
+                  <code className="text-xs  block bg-gray-100 dark:bg-background/50 p-2 rounded-md overflow-x-auto">
                     {element.style}
                   </code>
                   <div className="absolute top-1 right-1">
@@ -64,17 +64,17 @@ export default function InlineCssCard({
           {data.elements.length > 3 && (
             <button
               onClick={displayCount === 3 ? handleShowMore : handleShowLess}
-              className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 dark:bg-accent hover:bg-gray-100 dark:text-foreground dark:hover:text-foreground rounded-lg transition-colors duration-200 cursor-pointer"
             >
               {displayCount > 3 ? (
                 <>
                   <ChevronUp className="w-4 h-4" />
-                  <span className="text-sm font-medium text-gray-700">Show Less</span>
+                  <span className="text-sm font-medium">Show Less</span>
                 </>
               ) : (
                 <>
                   <ChevronDown className="w-4 h-4" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium">
                     Show 5 More Examples
                   </span>
                 </>

@@ -14,7 +14,7 @@ export default function Privacy() {
   return (
     <>
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-secondary to-black relative overflow-hidden">
+      <section className="pt-32 pb-16 bg-gradient-to-br from-primary to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -37,10 +37,10 @@ export default function Privacy() {
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-black text-white dark:text-foreground mb-6">
             Privacy <span className="text-primary">Policy</span>
           </h1>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-white/80 dark:text-foreground/80 mb-8 max-w-3xl mx-auto">
             Last Updated: {lastUpdated}
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function Privacy() {
       {/* Privacy Policy Content */}
       <section className="py-16 bg-background">
         <Container>
-          <div className="max-w-4xl mx-auto bg-gray-100 rounded-md p-8 md:p-12 shadow-md">
+          <div className="max-w-4xl mx-auto bg-card rounded-md p-8 md:p-12 shadow-md">
             <div className="prose max-w-none">
               <p className="lead text-lg mb-8">
                 This Privacy Policy describes how The SEO Hustler ("we", "us", or "our") collects, uses, and discloses your personal information when you visit our website, use our tools, or engage with our services (collectively, the "Services"). Please read this Privacy Policy carefully to understand our practices regarding your personal information.

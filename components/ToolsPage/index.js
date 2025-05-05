@@ -24,11 +24,11 @@ export default function Tools() {
         "Check your on page SEO score and get real-time suggestions to improve your website.",
       Icon: (
         <svg width="56" height="56" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M26 29L28 31L32 27" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M39 39.0002L34.7 34.7002" stroke="black" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M39 39.0002L34.7 34.7002" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       ),
       href: "/seo-check",
@@ -100,10 +100,10 @@ export default function Tools() {
 
         <Container>
           <div className="max-w-3xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white dark:text-foreground mb-6 leading-tight">
               Free SEO Tools
             </h1>
-            <p className="text-xl text-white/80 mb-8">
+            <p className="text-xl text-white/80 dark:text-foreground/70 mb-8">
               Access professional-grade SEO tools to research keywords, analyze
               competitors, optimize content, and more - completely free.
             </p>
@@ -112,7 +112,7 @@ export default function Tools() {
       </section>
 
       {/* Filter Categories */}
-      <section className="py-2 md:py-6 bg-white border-b  border-gray-200 sticky top-16 z-20">
+      <section className="py-2 md:py-6 bg-background border-b  border-foreground/10 sticky top-16 z-20">
         <Container className="!px-0 md:!px-6">
           <div className="flex overflow-x-auto no-scrollbar gap-3 justify-start md:justify-center">
             {categories.map((category, idx) => (
@@ -124,7 +124,7 @@ export default function Tools() {
                 size="sm"
                 onClick={() => setActiveCategory(category.label)}
                 className={`rounded-full cursor-pointer ${idx === 0 ? "ml-4 md:ml-0" : ""
-                  }`}
+                  } ${activeCategory === category.label ? "bg-primary text-primary-foreground" : "bg-card text-foreground"}`}
               >
                 {category.label}
               </Button>

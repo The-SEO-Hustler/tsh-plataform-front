@@ -24,7 +24,7 @@ export default function SitemapCheckCard({
           <span>Found in Robots.txt:</span>
           <span
             className={
-              data.foundInRobots ? "text-green-700" : "text-yellow-700"
+              data.foundInRobots ? "text-green-700 dark:text-green-500" : "text-yellow-700 "
             }
           >
             {data.foundInRobots ? "Yes ✓" : "No ✕"}

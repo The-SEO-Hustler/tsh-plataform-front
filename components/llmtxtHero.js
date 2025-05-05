@@ -89,7 +89,7 @@ function LLMTxtHero() {
     setLoading(false);
   };
   return (
-    <main className="min-h-screen relative bg-gradient-to-br from-[#eaeae9] to-white py-6 md:py-0">
+    <main className="min-h-screen relative bg-gradient-to-br bg-background py-6 md:py-0">
       {/* Hero Section*/}
 
       <Container>
@@ -97,10 +97,10 @@ function LLMTxtHero() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Keyword Input */}
             <div className="space-y-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                 Free <span className="text-primary">LLMs.txt</span> Generator
               </h1>
-              <p className="text-xl ">
+              <p className="text-xl text-foreground/80">
                 Create optimized LLMs.txt files in minutes, not hours. Control how AI sees and represents your business.
               </p>
               <Tabs value={mode} onValueChange={handleTabChange}>
@@ -116,7 +116,7 @@ function LLMTxtHero() {
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
                         placeholder="Enter a URL..."
-                        className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                        className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-foreground/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                         required
                         disabled={loading}
                       />
@@ -125,7 +125,7 @@ function LLMTxtHero() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                      className={`w-full ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-foreground/10`}
                       disabled={loading || usage?.remaining <= 0 || usage === null}
                     >
                       {loading ? "Initializing..." : "Generate Text"}
@@ -178,7 +178,7 @@ function LLMTxtHero() {
             {/* Right Column - Feature Preview */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-              <div className="bg-white p-8 rounded-2xl shadow-xl">
+              <div className="bg-card p-8 rounded-2xl shadow-xl">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -187,7 +187,7 @@ function LLMTxtHero() {
                     <div>
 
                       <h3 className="font-semibold text-lg">Generate a LLMs.txt file for your website</h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-foreground/80">
                         Just input your homepage URL and we will do the rest, this is how it works:
                       </p>
                     </div>
@@ -196,18 +196,18 @@ function LLMTxtHero() {
                   <ul className="list-disc space-y-2 text-sm">
                     <li className="flex justify-between">
                       <span>Website Crawling and Extraction</span>
-                      <span className="text-sm font-medium text-green-700">~3 minutes</span>
+                      <span className="text-sm font-medium text-green-700 dark:text-green-500">~3 minutes</span>
                     </li>
                     <li className="flex justify-between">
                       <span>Content Analysis and Understanding</span>
-                      <span className="text-sm font-medium text-blue-700">~4 minutes</span>
+                      <span className="text-sm font-medium text-blue-700 dark:text-blue-500">~4 minutes</span>
                     </li>
                     <li className="flex justify-between">
                       <span>Downloadable LLMs.txt file ready</span>
-                      <span className="text-sm font-medium text-purple-700">7 to 10 minutes</span>
+                      <span className="text-sm font-medium text-purple-700 dark:text-purple-500">7 to 10 minutes</span>
                     </li>
                   </ul>
-                  <p className="text-sm text-gray-500 italic">
+                  <p className="text-sm text-foreground/80 italic">
                     *Don't worry, you can browse around our website and we will notify you
                   </p>
                 </div>
@@ -220,19 +220,19 @@ function LLMTxtHero() {
 
 
       {/* What is LLMs.txt Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 dark:bg-black bg-card border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
             What is LLMs.txt?
           </h2>
-          <div className="max-w-4xl mx-auto bg-[#f4f4f4] p-8 rounded-lg">
-            <p className="text-xl text-gray-700 mb-6">
+          <div className="max-w-4xl mx-auto dark:bg-card bg-background p-8 rounded-lg">
+            <p className="text-xl text-foreground/80 mb-6">
               Think of LLMs.txt as your website's AI tour guide.
             </p>
-            <p className="text-lg text-gray-700 mb-6">
+            <p className="text-lg text-foreground/80 mb-6">
               It's a specialized file that tells AI exactly what your site is about and where to find your most valuable content. Without it, AI systems are left guessing — crawling through navigation menus and sidebars instead of focusing on what matters.
             </p>
-            <p className="text-lg text-gray-700 mb-6">
+            <p className="text-lg text-foreground/80 mb-6">
               In a world where more people are using AI search tools like ChatGPT and Claude to find information, this file is becoming your new digital front door.
             </p>
             <Link href="/blog/what-is-llms-txt" className="text-primary hover:underline inline-flex items-center">
@@ -243,52 +243,52 @@ function LLMTxtHero() {
       </section>
 
       {/* Why Your Website Needs LLMs.txt Now */}
-      <section className="py-16 bg-[#f0f0f0]">
+      <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
             Why Your Website Needs LLMs.txt Now
           </h2>
-          <p className="text-lg text-gray-700 max-w-4xl mx-auto mb-12 text-center">
+          <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
             Right now, AI systems are forming first impressions of your business without your input. That's like letting strangers describe your products to potential customers.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <div className="flex items-start">
                 <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mr-3 mt-1">✓</span>
                 <div>
                   <h3 className="text-xl font-bold mb-2">Control your narrative</h3>
-                  <p className="text-gray-700">Guide AI to your latest pricing, not a blog post from 2019</p>
+                  <p className="text-foreground/80">Guide AI to your latest pricing, not a blog post from 2019</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <div className="flex items-start">
                 <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mr-3 mt-1">✓</span>
                 <div>
                   <h3 className="text-xl font-bold mb-2">Boost AI visibility</h3>
-                  <p className="text-gray-700">Early adopters will have an edge as AI search grows (remember early SEO winners?)</p>
+                  <p className="text-foreground/80">Early adopters will have an edge as AI search grows (remember early SEO winners?)</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <div className="flex items-start">
                 <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mr-3 mt-1">✓</span>
                 <div>
                   <h3 className="text-xl font-bold mb-2">Prevent misrepresentation</h3>
-                  <p className="text-gray-700">Stop AI from quoting outdated info or missing your key points</p>
+                  <p className="text-foreground/80">Stop AI from quoting outdated info or missing your key points</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <div className="flex items-start">
                 <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mr-3 mt-1">✓</span>
                 <div>
                   <h3 className="text-xl font-bold mb-2">Future-proof your site</h3>
-                  <p className="text-gray-700">AI search isn't just coming, it's already here</p>
+                  <p className="text-foreground/80">AI search isn't just coming, it's already here</p>
                 </div>
               </div>
             </div>
@@ -297,38 +297,38 @@ function LLMTxtHero() {
       </section>
 
       {/* How Our Generator Works */}
-      <section className="py-16 bg-white">
+      <section className="py-16 dark:bg-black bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             How Our Generator Works
           </h2>
-          <p className="text-lg text-gray-700 max-w-4xl mx-auto mb-12 text-center">
+          <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
             We don't just scrape your site and call it a day. Our multi-step process is designed to truly understand what your website offers:
           </p>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-[#f9f9f9] p-8 rounded-lg">
+            <div className="bg-card p-8 rounded-lg">
               <ol className="space-y-6">
                 <li className="flex">
                   <div className="bg-primary text-black min-h-8 min-w-8 h-8 w-8 flex items-center justify-center rounded-full font-bold mr-4 flex-shrink-0">1</div>
                   <div>
                     <h3 className="text-xl font-bold">Deep crawling</h3>
-                    <p className="text-gray-700">We analyze your homepage and key pages</p>
+                    <p className="text-foreground/80">We analyze your homepage and key pages</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary text-black min-h-8 min-w-8 h-8 w-8 flex items-center justify-center rounded-full font-bold mr-4 flex-shrink-0">2</div>
                   <div>
                     <h3 className="text-xl font-bold">Markdown conversion</h3>
-                    <p className="text-gray-700">Content is transformed for optimal AI ingestion</p>
+                    <p className="text-foreground/80">Content is transformed for optimal AI ingestion</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary text-black min-h-8 min-w-8 h-8 w-8 flex items-center justify-center rounded-full font-bold mr-4 flex-shrink-0">3</div>
                   <div>
                     <h3 className="text-xl font-bold">NLP analysis</h3>
-                    <p className="text-gray-700">Our proprietary system identifies:</p>
-                    <ul className="list-disc list-inside pl-4 text-gray-700 mt-2">
+                    <p className="text-foreground/80">Our proprietary system identifies:</p>
+                    <ul className="list-disc list-inside pl-4 text-foreground/80 mt-2">
                       <li>Core concepts and semantics</li>
                       <li>Entity relationships</li>
                       <li>User intent on each page</li>
@@ -340,18 +340,18 @@ function LLMTxtHero() {
                   <div className="bg-primary text-black min-h-8 min-w-8 h-8 w-8 flex items-center justify-center rounded-full font-bold mr-4 flex-shrink-0">4</div>
                   <div>
                     <h3 className="text-xl font-bold">Semantic prioritization</h3>
-                    <p className="text-gray-700">We highlight what makes your site unique</p>
+                    <p className="text-foreground/80">We highlight what makes your site unique</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary text-black min-h-8 min-w-8 h-8 w-8 flex items-center justify-center rounded-full font-bold mr-4 flex-shrink-0">5</div>
                   <div>
                     <h3 className="text-xl font-bold">Optimized output</h3>
-                    <p className="text-gray-700">Get a perfectly formatted LLMs.txt file ready to implement</p>
+                    <p className="text-foreground/80">Get a perfectly formatted LLMs.txt file ready to implement</p>
                   </div>
                 </li>
               </ol>
-              <p className="text-gray-700 mt-6 italic">
+              <p className="text-foreground/80 mt-6 italic">
                 It's trying to do what it takes many SEOs hours to accomplish manually.
               </p>
             </div>
@@ -360,26 +360,26 @@ function LLMTxtHero() {
       </section>
 
       {/* Two Simple Ways */}
-      <section className="py-16 bg-[#f0f0f0]">
+      <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
             Two Simple Ways to Generate Your File
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-[#f9f9f9] p-8 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between">
+            <div className="bg-card p-8 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between">
               <div>
                 <h3 className="text-2xl font-bold mb-4 text-primary">Basic Mode</h3>
-                <p className="text-gray-700 mb-6">
+                <p className="text-foreground mb-6">
                   Just input your homepage URL and let us do the heavy lifting. Perfect if you're not sure which pages matter most.
                 </p>
               </div>
-              <Button href="/llms-txt-generator#tool" className="w-full bg-[#e0e0e0] hover:bg-[#d0d0d0] text-black py-3 rounded-md transition-all">
+              <Button href="/llms-txt-generator#tool" className="w-full bg-primary hover:bg-primary text-black py-3 rounded-md transition-all">
                 Use Basic Mode
               </Button>
             </div>
 
-            <div className="relative bg-[#f9f9f9] p-8 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between opacity-80 cursor-not-allowed">
+            <div className="relative bg-card p-8 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between opacity-80 cursor-not-allowed">
               {/* Coming Soon Badge */}
               <div className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full">
                 Coming Soon
@@ -387,7 +387,7 @@ function LLMTxtHero() {
 
               <div>
                 <h3 className="text-2xl font-bold mb-4 text-primary">Advanced Mode</h3>
-                <p className="text-gray-700 mb-6">
+                <p className="text-foreground/80 mb-6">
                   Input your homepage plus up to 10 key pages you want to prioritize. Ideal for larger sites or when you have specific pages you want AI to focus on.
                 </p>
               </div>
@@ -406,50 +406,50 @@ function LLMTxtHero() {
       </section>
 
       {/* Why Our Generator Beats the Competition */}
-      <section className="py-16 bg-white">
+      <section className="py-16 dark:bg-black bg-card border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Why Our Generator Beats the Competition
           </h2>
-          <p className="text-lg text-gray-700 max-w-4xl mx-auto mb-12 text-center">
+          <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
             Not all LLMs.txt generators are created equal. Here's what makes ours different:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <div className="bg-[#f9f9f9] p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <div className="dark:bg-card bg-background p-6 rounded-lg hover:translate-y-[-5px] transition-all">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
               <h3 className="text-xl font-bold mb-3">Multi-layered analysis</h3>
-              <p className="text-gray-700">We don't just scrape; we understand</p>
+              <p className="text-foreground/80">We don't just scrape; we understand</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <div className="dark:bg-card bg-background p-6 rounded-lg hover:translate-y-[-5px] transition-all">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
               <h3 className="text-xl font-bold mb-3">Semantic focus</h3>
-              <p className="text-gray-700">Highlights concepts and entities, not just URLs</p>
+              <p className="text-foreground/80">Highlights concepts and entities, not just URLs</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <div className="dark:bg-card bg-background p-6 rounded-lg hover:translate-y-[-5px] transition-all">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
               <h3 className="text-xl font-bold mb-3">Proper prioritization</h3>
-              <p className="text-gray-700">Surfaces what makes your business unique</p>
+              <p className="text-foreground/80">Surfaces what makes your business unique</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <div className="dark:bg-card bg-background p-6 rounded-lg hover:translate-y-[-5px] transition-all">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
               <h3 className="text-xl font-bold mb-3">Structured output</h3>
-              <p className="text-gray-700">Organized by importance and relevance</p>
+              <p className="text-foreground/80">Organized by importance and relevance</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <div className="dark:bg-card bg-background p-6 rounded-lg hover:translate-y-[-5px] transition-all">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
               <h3 className="text-xl font-bold mb-3">Future-proof format</h3>
-              <p className="text-gray-700">Ready for evolving AI standards</p>
+              <p className="text-foreground/80">Ready for evolving AI standards</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <div className="dark:bg-card bg-background p-6 rounded-lg hover:translate-y-[-5px] transition-all">
               <div className="h-full flex flex-col justify-between">
                 <div>
-                  <p className="text-gray-700 italic">
+                  <p className="text-foreground/80 italic">
                     While basic generators just list your pages, we're creating a semantic roadmap of your business that AI can actually understand.
                   </p>
                 </div>
@@ -460,59 +460,59 @@ function LLMTxtHero() {
       </section>
 
       {/* How to Use Section */}
-      <section className="py-16 bg-[#f0f0f0]">
+      <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             How to Use Our Generator (It's Dead Simple)
           </h2>
 
           <div className="max-w-4xl mx-auto">
-            <div className="bg-[#f9f9f9] p-8 rounded-lg">
+            <div className="bg-card  p-8 rounded-lg">
               <ol className="space-y-6">
                 <li className="flex">
                   <div className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full font-bold mr-4 flex-shrink-0">1</div>
                   <div>
                     <h3 className="text-xl font-bold">Choose your mode</h3>
-                    <p className="text-gray-700">Basic or Advanced</p>
+                    <p className="text-foreground/80">Basic or Advanced</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full font-bold mr-4 flex-shrink-0">2</div>
                   <div>
                     <h3 className="text-xl font-bold">Enter your URL(s)</h3>
-                    <p className="text-gray-700">Just your homepage or add specific key pages</p>
+                    <p className="text-foreground/80">Just your homepage or add specific key pages</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full font-bold mr-4 flex-shrink-0">3</div>
                   <div>
                     <h3 className="text-xl font-bold">Initiate generation</h3>
-                    <p className="text-gray-700">Click the button and we'll start working</p>
+                    <p className="text-foreground/80">Click the button and we'll start working</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full font-bold mr-4 flex-shrink-0">4</div>
                   <div>
                     <h3 className="text-xl font-bold">Wait briefly</h3>
-                    <p className="text-gray-700">The process takes up to 10 minutes (feel free to browse elsewhere; we'll notify you)</p>
+                    <p className="text-foreground/80">The process takes up to 10 minutes (feel free to browse elsewhere; we'll notify you)</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full font-bold mr-4 flex-shrink-0">5</div>
                   <div>
                     <h3 className="text-xl font-bold">Review & download</h3>
-                    <p className="text-gray-700">Get your custom LLMs.txt file</p>
+                    <p className="text-foreground/80">Get your custom LLMs.txt file</p>
                   </div>
                 </li>
                 <li className="flex">
                   <div className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full font-bold mr-4 flex-shrink-0">6</div>
                   <div>
                     <h3 className="text-xl font-bold">Implement</h3>
-                    <p className="text-gray-700">Upload to your website's root directory</p>
+                    <p className="text-foreground/80">Upload to your website's root directory</p>
                   </div>
                 </li>
               </ol>
-              <p className="text-gray-700 mt-6 text-center font-bold">
+              <p className="text-foreground/80 mt-6 text-center font-bold">
                 That's it! Your website is now optimized for the next generation of AI search.
               </p>
             </div>
@@ -521,53 +521,53 @@ function LLMTxtHero() {
       </section>
 
       {/* What You'll Get */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
             What You'll Get
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
-              <p className="text-lg text-gray-700">A perfectly formatted LLMs.txt file</p>
+              <p className="text-lg text-foreground/80">A perfectly formatted LLMs.txt file</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
-              <p className="text-lg text-gray-700">Optimized hierarchy of your most important content</p>
+              <p className="text-lg text-foreground/80">Optimized hierarchy of your most important content</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
-              <p className="text-lg text-gray-700">Clear descriptions that help AI understand your offerings</p>
+              <p className="text-lg text-foreground/80">Clear descriptions that help AI understand your offerings</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
-              <p className="text-lg text-gray-700">Proper markdown syntax following emerging standards</p>
+              <p className="text-lg text-foreground/80">Proper markdown syntax following emerging standards</p>
             </div>
 
-            <div className="bg-[#f9f9f9] p-6 rounded-lg">
+            <div className="bg-card p-6 rounded-lg">
               <span className="bg-primary min-h-8 min-w-8 h-8 w-8 flex items-center justify-center text-black p-1 rounded-full mb-4">✓</span>
-              <p className="text-lg text-gray-700">A competitive edge in AI-powered search and discovery</p>
+              <p className="text-lg text-foreground/80">A competitive edge in AI-powered search and discovery</p>
             </div>
           </div>
         </Container>
       </section>
 
       {/* Still on the Fence? */}
-      <section className="py-16 bg-[#f0f0f0]">
+      <section className="py-16 dark:bg-black bg-card border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
             Still on the Fence?
           </h2>
 
-          <div className="max-w-4xl mx-auto bg-[#f9f9f9] p-8 rounded-lg">
-            <p className="text-lg text-gray-700 mb-6">
+          <div className="max-w-4xl bg-background mx-auto p-8 rounded-lg">
+            <p className="text-lg text-foreground/80 mb-6">
               While LLMs.txt isn't an official standard yet, it's rapidly gaining adoption. The cost to implement is minimal, but the potential upside is huge.
             </p>
-            <p className="text-lg text-gray-700 mb-6">
+            <p className="text-lg text-foreground/80 mb-6">
               Remember when "mobile-friendly" websites were optional? The businesses that moved first won big. Don't be the last one to this party.
             </p>
           </div>
@@ -575,17 +575,17 @@ function LLMTxtHero() {
       </section>
 
       {/* Generate Now CTA */}
-      <section className="py-16 bg-gradient-to-r from-primary to-[#FFDD00]">
+      <section className="py-16 bg-gradient-to-r from-primary to-primary">
         <Container>
-          <h2 className="text-3xl md:text-4xl font-black text-black mb-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-black text-primary-foreground mb-6 text-center">
             Generate Your LLMs.txt File Now
           </h2>
-          <p className="text-lg text-black/80 max-w-3xl mx-auto mb-8">
+          <p className="text-lg text-primary-foreground/80 max-w-3xl mx-auto mb-8">
             Process takes approximately 10 minutes. You can continue browsing while we work.
           </p>
 
           <div className="flex justify-center">
-            <Button href="/llms-txt-generator#tool" size="lg" className="bg-black cursor-pointer hover:bg-gray-900 text-white font-bold py-4 px-10 rounded-md text-xl transition-all">
+            <Button href="/llms-txt-generator#tool" size="lg" className="bg-primary-foreground text-white cursor-pointer hover:bg-primary-foreground/80  font-bold py-4 px-10 rounded-md text-xl transition-all">
               Generate My LLMs.txt File
             </Button>
           </div>

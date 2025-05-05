@@ -18,13 +18,13 @@ function UsageCard() {
   };
 
   return (
-    <div className='bg-white p-3 px-4 rounded-lg shadow-md fixed bottom-2 left-1/2 transform -translate-x-1/2 z-10 w-64 border border-gray-200'>
+    <div className='bg-card p-3 px-4 rounded-lg shadow-md fixed bottom-2 left-1/2 transform -translate-x-1/2 z-10 w-64 border border-foreground/10 text-foreground'>
       {usage ? (
         <div>
           <div className='flex mb-2 text-sm text-center justify-center'>
             <span>{usage.remaining}/{usage.limit} daily free usage available</span>
           </div>
-          <div className='w-full bg-gray-200 rounded-full h-2.5'>
+          <div className='w-full bg-gray-200 dark:bg-background rounded-full h-2.5'>
             <div style={progressBarStyle} className='rounded-full'></div>
           </div>
         </div>
@@ -33,7 +33,7 @@ function UsageCard() {
           <div className='flex justify-between mb-2 text-transparent animate-pulse bg-gray-200 rounded-md'>
             <span>0/0 daily free usage available</span>
           </div>
-          <div className='w-full bg-gray-200 rounded-full h-2.5 animate-pulse'>
+          <div className='w-full bg-gray-200 dark:bg-background rounded-full h-2.5 animate-pulse'>
             <div style={progressBarStyle} className='rounded-full '></div>
           </div>
         </div>

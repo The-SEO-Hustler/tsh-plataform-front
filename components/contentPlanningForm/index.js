@@ -4,6 +4,25 @@ import { ArrowRight } from 'lucide-react'
 import { useUsage } from '@/lib/usage-context'
 import { useFirebase } from '@/lib/firebase-context'
 import { toast } from 'sonner'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const options = [
+  { value: "blog_post", label: "Blog Post" },
+  { value: "product_page", label: "Product Page" },
+  { value: "service_page", label: "Service Page" },
+  { value: "landing_page", label: "Landing Page" },
+  { value: "comparison_page", label: "Comparison Page" },
+  { value: "guide", label: "Complete Guide" },
+  { value: "list_post", label: "List Post" },
+  { value: "tutorial", label: "Tutorial/How-To" },
+  { value: "faq_page", label: "FAQ Page" },
+]
 
 function ContentPlanningForm() {
   const [keyword, setKeyword] = useState('');
@@ -85,29 +104,32 @@ function ContentPlanningForm() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="Enter a keyword..."
-            className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
             required
             disabled={loading}
           />
         </div>
         <div className="relative">
-          <select
-            className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 cursor-pointer"
-            id="contentType"
+          <Select
             value={contentType}
-            onChange={(e) => setContentType(e.target.value)}
+            onValueChange={setContentType}
             disabled={loading}
           >
-            <option value="blog_post">Blog Post</option>
-            <option value="product_page">Product Page</option>
-            <option value="service_page">Service Page</option>
-            <option value="landing_page">Landing Page</option>
-            <option value="comparison_page">Comparison Page</option>
-            <option value="guide">Complete Guide</option>
-            <option value="list_post">List Post</option>
-            <option value="tutorial">Tutorial/How-To</option>
-            <option value="faq_page">FAQ Page</option>
-          </select>
+            <SelectTrigger size="lg" className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200">
+              <SelectValue placeholder="Select content type" />
+            </SelectTrigger>
+            <SelectContent className="bg-card text-foreground border border-border rounded-lg shadow-lg">
+              {options.map((opt) => (
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value}
+                  className="px-4 py-2 cursor-pointer hover:bg-primary hover:text-primary-foreground rounded-md transition-colors"
+                >
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Button
           type="submit"

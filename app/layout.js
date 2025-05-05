@@ -4,12 +4,13 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { FirebaseProvider } from "@/lib/firebase-context";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import AnalysisStatusCard from "@/components/AnalysisStatusCard";
 import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
 import KeywordAnalysisStatusCard from "@/components/KeywordAnalysisStatusCard";
 import LLMStatusCard from "@/components/LLMStatusCard";
 import { UsageProvider } from "@/lib/usage-context";
+import { ThemeProvider } from 'next-themes'
 // import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Analytics } from "@vercel/analytics/react";
 const inter = Inter({ subsets: ["latin"] });
@@ -29,30 +30,34 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script src="https://analytics.ahrefs.com/analytics.js" data-key="rBdYZW92wmxvaGrL9URAvg" async></script>
       </head>
-      <body className={`${inter.className} antialiased`}>
-        <AppRouterCacheProvider>
-          <Analytics />
-          <FirebaseProvider>
-            <UsageProvider>
+      <body className={`${inter.className} antialiased `}>
+        <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange enableSystem>
+          <AppRouterCacheProvider>
+            <Analytics />
+            <FirebaseProvider>
+              <UsageProvider>
 
-              {/* <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}> */}
+                {/* <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}> */}
 
-              <Header />
-              {children}
-              <Footer />
-              <KeywordAnalysisStatusCard />
-              <AnalysisStatusCard />
-              <ContentPlanningStatusCard />
-              <LLMStatusCard />
-              <Toaster position="top-left" />
-              {/* </GoogleReCaptchaProvider> */}
-            </UsageProvider>
-          </FirebaseProvider>
-        </AppRouterCacheProvider>
+                <Header />
+                {children}
+                <Footer />
+                <KeywordAnalysisStatusCard />
+                <AnalysisStatusCard />
+                <ContentPlanningStatusCard />
+                <LLMStatusCard />
+                <Toaster position="top-left" toastOptions={{
+                  style: { color: "var(--foreground)" }
+                }} />
+                {/* </GoogleReCaptchaProvider> */}
+              </UsageProvider>
+            </FirebaseProvider>
+          </AppRouterCacheProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

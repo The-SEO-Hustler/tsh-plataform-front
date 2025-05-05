@@ -11,10 +11,10 @@ import { getIconComponent } from "@/lib/config";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 const statusClasses = {
-  error: "!bg-red-100 md:!bg-red-100/70 !text-red-500 hover:!bg-red-200",
+  error: "!bg-red-100 dark:!bg-red-700 dark:hover:!bg-red-300 dark:!text-red-300 dark:hover:!text-red-700 !text-red-500 hover:!bg-red-200 ",
   warning:
-    "!bg-yellow-100 md:!bg-yellow-100/70 !text-yellow-700 hover:!bg-yellow-200",
-  normal: "!bg-white md:!bg-white/70 !hover:bg-white",
+    "!bg-yellow-100 dark:!bg-yellow-700 dark:hover:!bg-yellow-300 dark:!text-yellow-300 dark:hover:!text-yellow-700 !text-yellow-700 hover:!bg-yellow-200",
+  normal: "!bg-card md:!bg-card/70 !hover:bg-card",
 };
 
 function Sidebar({ setFocusedCardId, alwaysShowTooltips, data, statusFilters }) {
@@ -136,7 +136,7 @@ function SidebarButton({
       <Tooltip open={alwaysShowTooltips || isHovered}>
         <TooltipTrigger asChild>
           <button
-            className={`rounded-xl p-3 shadow-sm cursor-pointer ${statusClasses[status]}`}
+            className={`rounded-xl p-3 shadow-sm cursor-pointer border border-foreground/10 ${statusClasses[status]}`}
             onClick={() => onFocusCard(id)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}

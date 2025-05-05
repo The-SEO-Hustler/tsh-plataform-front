@@ -62,15 +62,15 @@ export default function BrokenLinksCheckCard({
         <div className="space-y-2 text-sm">
           <div className="flex justify-between items-center">
             <span>Total Links:</span>
-            <span className="text-blue-500">{data.totalLinks}</span>
+            <span className="text-blue-500 dark:text-blue-500">{data.totalLinks}</span>
           </div>
           <div className="flex justify-between items-center">
             <span>Internal Links:</span>
-            <span className="text-green-700">{data.internalLinks}</span>
+            <span className="text-green-700 dark:text-green-500">{data.internalLinks}</span>
           </div>
           <div className="flex justify-between items-center">
             <span>External Links:</span>
-            <span className="text-blue-500">{data.externalLinks}</span>
+            <span className="text-blue-500 dark:text-blue-500">{data.externalLinks}</span>
           </div>
           <div className="flex justify-between items-center">
             <span>Non-HTTP Links:</span>
@@ -78,7 +78,7 @@ export default function BrokenLinksCheckCard({
           </div>
           <div className="flex justify-between items-center">
             <span>Broken Links:</span>
-            <span className={`${status === 'error' ? 'text-red-500' : status === 'warning' ? 'text-yellow-500' : 'text-green-700'}`}>{data.brokenLinks.length}</span>
+            <span className={`${status === 'error' ? 'text-red-500' : status === 'warning' ? 'text-yellow-500' : 'text-green-700 dark:text-green-500'}`}>{data.brokenLinks.length}</span>
           </div>
           {data.brokenLinks && data.brokenLinks.length > 0 && (
             <div className="mt-2">
@@ -115,19 +115,19 @@ export default function BrokenLinksCheckCard({
           {(data.brokenLinks.length > 5 || data.non200Links.length > 5) && (
             <button
               onClick={() => setShowAll(!showAll)}
-              className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 mt-2"
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 dark:bg-accent hover:bg-gray-100 dark:hover:bg-accent/80 rounded-lg transition-colors duration-200 mt-2"
             >
               {showAll ? (
                 <>
                   <ChevronUp className="w-4 h-4" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium ">
                     Show Less
                   </span>
                 </>
               ) : (
                 <>
                   <ChevronDown className="w-4 h-4" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium ">
                     Show{" "}
                     {Math.max(
                       data.brokenLinks.length - 5,

@@ -25,7 +25,7 @@ export default function BlogCard({
   return (
     <Link
       href={`/blog/${slug}`}
-      className="block group rounded-lg overflow-hidden bg-background shadow-sm hover:shadow-md transition-all h-full !no-underline"
+      className="block group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all h-full !no-underline bg-card"
     >
       {/* Image Container */}
       {featuredImage && (
@@ -70,11 +70,11 @@ export default function BlogCard({
         </h3>
 
         {/* Excerpt */}
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-3" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }} />
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-3 dark:text-foreground/70" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }} />
 
         {/* Date and Read More */}
         <div className="flex items-center text-sm">
-          <span className="text-muted-foreground">
+          <span className="text-foreground/80">
             {date}
           </span>
           <span className="ml-auto text-primary font-medium flex items-center">

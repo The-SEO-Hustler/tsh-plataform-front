@@ -134,11 +134,11 @@ function ContentPlanning() {
 
     // Determine styling based on heading level
     let levelStyle = '';
-    if (heading.level === 'H1') levelStyle = 'text-2xl font-black text-white';
+    if (heading.level === 'H1') levelStyle = 'text-2xl font-black text-foreground';
     else if (heading.level === 'H2') levelStyle = 'text-xl font-bold text-primary';
-    else if (heading.level === 'H3') levelStyle = 'text-lg font-semibold text-gray-200';
-    else if (heading.level === 'H4') levelStyle = 'text-base font-medium text-gray-300';
-    else levelStyle = 'text-sm font-normal text-gray-400';
+    else if (heading.level === 'H3') levelStyle = 'text-lg font-semibold text-foreground/70';
+    else if (heading.level === 'H4') levelStyle = 'text-base font-medium text-foreground/50';
+    else levelStyle = 'text-sm font-normal text-foreground/50';
 
     // Calculate indentation
     let indentClass = '';
@@ -152,7 +152,7 @@ function ContentPlanning() {
     return (
       <div key={headingId} className={indentClass}>
         <div
-          className={"py-3 px-4 my-2 rounded-md bg-[#1A1A1A] " + (hasChildren ? "cursor-pointer " : "") + "hover:bg-[#222222] transition-colors flex items-center"}
+          className={"py-3 px-4 my-2 rounded-md bg-gray-100 dark:bg-accent text-foreground " + (hasChildren ? "cursor-pointer " : "") + "hover:bg-gray-200 dark:hover:bg-background transition-colors flex items-center"}
           onClick={hasChildren ? () => toggleSection(headingId) : undefined}
         >
           {hasChildren && (
@@ -163,13 +163,13 @@ function ContentPlanning() {
           <div className="flex flex-col flex-1">
             <div className="flex items-center">
               <span className={levelStyle + " mr-2"}>{heading.text}</span>
-              <span className="text-xs text-gray-500 font-mono">{heading.level}</span>
+              <span className="text-xs  font-mono">{heading.level}</span>
             </div>
 
             {hasKeyPoints && (
               <div className="mt-2 flex flex-wrap gap-2">
                 {heading.key_points.map((point, idx) => (
-                  <span key={idx} className="bg-[#333333] text-xs text-gray-300 px-2 py-1 md:rounded-full rounded-sm">
+                  <span key={idx} className="bg-card text-xs text-foreground/80 px-2 py-1 md:rounded-full rounded-sm">
                     {point}
                   </span>
                 ))}
@@ -179,7 +179,7 @@ function ContentPlanning() {
         </div>
 
         {hasChildren && isExpanded && (
-          <div className="md:pl-4 pl-1 border-l-2 border-[#333333]">
+          <div className="md:pl-4 pl-1 border-l-2 border-foreground/10">
             {heading.children.map((child, idx) => renderHeadings(child, depth + 1, idx))}
           </div>
         )}
@@ -204,7 +204,7 @@ function ContentPlanning() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-            <p className="text-gray-600">{error}</p>
+            <p className="text-foreground">{error}</p>
             <Button onClick={() => router.push("/")} className="mt-4">
               Try Again
             </Button>
@@ -225,9 +225,9 @@ function ContentPlanning() {
 
   // If we have data, show the content planning results
   return (
-    <div className="min-h-screen pb-14 bg-[#121212] text-white">
+    <div className="min-h-screen pb-14 bg-background text-foreground">
       {/* Page Header */}
-      <div className="bg-gradient-to-br from-[#4e503a] to-black py-12 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-background to-[#ffcc0070] dark:from-[#4e503a] dark:to-background py-12 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -240,10 +240,10 @@ function ContentPlanning() {
         </div>
 
         <Container className=" relative z-10">
-          <div className="flex items-center gap-3 text-gray-300 text-sm mb-4">
+          <div className="flex items-center gap-3 text-foreground/80 text-sm mb-4">
             <span><Link href="/content-planning" className="hover:text-primary transition-colors"> Content Planning</Link></span>
             <ChevronRight size={16} />
-            <span className="text-primary font-semibold">{contentData.keyword || 'New Content'}</span>
+            <span className="text-primary font-bold">{contentData.keyword || 'New Content'}</span>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-start gap-6">
@@ -254,9 +254,9 @@ function ContentPlanning() {
 
 
               <div className="flex flex-wrap gap-3 mb-4">
-                <span className="bg-[#333333] text-white px-3 py-1 rounded-full text-sm inline-flex items-center">
+                <span className="bg-[#333333] text-white dark:text-foreground px-3 py-1 rounded-full text-sm inline-flex items-center">
                   <FileText size={14} className="mr-1" />
-                  {contentData.content_type || 'Unknown Type'}
+                  {contentData.content_type?.replace('_', ' ') || 'Unknown Type'}
                 </span>
                 {contentStructure.word_count_range && (
                   <span className="bg-primary text-black px-3 py-1 rounded-full text-sm font-bold inline-flex items-center">
@@ -264,12 +264,12 @@ function ContentPlanning() {
                     {contentStructure.word_count_range}
                   </span>
                 )}
-                <span className="bg-[#333333] text-white px-3 py-1 rounded-full text-sm inline-flex items-center">
+                <span className="bg-[#333333] text-white dark:text-foreground px-3 py-1 rounded-full text-sm inline-flex items-center">
                   <Target size={14} className="mr-1" />
                   Keyword: {contentData.keyword || 'None'}
                 </span>
               </div>
-              <p className="text-gray-300 text-lg">{contentStructure.introduction || 'No introduction provided.'}</p>
+              <p className="text-foreground/80 text-lg">{contentStructure.introduction || 'No introduction provided.'}</p>
             </div>
 
             {/* <div className="flex flex-col gap-2 mt-6 md:mt-0">
@@ -288,24 +288,24 @@ function ContentPlanning() {
 
       {/* Tab Navigation */}
       <Container className="mt-8">
-        <div className="border-b border-gray-800 flex overflow-x-auto hide-scrollbar">
+        <div className="border-b border-border flex overflow-x-auto hide-scrollbar">
           <button
             className={"px-6 cursor-pointer py-3 text-lg font-bold border-b-2 mr-4 hover:text-primary transition-colors " +
-              (activeTab === 'structure' ? 'border-primary text-primary' : 'border-transparent text-gray-400')}
+              (activeTab === 'structure' ? 'border-primary text-primary' : 'border-transparent text-foreground/80')}
             onClick={() => setActiveTab('structure')}
           >
             Content Structure
           </button>
           <button
             className={"px-6 cursor-pointer py-3 text-lg font-bold border-b-2 mr-4 hover:text-primary transition-colors " +
-              (activeTab === 'persona' ? 'border-primary text-primary' : 'border-transparent text-gray-400')}
+              (activeTab === 'persona' ? 'border-primary text-primary' : 'border-transparent text-foreground/80')}
             onClick={() => setActiveTab('persona')}
           >
             User Persona
           </button>
           <button
             className={"px-6 cursor-pointer py-3 text-lg font-bold border-b-2 mr-4 hover:text-primary transition-colors " +
-              (activeTab === 'tips' ? 'border-primary text-primary' : 'border-transparent text-gray-400')}
+              (activeTab === 'tips' ? 'border-primary text-primary' : 'border-transparent text-foreground/80')}
             onClick={() => setActiveTab('tips')}
           >
             Content Tips
@@ -318,20 +318,20 @@ function ContentPlanning() {
         {activeTab === 'structure' && (
           <div>
             {/* Meta Description Section */}
-            <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3 mb-8">
+            <div className="bg-card rounded-lg md:p-6 p-3 mb-8">
               <h2 className="text-xl font-bold mb-4 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <FileText size={16} />
                 </span>
                 Meta Description
               </h2>
-              <div className="bg-[#0D0D0D] p-4 rounded-md relative group">
-                <p className="text-gray-300">{contentStructure.meta_description || 'No meta description provided.'}</p>
+              <div className="dark:bg-accent bg-gray-100 p-4 rounded-md relative group">
+                <p className="text-foreground/80">{contentStructure.meta_description || 'No meta description provided.'}</p>
                 <button
-                  className="absolute top-2 right-2 p-2 bg-[#222222] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 p-2 bg-card rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                   onClick={() => copyToClipboard(contentStructure.meta_description)}
                 >
-                  <Copy size={14} className="text-gray-300 hover:text-primary" />
+                  <Copy size={14} className="text-foreground/80 hover:text-primary" />
                 </button>
               </div>
             </div>
@@ -340,14 +340,14 @@ function ContentPlanning() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Headings Structure */}
               <div className="md:col-span-2">
-                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                <div className="bg-card rounded-lg md:p-6 p-3">
                   <h2 className="text-xl font-bold mb-4 flex items-center">
-                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                    <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                       <FileText size={16} />
                     </span>
                     Content Outline
                   </h2>
-                  <div className="text-sm text-gray-400 mb-6">
+                  <div className="text-sm text-foreground/80 mb-6">
                     {contentStructure.sections_explanation || 'No explanation provided for this content structure.'}
                   </div>
                   <div className="space-y-2">
@@ -360,9 +360,9 @@ function ContentPlanning() {
               {/* Sidebar Information */}
               <div className="md:col-span-1 flex flex-col gap-6">
                 {/* CTAs */}
-                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                <div className="bg-card rounded-lg md:p-6 p-3">
                   <h2 className="text-xl font-bold mb-4 flex items-center">
-                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                    <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                       <CheckCircle size={16} />
                     </span>
                     Call-to-Actions
@@ -370,21 +370,21 @@ function ContentPlanning() {
                   {contentStructure.cta_recommendations?.length > 0 ? (
                     <ul className="space-y-3">
                       {contentStructure.cta_recommendations.map((cta, index) => (
-                        <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                        <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
                           <CheckCircle size={16} className="text-primary mr-2 mt-1 flex-shrink-0" />
-                          <span className="text-gray-300">{cta}</span>
+                          <span className="text-foreground/80">{cta}</span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-gray-400">No CTA recommendations available.</p>
+                    <p className="text-foreground/80">No CTA recommendations available.</p>
                   )}
                 </div>
 
                 {/* Internal Linking */}
-                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                <div className="bg-card rounded-lg md:p-6 p-3">
                   <h2 className="text-xl font-bold mb-4 flex items-center">
-                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                    <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                       <LinkIcon size={16} />
                     </span>
                     Internal Linking Strategy
@@ -392,21 +392,21 @@ function ContentPlanning() {
                   {contentStructure.internal_linking_strategy?.length > 0 ? (
                     <ul className="space-y-3">
                       {contentStructure.internal_linking_strategy.map((link, index) => (
-                        <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                        <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
                           <ExternalLink size={16} className="text-primary mr-2 mt-1 flex-shrink-0" />
-                          <span className="text-gray-300">{link}</span>
+                          <span className="text-foreground/80">{link}</span>
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-gray-400">No internal linking strategy available.</p>
+                    <p className="text-foreground/80">No internal linking strategy available.</p>
                   )}
                 </div>
 
                 {/* FAQ Section Recommendations */}
-                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                <div className="bg-card rounded-lg md:p-6 p-3">
                   <h2 className="text-xl font-bold mb-4 flex items-center">
-                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                    <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                       <MessageCircleQuestion size={16} />
                     </span>
                     FAQ Section Recommendations
@@ -415,23 +415,23 @@ function ContentPlanning() {
                     <>
                       <ul className="space-y-3">
                         {contentStructure.questions_to_answer.map((question, index) => (
-                          <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
-                            <span className="text-gray-300">{question}</span>
+                          <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
+                            <span className="text-foreground/80">{question}</span>
                           </li>
                         ))}
                       </ul>
-                      <p className="mt-4 text-gray-400">Tip: Use FAQ Schema markup to improve chances of appearing in featured snippets</p>
+                      <p className="mt-4 text-foreground/80">Tip: Use FAQ Schema markup to improve chances of appearing in featured snippets</p>
                     </>
                   ) : (
-                    <p className="text-gray-400">No FAQ section recommendations available.</p>
+                    <p className="text-foreground/80">No FAQ section recommendations available.</p>
                   )}
 
                 </div>
 
                 {/* Keywords to Target */}
-                <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+                <div className="bg-card rounded-lg md:p-6 p-3">
                   <h2 className="text-xl font-bold mb-4 flex items-center">
-                    <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                    <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                       <Key size={16} />
                     </span>
                     Keywords to Target
@@ -440,14 +440,14 @@ function ContentPlanning() {
                     <>
                       <ul className="space-y-3">
                         {contentStructure.keywords_to_include.map((keyword_to_include, index) => (
-                          <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
-                            <span className="text-gray-300">{keyword_to_include}</span>
+                          <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
+                            <span className="text-foreground/80">{keyword_to_include}</span>
                           </li>
                         ))}
                       </ul>
                     </>
                   ) : (
-                    <p className="text-gray-400">No keywords to target available.</p>
+                    <p className="text-foreground/80">No keywords to target available.</p>
                   )}
 
                 </div>
@@ -459,37 +459,37 @@ function ContentPlanning() {
         {activeTab === 'persona' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* User Persona Overview */}
-            <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+            <div className="bg-card rounded-lg md:p-6 p-3">
               <h2 className="text-xl font-bold mb-4 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <User size={16} />
                 </span>
                 User Persona
               </h2>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#222222] p-4 rounded-md">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-1">Age Range</h3>
+                <div className="dark:bg-accent bg-gray-100 p-4 rounded-md">
+                  <h3 className="text-sm font-semibold text-foreground/80 mb-1">Age Range</h3>
                   <p className="text-lg font-bold">{userPersona.age_range || 'Not specified'}</p>
                 </div>
-                <div className="bg-[#222222] p-4 rounded-md">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-1">Gender</h3>
+                <div className="dark:bg-accent bg-gray-100 p-4 rounded-md">
+                  <h3 className="text-sm font-semibold text-foreground/80 mb-1">Gender</h3>
                   <p className="text-lg font-bold">{userPersona.gender || 'Not specified'}</p>
                 </div>
-                <div className="bg-[#222222] p-4 rounded-md">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-1">Education</h3>
+                <div className="dark:bg-accent bg-gray-100 p-4 rounded-md">
+                  <h3 className="text-sm font-semibold text-foreground/80 mb-1">Education</h3>
                   <p className="text-lg font-bold">{userPersona.education_level || 'Not specified'}</p>
                 </div>
-                <div className="bg-[#222222] p-4 rounded-md">
-                  <h3 className="text-sm font-semibold text-gray-400 mb-1">Income Level</h3>
+                <div className="dark:bg-accent bg-gray-100 p-4 rounded-md">
+                  <h3 className="text-sm font-semibold text-foreground/80 mb-1">Income Level</h3>
                   <p className="text-lg font-bold">{userPersona.income_level || 'Not specified'}</p>
                 </div>
               </div>
             </div>
 
             {/* Goals */}
-            <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+            <div className="bg-card rounded-lg md:p-6 p-3">
               <h2 className="text-xl font-bold mb-4 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <Target size={16} />
                 </span>
                 User Goals
@@ -497,21 +497,21 @@ function ContentPlanning() {
               {userPersona.goals?.length > 0 ? (
                 <ul className="space-y-3">
                   {userPersona.goals.map((goal, index) => (
-                    <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                    <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
                       <CheckCircle size={16} className="text-green-500 mr-2 mt-1 flex-shrink-0" />
-                      <span className="text-gray-300">{goal}</span>
+                      <span className="text-foreground/80">{goal}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">No user goals specified.</p>
+                <p className="text-foreground/80">No user goals specified.</p>
               )}
             </div>
 
             {/* Pain Points */}
-            <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+            <div className="bg-card rounded-lg md:p-6 p-3">
               <h2 className="text-xl font-bold mb-4 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <AlertTriangle size={16} />
                 </span>
                 Pain Points
@@ -519,21 +519,21 @@ function ContentPlanning() {
               {userPersona.pain_points?.length > 0 ? (
                 <ul className="space-y-3">
                   {userPersona.pain_points.map((pain, index) => (
-                    <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                    <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
                       <AlertTriangle size={16} className="text-red-500 mr-2 mt-1 flex-shrink-0" />
-                      <span className="text-gray-300">{pain}</span>
+                      <span className="text-foreground/80">{pain}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">No pain points specified.</p>
+                <p className="text-foreground/80">No pain points specified.</p>
               )}
             </div>
 
             {/* Information Needs */}
-            <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+            <div className="bg-card rounded-lg md:p-6 p-3">
               <h2 className="text-xl font-bold mb-4 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <FileText size={16} />
                 </span>
                 Information Needs
@@ -541,21 +541,21 @@ function ContentPlanning() {
               {userPersona.information_needs?.length > 0 ? (
                 <ul className="space-y-3">
                   {userPersona.information_needs.map((need, index) => (
-                    <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                    <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
                       <CheckCircle size={16} className="text-blue-500 mr-2 mt-1 flex-shrink-0" />
-                      <span className="text-gray-300">{need}</span>
+                      <span className="text-foreground/80">{need}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">No information needs specified.</p>
+                <p className="text-foreground/80">No information needs specified.</p>
               )}
             </div>
 
             {/* Objections */}
-            <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+            <div className="bg-card rounded-lg md:p-6 p-3">
               <h2 className="text-xl font-bold mb-4 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <AlertTriangle size={16} />
                 </span>
                 Objections
@@ -563,23 +563,23 @@ function ContentPlanning() {
               {userPersona.objections?.length > 0 ? (
                 <ul className="space-y-3">
                   {userPersona.objections.map((objection, index) => (
-                    <li key={index} className="bg-[#222222] p-4 rounded-md flex items-start">
+                    <li key={index} className="dark:bg-accent bg-gray-100 p-4 rounded-md flex items-start">
                       <AlertTriangle size={16} className="text-orange-500 mr-2 mt-1 flex-shrink-0" />
-                      <span className="text-gray-300">{objection}</span>
+                      <span className="text-foreground/80">{objection}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">No objections specified.</p>
+                <p className="text-foreground/80">No objections specified.</p>
               )}
             </div>
           </div>
         )}
 
         {activeTab === 'tips' && (
-          <div className="bg-[#1A1A1A] rounded-lg md:p-6 p-3">
+          <div className="bg-card rounded-lg md:p-6 p-3">
             <h2 className="text-xl font-bold mb-4 flex items-center">
-              <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+              <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                 <Clipboard size={16} />
               </span>
               Content Creation Tips
@@ -587,18 +587,18 @@ function ContentPlanning() {
             {contentStructure.content_tips?.length > 0 ? (
               <ul className="space-y-4">
                 {contentStructure.content_tips.map((tip, index) => (
-                  <li key={index} className="bg-[#222222] p-5 rounded-md flex items-start">
-                    <span className="bg-primary text-black h-6 w-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                  <li key={index} className="dark:bg-accent bg-gray-100 p-5 rounded-md flex items-start">
+                    <span className="bg-primary text-primary-foreground h-6 w-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
                       {index + 1}
                     </span>
                     <div>
-                      <p className="text-gray-200 text-lg font-medium">{tip}</p>
+                      <p className="text-foreground/80 text-lg font-medium">{tip}</p>
                     </div>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-400">No content tips available.</p>
+              <p className="text-foreground/80">No content tips available.</p>
             )}
           </div>
         )}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense, useRef, Fragment } from "react";
+import React, { useState, useEffect, Suspense, useRef, Fragment, useMemo } from "react";
 import Link from "next/link";
 import Container from "@/components/container";
 import { toast } from "sonner";
@@ -42,7 +42,7 @@ ChartJS.register(
   ChartTooltip,
   Legend
 );
-
+import { useTheme } from 'next-themes'
 
 function AdvancedKeywordAnalysis() {
 
@@ -55,6 +55,7 @@ function AdvancedKeywordAnalysis() {
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const [chartData, setChartData] = useState(null);
+  const { resolvedTheme } = useTheme();
   const [selectedKeyword, setSelectedKeyword] = useState(analysisData?.related_keywords?.[0] || "");
   const listenerRef = useRef(null);
   const toastIds = useRef({
@@ -71,6 +72,65 @@ function AdvancedKeywordAnalysis() {
   );
   const [open, setOpen] = useState(false)
   const [selectedUrl, setSelectedUrl] = useState(null)
+  const options = useMemo(() => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
+        ticks: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)' }
+      },
+      x: {
+        grid: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
+        ticks: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)', maxTicksLimit: 10 }
+      }
+    },
+    plugins: {
+      legend: { labels: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' } },
+      tooltip: {
+        backgroundColor: resolvedTheme === 'dark' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
+        titleColor: resolvedTheme === 'dark' ? '#FFDD00' : '#000',
+        bodyColor: resolvedTheme === 'dark' ? '#fff' : '#111',
+      }
+    }
+  }), [resolvedTheme])
+  const trendChartOptions = useMemo(() => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+        },
+      },
+      x: {
+        grid: {
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          maxTicksLimit: 10,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+        },
+      },
+      tooltip: {
+        backgroundColor: resolvedTheme === 'dark' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+        bodyColor: resolvedTheme === 'dark' ? '#fff' : '#000',
+        titleColor: resolvedTheme === 'dark' ? '#FFDD00' : '#333',
+      },
+    },
+  }), [resolvedTheme])
 
   const handleRowClick = (url) => {
     // only open if we have headings for that URL
@@ -90,8 +150,6 @@ function AdvancedKeywordAnalysis() {
         : [...prev, url]
     )
   }
-
-
 
   useEffect(() => {
     // Start tracking this analysis in the global context.
@@ -316,7 +374,7 @@ function AdvancedKeywordAnalysis() {
   // Function to render heading structure in dialog
   const renderHeadings = (headings) => {
     if (!headings || headings.length === 0) {
-      return <p className="text-gray-500">No headings available for this URL.</p>;
+      return <p className="text-foreground/80">No headings available for this URL.</p>;
     }
 
     return (
@@ -354,7 +412,7 @@ function AdvancedKeywordAnalysis() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
-            <p className="text-gray-600">{error}</p>
+            <p className="text-foreground/80">{error}</p>
             <Button onClick={() => router.push("/")} className="mt-4 cursor-pointer">
               Try Again
             </Button>
@@ -372,7 +430,7 @@ function AdvancedKeywordAnalysis() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Hero Header with Keyword Info */}
       <section className="pt-28 pb-12 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -397,11 +455,11 @@ function AdvancedKeywordAnalysis() {
         </div>
 
         <Container className=" relative z-10">
-          <div className="flex items-center gap-1 md:gap-3 text-gray-300 text-sm mb-4 flex-wrap gap-y-0">
+          <div className="flex items-center gap-1 md:gap-3 text-foreground/80 text-sm mb-4 flex-wrap gap-y-0">
             <span>
               <Link
                 href="/advanced-keyword-analysis"
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors text-white dark:text-foreground"
               >
                 {" "}
                 Advanced Keyword Analysis
@@ -409,13 +467,13 @@ function AdvancedKeywordAnalysis() {
 
             </span>
             <ChevronRight size={16} />
-            <span className="text-primary font-semibold">
+            <span className="text-primary font-semibold ">
               {analysisData.keyword || "New Content"}
             </span>
           </div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 text-white dark:text-foreground">
             <div>
-              <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center">
+              <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center ">
                 {analysisData.keyword}
               </h1>
               <div className="flex gap-3 flex-col md:flex-row items-start md:items-center">
@@ -426,23 +484,23 @@ function AdvancedKeywordAnalysis() {
                     >
                       {analysisData.search_intent.primary}
                     </div>
-                    <span className="text-gray-300">
+                    <span className="text-gray-300 dark:text-foreground/80">
                       {analysisData.search_intent.confidence}% Confidence
                     </span>
                   </> :
                   <>
                     <div
-                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 animate-pulse`}
+                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 dark:bg-foreground/80 animate-pulse`}
                     >
                       loading intent
                     </div>
-                    <span className="text-gray-300">
+                    <span className="text-gray-300 dark:text-foreground/80">
                       Analyzing keyword search intent...
                     </span>
                   </>
                 }
               </div>
-              <div className="text-gray-300 text-sm mt-2">
+              <div className="text-gray-300 dark:text-foreground/80 text-sm mt-2">
                 <TimestampDisplay ts={updatedAt} />
               </div>
             </div>
@@ -450,32 +508,32 @@ function AdvancedKeywordAnalysis() {
         </Container>
       </section>
       {/* Overview Metrics */}
-      <section className="py-10 bg-black border-b border-gray-800">
+      <section className="py-10 dark:bg-black bg-gray-200 border-b border-foreground/10">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Search Volume */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-primary hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-primary hover:translate-y-[-5px] transition-all">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 Search Volume
               </h3>
               <div className="text-3xl">
                 {analysisData?.related_keywords[0]?.monthly_searches[0]?.search_volume > 0
                   ? <Fragment>
                     <div className="text-3xl font-black">{analysisData?.related_keywords[0]?.monthly_searches[0]?.search_volume.toLocaleString()}</div>
-                    <div className="text-gray-400 text-sm mt-2">{getMonthName(analysisData?.related_keywords[0]?.monthly_searches[0]?.month)} {analysisData?.related_keywords[0]?.monthly_searches[0]?.year}</div>
+                    <div className="text-gray-400 dark:text-foreground/80 text-sm mt-2">{getMonthName(analysisData?.related_keywords[0]?.monthly_searches[0]?.month)} {analysisData?.related_keywords[0]?.monthly_searches[0]?.year}</div>
                   </Fragment>
                   : analysisData?.search_volume > 0
                     ? <Fragment>
                       <div className="text-3xl font-black">{analysisData?.search_volume.toLocaleString()}</div>
-                      <div className="text-gray-400 text-sm mt-2"> monthly searches</div>
+                      <div className="text-gray-400 dark:text-foreground/80 text-sm mt-2"> monthly searches</div>
                     </Fragment>
                     : "N/A"}
               </div>
             </div>
 
             {/* CPC */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-blue-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-blue-500 hover:translate-y-[-5px] transition-all">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 CPC
               </h3>
               <div className="text-3xl font-black">
@@ -483,25 +541,25 @@ function AdvancedKeywordAnalysis() {
                   ? `$${analysisData.cpc.toFixed(2)}`
                   : "N/A"}
               </div>
-              <p className="text-gray-400 text-sm mt-2">Cost per click</p>
+              <p className="text-gray-400 dark:text-foreground/80 text-sm mt-2">Cost per click</p>
             </div>
 
             {/* Competition */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-green-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-green-500 hover:translate-y-[-5px] transition-all">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 Competition
               </h3>
               <div className="text-3xl font-black">
                 {analysisData.competition ? analysisData.competition : "N/A"}
               </div>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-400 dark:text-foreground text-sm mt-2">
                 Competitive density
               </p>
             </div>
 
             {/* Difficulty */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6 border-l-4 border-red-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+            <div className="bg-card rounded-lg p-6 border-l-4 border-red-500 hover:translate-y-[-5px] transition-all">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 Difficulty
               </h3>
               <div className="flex items-center gap-3">
@@ -513,7 +571,7 @@ function AdvancedKeywordAnalysis() {
                 {analysisData.difficulty > 0 &&
                   getDifficultyBadge(analysisData.difficulty)}
               </div>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-400 dark:text-foreground/80 text-sm mt-2">
                 Ranking difficulty score
               </p>
             </div>
@@ -522,7 +580,7 @@ function AdvancedKeywordAnalysis() {
       </section>
 
       {/* Search Intent Section */}
-      <section className="py-10 bg-[#121212]">
+      <section className="py-10 bg-background">
         <Container>
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
@@ -534,7 +592,7 @@ function AdvancedKeywordAnalysis() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Primary Intent */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-3">Primary Intent</h3>
               {searchIntentState === "completed" ?
                 <>
@@ -548,18 +606,18 @@ function AdvancedKeywordAnalysis() {
 
                   {/* Analysis Reasoning */}
                   <Tabs defaultValue="summary" className="w-full">
-                    <TabsList className="mb-2 bg-[#2A2A2A]" >
-                      <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Summary</TabsTrigger>
-                      <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black text-white cursor-pointer">Analysis Reasoning</TabsTrigger>
+                    <TabsList className="mb-2 bg-card" >
+                      <TabsTrigger value="summary" className="data-[state=active]:bg-primary data-[state=active]:text-black  cursor-pointer">Summary</TabsTrigger>
+                      <TabsTrigger value="reasoning" className="data-[state=active]:bg-primary data-[state=active]:text-black   cursor-pointer">Analysis Reasoning</TabsTrigger>
 
                     </TabsList>
                     <TabsContent value="reasoning">
-                      <p className="text-gray-300 ">
+                      <p className="text-foreground/80 ">
                         {analysisData.search_intent.reasoning}
                       </p>
                     </TabsContent>
                     <TabsContent value="summary">
-                      <p className="text-gray-300 ">
+                      <p className="text-foreground/80 ">
                         {analysisData.search_intent.summary}
                       </p>
                     </TabsContent>
@@ -575,11 +633,11 @@ function AdvancedKeywordAnalysis() {
                   <span className="text-gray-300 mb-3 block">
                     Analyzing keyword search intent...
                   </span>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-                  <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[360px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[330px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[300px] mb-2.5"></div>
+                  <div className="h-3 bg-gray-200 rounded-full max-w-[360px]"></div>
 
                 </>
               }
@@ -587,16 +645,16 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* Intent Breakdown */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">Intent Breakdown</h3>
               {searchIntentState === "completed" ?
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Informational
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {
                           analysisData.search_intent.intent_breakdown
                             .informational
@@ -604,7 +662,7 @@ function AdvancedKeywordAnalysis() {
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-600 h-2 rounded-full"
                         style={{
@@ -616,10 +674,10 @@ function AdvancedKeywordAnalysis() {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Navigational
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {
                           analysisData.search_intent.intent_breakdown
                             .navigational
@@ -627,7 +685,7 @@ function AdvancedKeywordAnalysis() {
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-purple-600 h-2 rounded-full"
                         style={{
@@ -639,15 +697,15 @@ function AdvancedKeywordAnalysis() {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Commercial
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {analysisData.search_intent.intent_breakdown.commercial}
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full"
                         style={{
@@ -659,10 +717,10 @@ function AdvancedKeywordAnalysis() {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-sm font-medium text-gray-300">
+                      <span className="text-sm font-medium text-foreground/80">
                         Transactional
                       </span>
-                      <span className="text-sm font-medium text-primary">
+                      <span className="text-sm font-medium dark:text-primary text-foreground/80">
                         {
                           analysisData.search_intent.intent_breakdown
                             .transactional
@@ -670,7 +728,7 @@ function AdvancedKeywordAnalysis() {
                         %
                       </span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full dark:bg-foreground/10 bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-orange-600 h-2 rounded-full"
                         style={{
@@ -733,7 +791,7 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* PAA Questions */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">People Also Ask</h3>
               {/* {JSON.stringify(analysisData.paa_questions)} */}
               {analysisData.paa_questions &&
@@ -745,12 +803,12 @@ function AdvancedKeywordAnalysis() {
                         size={18}
                         className="text-primary mt-1 mr-2 flex-shrink-0"
                       />
-                      <span className="text-gray-300">{question}</span>
+                      <span className="text-foreground/80">{question}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">
+                <p className="text-foreground/80">
                   No "People Also Ask" questions available for this keyword.
                 </p>
               )}
@@ -760,19 +818,19 @@ function AdvancedKeywordAnalysis() {
       </section>
       {/* {JSON.stringify(analysisData.page_classifications)} */}
       {/* Related Keywords & Search Volume Trend */}
-      <section className="py-10 bg-black">
+      <section className="py-10 dark:bg-black bg-gray-200  text-foreground">
         <Container>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Related Keywords */}
             <div className="md:col-span-1">
               <h2 className="text-2xl font-bold mb-6 flex items-center">
-                <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+                <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
                   <Tag size={16} />
                 </span>
                 Related Keywords
               </h2>
 
-              <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <div className="bg-card rounded-lg p-6">
                 <div className="space-y-4 max-h-[370px] overflow-y-auto pr-2">
                   {analysisData?.related_keywords?.map((keyword, index) => (
                     <button
@@ -780,7 +838,7 @@ function AdvancedKeywordAnalysis() {
                       onClick={() => setSelectedKeyword(keyword)}
                       className={`w-full p-3 rounded-lg flex items-center justify-between cursor-pointer ${selectedKeyword.keyword === keyword.keyword
                         ? "bg-primary text-black"
-                        : "bg-[#2A2A2A] hover:bg-[#333333]"
+                        : "bg-gray-200 dark:bg-accent hover:bg-accent/20 "
                         }`}
                     >
                       <div className="text-left">
@@ -806,70 +864,36 @@ function AdvancedKeywordAnalysis() {
                 Search Volume Trend
               </h2>
 
-              <div className="bg-[#1A1A1A] rounded-lg p-6">
+              <div className="bg-card rounded-lg p-6">
                 <div className="mb-4">
                   <h3 className="text-xl font-bold">
                     {selectedKeyword?.keyword}
                   </h3>
                   <div className="flex  gap-3 mt-2 flex-col md:flex-row items-start md:items-center">
-                    <span className="text-gray-400">
+                    <span className="text-foreground/80">
                       {selectedKeyword?.search_volume} monthly searches
                     </span>
 
-                    <span className="text-gray-300 text-sm px-2 py-1 bg-[#2A2A2A] rounded-md">
+                    <span className=" text-sm px-2 py-1 bg-gray-200 dark:bg-accent rounded-md">
                       ${selectedKeyword?.cpc?.toFixed(2)} CPC
                     </span>
-                    <div className={`text-gray-400`}>
+                    <div className={`text-foreground/80`}>
                       Competition: {selectedKeyword?.competition}
                     </div>
                   </div>
                 </div>
 
-                {chartData ? (
+                {chartData && chartData.labels.length > 0 ? (
                   <div className="h-72">
                     <Line
                       data={chartData}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            grid: {
-                              color: "rgba(255, 255, 255, 0.1)",
-                            },
-                            ticks: {
-                              color: "rgba(255, 255, 255, 0.7)",
-                            },
-                          },
-                          x: {
-                            grid: {
-                              color: "rgba(255, 255, 255, 0.1)",
-                            },
-                            ticks: {
-                              color: "rgba(255, 255, 255, 0.7)",
-                              maxTicksLimit: 10,
-                            },
-                          },
-                        },
-                        plugins: {
-                          legend: {
-                            labels: {
-                              color: "rgba(255, 255, 255, 0.7)",
-                            },
-                          },
-                          tooltip: {
-                            backgroundColor: "rgba(0, 0, 0, 0.8)",
-                            bodyColor: "#fff",
-                            titleColor: "#FFDD00",
-                          },
-                        },
-                      }}
+                      options={options}
+
                     />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-72 bg-[#0A0A0A] rounded-lg">
-                    <p className="text-gray-400">Loading chart data...</p>
+                  <div className="flex items-center justify-center h-72 bg-background rounded-lg">
+                    <p className="text-foreground/80">Loading chart data...</p>
                   </div>
                 )}
               </div>
@@ -877,10 +901,10 @@ function AdvancedKeywordAnalysis() {
           </div>
         </Container>
       </section>
-      <section className="py-10 bg-[#121212]">
+      <section className="py-10 bg-background">
         <Container>
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+            <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
               <Search size={16} />
             </span>
             Keyword overview
@@ -889,20 +913,20 @@ function AdvancedKeywordAnalysis() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Key Topics */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">Key Topics</h3>
               {searchIntentState === "completed" ?
                 <div className="flex flex-wrap gap-2">
                   {analysisData.key_topics?.slice(0, 34).map((topic, index) => (
                     <span
                       key={index}
-                      className="bg-[#2A2A2A] hover:bg-primary hover:text-black transition-colors px-3 py-1 rounded-md text-sm "
+                      className="dark:bg-accent bg-gray-200 hover:bg-primary hover:text-black transition-colors px-3 py-1 rounded-md text-sm "
                     >
                       {topic}
                     </span>
                   ))}
                   {analysisData.key_topics?.length > 34 && (
-                    <span className="text-gray-400 text-sm">
+                    <span className="text-foreground/80 text-sm mt-1">
                       +{analysisData.key_topics.length - 34} more topics
                     </span>
                   )}
@@ -932,25 +956,25 @@ function AdvancedKeywordAnalysis() {
             </div>
 
             {/* User Needs */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">User Needs</h3>
               {searchIntentState === "completed" ?
                 <ul className="space-y-3">
                   {analysisData.search_intent.user_needs?.map((need, index) => (
                     <li key={index} className="flex items-start mt-1 gap-3">
-                      <span className="bg-primary text-black p-1 rounded-full min-w-8 min-h-8 flex items-center justify-center ">✓</span>
-                      <p className="text-gray-300">{need}</p>
+                      <span className="bg-primary text-primary-foreground p-1 rounded-full min-w-8 min-h-8 flex items-center justify-center ">✓</span>
+                      <p className="text-foreground/80">{need}</p>
                     </li>
                   ))}
                 </ul> :
-                <p className="text-gray-400">
+                <p className="text-foreground/80">
                   Analyzing user needs...
                 </p>
               }
             </div>
 
             {/* AI Overview Section */}
-            <div className="bg-[#1A1A1A] rounded-lg p-6">
+            <div className="bg-card rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">AI Overview</h3>
 
 
@@ -958,10 +982,10 @@ function AdvancedKeywordAnalysis() {
                 <div className="space-y-4">
                   {analysisData.ai_overview.slice(0, 1).map((item, index) => (
                     <div key={index} className="">
-                      <p className="text-gray-300 mb-3">{item.text}</p>
+                      <p className="text-foreground/80 mb-3">{item.text}</p>
                       {item.references && item.references.length > 0 && (
                         <div className="flex flex-col gap-2">
-                          <p className="text-white">References</p>
+                          <p className="text-foreground/80">References</p>
                           <div className="flex flex-wrap gap-2">
                             {item.references.map((ref, refIndex) => {
                               const url = new URL(ref.url);
@@ -974,15 +998,15 @@ function AdvancedKeywordAnalysis() {
                                       <TooltipTrigger asChild>
                                         <div className="flex items-center gap-2 border border-gray-700 rounded-md px-2 py-1">
                                           <img src={`https://icons.duckduckgo.com/ip3/${url.hostname}.ico`} alt={ref.url} className="w-5 h-5 min-w-5 min-h-5 rounded-sm" />
-                                          <span className=" text-gray-300 text-sm">
+                                          <span className=" text-foreground/80 text-sm">
                                             {url.hostname}
                                           </span>
                                         </div>
                                       </TooltipTrigger>
-                                      <TooltipContent className="bg-[#121212] max-w-[300px] p-3 border-gray-700">
+                                      <TooltipContent className="bg-card max-w-[300px] p-3 border-foreground/10">
                                         <div className="space-y-2">
-                                          <h4 className="text-lg font-semibold text-white">{ref.title}</h4>
-                                          <p className="text-gray-400">{ref.text}</p>
+                                          <h4 className="text-lg font-semibold text-foreground/80">{ref.title}</h4>
+                                          <p className="text-foreground/80">{ref.text}</p>
                                         </div>
                                       </TooltipContent>
                                     </Tooltip>
@@ -1004,7 +1028,7 @@ function AdvancedKeywordAnalysis() {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-400">No AI Overview data available.</p>
+                <p className="text-foreground/80">No AI Overview data available.</p>
               )}
             </div>
           </div>
@@ -1014,10 +1038,10 @@ function AdvancedKeywordAnalysis() {
 
 
       {/* Google Trends Chart */}
-      <section className="py-10 bg-[#0A0A0A]">
+      <section className="py-10 dark:bg-black bg-gray-200">
         <Container>
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <span className="bg-primary text-black h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
+            <span className="bg-primary text-primary-foreground h-8 w-8 rounded-full inline-flex items-center justify-center mr-3">
               <BarChart2 size={16} />
             </span>
             Google Trends
@@ -1026,19 +1050,19 @@ function AdvancedKeywordAnalysis() {
             <div className="col-span-2">
 
               {googleTrendsState === "completed" ?
-                <div className="bg-[#1A1A1A] rounded-lg p-6">
+                <div className="bg-card rounded-lg p-6">
                   {analysisData.google_trends_data?.check_url && (
                     <a href={analysisData?.google_trends_data?.check_url} target="__blank" className="text-primary">View Google Trends</a>
                   )}
-                  {analysisData.google_trends_data ? (
+                  {analysisData?.google_trends_data && analysisData?.google_trends_data?.interestOverTime?.length > 0 ? (
                     <div className="h-72">
                       <Line
                         data={{
-                          labels: analysisData.google_trends_data.interestOverTime.map(item => new Date(item.date).toLocaleDateString()),
+                          labels: analysisData?.google_trends_data?.interestOverTime?.map(item => new Date(item.date).toLocaleDateString()),
                           datasets: [
                             {
                               label: "Interest Over Time",
-                              data: analysisData.google_trends_data.interestOverTime.map(item => item.value),
+                              data: analysisData?.google_trends_data?.interestOverTime?.map(item => item.value),
                               borderColor: "#FFDD00",
                               backgroundColor: "rgba(255, 221, 0, 0.2)",
                               tension: 0.3,
@@ -1046,66 +1070,31 @@ function AdvancedKeywordAnalysis() {
                             },
                           ],
                         }}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              grid: {
-                                color: "rgba(255, 255, 255, 0.1)",
-                              },
-                              ticks: {
-                                color: "rgba(255, 255, 255, 0.7)",
-                              },
-                            },
-                            x: {
-                              grid: {
-                                color: "rgba(255, 255, 255, 0.1)",
-                              },
-                              ticks: {
-                                color: "rgba(255, 255, 255, 0.7)",
-                                maxTicksLimit: 10,
-                              },
-                            },
-                          },
-                          plugins: {
-                            legend: {
-                              labels: {
-                                color: "rgba(255, 255, 255, 0.7)",
-                              },
-                            },
-                            tooltip: {
-                              backgroundColor: "rgba(0, 0, 0, 0.8)",
-                              bodyColor: "#fff",
-                              titleColor: "#FFDD00",
-                            },
-                          },
-                        }}
+                        options={trendChartOptions}
                       />
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-72 bg-[#0A0A0A] rounded-lg">
-                      <p className="text-gray-400">Loading Google Trends data...</p>
+                    <div className="flex items-center justify-center h-72 bg-background rounded-lg">
+                      <p className="text-foreground/80">Loading Google Trends data...</p>
                     </div>
                   )}
                 </div>
                 :
-                <div className="flex items-center justify-center h-72 bg-[#0A0A0A] rounded-lg">
-                  <div className="flex flex-col items-center justify-center bg-[#1A1A1A] animate-pulse w-full h-full rounded-lg p-4">
-                    <p className="text-gray-400">Loading Google Trends data...</p>
+                <div className="flex items-center justify-center h-72 bg-background rounded-lg">
+                  <div className="flex flex-col items-center justify-center bg-card animate-pulse w-full h-full rounded-lg p-4">
+                    <p className="text-foreground/80">Loading Google Trends data...</p>
                   </div>
                 </div>
               }
             </div>
 
             <div className="col-span-1">
-              <div className="bg-[#1A1A1A] rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-4">People Also Search</h3>
+              <div className="bg-card rounded-lg p-6">
+                <h3 className="text-xl font-bold mb-4 text-foreground">People Also Search</h3>
                 <div className="flex flex-col gap-2">
                   {analysisData?.related_searches && analysisData?.related_searches?.length > 0 ?
                     analysisData?.related_searches?.map((item, index) => (
-                      <div key={index} className="text-gray-300 flex items-center gap-2">
+                      <div key={index} className="text-foreground/80 flex items-center gap-2">
                         <a href={`https://www.google.com/search?q=${item}`} target="_blank" rel="noopener noreferrer" >
                           {item}
                         </a>
@@ -1113,7 +1102,7 @@ function AdvancedKeywordAnalysis() {
                       </div>
                     ))
                     :
-                    <div className="text-gray-400">No related searches found.</div>
+                    <div className="text-foreground/80">No related searches found.</div>
                   }
                 </div>
               </div>
@@ -1126,11 +1115,11 @@ function AdvancedKeywordAnalysis() {
 
 
       {/* SERP Analysis */}
-      <section className="py-10 bg-[#0A0A0A]">
+      <section className="py-10 bg-background">
         <Container>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
             <h2 className="text-2xl font-bold mb-6 flex items-center">
-              <span className="bg-primary text-black min-h-8 min-w-8 rounded-full inline-flex items-center justify-center mr-3">
+              <span className="bg-primary text-primary-foreground min-h-8 min-w-8 rounded-full inline-flex items-center justify-center mr-3">
                 <BarChart2 size={16} />
               </span>
               SERP Analysis
@@ -1155,24 +1144,24 @@ function AdvancedKeywordAnalysis() {
           {analysisData.serp_data && analysisData.serp_data.length > 0 ? (
             <div className="overflow-x-auto px-4 md:px-0">
               <table className="w-full">
-                <thead className="bg-[#1A1A1A] border-b border-gray-800">
+                <thead className="bg-card border-b border-foreground/10">
                   <tr>
                     <th className="p-2" />
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-foreground/80">
                       Rank
                     </th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-foreground/80">
                       Title & URL
                     </th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-300">
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-foreground/80">
                       Domain
                     </th>
-                    <th className="py-3 px-4 text-right text-sm font-semibold text-gray-300">
+                    <th className="py-3 px-4 text-right text-sm font-semibold text-foreground/80">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-800">
+                <tbody className="divide-y divide-foreground/10">
                   {analysisData.serp_data.map((result, idx) => {
 
                     const headings = analysisData.headings_by_url?.[result.url] || false;
@@ -1181,7 +1170,7 @@ function AdvancedKeywordAnalysis() {
                     return (
                       <tr
                         key={idx}
-                        className={`transition-colors ${isSelected ? "bg-primary/10" : "hover:bg-[#1E1E1E]"} cursor-pointer`}
+                        className={`transition-colors ${isSelected ? "bg-primary/10" : "hover:bg-card"} cursor-pointer`}
                         onClick={() => handleRowClick(result.url)}
                       >
                         {/* checkbox cell */}
@@ -1194,7 +1183,6 @@ function AdvancedKeywordAnalysis() {
                                 !isSelected && selectedUrls.length >= 3
                               }
                               onClick={(e) => e.stopPropagation()}
-                              className={`${isSelected ? "bg-primary" : "bg-gray-700"} cursor-pointer`}
                               aria-label={`Select ${result.title} for comparison`}
                             />
                           )}
@@ -1204,8 +1192,8 @@ function AdvancedKeywordAnalysis() {
                         </td>
                         <td className="py-4 px-4">
                           <div className="max-w-xl">
-                            <div className="font-bold text-white mb-1 line-clamp-1 flex items-start gap-2">
-                              <span className="text-white">
+                            <div className="font-bold text-foreground mb-1 line-clamp-1 flex items-start gap-2">
+                              <span className="text-foreground">
                                 {result.title}
                               </span>
                               {searchIntentState === "completed" ?
@@ -1213,7 +1201,7 @@ function AdvancedKeywordAnalysis() {
                                 result.url
                                 ] && (
                                   <span
-                                    className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${getIntentColor(
+                                    className={`text-xs px-2 py-1 text-white rounded-full whitespace-nowrap ${getIntentColor(
                                       analysisData.page_classifications?.[
                                       result.url
                                       ],
@@ -1231,7 +1219,7 @@ function AdvancedKeywordAnalysis() {
 
                               }
                             </div>
-                            <div className="text-sm text-gray-400 line-clamp-2">
+                            <div className="text-sm text-foreground/80 line-clamp-2">
                               {result.description}
                             </div>
                             <div className="text-xs text-green-500 mt-1">
@@ -1241,7 +1229,7 @@ function AdvancedKeywordAnalysis() {
                               result.links && result.links.length > 0 && (
                                 <div className="flex flex-wrap gap-2 mt-2">
                                   {result.links.map((link) => (
-                                    <a key={link.url} href={link.url} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer" className="text-xs border border-white rounded-lg px-2 py-1 !no-underline hover:bg-white hover:text-black transition-colors">
+                                    <a key={link.url} href={link.url} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer" className="text-xs border border-foreground/20 rounded-lg px-2 py-1 !no-underline hover:bg-foreground/10 hover:text-foreground transition-colors">
                                       {link.title}
                                     </a>
                                   ))}
@@ -1250,7 +1238,7 @@ function AdvancedKeywordAnalysis() {
                             }
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-gray-300">
+                        <td className="py-4 px-4 text-foreground/80">
                           {result.domain}
                         </td>
                         <td className="py-4 px-4">
@@ -1260,13 +1248,13 @@ function AdvancedKeywordAnalysis() {
 
                               headings ? (
                                 <button
-                                  className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer"
+                                  className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer border border-foreground/10"
                                   title="View Headings"
                                 >
                                   <AlignLeft size={16} />
                                 </button>
                               ) : (
-                                <button className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                <button className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-foreground/10"
                                   title="Extract page Intent"
                                   disabled={extractingPageIntent}
                                   onClick={() => handleExtractPageIntent(result.url)}
@@ -1282,7 +1270,7 @@ function AdvancedKeywordAnalysis() {
                               href={result.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="bg-[#2A2A2A] hover:bg-primary hover:text-black text-white p-2 rounded-md transition-colors"
+                              className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors border border-foreground/10"
                               title="Visit Page"
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -1297,7 +1285,7 @@ function AdvancedKeywordAnalysis() {
               </table>
               {/* single Dialog instance */}
               <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="bg-[#1A1A1A] text-white border-gray-700">
+                <DialogContent className="bg-card text-foreground border-foreground/10">
                   <DialogHeader>
                     <DialogTitle className="text-xl font-bold flex items-center gap-2">
                       <AlignLeft className="text-primary" size={20} />
@@ -1305,7 +1293,7 @@ function AdvancedKeywordAnalysis() {
                     </DialogTitle>
                   </DialogHeader>
                   <div className="mt-2 max-h-[500px] overflow-y-auto">
-                    <div className="text-sm text-gray-400 mb-4">
+                    <div className="text-sm text-foreground/80 mb-4">
                       {selectedUrl}
                     </div>
                     {selectedUrl &&
@@ -1317,7 +1305,7 @@ function AdvancedKeywordAnalysis() {
               </Dialog>
               {/* 3) Comparison Dialog */}
               <Dialog open={compareOpen} onOpenChange={setCompareOpen}>
-                <DialogContent className="bg-[#1A1A1A] text-white border-gray-700 md:!max-w-2xl lg:!max-w-4xl">
+                <DialogContent className="bg-card text-foreground border-foreground/10 md:!max-w-2xl lg:!max-w-4xl">
                   <DialogHeader>
                     <DialogTitle className="text-xl font-bold flex items-center gap-2">
                       <AlignLeft className="text-primary" size={20} />
@@ -1330,7 +1318,7 @@ function AdvancedKeywordAnalysis() {
                     {selectedUrls.map((url) => (
                       <div
                         key={url}
-                        className="border p-4 rounded border-gray-800"
+                        className="border p-4 rounded border-foreground/10"
                       >
                         <h3 className="font-bold mb-2 line-clamp-1 text-primary">
                           {url}
@@ -1343,7 +1331,7 @@ function AdvancedKeywordAnalysis() {
               </Dialog>
             </div>
           ) : (
-            <div className="bg-[#1A1A1A] rounded-lg p-8 text-center">
+            <div className="bg-card rounded-lg p-8 text-center">
               <AlertTriangle
                 size={48}
                 className="text-yellow-500 mx-auto mb-4"
@@ -1351,7 +1339,7 @@ function AdvancedKeywordAnalysis() {
               <h3 className="text-xl font-bold mb-2">
                 No SERP Data Available
               </h3>
-              <p className="text-gray-400 max-w-md mx-auto">
+              <p className="text-foreground/80 max-w-md mx-auto">
                 We couldn't find any search engine results for this keyword.
                 This might be due to very low search volume or a highly
                 specific query.
@@ -1364,12 +1352,12 @@ function AdvancedKeywordAnalysis() {
 
 
       {/* Action Section */}
-      <section className="py-12 bg-gradient-to-r from-primary to-[#FFAA00]">
+      <section className="py-12 bg-gradient-to-r from-primary to-primary">
         <Container>
-          <h2 className="text-3xl font-black text-black mb-6">
+          <h2 className="text-3xl font-black text-primary-foreground mb-6 text-center">
             Ready to Dominate Search Results?
           </h2>
-          <p className="text-lg text-black/80 max-w-3xl mx-auto mb-8">
+          <p className="text-lg text-primary-foreground/80 max-w-3xl mx-auto mb-8 text-center">
             Use this keyword analysis to create content that ranks. Our SEO
             tools help you cut through the noise and focus on what matters.
           </p>
@@ -1381,7 +1369,7 @@ function AdvancedKeywordAnalysis() {
             >
               Explore More Keywords
             </Button>
-            <Button size="lg" variant="secondary">
+            <Button size="lg" variant="secondary" disabled={true} className="cursor-not-allowed">
               Get the Full Report
             </Button>
           </div>
