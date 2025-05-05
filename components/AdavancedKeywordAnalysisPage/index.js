@@ -55,7 +55,7 @@ function AdvancedKeywordAnalysis() {
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const [chartData, setChartData] = useState(null);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [selectedKeyword, setSelectedKeyword] = useState(analysisData?.related_keywords?.[0] || "");
   const listenerRef = useRef(null);
   const toastIds = useRef({
@@ -78,23 +78,23 @@ function AdvancedKeywordAnalysis() {
     scales: {
       y: {
         beginAtZero: true,
-        grid: { color: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
-        ticks: { color: theme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)' }
+        grid: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
+        ticks: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)' }
       },
       x: {
-        grid: { color: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
-        ticks: { color: theme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)', maxTicksLimit: 10 }
+        grid: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' },
+        ticks: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.5)', maxTicksLimit: 10 }
       }
     },
     plugins: {
-      legend: { labels: { color: theme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' } },
+      legend: { labels: { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)' } },
       tooltip: {
-        backgroundColor: theme === 'dark' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
-        titleColor: theme === 'dark' ? '#FFDD00' : '#000',
-        bodyColor: theme === 'dark' ? '#fff' : '#111',
+        backgroundColor: resolvedTheme === 'dark' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.9)',
+        titleColor: resolvedTheme === 'dark' ? '#FFDD00' : '#000',
+        bodyColor: resolvedTheme === 'dark' ? '#fff' : '#111',
       }
     }
-  }), [theme])
+  }), [resolvedTheme])
   const trendChartOptions = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
@@ -102,18 +102,18 @@ function AdvancedKeywordAnalysis() {
       y: {
         beginAtZero: true,
         grid: {
-          color: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
         },
         ticks: {
-          color: theme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
         },
       },
       x: {
         grid: {
-          color: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
         },
         ticks: {
-          color: theme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
           maxTicksLimit: 10,
         },
       },
@@ -121,16 +121,16 @@ function AdvancedKeywordAnalysis() {
     plugins: {
       legend: {
         labels: {
-          color: theme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          color: resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
         },
       },
       tooltip: {
-        backgroundColor: theme === 'dark' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
-        bodyColor: theme === 'dark' ? '#fff' : '#000',
-        titleColor: theme === 'dark' ? '#FFDD00' : '#333',
+        backgroundColor: resolvedTheme === 'dark' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+        bodyColor: resolvedTheme === 'dark' ? '#fff' : '#000',
+        titleColor: resolvedTheme === 'dark' ? '#FFDD00' : '#333',
       },
     },
-  }), [theme])
+  }), [resolvedTheme])
 
   const handleRowClick = (url) => {
     // only open if we have headings for that URL

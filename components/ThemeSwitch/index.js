@@ -4,44 +4,29 @@ import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Sun, Moon } from 'lucide-react'
 
-const ThemeSwitch = () => {
+export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
 
-  // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  if (!mounted) {
-    return null
-  }
-  const handMode = () => {
-    if (theme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  }
+  if (!mounted) return null
+
+  const isDark = resolvedTheme === 'dark'
+
   return (
     <Button
       id="btn-mode"
-      className=" bg-transparent hover:bg-transparent
-         hover:opacity-80 cursor-pointer text-foreground shadow-none"
-      onClick={handMode}
-
+      className="bg-transparent hover:opacity-80 cursor-pointer text-foreground shadow-none"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
     >
-      {theme === "dark" ? (
-        <span className="flex flex-row items-center gap-3">
-          <Sun className="" />
-        </span>
+      {isDark ? (
+        <Sun size={20} />
       ) : (
-        <span id="sunIcon" className="flex flex-row items-center gap-3">
-          <Moon className=" " />
-        </span>
+        <Moon size={20} />
       )}
     </Button>
   )
 }
-
-export default ThemeSwitch

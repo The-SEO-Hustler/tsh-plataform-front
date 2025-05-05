@@ -31,7 +31,7 @@ import styles from "./style.module.css";
 function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   // Add scroll listener to apply elevation to header on scroll
   useEffect(() => {
@@ -82,7 +82,7 @@ function Header() {
         {/* Logo */}
 
         <Link href="/" className="flex items-center relative space-x-2 h-full">
-          {mounted && ((isSpecialPath && !scrolled) || theme === 'dark' ? (
+          {mounted && ((isSpecialPath && !scrolled) || resolvedTheme === 'dark' ? (
             <Image
               src="/the-seo-hustler-horizontal-white-logo.png"
               alt="The SEO Hustler logo"
