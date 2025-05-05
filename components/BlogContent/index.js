@@ -130,7 +130,7 @@ function BlogContentPage({ post, blogPostsData }) {
               <span className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium">
                 {post.category}
               </span>
-              <span className="ml-4 text-white/70 flex items-center text-sm">
+              <span className="ml-4 text-white/70 dark:text-foreground/70 flex items-center text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-1"
@@ -283,7 +283,7 @@ function BlogContentPage({ post, blogPostsData }) {
             </div>
 
             {/* Main Article Content */}
-            <article className={styles.content}>
+            <article className={`${styles.content} wp-article`}>
               {replaceComponents(post.content)}
             </article>
             {/* {content && <Content html={content} />} */}

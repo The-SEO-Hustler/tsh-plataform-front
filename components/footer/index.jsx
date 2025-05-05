@@ -97,7 +97,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="! hover:text-primary transition-colors text-sm"
+                      className="hover:!text-primary !text-foreground transition-colors text-sm"
                     >
                       {link.name}
                     </Link>

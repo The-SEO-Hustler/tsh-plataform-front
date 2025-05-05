@@ -304,3 +304,12 @@ body a {
 [data-sonner-toast][data-y-position=top]{
   top: 50px !important;
 }
+.wp-article table tr:nth-child(even) {
+  background-color: oklch(0.97 0.0437 95.85) !important;
+}
+html.dark .wp-article table tr:nth-child(even) {
+  background-color: var(--accent) !important;
+}
+.wp-article table tr:nth-child(odd) {
+  background-color: var(--card) !important;
+}

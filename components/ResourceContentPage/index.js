@@ -109,19 +109,19 @@ function ResourceContentPage({ post }) {
               <span className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium">
                 {post.category}
               </span>
-              <span className="ml-4 text-white/70 flex items-center text-sm">
+              <span className="ml-4 text-white/70 dark:text-foreground/70 flex items-center text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 {post.readTime} min read
               </span>
-              <span className="ml-4 text-white/70 text-sm">
+              <span className="ml-4 text-white/70 dark:text-foreground/70 text-sm">
                 {post.date}
               </span>
             </div>
 
-            <h1 className={`text-3xl md:text-4xl lg:text-5xl font-black !text-white mb-6 leading-tight ${s.title}`}>
+            <h1 className={`text-3xl md:text-4xl lg:text-5xl font-black !text-white dark:!text-foreground mb-6 leading-tight ${s.title}`}>
               {post.title}
             </h1>
 
@@ -136,10 +136,10 @@ function ResourceContentPage({ post }) {
                 </svg>
               </div>
               <div>
-                <p className="text-white font-medium">
+                <p className="text-white dark:text-foreground font-medium">
                   {post.author}
                 </p>
-                <p className="text-white/60 text-sm">
+                <p className="text-white/60 dark:text-foreground/60 text-sm">
                   SEO Consultant & Founder
                 </p>
               </div>
@@ -196,7 +196,7 @@ function ResourceContentPage({ post }) {
 
             {/* Main Article Content */}
 
-            <article className={s.content}>
+            <article className={`${s.content} wp-article`}>
               {replaceComponents(post.content)}
             </article>
 

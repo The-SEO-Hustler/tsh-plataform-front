@@ -78,9 +78,12 @@
   background-color: var(--card); 
   z-index: 2; /* to stay on top of content */
 }
-.content table tr:nth-child(odd) {
+/* .content table tr:nth-child(odd) {
   background-color: var(--card) !important;
 }
+.content table tr:nth-child(even) {
+  background-color: var(--accent) !important;
+} */
 .content table th,
 .content table td {
   padding: 12px 15px;
@@ -96,7 +99,21 @@
   color: var(--foreground);
   font-weight: bold;
 }
-
+.content figure:has(table){
+  border-radius: 0.5rem;
+}
+.content table thead tr th:first-of-type {
+  border-radius: 0.5rem 0 0 0;
+}
+.content table thead tr th:last-of-type {
+  border-radius: 0 0.5rem 0 0;
+}
+.content table tbody tr:last-of-type td:first-of-type {
+  border-radius: 0 0 0 0.5rem;
+}
+.content table tbody tr:last-of-type td:last-of-type {
+  border-radius: 0 0 0.5rem 0;
+}
 .content table tbody tr:hover {
   background-color: var(--card);
 }
