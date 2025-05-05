@@ -62,7 +62,7 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
 
         <p className={cn(
           "text-sm",
-          'text-muted-foreground'
+          'text-muted-foreground dark:text-foreground/70'
         )}>
           {description}
         </p>

@@ -123,7 +123,7 @@ export default function ResourceCard({
           {title}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-4" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }}>
+        <p className="text-sm text-muted-foreground mb-4 dark:text-foreground/70" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }}>
         </p>
 
         {/* Author info */}
@@ -135,7 +135,7 @@ export default function ResourceCard({
               className="w-6 h-6 rounded-full mr-2"
             />
           )}
-          <span className="text-xs text-muted-foreground">{authorName}</span>
+          <span className="text-xs text-muted-foreground dark:text-foreground/50">{authorName}</span>
         </div>
 
         <div
