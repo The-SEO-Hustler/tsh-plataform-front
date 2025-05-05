@@ -100,10 +100,10 @@ export default function Tools() {
 
         <Container>
           <div className="max-w-3xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white dark:text-foreground mb-6 leading-tight">
               Free SEO Tools
             </h1>
-            <p className="text-xl text-white/80 mb-8">
+            <p className="text-xl text-white/80 dark:text-foreground/70 mb-8">
               Access professional-grade SEO tools to research keywords, analyze
               competitors, optimize content, and more - completely free.
             </p>

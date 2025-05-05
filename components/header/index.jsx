@@ -36,18 +36,19 @@ function Header() {
   // Add scroll listener to apply elevation to header on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
+      setScrolled(window.scrollY > 10);
     };
 
-    document.addEventListener("scroll", handleScroll, { passive: true });
+    // 1) Attach once
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // 2) Call it once immediately, to pick up any existing scroll
+    handleScroll();
 
     return () => {
-      document.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [scrolled]);
+  }, []);
+
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -297,7 +298,7 @@ const ListItem = (
             {title}{" "}
             {free && <span className="ml-2 text-green-600 font-semibold">FREE</span>}
           </div>
-          <div className="line-clamp-2 text-xs leading-snug text-[#555]">
+          <div className="line-clamp-2 text-xs leading-snug text-[#555] dark:text-foreground/60">
             {children}
           </div>
         </a>
