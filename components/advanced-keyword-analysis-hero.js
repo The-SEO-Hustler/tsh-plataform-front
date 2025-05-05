@@ -115,14 +115,14 @@ function AdvancedKeywordAnalysisHero() {
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     placeholder="Enter a keyword..."
-                    className="w-full px-4 sm:px-6 sm:pr-[240px] pr-[60px] py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 sm:px-6 sm:pr-[240px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                     required
                     disabled={loading}
                   />
                   <Button
                     type="submit"
                     size="lg"
-                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
                     disabled={loading || usage?.remaining <= 0 || usage === null}
                   >
                     <span className='sm:block hidden'>{loading ? "Analyzing..." : "Analyze Keyword"}</span>

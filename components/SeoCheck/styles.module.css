@@ -77,18 +77,21 @@
 .cardNormal,
 .cardError,
 .cardWarning {
-  color: oklch(0.446 0.03 256.802);
+  color: var(--foreground);
 }
-[data-theme="dark"] .cardNormal{
-  color: oklch(0.949 0.000 89.9);
+html.dark .cardNormal{
+  color: var(--foreground);
 }
-[data-theme="dark"] .cardError, [data-theme="dark"] .cardWarning{
+html.dark .cardError, html.dark .cardWarning{
   color: #222;
 }
 
 .card:not(.cardWarning):not(.cardError) .cardDescription {
   opacity: 0;
   transition: all 0.3s ease-in-out;
+}
+.card.cardWarning .cardDescription, .card.cardError .cardDescription, .card.cardWarning, .card.cardError{
+  color: #333;
 }
 .card:hover .cardDescription {
   opacity: 1 !important;

@@ -18,7 +18,7 @@ function UsageCard() {
   };
 
   return (
-    <div className='bg-card p-3 px-4 rounded-lg shadow-md fixed bottom-2 left-1/2 transform -translate-x-1/2 z-10 w-64 border border-foreground/10'>
+    <div className='bg-card p-3 px-4 rounded-lg shadow-md fixed bottom-2 left-1/2 transform -translate-x-1/2 z-10 w-64 border border-foreground/10 text-foreground'>
       {usage ? (
         <div>
           <div className='flex mb-2 text-sm text-center justify-center'>

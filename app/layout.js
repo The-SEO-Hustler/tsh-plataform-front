@@ -50,7 +50,9 @@ export default function RootLayout({ children }) {
                 <AnalysisStatusCard />
                 <ContentPlanningStatusCard />
                 <LLMStatusCard />
-                <Toaster position="top-left" />
+                <Toaster position="top-left" toastOptions={{
+                  style: { color: "var(--foreground)" }
+                }} />
                 {/* </GoogleReCaptchaProvider> */}
               </UsageProvider>
             </FirebaseProvider>

@@ -36,10 +36,10 @@ export default function Terms() {
         </div>
 
         <Container className="text-center">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-black text-white dark:text-foreground mb-6">
             Terms of <span className="text-primary">Service</span>
           </h1>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-white/80 dark:text-foreground/80 mb-8 max-w-3xl mx-auto">
             Last Updated: {lastUpdated}
           </p>
         </Container>

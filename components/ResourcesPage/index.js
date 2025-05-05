@@ -117,10 +117,10 @@ export default function Resources({ resources }) {
         </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-foreground mb-6">
             <span className="text-yellow-400">Free SEO Resources</span> & Templates
           </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto dark:text-foreground/80">
             Download actionable resources, cheatsheets, playbooks, and templates to streamline your SEO workflow and get results faster.
           </p>
         </div>
@@ -271,7 +271,7 @@ export default function Resources({ resources }) {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       />
                     </div>
@@ -288,7 +288,7 @@ export default function Resources({ resources }) {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       />
                     </div>
@@ -307,7 +307,7 @@ export default function Resources({ resources }) {
                         onChange={handleInputChange}
                         placeholder="Describe the resource you'd like us to create..."
                         rows="4"
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       ></textarea>
                     </div>

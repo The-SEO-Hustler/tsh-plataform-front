@@ -104,7 +104,7 @@ function ContentPlanningForm() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="Enter a keyword..."
-            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
             required
             disabled={loading}
           />
@@ -115,7 +115,7 @@ function ContentPlanningForm() {
             onValueChange={setContentType}
             disabled={loading}
           >
-            <SelectTrigger size="lg" className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200">
+            <SelectTrigger size="lg" className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200">
               <SelectValue placeholder="Select content type" />
             </SelectTrigger>
             <SelectContent className="bg-card text-foreground border border-border rounded-lg shadow-lg">

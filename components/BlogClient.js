@@ -32,10 +32,10 @@ export default function BlogClient({ categories, blogPosts }) {
 
         <Container>
           <div className="max-w-3xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white dark:text-foreground mb-6 leading-tight">
               SEO Blog & Resources
             </h1>
-            <p className="text-xl text-white/80 mb-8">
+            <p className="text-xl text-gray-300 mb-8 dark:text-foreground/80">
               Expert insights, strategies, and tips to help you improve your website's search engine rankings.
             </p>
           </div>

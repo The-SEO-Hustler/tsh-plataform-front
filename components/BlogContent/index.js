@@ -146,11 +146,11 @@ function BlogContentPage({ post, blogPostsData }) {
                 </svg>
                 {post.readTime} min read
               </span>
-              <span className="ml-4 text-white/70 text-sm">{post.date}</span>
+              <span className="ml-4 text-white/70 dark:text-foreground/70 text-sm">{post.date}</span>
             </div>
 
             <h1
-              className={`text-3xl md:text-4xl lg:text-5xl font-black !text-white mb-6 leading-tight ${styles.title}`}
+              className={`text-3xl md:text-4xl lg:text-5xl font-black !text-white dark:!text-foreground mb-6 leading-tight ${styles.title}`}
             >
               {post.title}
             </h1>
@@ -180,8 +180,8 @@ function BlogContentPage({ post, blogPostsData }) {
                 </svg>
               </div>
               <div>
-                <p className="text-white font-medium">{post.author}</p>
-                <p className="text-white/60 text-sm">
+                <p className="text-white dark:text-foreground font-medium">{post.author}</p>
+                <p className="text-white/60 dark:text-foreground/60 text-sm">
                   SEO Consultant & Founder
                 </p>
               </div>

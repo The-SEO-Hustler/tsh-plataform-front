@@ -119,12 +119,12 @@ function SeoCheckHeroContent() {
                       placeholder="Enter your website URL"
                       required
                       disabled={isLoading}
-                      className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                      className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                     />
                     <Button
                       type="submit"
                       size="lg"
-                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300  ${isLoading ? "animate-pulse !bg-primary " : ""}`}
+                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${isLoading ? "animate-pulse !bg-primary " : ""}`}
                       disabled={isLoading || usage?.remaining <= 0 || usage === null}
                     >
                       <span className='sm:block hidden'>{isLoading ? "Starting Analysis..." : "Analyze"}</span>

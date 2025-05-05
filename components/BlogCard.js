@@ -74,7 +74,7 @@ export default function BlogCard({
 
         {/* Date and Read More */}
         <div className="flex items-center text-sm">
-          <span className="text-muted-foreground">
+          <span className="text-foreground/80">
             {date}
           </span>
           <span className="ml-auto text-primary font-medium flex items-center">

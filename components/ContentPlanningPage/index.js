@@ -254,9 +254,9 @@ function ContentPlanning() {
 
 
               <div className="flex flex-wrap gap-3 mb-4">
-                <span className="bg-[#333333] text-white px-3 py-1 rounded-full text-sm inline-flex items-center">
+                <span className="bg-[#333333] text-white dark:text-foreground px-3 py-1 rounded-full text-sm inline-flex items-center">
                   <FileText size={14} className="mr-1" />
-                  {contentData.content_type || 'Unknown Type'}
+                  {contentData.content_type?.replace('_', ' ') || 'Unknown Type'}
                 </span>
                 {contentStructure.word_count_range && (
                   <span className="bg-primary text-black px-3 py-1 rounded-full text-sm font-bold inline-flex items-center">
@@ -264,7 +264,7 @@ function ContentPlanning() {
                     {contentStructure.word_count_range}
                   </span>
                 )}
-                <span className="bg-[#333333] text-white px-3 py-1 rounded-full text-sm inline-flex items-center">
+                <span className="bg-[#333333] text-white dark:text-foreground px-3 py-1 rounded-full text-sm inline-flex items-center">
                   <Target size={14} className="mr-1" />
                   Keyword: {contentData.keyword || 'None'}
                 </span>

@@ -101,10 +101,10 @@ export default function About() {
         </div>
 
         <Container className=" text-center">
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-black text-white dark:text-foreground mb-6">
             We Cut Through the <span className="text-primary">BS</span> So You Can <span className="text-primary">Dominate Search</span>
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-white/90 dark:text-foreground/90 mb-8 max-w-3xl mx-auto">
             Look, the SEO world is full of smoke and mirrors. We're not about that life.
           </p>
         </Container>
@@ -278,12 +278,12 @@ export default function About() {
       </FeatureSection>
 
       {/* Real Talk Section */}
-      <section className="py-16 bg-black text-white">
+      <section className="py-16 bg-black text-white dark:text-foreground">
         <Container>
           <div className="max-w-4xl mx-auto ">
             <div className="bg-[#333] p-8 rounded-lg transform rotate-1 shadow-md overflow-hidden">
               <div className="transform -rotate-1">
-                <h2 className="text-3xl font-black mb-6">Real Talk: This Isn't For Everyone</h2>
+                <h2 className="text-3xl font-black mb-6 dark:text-foreground">Real Talk: This Isn't For Everyone</h2>
                 <div className="space-y-4 text-lg">
                   <p>
                     Let's be real — no one's reading a 1,500-word blog post about alt text unless it's helping them rank or save time.

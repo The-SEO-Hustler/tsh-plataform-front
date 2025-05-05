@@ -143,10 +143,10 @@ export default function Contact() {
         </div>
 
         <Container className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-foreground mb-6">
             Get in <span className="text-yellow-400">Touch</span>
           </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto dark:text-foreground/80">
             Questions, feedback, partnership inquiries? We're here to help.
           </p>
         </Container>
@@ -277,7 +277,7 @@ export default function Contact() {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       />
                     </div>
@@ -294,7 +294,7 @@ export default function Contact() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       />
                     </div>
@@ -312,7 +312,7 @@ export default function Contact() {
                         value={formData.message}
                         onChange={handleInputChange}
                         rows="4"
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                         required
                       ></textarea>
                     </div>

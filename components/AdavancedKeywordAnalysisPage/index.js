@@ -459,7 +459,7 @@ function AdvancedKeywordAnalysis() {
             <span>
               <Link
                 href="/advanced-keyword-analysis"
-                className="hover:text-primary transition-colors text-white"
+                className="hover:text-primary transition-colors text-white dark:text-foreground"
               >
                 {" "}
                 Advanced Keyword Analysis
@@ -471,7 +471,7 @@ function AdvancedKeywordAnalysis() {
               {analysisData.keyword || "New Content"}
             </span>
           </div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 text-white">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 text-white dark:text-foreground">
             <div>
               <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center ">
                 {analysisData.keyword}
@@ -484,23 +484,23 @@ function AdvancedKeywordAnalysis() {
                     >
                       {analysisData.search_intent.primary}
                     </div>
-                    <span className="text-gray-300">
+                    <span className="text-gray-300 dark:text-foreground/80">
                       {analysisData.search_intent.confidence}% Confidence
                     </span>
                   </> :
                   <>
                     <div
-                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 animate-pulse`}
+                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 dark:bg-foreground/80 animate-pulse`}
                     >
                       loading intent
                     </div>
-                    <span className="text-gray-300">
+                    <span className="text-gray-300 dark:text-foreground/80">
                       Analyzing keyword search intent...
                     </span>
                   </>
                 }
               </div>
-              <div className="text-gray-300 text-sm mt-2">
+              <div className="text-gray-300 dark:text-foreground/80 text-sm mt-2">
                 <TimestampDisplay ts={updatedAt} />
               </div>
             </div>
@@ -513,19 +513,19 @@ function AdvancedKeywordAnalysis() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Search Volume */}
             <div className="bg-card rounded-lg p-6 border-l-4 border-primary hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 Search Volume
               </h3>
               <div className="text-3xl">
                 {analysisData?.related_keywords[0]?.monthly_searches[0]?.search_volume > 0
                   ? <Fragment>
                     <div className="text-3xl font-black">{analysisData?.related_keywords[0]?.monthly_searches[0]?.search_volume.toLocaleString()}</div>
-                    <div className="text-gray-400 text-sm mt-2">{getMonthName(analysisData?.related_keywords[0]?.monthly_searches[0]?.month)} {analysisData?.related_keywords[0]?.monthly_searches[0]?.year}</div>
+                    <div className="text-gray-400 dark:text-foreground/80 text-sm mt-2">{getMonthName(analysisData?.related_keywords[0]?.monthly_searches[0]?.month)} {analysisData?.related_keywords[0]?.monthly_searches[0]?.year}</div>
                   </Fragment>
                   : analysisData?.search_volume > 0
                     ? <Fragment>
                       <div className="text-3xl font-black">{analysisData?.search_volume.toLocaleString()}</div>
-                      <div className="text-gray-400 text-sm mt-2"> monthly searches</div>
+                      <div className="text-gray-400 dark:text-foreground/80 text-sm mt-2"> monthly searches</div>
                     </Fragment>
                     : "N/A"}
               </div>
@@ -533,7 +533,7 @@ function AdvancedKeywordAnalysis() {
 
             {/* CPC */}
             <div className="bg-card rounded-lg p-6 border-l-4 border-blue-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 CPC
               </h3>
               <div className="text-3xl font-black">
@@ -541,25 +541,25 @@ function AdvancedKeywordAnalysis() {
                   ? `$${analysisData.cpc.toFixed(2)}`
                   : "N/A"}
               </div>
-              <p className="text-gray-400 text-sm mt-2">Cost per click</p>
+              <p className="text-gray-400 dark:text-foreground/80 text-sm mt-2">Cost per click</p>
             </div>
 
             {/* Competition */}
             <div className="bg-card rounded-lg p-6 border-l-4 border-green-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 Competition
               </h3>
               <div className="text-3xl font-black">
                 {analysisData.competition ? analysisData.competition : "N/A"}
               </div>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-400 dark:text-foreground text-sm mt-2">
                 Competitive density
               </p>
             </div>
 
             {/* Difficulty */}
             <div className="bg-card rounded-lg p-6 border-l-4 border-red-500 hover:translate-y-[-5px] transition-all">
-              <h3 className="text-gray-400 text-sm uppercase mb-2 font-semibold">
+              <h3 className="text-gray-400 dark:text-foreground/80 text-sm uppercase mb-2 font-semibold">
                 Difficulty
               </h3>
               <div className="flex items-center gap-3">
@@ -571,7 +571,7 @@ function AdvancedKeywordAnalysis() {
                 {analysisData.difficulty > 0 &&
                   getDifficultyBadge(analysisData.difficulty)}
               </div>
-              <p className="text-gray-400 text-sm mt-2">
+              <p className="text-gray-400 dark:text-foreground/80 text-sm mt-2">
                 Ranking difficulty score
               </p>
             </div>
