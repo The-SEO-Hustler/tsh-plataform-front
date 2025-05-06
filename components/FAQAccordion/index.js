@@ -26,13 +26,13 @@ export default function FAQAccordion({ title, description, items }) {
               className="w-full text-left py-3 px-4 font-medium focus:outline-none flex justify-between items-center cursor-pointer bg-primary text-black"
               onClick={() => toggleIndex(idx)}
             >
-              <h3 className="!text-base !py-0 !my-0 font-semibold">{item.question}</h3>
+              <h3 className="!py-0 !my-0 font-semibold !text-primary-foreground">{item.question}</h3>
               <span className="transform transition-transform duration-500 text-lg">
                 {openIndex === idx ? '-' : '+'}
               </span>
             </button>
             <div
-              className="bg-white"
+              className="bg-card text-foreground"
               style={{
                 maxHeight: openIndex === idx ? '1000px' : '0px',
                 transition: 'max-height 0.3s ease',

@@ -30,10 +30,10 @@ function UsageCard() {
         </div>
       ) : (
         <div className=''>
-          <div className='flex justify-between mb-2 text-transparent animate-pulse bg-gray-200 rounded-md'>
+          <div className='flex justify-between mb-2 text-transparent animate-pulse bg-gray-200 dark:bg-foreground/10 rounded-md'>
             <span>0/0 daily free usage available</span>
           </div>
-          <div className='w-full bg-gray-200 dark:bg-background rounded-full h-2.5 animate-pulse'>
+          <div className='w-full bg-gray-200 dark:bg-foreground/10 rounded-full h-2.5 animate-pulse'>
             <div style={progressBarStyle} className='rounded-full '></div>
           </div>
         </div>

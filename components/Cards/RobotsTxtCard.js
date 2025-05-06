@@ -70,7 +70,7 @@ export default function RobotsTxtCard({
         {data.content && (
           <div className="mt-2">
             <span className="font-medium">Content:</span>
-            <pre className="mt-1 p-2 bg-gray-100 dark:bg-accent rounded text-xs overflow-auto max-h-[300px]">
+            <pre className="mt-1 p-2 bg-gray-100 dark:bg-accent dark:text-white rounded text-xs overflow-auto max-h-[300px]">
               {data.content}
             </pre>
           </div>

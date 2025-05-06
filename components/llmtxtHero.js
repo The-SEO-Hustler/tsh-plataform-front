@@ -125,7 +125,7 @@ function LLMTxtHero() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-foreground/10`}
+                      className={`w-full ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
                       disabled={loading || usage?.remaining <= 0 || usage === null}
                     >
                       {loading ? "Initializing..." : "Generate Text"}

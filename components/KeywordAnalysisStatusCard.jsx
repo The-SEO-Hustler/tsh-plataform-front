@@ -34,7 +34,7 @@ function KeywordAnalysisStatusCardContent() {
       case "failed":
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
-        return <SettingsIcon className="h-5 w-5 text-gray-500" />;
+        return <SettingsIcon className="h-5 w-5 text-gray-500 dark:text-foreground/80" />;
     }
   };
 
@@ -112,7 +112,7 @@ function KeywordAnalysisStatusCardContent() {
         <Button
           size="sm"
           onClick={handleViewAnalysis}
-          className="flex items-center gap-1 cursor-pointer !text-foreground"
+          className="flex items-center gap-1 cursor-pointer !text-primary-foreground"
         >
           View Results
           <ExternalLink className="h-3 w-3" />
