@@ -86,7 +86,7 @@ function SeoCheckForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col md:flex-row">
         <input
-          className="bg-card text-foreground px-4 py-3 rounded-md w-full md:w-3/4 mb-3 md:mb-0 md:mr-3 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-foreground"
+          className="bg-card text-foreground px-4 py-3 rounded-md w-full md:w-3/4 mb-3 md:mb-0 md:mr-3 focus:outline-none border border-foreground/10 focus:ring-2 focus:ring-black dark:focus:ring-foreground"
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
