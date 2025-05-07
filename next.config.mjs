@@ -32,6 +32,11 @@ const nextConfig = {
       destination: '/playbooks',
       permanent: true,
     },
+    {
+      source: '/seo-competitor-analysis',
+      destination: '/blog/seo-competitor-analysis',
+      permanent: true,
+    },
   ],
 };
 
