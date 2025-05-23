@@ -10,57 +10,57 @@ import { replaceComponents } from "@/lib/replaceComponents";
 // import useStickyTableHeaders from '@/lib/useStickyTableHeaders'
 
 function BlogContentPage({ post, blogPostsData }) {
-  useEffect(() => {
-    const codeBlocks = document.querySelectorAll(
-      ".wp-block-kevinbatdorf-code-block-pro"
-    );
-    codeBlocks.forEach((block) => {
-      const existingButton = block.querySelector(".copy-button");
-      if (existingButton) return; // avoid duplicates
+  // useEffect(() => {
+  //   const codeBlocks = document.querySelectorAll(
+  //     ".wp-block-kevinbatdorf-code-block-pro"
+  //   );
+  //   codeBlocks.forEach((block) => {
+  //     const existingButton = block.querySelector(".copy-button");
+  //     if (existingButton) return; // avoid duplicates
 
-      const span = block.querySelector("span[data-code]");
-      if (!span) return;
+  //     const span = block.querySelector("span[data-code]");
+  //     if (!span) return;
 
-      const code = span.getAttribute("data-code");
-      if (!code) return;
+  //     const code = span.getAttribute("data-code");
+  //     if (!code) return;
 
-      const button = document.createElement("button");
-      button.className = "copy-button";
-      button.style.position = "absolute";
-      button.style.color = "#666";
-      button.style.top = "0.5rem";
-      button.style.right = "0.5rem";
-      button.style.zIndex = "10";
-      button.style.background = "#fff";
-      button.style.border = "1px solid #666";
-      button.style.borderRadius = "4px";
-      button.style.padding = "0.25rem";
-      button.style.cursor = "pointer";
-      button.title = "Copy code";
-      button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`; // default icon
+  //     const button = document.createElement("button");
+  //     button.className = "copy-button";
+  //     button.style.position = "absolute";
+  //     button.style.color = "#666";
+  //     button.style.top = "0.5rem";
+  //     button.style.right = "0.5rem";
+  //     button.style.zIndex = "10";
+  //     button.style.background = "#fff";
+  //     button.style.border = "1px solid #666";
+  //     button.style.borderRadius = "4px";
+  //     button.style.padding = "0.25rem";
+  //     button.style.cursor = "pointer";
+  //     button.title = "Copy code";
+  //     button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`; // default icon
 
-      let copied = false;
+  //     let copied = false;
 
-      button.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(code);
-          copied = true;
-          toast.success("Copied to clipboard!");
-          button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`;
+  //     button.addEventListener("click", async () => {
+  //       try {
+  //         await navigator.clipboard.writeText(code);
+  //         copied = true;
+  //         toast.success("Copied to clipboard!");
+  //         button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`;
 
-          setTimeout(() => {
-            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
-            copied = false;
-          }, 2000);
-        } catch (err) {
-          toast.error("Failed to copy");
-        }
-      });
+  //         setTimeout(() => {
+  //           button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+  //           copied = false;
+  //         }, 2000);
+  //       } catch (err) {
+  //         toast.error("Failed to copy");
+  //       }
+  //     });
 
-      block.style.position = "relative";
-      block.appendChild(button);
-    });
-  }, []);
+  //     block.style.position = "relative";
+  //     block.appendChild(button);
+  //   });
+  // }, []);
 
   // useStickyTableHeaders(`.${styles.content} table`);
 
@@ -146,7 +146,9 @@ function BlogContentPage({ post, blogPostsData }) {
                 </svg>
                 {post.readTime} min read
               </span>
-              <span className="ml-4 text-white/70 dark:text-foreground/70 text-sm">{post.date}</span>
+              <span className="ml-4 text-white/70 dark:text-foreground/70 text-sm">
+                {post.date}
+              </span>
             </div>
 
             <h1
@@ -180,7 +182,9 @@ function BlogContentPage({ post, blogPostsData }) {
                 </svg>
               </div>
               <div>
-                <p className="text-white dark:text-foreground font-medium">{post.author}</p>
+                <p className="text-white dark:text-foreground font-medium">
+                  {post.author}
+                </p>
                 <p className="text-white/60 dark:text-foreground/60 text-sm">
                   SEO Consultant & Founder
                 </p>
@@ -285,6 +289,7 @@ function BlogContentPage({ post, blogPostsData }) {
             {/* Main Article Content */}
             <article className={`${styles.content} wp-article`}>
               {replaceComponents(post.content)}
+              {/* <div dangerouslySetInnerHTML={{ __html: post.content }} /> */}
             </article>
             {/* {content && <Content html={content} />} */}
 
