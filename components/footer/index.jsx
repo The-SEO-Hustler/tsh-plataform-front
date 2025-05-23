@@ -1,36 +1,36 @@
-import Link from 'next/link';
-import Container from '@/components/container';
+import Link from "next/link";
+import Container from "@/components/container";
 
 export default function Footer() {
   // Footer link sections
   const sections = [
     {
-      title: 'Resources',
+      title: "Resources",
       links: [
-        { name: 'Free SEO Tools', href: '/free-tools' },
-        { name: 'Blog', href: '/blog' },
-        { name: 'Playbooks', href: '/resources#playbooks' },
-        { name: 'Cheatsheets', href: '/resources#cheatsheets' },
-        { name: 'Ebooks', href: '/resources#ebooks' },
+        { name: "Free SEO Tools", href: "/free-tools" },
+        { name: "Blog", href: "/blog" },
+        { name: "Playbooks", href: "/resources#playbooks" },
+        { name: "Cheatsheets", href: "/resources#cheatsheets" },
+        { name: "Ebooks", href: "/resources#ebooks" },
       ],
     },
     {
-      title: 'Learn',
+      title: "Learn",
       links: [
-        { name: 'SEO Basics', href: '/playbooks/seo-basics' },
-        { name: 'Keyword Research', href: '/playbooks/keyword-research' },
-        { name: 'Link Building', href: '/playbooks/link-building' },
-        { name: 'Technical SEO', href: '/playbooks/technical-seo-audit' },
-        { name: 'Content Strategy', href: '/playbooks/content-strategy' },
+        { name: "SEO Basics", href: "/playbooks/seo-basics" },
+        { name: "Keyword Research", href: "/playbooks/keyword-research" },
+        { name: "Link Building", href: "/playbooks/link-building" },
+        { name: "Technical SEO", href: "/playbooks/technical-seo-audit" },
+        { name: "Content Strategy", href: "/playbooks/content-strategy" },
       ],
     },
     {
-      title: 'Company',
+      title: "Company",
       links: [
-        { name: 'About Us', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Terms', href: '/terms' },
-        { name: 'Privacy', href: '/privacy' },
+        { name: "About Us", href: "/about" },
+        { name: "Contact", href: "/contact" },
+        { name: "Terms", href: "/terms" },
+        { name: "Privacy", href: "/privacy" },
       ],
     },
   ];
@@ -48,13 +48,35 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block">
-              <svg width="160" height="40" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="100" y="30" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" textAnchor="middle" fill="#FFcc00">THE SEO HUSTLER</text>
+            <Link
+              href="/"
+              className="inline-block"
+              aria-label="The SEO Hustler Homepage"
+            >
+              <svg
+                width="160"
+                height="40"
+                viewBox="0 0 200 60"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <text
+                  x="100"
+                  y="30"
+                  fontFamily="Arial, sans-serif"
+                  fontSize="24"
+                  fontWeight="bold"
+                  textAnchor="middle"
+                  fill="#FFcc00"
+                >
+                  THE SEO HUSTLER
+                </text>
               </svg>
             </Link>
             <p className="mt-4  text-sm">
-              The SEO Hustler is a resource for anyone trying to learn and execute SEO and organic growth by themselves. Get sh*t done with our free tools, in-depth playbooks, and resources.
+              The SEO Hustler is a resource for anyone trying to learn and
+              execute SEO and organic growth by themselves. Get sh*t done with
+              our free tools, in-depth playbooks, and resources.
             </p>
             <div className="mt-6 flex space-x-4">
               {socialLinks.map((social) => (
@@ -66,20 +88,50 @@ export default function Footer() {
                   className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 text-zinc-100 hover:bg-primary hover:text-primary-foreground transition-colors"
                   aria-label={social.name}
                 >
-                  {social.icon === 'twitter' && (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  {social.icon === "twitter" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                     </svg>
                   )}
-                  {social.icon === 'linkedin' && (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  {social.icon === "linkedin" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                       <rect x="2" y="9" width="4" height="12"></rect>
                       <circle cx="4" cy="4" r="2"></circle>
                     </svg>
                   )}
-                  {social.icon === 'youtube' && (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  {social.icon === "youtube" && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
                       <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
                     </svg>
@@ -91,7 +143,9 @@ export default function Footer() {
           {/* Link Columns */}
           {sections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-lg font-bold !text-primary mb-4">{section.title}</h3>
+              <h3 className="text-lg font-bold !text-primary mb-4">
+                {section.title}
+              </h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
