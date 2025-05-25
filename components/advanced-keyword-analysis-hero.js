@@ -268,10 +268,10 @@ function AdvancedKeywordAnalysisHero() {
                 </h3>
               </div>
               <div className="space-y-3">
-                <div className="flex items-start">
+                <div className="flex items-start flex-col md:flex-row">
                   <Gauge
-                    className="text-primary mr-2 mt-1 shrink-0 min-h-4 min-w-4"
-                    size={16}
+                    className="text-primary mr-3 mt-1 shrink-0 min-h-8 min-w-8"
+                    size={32}
                   />
                   <div>
                     <span className="font-semibold">Volume & Difficulty:</span>{" "}
@@ -279,10 +279,10 @@ function AdvancedKeywordAnalysisHero() {
                     density, and a ranking-difficulty score.
                   </div>
                 </div>
-                <div className="flex items-start">
+                <div className="flex items-start flex-col md:flex-row">
                   <Eye
-                    className="text-primary mr-2 mt-1 shrink-0 min-h-4 min-w-4"
-                    size={16}
+                    className="text-primary mr-3 mt-1 shrink-0 min-h-8 min-w-8"
+                    size={32}
                   />
                   <div>
                     <span className="font-semibold">SERP Scrape:</span> We scan
@@ -290,10 +290,10 @@ function AdvancedKeywordAnalysisHero() {
                     meta titles/descriptions, and URL slugs.
                   </div>
                 </div>
-                <div className="flex items-start">
+                <div className="flex items-start flex-col md:flex-row">
                   <Target
-                    className="text-primary mr-2 mt-1 shrink-0 min-h-4 min-w-4"
-                    size={16}
+                    className="text-primary mr-3 mt-1 shrink-0 min-h-8 min-w-8"
+                    size={32}
                   />
                   <div>
                     <span className="font-semibold">Intent & PAA:</span> We
@@ -301,10 +301,10 @@ function AdvancedKeywordAnalysisHero() {
                     questions.
                   </div>
                 </div>
-                <div className="flex items-start">
+                <div className="flex items-start flex-col md:flex-row">
                   <TrendingUp
-                    className="text-primary mr-2 mt-1 shrink-0 min-h-4 min-w-4"
-                    size={16}
+                    className="text-primary mr-3 mt-1 shrink-0 min-h-8 min-w-8"
+                    size={32}
                   />
                   <div>
                     <span className="font-semibold">Related Insights:</span> We
@@ -318,11 +318,8 @@ function AdvancedKeywordAnalysisHero() {
 
           {/* Results Interpretation */}
           <div className="dark:bg-card bg-background rounded-2xl p-4 md:p-8 border border-border">
-            <h3 className="text-2xl font-bold mb-8 flex items-center">
-              <Lightbulb
-                className="text-primary mr-3 min-h-6 min-w-6"
-                size={24}
-              />
+            <h3 className="text-2xl font-bold mb-8 flex items-center gap-3 flex-col md:flex-row">
+              <Lightbulb className="text-primary  min-h-6 min-w-6" size={24} />
               Step-by-Step: Interpreting Your Results
             </h3>
 
@@ -330,28 +327,28 @@ function AdvancedKeywordAnalysisHero() {
               <TabsList className="mb-8 grid grid-cols-1 !h-auto md:grid-cols-4 w-full">
                 <TabsTrigger
                   value="metrics"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-black"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-black justify-start md:justify-center"
                 >
                   <BarChart2 className="w-4 h-4 mr-2" />
                   Core Metrics
                 </TabsTrigger>
                 <TabsTrigger
                   value="intent"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-black"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-black justify-start md:justify-center"
                 >
                   <Target className="w-4 h-4 mr-2" />
                   Search Intent
                 </TabsTrigger>
                 <TabsTrigger
                   value="questions"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-black"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-black justify-start md:justify-center"
                 >
                   <Search className="w-4 h-4 mr-2" />
                   Questions & Related
                 </TabsTrigger>
                 <TabsTrigger
                   value="advanced"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-black"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-black justify-start md:justify-center"
                 >
                   <Zap className="w-4 h-4 mr-2" />
                   Advanced Insights
@@ -719,12 +716,16 @@ function AdvancedKeywordAnalysisHero() {
                 <Search className="mr-2" size={20} />
                 Start Analyzing Keywords
               </Button>
-              <Link href="/tools">
-                <Button variant="outline" size="lg" className="text-foreground">
-                  <ArrowRight className="mr-2" size={20} />
-                  Explore More Tools
-                </Button>
-              </Link>
+
+              <Button
+                variant="outline"
+                href="/free-tools"
+                size="lg"
+                className="text-foreground"
+              >
+                <ArrowRight className="mr-2" size={20} />
+                Explore More Tools
+              </Button>
             </div>
           </div>
         </Container>
