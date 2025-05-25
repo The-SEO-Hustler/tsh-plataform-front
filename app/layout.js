@@ -10,8 +10,9 @@ import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
 import KeywordAnalysisStatusCard from "@/components/KeywordAnalysisStatusCard";
 import LLMStatusCard from "@/components/LLMStatusCard";
 import { UsageProvider } from "@/lib/usage-context";
-import { ThemeProvider } from 'next-themes'
+// import { ThemeProvider } from 'next-themes'
 // import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { ThemeProviderWrapper } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,22 +26,24 @@ export const metadata = {
       "The SEO Hustler provides free SEO tools, in-depth guides, and resources to help you learn and execute SEO by yourself.",
   },
   robots: { index: "index", follow: "follow" },
-
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script src="https://analytics.ahrefs.com/analytics.js" data-key="rBdYZW92wmxvaGrL9URAvg" async></script>
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="rBdYZW92wmxvaGrL9URAvg"
+          async
+        ></script>
       </head>
       <body className={`${inter.className} antialiased `}>
-        <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange enableSystem>
+        <ThemeProviderWrapper>
           <AppRouterCacheProvider>
             <Analytics />
             <FirebaseProvider>
               <UsageProvider>
-
                 {/* <GoogleReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}> */}
 
                 <Header />
@@ -50,14 +53,17 @@ export default function RootLayout({ children }) {
                 <AnalysisStatusCard />
                 <ContentPlanningStatusCard />
                 <LLMStatusCard />
-                <Toaster position="top-left" toastOptions={{
-                  style: { color: "var(--foreground)" }
-                }} />
+                <Toaster
+                  position="top-left"
+                  toastOptions={{
+                    style: { color: "rgb(var(--foreground))" },
+                  }}
+                />
                 {/* </GoogleReCaptchaProvider> */}
               </UsageProvider>
             </FirebaseProvider>
           </AppRouterCacheProvider>
-        </ThemeProvider>
+        </ThemeProviderWrapper>
       </body>
     </html>
   );

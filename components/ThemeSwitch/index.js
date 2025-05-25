@@ -20,7 +20,7 @@ export default function ThemeSwitch() {
     <Button
       id="btn-mode"
       aria-label="Toggle dark mode"
-      className="bg-transparent hover:opacity-80 cursor-pointer text-foreground shadow-none"
+      className="bg-transparent hover:opacity-80 cursor-pointer text-foreground shadow-none hover:text-black"
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       {isDark ? <Sun size={20} /> : <Moon size={20} />}

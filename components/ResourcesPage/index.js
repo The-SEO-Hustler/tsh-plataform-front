@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import FeatureSection from "@/components/FeatureSection";
 import ResourceCard from "@/components/ResourceCard";
@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function Resources({ resources }) {
-
   const initValues = { name: "", email: "", message: "" };
   const [formData, setFormData] = useState(initValues);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,8 +23,6 @@ export default function Resources({ resources }) {
     { id: "cheatsheets", label: "Cheatsheets" },
   ];
 
-
-
   async function saveToNotion(formDataWithToken) {
     try {
       console.log("Sending form data:", JSON.stringify(formDataWithToken));
@@ -34,7 +31,7 @@ export default function Resources({ resources }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify(formDataWithToken),
       });
@@ -64,7 +61,9 @@ export default function Resources({ resources }) {
       } else {
         console.error("Error response:", data);
         setFormError(
-          data.error || data.message || "There was an error sending your message. Please try again."
+          data.error ||
+            data.message ||
+            "There was an error sending your message. Please try again."
         );
       }
     } catch (error) {
@@ -95,7 +94,7 @@ export default function Resources({ resources }) {
     const token = await executeRecaptcha("contact_form");
     console.log("reCAPTCHA token:", token);
 
-    const formDataWithToken = { ...formData, token, form: 'resources' };
+    const formDataWithToken = { ...formData, token, form: "resources" };
     await saveToNotion(formDataWithToken);
 
     setIsLoading(false);
@@ -108,8 +107,19 @@ export default function Resources({ resources }) {
         <div className="absolute inset-0 opacity-30">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-yellow-400" />
+              <pattern
+                id="grid"
+                width="40"
+                height="40"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  className="text-yellow-400"
+                />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
@@ -118,10 +128,12 @@ export default function Resources({ resources }) {
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-foreground mb-6">
-            <span className="text-yellow-400">Free SEO Resources</span> & Templates
+            <span className="text-yellow-400">Free SEO Resources</span> &
+            Templates
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto dark:text-foreground/80">
-            Download actionable resources, cheatsheets, playbooks, and templates to streamline your SEO workflow and get results faster.
+            Download actionable resources, cheatsheets, playbooks, and templates
+            to streamline your SEO workflow and get results faster.
           </p>
         </div>
       </section>
@@ -152,10 +164,7 @@ export default function Resources({ resources }) {
               <h2 className="text-3xl font-bold mb-8">Playbooks</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.playbooks.map((resource, index) => (
-                  <ResourceCard
-                    key={index}
-                    {...resource}
-                  />
+                  <ResourceCard key={index} {...resource} />
                 ))}
               </div>
             </Container>
@@ -169,10 +178,7 @@ export default function Resources({ resources }) {
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Ebooks</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.ebooks.map((resource, index) => (
-                  <ResourceCard
-                    key={index}
-                    {...resource}
-                  />
+                  <ResourceCard key={index} {...resource} />
                 ))}
               </div>
             </Container>
@@ -183,13 +189,12 @@ export default function Resources({ resources }) {
         {resources.spreadsheets.length > 0 && (
           <section id="cheatsheets" className="scroll-mt-24">
             <Container>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Cheatsheets</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Cheatsheets
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {resources.spreadsheets.map((resource, index) => (
-                  <ResourceCard
-                    key={index}
-                    {...resource}
-                  />
+                  <ResourceCard key={index} {...resource} />
                 ))}
               </div>
             </Container>
@@ -229,7 +234,9 @@ export default function Resources({ resources }) {
         <div className="max-w-xl mx-auto">
           <div>
             <div className="bg-card rounded-lg p-8 shadow-md">
-              <h2 className="text-2xl font-bold mb-6">Send a Resource Request</h2>
+              <h2 className="text-2xl font-bold mb-6">
+                Send a Resource Request
+              </h2>
 
               {formSubmitted ? (
                 <div className="bg-yellow-400/20 p-6 rounded-lg mb-4">
@@ -271,7 +278,7 @@ export default function Resources({ resources }) {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-transparent text-foreground placeholder:text-foreground/50"
                         required
                       />
                     </div>
@@ -288,7 +295,7 @@ export default function Resources({ resources }) {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-transparent text-foreground placeholder:text-foreground/50"
                         required
                       />
                     </div>
@@ -307,7 +314,7 @@ export default function Resources({ resources }) {
                         onChange={handleInputChange}
                         placeholder="Describe the resource you'd like us to create..."
                         rows="4"
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-transparent text-foreground placeholder:text-foreground/50"
                         required
                       ></textarea>
                     </div>

@@ -62,8 +62,8 @@
   /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); */
 }
 
-
-.cardError .cardHeading, [data-theme="dark"] .cardError .cardHeading {
+.cardError .cardHeading,
+[data-theme="dark"] .cardError .cardHeading {
   border-bottom: 1px solid oklch(0.637 0.237 25.331) !important;
   color: oklch(0.637 0.237 25.331) !important;
 }
@@ -77,12 +77,13 @@
 .cardNormal,
 .cardError,
 .cardWarning {
-  color: var(--foreground);
+  color: rgb(var(--foreground));
 }
-html.dark .cardNormal{
-  color: var(--foreground);
+html.dark .cardNormal {
+  color: rgb(var(--foreground));
 }
-html.dark .cardError, html.dark .cardWarning{
+html.dark .cardError,
+html.dark .cardWarning {
   color: #222;
 }
 
@@ -90,7 +91,10 @@ html.dark .cardError, html.dark .cardWarning{
   opacity: 0;
   transition: all 0.3s ease-in-out;
 }
-.card.cardWarning .cardDescription, .card.cardError .cardDescription, .card.cardWarning, .card.cardError{
+.card.cardWarning .cardDescription,
+.card.cardError .cardDescription,
+.card.cardWarning,
+.card.cardError {
   color: #333;
 }
 .card:hover .cardDescription {

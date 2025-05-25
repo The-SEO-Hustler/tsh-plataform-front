@@ -102,7 +102,7 @@ function BlogContentPage({ post, blogPostsData }) {
   return (
     <>
       {/* Article Header */}
-      <section className="pt-32 pb-10 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
+      <section className="pt-16 md:pt-32 pb-10 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -126,11 +126,11 @@ function BlogContentPage({ post, blogPostsData }) {
 
         <div className="container lg:max-w-4xl mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-center mb-5">
+            <div className="flex md:items-center mb-5 flex-col md:flex-row items-start gap-4">
               <span className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium">
                 {post.category}
               </span>
-              <span className="ml-4 text-white/70 dark:text-foreground/70 flex items-center text-sm">
+              <span className=" text-white/70 dark:text-foreground/70 flex items-center text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-1"
@@ -146,7 +146,7 @@ function BlogContentPage({ post, blogPostsData }) {
                 </svg>
                 {post.readTime} min read
               </span>
-              <span className="ml-4 text-white/70 dark:text-foreground/70 text-sm">
+              <span className=" text-white/70 dark:text-foreground/70 text-sm">
                 {post.date}
               </span>
             </div>

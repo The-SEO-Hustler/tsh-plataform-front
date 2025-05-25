@@ -1,12 +1,12 @@
-'use client'
-import React from 'react'
-import Container from '@/components/container'
-import { Button } from '@/components/ui/button'
-import { ArrowRight, Search } from 'lucide-react'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { useFirebase } from '@/lib/firebase-context'
-import { useRouter } from 'next/navigation'
+"use client";
+import React from "react";
+import Container from "@/components/container";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Search } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useFirebase } from "@/lib/firebase-context";
+import { useRouter } from "next/navigation";
 import { useUsage } from "@/lib/usage-context";
 import {
   Select,
@@ -14,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 const options = [
   { value: "blog_post", label: "Blog Post" },
@@ -26,25 +26,36 @@ const options = [
   { value: "list_post", label: "List Post" },
   { value: "tutorial", label: "Tutorial/How-To" },
   { value: "faq_page", label: "FAQ Page" },
-]
+];
 
 function ContentPlanningHero() {
-
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { trackContentPlanning, currentContentPlanning, removeLLMTxt, removeAdvancedKeywordAnalysis, removeAnalysis } = useFirebase();
+  const {
+    trackContentPlanning,
+    currentContentPlanning,
+    removeLLMTxt,
+    removeAdvancedKeywordAnalysis,
+    removeAnalysis,
+  } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (usage?.remaining <= 0) {
-      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      toast.error(
+        "You have reached your daily limit. Please try again tomorrow."
+      );
       return;
     }
-    if (currentContentPlanning && (currentContentPlanning?.status !== "completed" && currentContentPlanning?.status !== "failed")) {
+    if (
+      currentContentPlanning &&
+      currentContentPlanning?.status !== "completed" &&
+      currentContentPlanning?.status !== "failed"
+    ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
@@ -66,7 +77,7 @@ function ContentPlanningHero() {
     setLoading(true);
     setError(null);
     // setAnalysisData(null);
-    console.log('keyword', keyword, 'contentType', contentType);
+    console.log("keyword", keyword, "contentType", contentType);
     try {
       const formData = new FormData();
       formData.append("keyword", keyword);
@@ -89,9 +100,9 @@ function ContentPlanningHero() {
         removeAdvancedKeywordAnalysis();
         trackContentPlanning(data.docId, keyword);
         router.push(`/content-planning/result?id=${data.docId}`);
-        setUsage(prevUsage => ({
+        setUsage((prevUsage) => ({
           ...prevUsage,
-          remaining: prevUsage.remaining - 1
+          remaining: prevUsage.remaining - 1,
         }));
       }
     } catch (err) {
@@ -108,8 +119,18 @@ function ContentPlanningHero() {
       <div className="absolute inset-0 opacity-30">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFDD00" strokeWidth="0.5" />
+            <pattern
+              id="grid"
+              width="40"
+              height="40"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 40 0 L 0 0 0 40"
+                fill="none"
+                stroke="#FFDD00"
+                strokeWidth="0.5"
+              />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
@@ -124,7 +145,8 @@ function ContentPlanningHero() {
                 Content <span className="text-primary">Planning</span>
               </h1>
               <p className="text-xl ">
-                Plan your content strategy with detailed insights and recommendations.
+                Plan your content strategy with detailed insights and
+                recommendations.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
                 <div className="relative">
@@ -133,7 +155,7 @@ function ContentPlanningHero() {
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     placeholder="Enter a keyword..."
-                    className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
                     required
                     disabled={loading}
                   />
@@ -144,7 +166,10 @@ function ContentPlanningHero() {
                     onValueChange={setContentType}
                     disabled={loading}
                   >
-                    <SelectTrigger size="lg" className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200">
+                    <SelectTrigger
+                      size="lg"
+                      className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                    >
                       <SelectValue placeholder="Select content type" />
                     </SelectTrigger>
                     <SelectContent className="bg-card text-foreground border border-border rounded-lg shadow-lg">
@@ -163,7 +188,9 @@ function ContentPlanningHero() {
                 <Button
                   type="submit"
                   size="lg"
-                  className={`w-full ${loading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                  className={`w-full ${
+                    loading ? "animate-pulse" : ""
+                  } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
                   disabled={loading || usage?.remaining <= 0 || usage === null}
                 >
                   {loading ? "Analyzing..." : "Analyze Content Structure"}
@@ -220,7 +247,7 @@ function ContentPlanningHero() {
         </section>
       </Container>
     </main>
-  )
+  );
 }
 
 export default ContentPlanningHero;

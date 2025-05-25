@@ -5,7 +5,6 @@ import FeatureSection from "@/components/FeatureSection";
 import Container from "../container";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
-
 export default function Contact() {
   const initValues = { name: "", email: "", message: "" };
   const [formData, setFormData] = useState(initValues);
@@ -16,13 +15,16 @@ export default function Contact() {
 
   async function saveToNotion(formDataWithToken) {
     try {
-      console.log("Sending form data with token:", JSON.stringify(formDataWithToken));
+      console.log(
+        "Sending form data with token:",
+        JSON.stringify(formDataWithToken)
+      );
 
       const response = await fetch("/api/submit-to-notion", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          Accept: "application/json",
         },
         body: JSON.stringify(formDataWithToken),
       });
@@ -52,7 +54,9 @@ export default function Contact() {
       } else {
         console.error("Error response:", data);
         setFormError(
-          data.error || data.message || "There was an error sending your message. Please try again."
+          data.error ||
+            data.message ||
+            "There was an error sending your message. Please try again."
         );
       }
     } catch (error) {
@@ -84,7 +88,7 @@ export default function Contact() {
     const token = await executeRecaptcha("contact_form");
     console.log("reCAPTCHA token:", token);
 
-    const formDataWithToken = { ...formData, token, form: 'contact' };
+    const formDataWithToken = { ...formData, token, form: "contact" };
 
     await saveToNotion(formDataWithToken);
 
@@ -277,7 +281,7 @@ export default function Contact() {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-transparent text-foreground placeholder:text-foreground/50"
                         required
                       />
                     </div>
@@ -294,7 +298,7 @@ export default function Contact() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-transparent text-foreground placeholder:text-foreground/50"
                         required
                       />
                     </div>
@@ -312,7 +316,7 @@ export default function Contact() {
                         value={formData.message}
                         onChange={handleInputChange}
                         rows="4"
-                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-foreground/80 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-transparent text-foreground placeholder:text-foreground/50"
                         required
                       ></textarea>
                     </div>
@@ -345,7 +349,9 @@ export default function Contact() {
             <div className="space-y-4">
               {faqItems.map((item, index) => (
                 <div key={index} className="bg-card rounded-md p-6 shadow-md">
-                  <h3 className="font-bold text-lg mb-2 text-foreground">{item.question}</h3>
+                  <h3 className="font-bold text-lg mb-2 text-foreground">
+                    {item.question}
+                  </h3>
                   <p className="text-foreground">{item.answer}</p>
                 </div>
               ))}
