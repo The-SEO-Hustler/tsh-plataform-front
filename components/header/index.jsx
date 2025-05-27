@@ -71,13 +71,11 @@ function Header() {
 
   return (
     <header
-      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${
-        styles.header
-      } ${isSpecialPath ? "fixed" : "sticky"} ${
-        isSpecialPath && !scrolled
+      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${styles.header
+        } ${isSpecialPath ? "fixed" : "sticky"} ${isSpecialPath && !scrolled
           ? `!text-primary !backdrop-blur-none !bg-transparent !border-b-0 ${styles.isSpecialPath} ${styles.notScrolled}`
           : "text-foreground"
-      } z-[999] top-0 w-full font-semibold`}
+        } z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
@@ -148,7 +146,7 @@ function Header() {
                         />
                         <path
                           d="M26 29L28 31L32 27"
-                          stroke="black"
+                          stroke="currentColor"
                           strokeWidth="2.2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
