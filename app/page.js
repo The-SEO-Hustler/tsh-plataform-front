@@ -9,19 +9,26 @@ import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
-import { Search, NotebookPen, ChartArea, FileCode } from 'lucide-react';
+import {
+  Search,
+  NotebookPen,
+  ChartArea,
+  FileCode,
+  ScanSearch,
+} from "lucide-react";
 export const revalidate = 3600;
-import getMetadata from '@/lib/getMetadata';
-import SEO_DATA from '@/lib/seo-data';
+import getMetadata from "@/lib/getMetadata";
+import SEO_DATA from "@/lib/seo-data";
 
 export const metadata = getMetadata(SEO_DATA.index);
-
-
 
 export default async function Home() {
   const latestPosts = await getAllPostsForHome();
   let latestResources = await getAllResourcePage();
-  latestResources = latestResources.playbooks.concat(latestResources.spreadsheets, latestResources.ebooks);
+  latestResources = latestResources.playbooks.concat(
+    latestResources.spreadsheets,
+    latestResources.ebooks
+  );
 
   // console.log('latestResources', latestResources);
   // const latestPosts = [];
@@ -55,12 +62,48 @@ export default async function Home() {
       description:
         "Check your on page SEO score and get real-time suggestions to improve your website.",
       Icon: (
-        <svg width="56" height="56" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M26 29L28 31L32 27" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M39 39.0002L34.7 34.7002" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          width="56"
+          height="56"
+          viewBox="0 0 42 42"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M26 29L28 31L32 27"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M39 39.0002L34.7 34.7002"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       ),
       href: "/seo-check",
@@ -68,10 +111,33 @@ export default async function Home() {
       featured: false,
     },
     {
+      title: "E-E-A-T Checker",
+      description:
+        "This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).",
+      Icon: (
+        <ScanSearch
+          width={56}
+          height={56}
+          strokeWidth={1.5}
+          className=" rounded-md"
+        />
+      ),
+      href: "/eeat-checker",
+      category: "E-E-A-T",
+      featured: false,
+    },
+    {
       title: "Advanced Keyword Analysis",
       description:
         "Analyze your keyword data with our advanced keyword analysis tool.",
-      Icon: <ChartArea width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      Icon: (
+        <ChartArea
+          width={56}
+          height={56}
+          strokeWidth={1.5}
+          className=" rounded-md"
+        />
+      ),
       href: "/advanced-keyword-analysis",
       category: "Advanced Keyword Analysis",
       featured: false,
@@ -80,7 +146,14 @@ export default async function Home() {
       title: "Content Planning Tool",
       description:
         "Plan your content for your website with our content planning tool.",
-      Icon: <NotebookPen width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      Icon: (
+        <NotebookPen
+          width={56}
+          height={56}
+          strokeWidth={1.5}
+          className=" rounded-md"
+        />
+      ),
       href: "/content-planning",
       category: "Content Planning Tool",
       featured: false,
@@ -89,14 +162,19 @@ export default async function Home() {
       title: "LLMs.txt Generator",
       description:
         "Create optimized LLMs.txt files in minutes, not hours. Control how AI sees and represents your business.",
-      Icon: <FileCode width={56} height={56} strokeWidth={1.5} className=" rounded-md" />,
+      Icon: (
+        <FileCode
+          width={56}
+          height={56}
+          strokeWidth={1.5}
+          className=" rounded-md"
+        />
+      ),
       href: "/llms-txt-generator",
       category: "LLMs.txt Generator",
       featured: false,
     },
   ];
-
-
 
   // Features list
   const features = [
@@ -222,7 +300,7 @@ export default async function Home() {
         title="Powerful SEO Tools, Completely Free"
         description="Access professional-grade SEO tools that help you research, analyze, and optimize without spending a dime."
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredTools.map((tool, index) => (
             <ToolCard
               key={index}
@@ -277,10 +355,7 @@ export default async function Home() {
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {latestResources.slice(0, 3).map((resource, index) => (
-            <ResourceCard
-              key={index}
-              {...resource}
-            />
+            <ResourceCard key={index} {...resource} />
           ))}
         </div>
 
@@ -346,22 +421,22 @@ export default async function Home() {
               rating: 5,
               text: "The tools and resources from The SEO Hustler have been a game-changer for my business. I was able to increase my organic traffic by 237% in just 3 months following their step-by-step guides.",
               name: "Sarah Johnson",
-              role: "E-commerce Website Owner"
+              role: "E-commerce Website Owner",
             },
             {
               id: 2,
               rating: 5,
               text: "As a small business owner, I struggled with SEO until I found these resources. The spreadsheets helped me track my progress, and the guides provided actionable steps that actually worked. My local search rankings improved significantly!",
               name: "Michael Chen",
-              role: "Local Business Owner"
+              role: "Local Business Owner",
             },
             {
               id: 3,
               rating: 5,
               text: "The SEO ebooks were exactly what I needed to understand the fundamentals. I implemented the strategies in my content marketing plan and saw a 45% increase in conversions. Highly recommend for anyone serious about SEO.",
               name: "Emily Rodriguez",
-              role: "Content Marketing Manager"
-            }
+              role: "Content Marketing Manager",
+            },
           ].map((testimonial) => (
             <div
               key={testimonial.id}
