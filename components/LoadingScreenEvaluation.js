@@ -108,7 +108,7 @@ export default function LoadingScreenEvaluation({ status = 'pending' }) {
         <div className="mt-8 text-xs text-foreground/80 flex items-center gap-2">
           <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {
-            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/evaluation/result?id=${searchParams.get('id')}`)
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/eeat-checker/result?id=${searchParams.get('id')}`)
             toast.success("Link to content planning copied to clipboard")
           }
           }

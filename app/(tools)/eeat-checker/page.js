@@ -91,7 +91,7 @@ function ContentPlanningHero() {
       formData.append("userLocation", userLocation)
       formData.append("taskLocale", taskLocale)
 
-      const response = await fetch("/api/evaluation", {
+      const response = await fetch("/api/eeat-checker", {
         method: "POST",
         body: formData,
       });
@@ -108,7 +108,7 @@ function ContentPlanningHero() {
         removeAdvancedKeywordAnalysis();
         removeEvaluation();
         trackEvaluation(data.docId, url);
-        router.push(`/evaluation/result?id=${data.docId}`);
+        router.push(`/eeat-checker/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1,
@@ -243,7 +243,7 @@ function ContentPlanningHero() {
                       <Search className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold">Content Insights</h3>
+                      <h3 className="font-semibold">E-E-A-T Checker</h3>
                       <p className="text-sm text-muted-foreground">
                         Detailed analysis of content strategy
                       </p>

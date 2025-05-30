@@ -54,14 +54,14 @@ function EvaluationStatusCardContent() {
 
   // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/evaluation/result?id=${currentEvaluation?.docId}`);
+    router.push(`/eeat-checker/result?id=${currentEvaluation?.docId}`);
   };
 
   const scoreAppearance = getScoreAppearance(currentEvaluation?.score);
   const ScoreIcon = scoreAppearance?.icon;
 
   // Do not render if there's no analysis or if we're already on the SEO check page with a docId.
-  if (!currentEvaluation || (pathname === "/evaluation/result" && docId)) {
+  if (!currentEvaluation || (pathname === "/eeat-checker/result" && docId)) {
     return null;
   }
 
@@ -91,7 +91,7 @@ function EvaluationStatusCardContent() {
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/evaluation/result?id=${currentEvaluation?.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}/eeat-checker/result?id=${currentEvaluation?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}
@@ -103,7 +103,7 @@ function EvaluationStatusCardContent() {
 
       {currentEvaluation?.status === "failed" && currentEvaluation?.error && (
         <div className="text-sm !text-red-600 mb-3">
-          {currentContentPlanning?.error}
+          {currentEvaluation?.error}
         </div>
       )}
 

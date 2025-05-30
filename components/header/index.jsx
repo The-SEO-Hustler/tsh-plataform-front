@@ -21,7 +21,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Menu, ChartArea, NotebookPen, FileCode } from "lucide-react";
+import { Menu, ChartArea, NotebookPen, FileCode, ScanSearch } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -183,6 +183,22 @@ function Header() {
                         color="currentColor"
                       />
                       <span>Provide a keyword and get its SEO insights</span>
+                    </div>
+                  </ListItem>
+                  <ListItem
+                    href="/eeat-checker"
+                    title="E-E-A-T Checker"
+                    free
+                  >
+                    <div className="flex items-center space-x-3">
+                      <ScanSearch
+                        width={20}
+                        height={20}
+                        strokeWidth={1.5}
+                        className="min-w-5 min-h-5 rounded-md"
+                        color="currentColor"
+                      />
+                      <span>This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).</span>
                     </div>
                   </ListItem>
                   <ListItem
@@ -364,6 +380,21 @@ function Header() {
                     color="currentColor"
                   />
                   <span>Advanced Keyword Analysis</span>
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                  href="/eeat-checker"
+                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
+                >
+                  <ScanSearch
+                    width={20}
+                    height={20}
+                    strokeWidth={1.5}
+                    className="min-w-5 min-h-5 rounded-md"
+                    color="currentColor"
+                  />
+                  <span>This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).</span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
