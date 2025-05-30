@@ -21,7 +21,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Menu, ChartArea, NotebookPen, FileCode, ScanSearch } from "lucide-react";
+import {
+  Menu,
+  ChartArea,
+  NotebookPen,
+  FileCode,
+  ScanSearch,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -71,11 +77,13 @@ function Header() {
 
   return (
     <header
-      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${styles.header
-        } ${isSpecialPath ? "fixed" : "sticky"} ${isSpecialPath && !scrolled
+      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${
+        styles.header
+      } ${isSpecialPath ? "fixed" : "sticky"} ${
+        isSpecialPath && !scrolled
           ? `!text-primary !backdrop-blur-none !bg-transparent !border-b-0 ${styles.isSpecialPath} ${styles.notScrolled}`
           : "text-foreground"
-        } z-[999] top-0 w-full font-semibold`}
+      } z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
@@ -185,11 +193,7 @@ function Header() {
                       <span>Provide a keyword and get its SEO insights</span>
                     </div>
                   </ListItem>
-                  <ListItem
-                    href="/eeat-checker"
-                    title="E-E-A-T Checker"
-                    free
-                  >
+                  <ListItem href="/eeat-checker" title="E-E-A-T Checker" free>
                     <div className="flex items-center space-x-3">
                       <ScanSearch
                         width={20}
@@ -198,7 +202,10 @@ function Header() {
                         className="min-w-5 min-h-5 rounded-md"
                         color="currentColor"
                       />
-                      <span>This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).</span>
+                      <span>
+                        Stop guessing your pages E-E-A-T and get a professional
+                        grade Needs Met and Page Quality assessment for free.
+                      </span>
                     </div>
                   </ListItem>
                   <ListItem
@@ -394,7 +401,10 @@ function Header() {
                     className="min-w-5 min-h-5 rounded-md"
                     color="currentColor"
                   />
-                  <span>This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).</span>
+                  <span>
+                    This checklist provides a step-by-step guide for evaluating
+                    Page Quality (PQ) and Needs Met (NM).
+                  </span>
                 </Link>
               </SheetClose>
               <SheetClose asChild>

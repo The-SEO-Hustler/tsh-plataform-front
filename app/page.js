@@ -9,13 +9,8 @@ import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
-import {
-  Search,
-  NotebookPen,
-  ChartArea,
-  FileCode,
-  ScanSearch,
-} from "lucide-react";
+import { NotebookPen, ChartArea, FileCode, ScanSearch } from "lucide-react";
+import Link from "next/link";
 export const revalidate = 3600;
 import getMetadata from "@/lib/getMetadata";
 import SEO_DATA from "@/lib/seo-data";
@@ -113,7 +108,7 @@ export default async function Home() {
     {
       title: "E-E-A-T Checker",
       description:
-        "This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).",
+        "Stop guessing your pages E-E-A-T and get a professional grade Needs Meet and Page Quality assessment for free.",
       Icon: (
         <ScanSearch
           width={56}
@@ -198,6 +193,7 @@ export default async function Home() {
           <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
       ),
+      href: "/free-tools",
     },
     {
       title: "In-Depth Guides",
@@ -218,6 +214,7 @@ export default async function Home() {
           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
         </svg>
       ),
+      href: "/resources",
     },
     {
       title: "Actionable Resources",
@@ -241,6 +238,7 @@ export default async function Home() {
           <polyline points="10 9 9 9 8 9"></polyline>
         </svg>
       ),
+      href: false,
     },
     {
       title: "Expert Courses",
@@ -263,6 +261,7 @@ export default async function Home() {
           <line x1="6" y1="18" x2="6.01" y2="18"></line>
         </svg>
       ),
+      href: false,
     },
   ];
 
@@ -279,18 +278,38 @@ export default async function Home() {
         description="The SEO Hustler provides all the tools and resources you need to grow your organic traffic, without the fluff or technical jargon."
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center text-center p-6 rounded-shape-large bg-card  shadow-lg m3-transition rounded-lg"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-bold mb-2 text-on-surface">
-                {feature.title}
-              </h3>
-              <p className="text-foreground">{feature.description}</p>
-            </div>
-          ))}
+          {features.map((feature, idx) => {
+            const content = (
+              <div
+                key={idx}
+                className="flex flex-col items-center text-center p-6 rounded-shape-large bg-card shadow-lg m3-transition rounded-lg relative"
+              >
+                <div className="mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-bold mb-2 text-on-surface">
+                  {feature.title}
+                </h3>
+                <p className="text-foreground">{feature.description}</p>
+
+                {!feature.href && (
+                  <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">
+                    Coming Soon
+                  </span>
+                )}
+              </div>
+            );
+
+            return feature.href ? (
+              <Link
+                key={idx}
+                href={feature.href}
+                className="no-underline hover:outline outline-foreground rounded-lg overflow-hidden block"
+              >
+                {content}
+              </Link>
+            ) : (
+              content
+            );
+          })}
         </div>
       </FeatureSection>
 

@@ -73,7 +73,7 @@ export default function Tools() {
     {
       title: "E-E-A-T Checker",
       description:
-        "This checklist provides a step-by-step guide for evaluating Page Quality (PQ) and Needs Met (NM).",
+        "Stop guessing your pages E-E-A-T and get a professional grade Needs Meet and Page Quality assessment for free.",
       Icon: (
         <ScanSearch
           width={56}

@@ -2,7 +2,7 @@
 import React from "react";
 import Container from "@/components/container";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, ScanSearch, Search } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useFirebase } from "@/lib/firebase-context";
@@ -29,7 +29,6 @@ const options = [
   { value: "korean", label: "Korean" },
   { value: "russian", label: "Russian" },
   { value: "turkish", label: "Turkish" },
-
 ];
 
 function ContentPlanningHero() {
@@ -88,8 +87,8 @@ function ContentPlanningHero() {
       const formData = new FormData();
       formData.append("url", url);
       formData.append("query", query);
-      formData.append("userLocation", userLocation)
-      formData.append("taskLocale", taskLocale)
+      formData.append("userLocation", userLocation);
+      formData.append("taskLocale", taskLocale);
 
       const response = await fetch("/api/eeat-checker", {
         method: "POST",
@@ -151,10 +150,11 @@ function ContentPlanningHero() {
             {/* Left Column - Keyword Input */}
             <div className="space-y-8">
               <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-                New Evaluation
+                E-E-A-T Checker
               </h1>
               <p className="text-xl ">
-                Submit a URL and query for automated quality evaluation.
+                Stop guessing your pages E-E-A-T and get a professional grade
+                Needs Met and Page Quality assessment for free.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
                 <div className="relative">
@@ -218,8 +218,9 @@ function ContentPlanningHero() {
                 <Button
                   type="submit"
                   size="lg"
-                  className={`w-full ${loading ? "animate-pulse" : ""
-                    } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                  className={`w-full ${
+                    loading ? "animate-pulse" : ""
+                  } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
                   disabled={loading || usage?.remaining <= 0 || usage === null}
                 >
                   {loading ? "Analyzing..." : "Evaluate Content"}
@@ -240,30 +241,30 @@ function ContentPlanningHero() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Search className="w-6 h-6 text-primary" />
+                      <ScanSearch className="w-6 h-6 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold">E-E-A-T Checker</h3>
                       <p className="text-sm text-muted-foreground">
-                        Detailed analysis of content strategy
+                        Professional grade E-E-A-T Assessment Tool
                       </p>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm">Content Quality</span>
+                      <span className="text-sm">Needs Met</span>
                       <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         Excellent
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm">SEO Optimization</span>
+                      <span className="text-sm">Page Quality</span>
                       <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">
                         Needs Improvement
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm">Engagement</span>
+                      <span className="text-sm">Technical Assessment</span>
                       <span className="text-sm font-medium text-green-700 dark:text-green-500">
                         High
                       </span>
