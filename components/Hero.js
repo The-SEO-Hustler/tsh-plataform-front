@@ -24,7 +24,7 @@ export default function Hero() {
           <h1 className=" text-4xl md:text-5xl lg:text-6xl font-black dark:text-foreground text-white mb-6 leading-tight">
             <span className="text-primary">DIY SEO</span> for the Go-Getters
           </h1>
-          <p className=" animation-delay-1 text-xl md:text-2xl dark:text-foreground/80 text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className=" animation-delay-1 text-xl md:text-2xl dark:text-foreground/80 text-white/80 mb-8 max-w-3xl mx-auto intro-paragraph">
             Free tools, in-depth playbooks, and resources to help you learn and execute SEO and organic growth by yourself. No fluff, just results.
           </p>
           <div className=" animation-delay-2 flex flex-col sm:flex-row gap-4 justify-center">

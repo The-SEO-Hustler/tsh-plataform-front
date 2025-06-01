@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Container from "../container";
 import { Button } from "@/components/ui/button";
 import cn from "clsx";
+import { tools } from "@/lib/toolsMetaData";
 import {
   Sheet,
   SheetContent,
@@ -77,13 +78,11 @@ function Header() {
 
   return (
     <header
-      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${
-        styles.header
-      } ${isSpecialPath ? "fixed" : "sticky"} ${
-        isSpecialPath && !scrolled
+      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${styles.header
+        } ${isSpecialPath ? "fixed" : "sticky"} ${isSpecialPath && !scrolled
           ? `!text-primary !backdrop-blur-none !bg-transparent !border-b-0 ${styles.isSpecialPath} ${styles.notScrolled}`
           : "text-foreground"
-      } z-[999] top-0 w-full font-semibold`}
+        } z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
@@ -128,123 +127,25 @@ function Header() {
                 className="shadow-lg rounded-md "
               >
                 <ul className="flex flex-col gap-3 p-2">
-                  <ListItem href="/seo-check" title="SEO Check On Page" free>
-                    <div className="flex items-center space-x-3">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 42 42"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="min-w-5 min-h-5 rounded-md"
-                      >
-                        <path
-                          d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M26 29L28 31L32 27"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M39 39.0002L34.7 34.7002"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span>Provide an URL and get its SEO score</span>
-                    </div>
-                  </ListItem>
-                  <ListItem
-                    href="/advanced-keyword-analysis"
-                    title="Advanced Keyword Analysis"
-                    free
-                  >
-                    <div className="flex items-center space-x-3">
-                      <ChartArea
-                        width={20}
-                        height={20}
-                        strokeWidth={1.5}
-                        className="min-w-5 min-h-5 rounded-md"
-                        color="currentColor"
-                      />
-                      <span>Provide a keyword and get its SEO insights</span>
-                    </div>
-                  </ListItem>
-                  <ListItem href="/eeat-checker" title="E-E-A-T Checker" free>
-                    <div className="flex items-center space-x-3">
-                      <ScanSearch
-                        width={20}
-                        height={20}
-                        strokeWidth={1.5}
-                        className="min-w-5 min-h-5 rounded-md"
-                        color="currentColor"
-                      />
-                      <span>
-                        Stop guessing your pages E-E-A-T and get a professional
-                        grade Needs Met and Page Quality assessment for free.
-                      </span>
-                    </div>
-                  </ListItem>
-                  <ListItem
-                    href="/llms-txt-generator"
-                    title="LLMs.txt Generator"
-                    free
-                  >
-                    <div className="flex items-center space-x-3">
-                      <FileCode
-                        width={20}
-                        height={20}
-                        strokeWidth={1.5}
-                        className="min-w-5 min-h-5 rounded-md"
-                        color="currentColor"
-                      />
-                      <span>
-                        Create optimized LLMs.txt files in minutes, not hours.
-                        Control how AI sees and represents your business.
-                      </span>
-                    </div>
-                  </ListItem>
-                  <ListItem
-                    href="/content-planning"
-                    title="Content Planning"
-                    free
-                  >
-                    <div className="flex items-center space-x-3">
-                      <NotebookPen
-                        width={20}
-                        height={20}
-                        strokeWidth={1.5}
-                        className="min-w-5 min-h-5 rounded-md"
-                        color="currentColor"
-                      />
-                      <span>
-                        Provide a keyword and we will give you a content plan
-                      </span>
-                    </div>
-                  </ListItem>
+                  {tools.map((tool, index) => (
+                    <ListItem href={tool.href} title={tool.title} key={index} free>
+                      <div className="flex items-center space-x-3">
+                        {/* {tool.Icon && (
+                          typeof tool.Icon === 'function' ? (
+                            <tool.Icon className={cn(
+                              "fill-red-600 text-red-600"
+                            )} />
+                          ) : (
+                            <div >
+                              {tool.Icon}
+                            </div>
+                          )
+                        )} */}
+                        <span>{tool.description}</span>
+                      </div>
+                    </ListItem>
+                  ))}
+
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -323,128 +224,31 @@ function Header() {
                   Free Tools
                 </Link>
               </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href="/seo-check"
-                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 42 42"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+              {tools.map((tool, index) => (
+                <SheetClose asChild key={index}>
+                  <Link
+                    href={tool.href}
+                    className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
                   >
-                    <path
-                      d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M26 29L28 31L32 27"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M39 39.0002L34.7 34.7002"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>SEO Check On Page</span>
-                </Link>
-              </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href="/advanced-keyword-analysis"
-                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
-                >
-                  <ChartArea
-                    width={20}
-                    height={20}
-                    strokeWidth={1.5}
-                    className="min-w-5 min-h-5 rounded-md"
-                    color="currentColor"
-                  />
-                  <span>Advanced Keyword Analysis</span>
-                </Link>
-              </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href="/eeat-checker"
-                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
-                >
-                  <ScanSearch
-                    width={20}
-                    height={20}
-                    strokeWidth={1.5}
-                    className="min-w-5 min-h-5 rounded-md"
-                    color="currentColor"
-                  />
-                  <span>
-                    This checklist provides a step-by-step guide for evaluating
-                    Page Quality (PQ) and Needs Met (NM).
-                  </span>
-                </Link>
-              </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href="/content-planning"
-                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
-                >
-                  <NotebookPen
-                    width={20}
-                    height={20}
-                    strokeWidth={1.5}
-                    className=" rounded-md"
-                    color="currentColor"
-                  />
-                  <span>Content Planning</span>
-                </Link>
-              </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href="/llms-txt-generator"
-                  className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
-                >
-                  <FileCode
-                    width={20}
-                    height={20}
-                    strokeWidth={1.5}
-                    className=" rounded-md"
-                    color="currentColor"
-                  />
-                  <span>LLMs.txt Generator</span>
-                </Link>
-              </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href="/seo-check"
-                  className="text-sm !text-foreground  !no-underline !font-bold"
-                >
-                  <span>SEO Check On Page</span>
-                </Link>
-              </SheetClose>
+                    {tool.Icon && (
+                      typeof tool.Icon === 'function' ? (
+                        <tool.Icon className={cn(
+                          "w-5 h-5 text-primary-foreground dark:text-foreground dark:fill-foreground"
+                        )} />
+                      ) : (
+                        <div className="max-w-5 max-h-5 flex items-center justify-center text-primary-foreground dark:text-foreground dark:fill-foreground">
+                          {tool.Icon}
+                        </div>
+                      )
+                    )}
+
+                    <span>{tool.title}</span>
+                  </Link>
+                </SheetClose>
+              ))}
+
+
+
               <SheetClose asChild>
                 <Link
                   href="/blog"

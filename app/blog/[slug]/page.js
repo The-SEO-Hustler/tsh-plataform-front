@@ -9,12 +9,11 @@ import Script from 'next/script'
 import { getFaqSchema } from "@/lib/getFaqSchema";
 import {
   transformContentUrls,
-  getSeoTerm,
   createPostSchema,
 } from "@/lib/wordpress/utils";
+import { blogPostSchema } from "@/lib/schemas/blog-post-schema";
 // import getReactContentWithLazyBlocks from "@/lib/get-react-content-with-lazy-blocks";
 import BlogContentPage from "@/components/BlogContent";
-
 export const revalidate = 3600;
 
 // Generate static params for all blog posts
@@ -110,6 +109,7 @@ export default async function BlogPost({ params }) {
 
   // Create schema markup
   data.post.seo = createPostSchema(data.post);
+  const schemaMarkup = blogPostSchema(data.post);
 
   // Format post data for the BlogContentPage component
   const formattedPost = {
@@ -158,6 +158,7 @@ export default async function BlogPost({ params }) {
   return (
     <>
       {styles && <style dangerouslySetInnerHTML={{ __html: styles }} />}
+      <script type="application/ld+json">{JSON.stringify(schemaMarkup)}</script>
       {faqSchema && (
         <Script
           type="application/ld+json"

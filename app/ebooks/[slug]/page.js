@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import { getFaqSchema } from '@/lib/getFaqSchema';
 import { transformContentUrls } from '@/lib/wordpress/utils';
 import Script from 'next/script';
+import { resourcePostSchema } from '@/lib/schemas/resource-post-schema';
 export const revalidate = 3600;
 
 
@@ -84,6 +85,8 @@ async function Page({ params }) {
     faqSchema = getFaqSchema(resource.content);
   }
 
+  const schema = resourcePostSchema(resource, 'ebooks', 'Ebook');
+
   const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/resources/${param.slug}?no_redirect=true`));
   const html = await response.text();
   const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
@@ -94,6 +97,7 @@ async function Page({ params }) {
       {styles && (
         <style dangerouslySetInnerHTML={{ __html: styles }} />
       )}
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
       {faqSchema && (
         <Script
           type="application/ld+json"

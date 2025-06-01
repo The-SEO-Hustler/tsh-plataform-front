@@ -3,7 +3,7 @@ import { getAllCategories } from '@/lib/wordpress/posts/getAllCategories';
 import BlogClient from '@/components/BlogClient';
 import getMetadata from '@/lib/getMetadata';
 import SEO_DATA from '@/lib/seo-data';
-
+import { blogSchema } from '@/lib/schemas/blog-schema';
 export const metadata = getMetadata(SEO_DATA.blog);
 
 
@@ -45,6 +45,10 @@ export default async function Blog() {
       featuredImageAlt: node.featuredImage?.node?.altText || node.title,
     };
   });
+  const blogSchemaJson = blogSchema(blogPosts);
 
-  return <BlogClient categories={categories} blogPosts={blogPosts} />;
+  return <>
+    <script type="application/ld+json">{JSON.stringify(blogSchemaJson)}</script>
+    <BlogClient categories={categories} blogPosts={blogPosts} />
+  </>
 }

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
@@ -28,7 +30,7 @@ export default function CodeBlock({ language, code }) {
   // *** During SSR, just render a plain fallback ***
   if (!mounted) {
     return (
-      <pre className="rounded-2xl overflow-hidden p-4 bg-gray-100 text-gray-800">
+      <pre className="rounded-2xl overflow-hidden p-4 bg-gray-100 text-foreground">
         {code}
       </pre>
     );

@@ -88,7 +88,7 @@ export default function BlogClient({ categories, blogPosts }) {
       </section>
 
       {/* Newsletter Section */}
-      <FeatureSection
+      {/* <FeatureSection
         title="Get SEO Tips Delivered to Your Inbox"
         description="Subscribe to our newsletter to receive the latest SEO strategies, tips, and industry insights."
         buttonText="Subscribe Now"
@@ -96,7 +96,7 @@ export default function BlogClient({ categories, blogPosts }) {
         image="/images/newsletter.svg"
         imageAlt="Newsletter subscription"
         reverse
-      />
+      /> */}
     </>
   );
 } 

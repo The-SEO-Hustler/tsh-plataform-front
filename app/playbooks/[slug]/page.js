@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import { getFaqSchema } from '@/lib/getFaqSchema';
 import { transformContentUrls } from '@/lib/wordpress/utils';
 import Script from 'next/script';
+import { resourcePostSchema } from '@/lib/schemas/resource-post-schema';
 export const revalidate = 3600;
 
 
@@ -74,6 +75,8 @@ export async function generateMetadata({ params }) {
 async function Page({ params }) {
   const param = await params
   const resource = await getResourceBySlug(param.slug);
+  const schema = resourcePostSchema(resource, 'playbooks', 'Playbook');
+
   let faqSchema = null;
   // Transform content URLs
   if (resource?.content) {
@@ -94,6 +97,9 @@ async function Page({ params }) {
       {styles && (
         <style dangerouslySetInnerHTML={{ __html: styles }} />
       )}
+
+      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+
       {faqSchema && (
         <Script
           type="application/ld+json"

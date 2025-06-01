@@ -9,12 +9,12 @@ import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
 import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
-import { NotebookPen, ChartArea, FileCode, ScanSearch } from "lucide-react";
 import Link from "next/link";
 export const revalidate = 3600;
 import getMetadata from "@/lib/getMetadata";
 import SEO_DATA from "@/lib/seo-data";
-
+import { tools } from "@/lib/toolsMetaData";
+import { homepageSchema } from "@/lib/schemas/homepage-schema";
 export const metadata = getMetadata(SEO_DATA.index);
 
 export default async function Home() {
@@ -50,126 +50,7 @@ export default async function Home() {
     };
   });
 
-  // Featured SEO Tools
-  const featuredTools = [
-    {
-      title: "SEO Page Checker",
-      description:
-        "Check your on page SEO score and get real-time suggestions to improve your website.",
-      Icon: (
-        <svg
-          width="56"
-          height="56"
-          viewBox="0 0 42 42"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M35 17.5V12.25L26.25 3.5H10.5C9.57174 3.5 8.6815 3.86875 8.02513 4.52513C7.36875 5.1815 7 6.07174 7 7V35C7 35.9283 7.36875 36.8185 8.02513 37.4749C8.6815 38.1313 9.57174 38.5 10.5 38.5H17.5"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M24.5 3.5V10.5C24.5 11.4283 24.8687 12.3185 25.5251 12.9749C26.1815 13.6313 27.0717 14 28 14H35"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M26 29L28 31L32 27"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M29 37C33.4183 37 37 33.4183 37 29C37 24.5817 33.4183 21 29 21C24.5817 21 21 24.5817 21 29C21 33.4183 24.5817 37 29 37Z"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M39 39.0002L34.7 34.7002"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ),
-      href: "/seo-check",
-      category: "On Page SEO Checker",
-      featured: false,
-    },
-    {
-      title: "E-E-A-T Checker",
-      description:
-        "Stop guessing your pages E-E-A-T and get a professional grade Needs Meet and Page Quality assessment for free.",
-      Icon: (
-        <ScanSearch
-          width={56}
-          height={56}
-          strokeWidth={1.5}
-          className=" rounded-md"
-        />
-      ),
-      href: "/eeat-checker",
-      category: "E-E-A-T",
-      featured: false,
-    },
-    {
-      title: "Advanced Keyword Analysis",
-      description:
-        "Analyze your keyword data with our advanced keyword analysis tool.",
-      Icon: (
-        <ChartArea
-          width={56}
-          height={56}
-          strokeWidth={1.5}
-          className=" rounded-md"
-        />
-      ),
-      href: "/advanced-keyword-analysis",
-      category: "Advanced Keyword Analysis",
-      featured: false,
-    },
-    {
-      title: "Content Planning Tool",
-      description:
-        "Plan your content for your website with our content planning tool.",
-      Icon: (
-        <NotebookPen
-          width={56}
-          height={56}
-          strokeWidth={1.5}
-          className=" rounded-md"
-        />
-      ),
-      href: "/content-planning",
-      category: "Content Planning Tool",
-      featured: false,
-    },
-    {
-      title: "LLMs.txt Generator",
-      description:
-        "Create optimized LLMs.txt files in minutes, not hours. Control how AI sees and represents your business.",
-      Icon: (
-        <FileCode
-          width={56}
-          height={56}
-          strokeWidth={1.5}
-          className=" rounded-md"
-        />
-      ),
-      href: "/llms-txt-generator",
-      category: "LLMs.txt Generator",
-      featured: false,
-    },
-  ];
+
 
   // Features list
   const features = [
@@ -267,6 +148,9 @@ export default async function Home() {
 
   return (
     <>
+      <script type="application/ld+json">
+        {JSON.stringify(homepageSchema)}
+      </script>
       {/* Hero Section */}
       <Hero />
 
@@ -320,7 +204,7 @@ export default async function Home() {
         description="Access professional-grade SEO tools that help you research, analyze, and optimize without spending a dime."
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredTools.map((tool, index) => (
+          {tools.map((tool, index) => (
             <ToolCard
               key={index}
               title={tool.title}

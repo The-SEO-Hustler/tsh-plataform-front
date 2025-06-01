@@ -144,7 +144,10 @@ function BlogContentPage({ post, blogPostsData }) {
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                {post.readTime} min read
+                <span>
+
+                  {`${post.readTime}  min read`}
+                </span>
               </span>
               <span className=" text-white/70 dark:text-foreground/70 text-sm">
                 {post.date}
