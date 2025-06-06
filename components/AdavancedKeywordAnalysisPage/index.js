@@ -12,9 +12,10 @@ import LoadingScreenKeyword from "@/components/LoadingScreenKeyword";
 import { onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download } from 'lucide-react';
+import { Search, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download, Play } from 'lucide-react';
 import TimestampDisplay from "@/components/TimestampDisplay";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { sample } from "./sample";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -43,6 +44,256 @@ ChartJS.register(
   Legend
 );
 import { useTheme } from 'next-themes'
+
+const OrganicPaidRow = ({ result, idx, headings, url, isSelected, searchIntentState, analysisData, getIntentColor, extractingPageIntent, handleExtractPageIntent, toggleSelect, handleRowClick, selectedUrls, setSelectedUrls }) => (
+  <tr
+    key={idx}
+    className={`transition-colors ${isSelected ? "bg-primary/10" : "hover:bg-card"} cursor-pointer`}
+    onClick={() => handleRowClick(result.url)}
+  >
+    <td className="p-2 text-center">
+      {headings && (
+        <Checkbox
+          checked={isSelected}
+          onCheckedChange={() => toggleSelect(url)}
+          disabled={!isSelected && selectedUrls.length >= 3}
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`Select ${result.title} for comparison`}
+        />
+      )}
+    </td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">
+      #{idx + 1}
+    </td>
+    <td className="py-4 px-4">
+      {result.item_type === 'paid' && (
+        <div className="mb-2">
+          <span className="text-xs text-foreground/80 bg-primary/10 px-2 py-1 rounded-md border border-foreground/10 mb-2">
+            <span>Sponsored</span>
+          </span>
+        </div>
+      )}
+      <div className="max-w-xl">
+        <div className="font-bold text-foreground mb-1 line-clamp-1 flex items-start gap-2">
+          <span className="text-foreground">{result.title}</span>
+          {searchIntentState === "completed" && analysisData.page_classifications?.[result.url] && (
+            <span className={`text-xs px-2 py-1 text-white rounded-full whitespace-nowrap ${getIntentColor(analysisData.page_classifications?.[result.url])}`}>
+              {analysisData.page_classifications[result.url]}
+            </span>
+          )}
+        </div>
+        <div className="text-sm text-foreground/80 line-clamp-2">{result.description}</div>
+        <div className="text-xs text-green-500 mt-1">{result.url}</div>
+        {result.links && result.links.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {result.links.map((link) => (
+              <a key={link.url} href={link.url} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer" className="text-xs border border-foreground/20 rounded-lg px-2 py-1 !no-underline hover:bg-foreground/10 hover:text-foreground transition-colors">
+                {link.title}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </td>
+    <td className="py-4 px-4 text-foreground/80">{result.domain}</td>
+    <td className="py-4 px-4">
+      <div className="flex space-x-2 justify-end">
+        {searchIntentState === "completed" ? (
+          headings ? (
+            <button className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer border border-foreground/10" title="View Headings">
+              <AlignLeft size={16} />
+            </button>
+          ) : (
+            <button className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-foreground/10"
+              title="Extract page Intent"
+              disabled={extractingPageIntent}
+              onClick={() => handleExtractPageIntent(result.url)}>
+              <Download size={16} />
+            </button>
+          )
+        ) : (
+          <div className="bg-gray-200 animate-pulse rounded-md p-2">
+            <AlignLeft size={16} />
+          </div>
+        )}
+        <a href={result.url} target="_blank" rel="noopener noreferrer" className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors border border-foreground/10" title="Visit Page" onClick={(e) => e.stopPropagation()}>
+          <ExternalLink size={16} />
+        </a>
+      </div>
+    </td>
+  </tr>
+);
+
+const AnswerBoxRow = ({ result, idx }) => (
+  <tr key={idx} className="hover:bg-card">
+    <td className="p-2"></td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">#{idx + 1}</td>
+    <td className="py-4 px-4" colSpan="3">
+      <div className="max-w-xl">
+        <div className="text-sm text-foreground/80">{result.text}</div>
+        {result.links && result.links.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {result.links.map((link) => (
+              <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs border border-foreground/20 rounded-lg px-2 py-1 !no-underline hover:bg-foreground/10 hover:text-foreground transition-colors">
+                {link.title}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </td>
+  </tr>
+);
+
+const VideoRow = ({ result, idx }) => (
+  <tr key={idx} className="hover:bg-card">
+    <td className="p-2"></td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">#{idx + 1}</td>
+    <td className="py-4 px-4" colSpan="3">
+      <div className="max-w-xl">
+        <div className="text-sm text-foreground/80">{result.text}</div>
+        {result.items && result.items.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {result.items.map((item, index) => (
+              <div key={index} className="flex gap-4">
+                <div className="w-20 h-20 bg-card rounded flex items-center justify-center min-w-20 min-h-20 max-w-20 max-h-20">
+                  <Play className="w-8 h-8 text-foreground/60" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <img
+                      src={`https://icons.duckduckgo.com/ip3/${item.source.toLowerCase()}.com.ico`}
+                      className="w-4 h-4 aspect-square object-cover min-w-4 min-h-4 max-w-4 max-h-4"
+                      alt={item.source}
+                    />
+                    <div className="text-sm text-foreground/80">{item.source}</div>
+                  </div>
+                  <div className="font-medium line-clamp-2">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="no-underline hover:underline"
+                    >
+                      {item.title}
+                    </a>
+                  </div>
+                  <div className="text-xs text-foreground/60">
+                    {new Date(item.timestamp).toLocaleDateString()}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </td>
+  </tr>
+);
+
+const TopStoriesRow = ({ result, idx }) => (
+  <tr key={idx} className="hover:bg-card">
+    <td className="p-2"></td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">#{idx + 1}</td>
+    <td className="py-4 px-4" colSpan="3">
+      <div className="max-w-xl">
+        <div className="font-bold text-foreground mb-2">{result.title}</div>
+        {result.items && result.items.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {result.items.map((item, index) => (
+              <div key={index} className="flex gap-4">
+                {item.image_url && (
+                  <img src={item.image_url} alt={item.title} className="w-32 h-20 object-cover rounded" />
+                )}
+                <div>
+                  <div className="flex items-center gap-2">
+                    <img src={`https://icons.duckduckgo.com/ip3/${item.domain}.ico`} className="w-4 h-4" />
+                    <div className="text-sm text-foreground/80">{item.source}</div>
+                  </div>
+                  <div className="font-medium">{item.title}</div>
+
+                  <div className="text-xs text-foreground/60">{item.date}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </td>
+  </tr>
+);
+
+const FeaturedSnippetRow = ({ result, idx }) => (
+  <tr key={idx} className="hover:bg-card">
+    <td className="p-2"></td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">#{idx + 1}</td>
+    <td className="py-4 px-4" colSpan="3">
+      <div className="max-w-xl">
+        <div className="font-bold text-foreground mb-2">{result.featured_title}</div>
+        <div className="text-sm text-foreground/80 mb-4">{result.description}</div>
+        {result.images && result.images.length > 0 && (
+          <div className="flex gap-4 mb-4 overflow-x-auto">
+            {result.images.map((image, index) => (
+              <img key={index} src={image} alt={`Featured snippet ${index + 1}`} className="h-32 object-cover rounded" />
+            ))}
+          </div>
+        )}
+        {result.table && result.table.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-foreground/10">
+              <tbody>
+                {result.table.map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {row.map((cell, cellIndex) => (
+                      <td key={cellIndex} className="border border-foreground/10 p-2">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </td>
+  </tr>
+);
+
+const MapRow = ({ result, idx }) => (
+  <tr key={idx} className="hover:bg-card">
+    <td className="p-2"></td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">#{idx + 1}</td>
+    <td className="py-4 px-4" colSpan="3">
+      <div className="max-w-xl">
+        <div className="font-bold text-foreground mb-2">{result.title}</div>
+        <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+          View on Google Maps
+        </a>
+      </div>
+    </td>
+  </tr>
+);
+
+const LocalPackRow = ({ result, idx }) => (
+  <tr key={idx} className="hover:bg-card">
+    <td className="p-2"></td>
+    <td className="py-4 px-4 font-mono text-lg font-bold text-primary">#{idx + 1}</td>
+    <td className="py-4 px-4" colSpan="3">
+      <div className="max-w-xl">
+        <div className="font-bold text-foreground mb-2">{result.title}</div>
+        <div className="text-sm text-foreground/80 mb-2">{result.description}</div>
+        {result.phone && (
+          <div className="text-sm text-foreground/80 mb-2">Phone: {result.phone}</div>
+        )}
+        {result.rating && (
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-sm text-foreground/80">Rating: {result.rating.value}</span>
+            <span className="text-sm text-foreground/60">({result.rating.count} reviews)</span>
+          </div>
+        )}
+      </div>
+    </td>
+  </tr>
+);
 
 function AdvancedKeywordAnalysis() {
 
@@ -508,6 +759,11 @@ function AdvancedKeywordAnalysis() {
         </Container>
       </section>
       {/* Overview Metrics */}
+      <div className="word-break-all whitespace-pre-wrap">
+        {/* <pre className="">
+          {JSON.stringify(analysisData)}
+        </pre> */}
+      </div>
       <section className="py-10 dark:bg-black bg-gray-200 border-b border-foreground/10">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1047,7 +1303,7 @@ function AdvancedKeywordAnalysis() {
             Google Trends
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="col-span-2">
+            <div className="md:col-span-2">
 
               {googleTrendsState === "completed" ?
                 <div className="bg-card rounded-lg p-6">
@@ -1088,8 +1344,8 @@ function AdvancedKeywordAnalysis() {
               }
             </div>
 
-            <div className="col-span-1">
-              <div className="bg-card rounded-lg p-6">
+            <div className="md:col-span-1 ">
+              <div className="bg-card rounded-lg p-6 ">
                 <h3 className="text-xl font-bold mb-4 text-foreground">People Also Search</h3>
                 <div className="flex flex-col gap-2">
                   {analysisData?.related_searches && analysisData?.related_searches?.length > 0 ?
@@ -1143,90 +1399,69 @@ function AdvancedKeywordAnalysis() {
         <div className="max-w-[1450px] mx-auto md:px-6">
           {analysisData.serp_data && analysisData.serp_data.length > 0 ? (
             <div className="overflow-x-auto px-4 md:px-0">
-              <table className="w-full">
-                <thead className="bg-card border-b border-foreground/10">
-                  <tr>
-                    <th className="p-2" />
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-foreground/80">
-                      Rank
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-foreground/80">
-                      Title & URL
-                    </th>
-                    <th className="py-3 px-4 text-left text-sm font-semibold text-foreground/80">
-                      Domain
-                    </th>
-                    <th className="py-3 px-4 text-right text-sm font-semibold text-foreground/80">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-foreground/10">
+              <div className="w-full min-w-[1100px]">
+                <div className="bg-card border-b border-foreground/10 flex">
+                  <div className="p-2 w-12" />
+                  <div className="py-3 px-4 text-left text-sm font-semibold text-foreground/80 w-16">
+                    Rank
+                  </div>
+                  <div className="py-3 px-4 text-left text-sm font-semibold text-foreground/80 flex-1">
+                    Title & URL
+                  </div>
+                  <div className="py-3 px-4 text-left text-sm font-semibold text-foreground/80 w-48">
+                    Domain
+                  </div>
+                  <div className="py-3 px-4 text-right text-sm font-semibold text-foreground/80 w-32">
+                    Actions
+                  </div>
+                </div>
+                <div className="divide-y divide-foreground/10">
                   {analysisData.serp_data.map((result, idx) => {
-
                     const headings = analysisData.headings_by_url?.[result.url] || false;
                     const url = result.url;
                     const isSelected = selectedUrls.includes(url);
-                    return (
-                      <tr
-                        key={idx}
-                        className={`transition-colors ${isSelected ? "bg-primary/10" : "hover:bg-card"} cursor-pointer`}
-                        onClick={() => handleRowClick(result.url)}
-                      >
-                        {/* checkbox cell */}
-                        <td className="p-2 text-center">
-                          {headings && (
-                            <Checkbox
-                              checked={isSelected}
-                              onCheckedChange={() => toggleSelect(url)}
-                              disabled={
-                                !isSelected && selectedUrls.length >= 3
-                              }
-                              onClick={(e) => e.stopPropagation()}
-                              aria-label={`Select ${result.title} for comparison`}
-                            />
-                          )}
-                        </td>
-                        <td className="py-4 px-4 font-mono text-lg font-bold text-primary">
-                          #{idx + 1}
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="max-w-xl">
-                            <div className="font-bold text-foreground mb-1 line-clamp-1 flex items-start gap-2">
-                              <span className="text-foreground">
-                                {result.title}
-                              </span>
-                              {searchIntentState === "completed" ?
-                                analysisData.page_classifications?.[
-                                result.url
-                                ] && (
-                                  <span
-                                    className={`text-xs px-2 py-1 text-white rounded-full whitespace-nowrap ${getIntentColor(
-                                      analysisData.page_classifications?.[
-                                      result.url
-                                      ],
-                                    )}`}
-                                  >
-                                    {
-                                      analysisData.page_classifications[
-                                      result.url
-                                      ]
-                                    }
-                                  </span>
-                                )
-                                :
-                                <div className="w-[70px] bg-gray-200 animate-pulse rounded-full h-6"></div>
 
-                              }
-                            </div>
-                            <div className="text-sm text-foreground/80 line-clamp-2">
-                              {result.description}
-                            </div>
-                            <div className="text-xs text-green-500 mt-1">
-                              {result.url}
-                            </div>
-                            {
-                              result.links && result.links.length > 0 && (
+                    if (result.item_type === 'organic' || result.item_type === 'paid') {
+                      return (
+                        <div
+                          key={idx}
+                          className={`flex transition-colors ${isSelected ? "bg-primary/10" : "hover:bg-card"} cursor-pointer items-center`}
+                          onClick={() => handleRowClick(result.url)}
+                        >
+                          <div className="p-2 w-12 text-center">
+                            {headings && (
+                              <Checkbox
+                                checked={isSelected}
+                                onCheckedChange={() => toggleSelect(url)}
+                                disabled={!isSelected && selectedUrls.length >= 3}
+                                onClick={(e) => e.stopPropagation()}
+                                aria-label={`Select ${result.title} for comparison`}
+                              />
+                            )}
+                          </div>
+                          <div className="py-4 px-4 font-mono text-lg font-bold text-primary w-16">
+                            #{idx + 1}
+                          </div>
+                          <div className="py-4 px-4 flex-1">
+                            {result.item_type === 'paid' && (
+                              <div className="mb-2">
+                                <span className="text-xs text-foreground/80 bg-primary/10 px-2 py-1 rounded-md border border-foreground/10 mb-2">
+                                  <span>Sponsored</span>
+                                </span>
+                              </div>
+                            )}
+                            <div className="max-w-xl">
+                              <div className="font-bold text-foreground mb-1 line-clamp-1 flex items-start gap-2">
+                                <span className="text-foreground">{result.title}</span>
+                                {searchIntentState === "completed" && analysisData.page_classifications?.[result.url] && (
+                                  <span className={`text-xs px-2 py-1 text-white rounded-full whitespace-nowrap ${getIntentColor(analysisData.page_classifications?.[result.url])}`}>
+                                    {analysisData.page_classifications[result.url]}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-sm text-foreground/80 line-clamp-2">{result.description}</div>
+                              <div className="text-xs text-green-500 mt-1">{result.url}</div>
+                              {result.links && result.links.length > 0 && (
                                 <div className="flex flex-wrap gap-2 mt-2">
                                   {result.links.map((link) => (
                                     <a key={link.url} href={link.url} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer" className="text-xs border border-foreground/20 rounded-lg px-2 py-1 !no-underline hover:bg-foreground/10 hover:text-foreground transition-colors">
@@ -1234,55 +1469,291 @@ function AdvancedKeywordAnalysis() {
                                     </a>
                                   ))}
                                 </div>
-                              )
-                            }
+                              )}
+                            </div>
                           </div>
-                        </td>
-                        <td className="py-4 px-4 text-foreground/80">
-                          {result.domain}
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex space-x-2 justify-end">
-                            {/* just an icon indicator; clicking it still opens the dialog */}
-                            {searchIntentState === "completed" ?
-
-                              headings ? (
-                                <button
-                                  className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer border border-foreground/10"
-                                  title="View Headings"
-                                >
-                                  <AlignLeft size={16} />
-                                </button>
+                          <div className="py-4 px-4 text-foreground/80 w-48">
+                            {result.domain}
+                          </div>
+                          <div className="py-4 px-4 w-32">
+                            <div className="flex space-x-2 justify-end">
+                              {searchIntentState === "completed" ? (
+                                headings ? (
+                                  <button className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer border border-foreground/10" title="View Headings">
+                                    <AlignLeft size={16} />
+                                  </button>
+                                ) : (
+                                  <button className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-foreground/10"
+                                    title="Extract page Intent"
+                                    disabled={extractingPageIntent}
+                                    onClick={() => handleExtractPageIntent(result.url)}>
+                                    <Download size={16} />
+                                  </button>
+                                )
                               ) : (
-                                <button className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border border-foreground/10"
-                                  title="Extract page Intent"
-                                  disabled={extractingPageIntent}
-                                  onClick={() => handleExtractPageIntent(result.url)}
-                                >
-                                  <Download size={16} />
-                                </button>
-                              ) :
-                              <div className=" bg-gray-200 animate-pulse rounded-md p-2"> <AlignLeft size={16} /></div>
-                            }
-
-                            {/* this link should NOT open the dialog */}
-                            <a
-                              href={result.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors border border-foreground/10"
-                              title="Visit Page"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <ExternalLink size={16} />
-                            </a>
+                                <div className="bg-gray-200 animate-pulse rounded-md p-2">
+                                  <AlignLeft size={16} />
+                                </div>
+                              )}
+                              <a href={result.url} target="_blank" rel="noopener noreferrer" className="bg-card hover:bg-primary hover:text-primary-foreground text-foreground/80 p-2 rounded-md transition-colors border border-foreground/10" title="Visit Page" onClick={(e) => e.stopPropagation()}>
+                                <ExternalLink size={16} />
+                              </a>
+                            </div>
                           </div>
-                        </td>
-                      </tr>
+                        </div>
+                      );
+                    }
+
+                    // For other result types, use a simpler layout without domain and actions
+                    return (
+                      <div key={idx} className="flex hover:bg-card">
+                        <div className="p-2 w-12" />
+                        <div className="py-4 px-4 font-mono text-lg font-bold text-primary w-16">
+                          #{idx + 1}
+                        </div>
+                        <div className="py-4 px-4 flex-1">
+                          <div className="max-w-full">
+                            {result.item_type === 'answer_box' && (
+                              <>
+                                <div className="text-sm text-foreground/80">{result.text}</div>
+                                {result.links && result.links.length > 0 && (
+                                  <div className="flex flex-wrap gap-2 mt-2">
+                                    {result.links.map((link) => (
+                                      <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs border border-foreground/20 rounded-lg px-2 py-1 !no-underline hover:bg-foreground/10 hover:text-foreground transition-colors">
+                                        {link.title}
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            )}
+                            {result.item_type === 'video' && (
+                              <>
+                                {result.items && result.items.length > 0 && (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {result.items.map((item, index) => (
+                                      <div key={index} className="flex gap-4">
+                                        <div className="w-20 h-20 bg-card rounded flex items-center justify-center min-w-20 min-h-20 max-w-20 max-h-20">
+                                          <Play className="w-8 h-8 text-foreground/60" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <div className="flex items-center gap-2 mb-1">
+                                            <img
+                                              src={`https://icons.duckduckgo.com/ip3/${item.source.toLowerCase()}.com.ico`}
+                                              className="w-4 h-4 aspect-square object-cover min-w-4 min-h-4 max-w-4 max-h-4"
+                                              alt={item.source}
+                                            />
+                                            <div className="text-sm text-foreground/80">{item.source}</div>
+                                          </div>
+                                          <div className="font-medium line-clamp-2">
+                                            <a
+                                              href={item.url}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="no-underline hover:underline"
+                                            >
+                                              {item.title}
+                                            </a>
+                                          </div>
+                                          <div className="text-xs text-foreground/60">
+                                            {new Date(item.timestamp).toLocaleDateString()}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            )}
+                            {result.item_type === 'top_stories' && (
+                              <>
+                                <div className="font-bold text-foreground mb-2">{result.title}</div>
+                                {result.items && result.items.length > 0 && (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {result.items.map((item, index) => (
+                                      <div key={index} className="flex gap-4">
+                                        {item.image_url && (
+                                          <img src={item.image_url} alt={item.title} className="w-20 h-20 object-cover rounded aspect-square min-w-20 min-h-20 max-w-20 max-h-20" />
+                                        )}
+                                        <div>
+                                          <div className="flex items-center gap-2">
+                                            <img src={`https://icons.duckduckgo.com/ip3/${item.domain}.ico`} className="w-4 h-4 aspect-square object-cover min-w-4 min-h-4 max-w-4 max-h-4" />
+                                            <div className="text-sm text-foreground/80">{item.source}</div>
+                                          </div>
+                                          <div className="font-medium">
+                                            <a href={item.url} target="_blank" rel="noopener noreferrer" className="no-underline hover:underline">{item.title}</a>
+                                          </div>
+                                          <div className="text-xs text-foreground/60">{item.date}</div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
+                            )}
+                            {result.item_type === 'featured_snippet' && (
+                              <>
+                                <div className="font-bold text-foreground mb-2">{result.featured_title}</div>
+                                <div className="text-sm text-foreground/80 mb-4">{result.description}</div>
+                                {result.images && result.images.length > 0 && (
+                                  <div className="flex gap-4 mb-4 overflow-x-auto">
+                                    {result.images.map((image, index) => (
+                                      <img key={index} src={image} alt={`Featured snippet ${index + 1}`} className="h-32 object-cover rounded" />
+                                    ))}
+                                  </div>
+                                )}
+                                {result.table && result.table.length > 0 && (
+                                  <div className="overflow-x-auto">
+                                    <table className="min-w-full border border-foreground/10">
+                                      <tbody>
+                                        {result.table.map((row, rowIndex) => (
+                                          <tr key={rowIndex}>
+                                            {row.map((cell, cellIndex) => (
+                                              <td key={cellIndex} className="border border-foreground/10 p-2">{cell}</td>
+                                            ))}
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                )}
+                              </>
+                            )}
+                            {result.item_type === 'map' && (
+                              <>
+                                <div className="font-bold text-foreground mb-2">{result.title}</div>
+                                <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
+                                  View on Google Maps
+                                </a>
+                              </>
+                            )}
+                            {result.item_type === 'local_pack' && (
+                              <>
+                                <div className="font-bold text-foreground mb-2">{result.title}</div>
+                                <div className="text-sm text-foreground/80 mb-2">{result.description}</div>
+                                {result.phone && (
+                                  <div className="text-sm text-foreground/80 mb-2">Phone: {result.phone}</div>
+                                )}
+                                {result.rating && (
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-sm text-foreground/80">Rating: {result.rating.value}</span>
+                                    <span className="text-sm text-foreground/60">({result.rating.count} reviews)</span>
+                                  </div>
+                                )}
+                              </>
+                            )}
+                            {result.item_type === 'carousel' && (
+                              <>
+                                <div className="w-full overflow-x-auto max-w-[1000px] m-auto">
+                                  <div className="flex gap-4 pb-4">
+                                    {result.items.map((item, index) => (
+                                      <div key={index} className="flex flex-col items-center flex-shrink-0 w-[200px]">
+                                        <div className="w-40 h-40 bg-card rounded-lg overflow-hidden mb-2">
+                                          {item.image_url && (
+                                            <img
+                                              src={item.image_url}
+                                              alt={item.title}
+                                              className="w-full h-full object-cover"
+                                            />
+                                          )}
+                                        </div>
+                                        <div className="text-center w-full">
+                                          <div className="font-medium truncate w-full">{item.title}</div>
+                                          {item.subtitle && (
+                                            <div className="text-sm text-foreground/80 truncate w-full">{item.subtitle}</div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </>
+                            )}
+                            {result.item_type === 'featured_snippet' && (
+                              <>
+                                <div className="bg-card rounded-lg p-4 border border-foreground/10">
+                                  {result.title && (
+                                    <div className="font-bold text-foreground mb-2">{result.title}</div>
+                                  )}
+                                  {result.description && (
+                                    <div className="text-sm text-foreground/80 mb-4">{result.description}</div>
+                                  )}
+                                  {result.images && result.images.length > 0 && (
+                                    <div className="flex gap-4 mb-4 overflow-x-auto">
+                                      {result.images.map((image, index) => (
+                                        <div key={index} className="flex-shrink-0">
+                                          <a
+                                            href={image.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block"
+                                          >
+                                            <img
+                                              src={image.image_url}
+                                              alt={image.alt || 'Featured snippet image'}
+                                              className="h-32 object-cover rounded"
+                                            />
+                                          </a>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  {result.table && (
+                                    <div className="overflow-x-auto">
+                                      <table className="min-w-full border border-foreground/10">
+                                        {result.table.table_header && (
+                                          <thead>
+                                            <tr>
+                                              {result.table.table_header.map((header, index) => (
+                                                <th
+                                                  key={index}
+                                                  className="border border-foreground/10 p-2 text-left text-sm font-semibold text-foreground/80"
+                                                >
+                                                  {header}
+                                                </th>
+                                              ))}
+                                            </tr>
+                                          </thead>
+                                        )}
+                                        <tbody>
+                                          {result.table.table_content.map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                              {row.map((cell, cellIndex) => (
+                                                <td
+                                                  key={cellIndex}
+                                                  className="border border-foreground/10 p-2 text-sm"
+                                                >
+                                                  {cell}
+                                                </td>
+                                              ))}
+                                            </tr>
+                                          ))}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  )}
+                                  {result.url && (
+                                    <div className="mt-4">
+                                      <a
+                                        href={result.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm text-primary hover:underline"
+                                      >
+                                        View source
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     );
                   })}
-                </tbody>
-              </table>
+                </div>
+              </div>
               {/* single Dialog instance */}
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="bg-card text-foreground border-foreground/10">

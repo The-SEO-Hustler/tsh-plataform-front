@@ -107,6 +107,9 @@ html.dark {
   --chart-4: 63, 37, 14;
   --chart-5: 250, 106, 16;
 }
+* {
+  /* outline: 1px solid red; */
+}
 
 @theme {
   --animate-slide-up: slideUp 1s ease-in-out forwards;
