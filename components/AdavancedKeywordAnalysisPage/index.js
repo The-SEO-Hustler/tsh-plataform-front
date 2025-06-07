@@ -1508,7 +1508,7 @@ function AdvancedKeywordAnalysis() {
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {result.items.map((item, index) => (
                                           <div key={index} className="flex gap-4">
-                                            <div className="w-20 h-20 bg-card rounded flex items-center justify-center min-w-20 min-h-20 max-w-20 max-h-20">
+                                            <div className="w-20 h-20 bg-card border border-foreground/10 rounded flex items-center justify-center min-w-20 min-h-20 max-w-20 max-h-20">
                                               <Play className="w-8 h-8 text-foreground/60" />
                                             </div>
                                             <div className="flex-1 min-w-0">

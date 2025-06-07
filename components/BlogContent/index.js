@@ -7,6 +7,7 @@ import { LinkedinIcon, Mail, Check, Copy } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { replaceComponents } from "@/lib/replaceComponents";
+
 // import useStickyTableHeaders from '@/lib/useStickyTableHeaders'
 
 function BlogContentPage({ post, blogPostsData }) {
@@ -291,8 +292,8 @@ function BlogContentPage({ post, blogPostsData }) {
 
             {/* Main Article Content */}
             <article className={`${styles.content} wp-article`}>
+
               {replaceComponents(post.content)}
-              {/* <div dangerouslySetInnerHTML={{ __html: post.content }} /> */}
             </article>
             {/* {content && <Content html={content} />} */}
 
