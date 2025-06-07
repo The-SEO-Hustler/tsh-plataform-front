@@ -1,0 +1,50 @@
+.footnotesCustom {
+  position: relative;
+  max-height: 300px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  
+}
+.footnotesCustom li{
+  margin-left: 10px;
+}
+.hide {
+  max-height: 300px;
+}
+
+.footnotesCustom:not(.hide) {
+  max-height: 2000px;
+}
+
+.footnotesButton {
+  display: block;
+  /* width: 100%; */
+  /* padding: 10px; */
+  /* background: linear-gradient(to bottom, transparent, var(--background) 50%); */
+  /* border: none; */
+  cursor: pointer;
+  /* color: var(--foreground); */
+  /* font-weight: 500; */
+  /* text-align: center; */
+  /* margin-top: -50px; */
+  position: relative;
+  z-index: 2;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.footnotesOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, rgb(var(--background)));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.footnotesCustom:not(.hide) .footnotesOverlay {
+  opacity: 0;
+} 
