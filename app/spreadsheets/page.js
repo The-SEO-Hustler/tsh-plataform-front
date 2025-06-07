@@ -5,6 +5,7 @@ import Container from '@/components/container';
 import getMetadata from '@/lib/getMetadata';
 import SEO_DATA from '@/lib/seo-data';
 
+
 export const metadata = getMetadata(SEO_DATA.spreadsheets);
 
 

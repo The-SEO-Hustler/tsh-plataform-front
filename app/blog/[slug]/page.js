@@ -7,6 +7,8 @@ import { getAllPostsWithSlug } from "@/lib/wordpress/posts/getAllPostsWithSlug";
 import { cleanExcerpt } from "@/lib/wordpress/cleanExcerpt";
 import Script from 'next/script'
 import { getFaqSchema } from "@/lib/getFaqSchema";
+import { indexContent } from '@/lib/indexContent'
+import organizeToc from '@/lib/organizeToc'
 import {
   transformContentUrls,
   createPostSchema,
@@ -110,11 +112,14 @@ export default async function BlogPost({ params }) {
   // Create schema markup
   data.post.seo = createPostSchema(data.post);
   const schemaMarkup = blogPostSchema(data.post);
+  const { new_content, list } = indexContent(data.post?.content)
+  const newList = organizeToc(list)
 
   // Format post data for the BlogContentPage component
   const formattedPost = {
     title: data.post.title,
-    content: data.post.content,
+    content: new_content,
+    toc: newList,
     excerpt: data.post.excerpt,
     date: new Date(data.post.date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -171,6 +176,7 @@ export default async function BlogPost({ params }) {
       <BlogContentPage
         post={formattedPost}
         blogPostsData={blogPostsData}
+        toc={newList}
       // content={contentWithLazyBlocks}
       />
 

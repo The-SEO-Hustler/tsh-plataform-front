@@ -9,7 +9,10 @@ import { notFound } from 'next/navigation';
 import { getFaqSchema } from '@/lib/getFaqSchema';
 import { transformContentUrls } from '@/lib/wordpress/utils';
 import { resourcePostSchema } from '@/lib/schemas/resource-post-schema';
+import { indexContent } from '@/lib/indexContent'
+import organizeToc from '@/lib/organizeToc'
 import Script from 'next/script';
+
 export const revalidate = 3600;
 
 
@@ -84,6 +87,10 @@ async function Page({ params }) {
     resource.content = transformContentUrls(resource.content);
     faqSchema = getFaqSchema(resource.content);
   }
+  const { new_content, list } = indexContent(resource.content)
+  const newList = organizeToc(list)
+  resource.content = new_content
+
 
   const schema = resourcePostSchema(resource, 'spreadsheets', 'Spreadsheet');
 
@@ -106,7 +113,7 @@ async function Page({ params }) {
           {JSON.stringify(faqSchema)}
         </Script>
       )}
-      <ResourceContentPage post={resource} />
+      <ResourceContentPage post={resource} toc={newList} />
     </>
   );
 }

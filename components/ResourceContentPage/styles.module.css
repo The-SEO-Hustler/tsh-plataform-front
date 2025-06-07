@@ -206,11 +206,14 @@
   margin-bottom: 1rem;
   font-weight: bold;
 }
+
 .content h2,
 .content h3 {
-  scroll-margin: 3rem;
+  scroll-margin: 64px;
 }
-
+.content *:first-child{
+  margin-top: 0 !important;
+}
 .content h3 {
   font-size: 1.5rem;
   margin-top: 2rem;

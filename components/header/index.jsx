@@ -22,6 +22,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import useScrollDirection from "./scroll";
+
 import {
   Menu,
   ChartArea,
@@ -74,15 +76,35 @@ function Header() {
       return false;
     }
   };
+
+  const checkScrollPath = () => {
+    // Check if the path matches the pattern of a single post
+    // e.g., /blog/post-name, /guides/guide-name, etc.
+    const pathSegments = pathname.split('/').filter(Boolean);
+
+    // Must have exactly 2 segments (category/post-name)
+    if (pathSegments.length !== 2) return false;
+
+    const [category, post] = pathSegments;
+
+    // Check if it's one of our target categories
+    const validCategories = ['blog', 'guides', 'playbooks', 'spreadsheets'];
+
+    return validCategories.includes(category) && post.length > 0;
+  };
+
   const isSpecialPath = checkPathname();
+  const isScrollPath = checkScrollPath();
+  const scrollDirection = useScrollDirection();
 
   return (
     <header
-      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${styles.header
-        } ${isSpecialPath ? "fixed" : "sticky"} ${isSpecialPath && !scrolled
-          ? `!text-primary !backdrop-blur-none !bg-transparent !border-b-0 ${styles.isSpecialPath} ${styles.notScrolled}`
-          : "text-foreground"
-        } z-[999] top-0 w-full font-semibold`}
+      className={`bg-background backdrop-blur-sm shadow-elevation-2 border-b border-border ${styles.header} 
+        ${isSpecialPath ? "fixed" : "sticky"} 
+        ${isSpecialPath && !scrolled ? `!text-primary !backdrop-blur-none !bg-transparent !border-b-0 ${styles.isSpecialPath} ${styles.notScrolled}` : "text-foreground"}
+        ${isScrollPath ? styles.scrollHeader : ""}
+        ${isScrollPath && scrollDirection === "down" ? styles.headerHidden : ""}
+        z-[999] top-0 w-full font-semibold`}
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}

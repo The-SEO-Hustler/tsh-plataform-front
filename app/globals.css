@@ -162,7 +162,7 @@ html.dark {
 
 body {
   color: rgba(var(--foreground), 1);
-  background: rgba(var(--background), 1);
+  background: rgba(var(--background), 1) !important;
 }
 button.MuiButtonBase-root.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-primary.MuiFab-root.MuiFab-circular.MuiFab-sizeLarge.MuiFab-primary.MuiSpeedDial-fab.mui-1usvvvc-MuiButtonBase-root-MuiFab-root-MuiSpeedDial-fab {
   background-color: #ffcc00;
@@ -272,4 +272,8 @@ code.language-json *,
 code.language-plaintext *,
 code.language-plaintext {
   color: rgb(var(--foreground)) !important;
+}
+
+#references-tsh li{
+  scroll-margin-top: 64px;
 }

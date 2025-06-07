@@ -29,3 +29,11 @@
 .isSpecialPath.notScrolled button:focus svg {
   color: rgb(var(--primary-foreground)) !important;
 }
+
+.scrollHeader {
+  transition: transform 0.3s ease-in-out;
+}
+
+.headerHidden {
+  transform: translateY(-100%);
+}

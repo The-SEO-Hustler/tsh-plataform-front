@@ -1,0 +1,120 @@
+.topicWrapper {
+  position: relative;
+}
+
+.topic::after {
+  top: 0;
+  left: 0;
+  position: absolute;
+  content: "";
+  width: 2px;
+  height: 100%;
+  @apply bg-foreground/40 dark:bg-primary/40;
+}
+
+.topic:hover,
+.topic.active:hover {
+  @apply bg-primary text-primary-foreground;
+}
+.h2 {
+  font-size: 20px;
+}
+.h3 {
+  font-size: 16px;
+  padding: 0px 0px 0px 10px;
+  @apply text-primary/80;
+}
+.initialChildConector {
+  width: 12px;
+  height: 2px;
+  @apply dark:bg-primary/40 bg-foreground/40;
+  transform: rotate(30deg) translate(-1px, -1px);
+}
+.endChildConector {
+  width: 12px;
+  height: 2px;
+  @apply dark:bg-primary/40 bg-foreground/40;
+  transform: rotate(-30deg) translate(-1px, 2px);
+}
+.h2,
+.h3 {
+  line-height: 1.2;
+}
+.h2:has(+ .h3) {
+  padding: 5px 0 0 10px;
+  margin-bottom: 0.2rem;
+}
+.related .topicWrapper {
+  margin-bottom: 0.6rem;
+}
+.topic {
+  font-weight: 500;
+  font-size: 16px;
+  overflow: hidden;
+  padding: 4px 0px 4px 10px;
+  gap: 12px;
+  display: flex;
+  flex: 1;
+  position: relative;
+  @apply text-foreground;
+  align-items: center;
+}
+.topic.active::after {
+  @apply bg-foreground;
+}
+.topic.active {
+  @apply text-xl text-primary;
+  font-weight: bolder;
+  /* text-shadow: -1px -1px 0 hsl(var(--primary)), 1px -1px 0 hsl(var(--primary)), */
+  /* -1px 1px 0 hsl(var(--primary)), 1px 1px 0 hsl(var(--primary)); */
+}
+.topic span {
+  margin-left: 6px;
+  white-space: break-spaces;
+}
+.topic::before {
+  display: block;
+  background-color: var(--primary);
+  content: "";
+  top: 0;
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 50%;
+  color: var(--primary);
+}
+.h2 span,
+.h3 span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.h2 .topic::before,
+.h3 .topic::before {
+  background-color: transparent;
+  width: unset;
+  height: unset;
+  top: unset;
+  font-size: 12px;
+}
+.h2 .topic::before {
+  content: "h2";
+}
+.h3 .topic::before {
+  content: "h3";
+}
+
+.topicW {
+  display: flex;
+}
+
+.topicW svg {
+  fill: var(--primary);
+  transform: rotate(180deg);
+}
+.topicW:has(+ ul[data-open="true"]) svg {
+  fill: var(--primary);
+  transform: rotate(-90deg);
+}

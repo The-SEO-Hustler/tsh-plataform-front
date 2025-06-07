@@ -10,6 +10,8 @@ import { getFaqSchema } from '@/lib/getFaqSchema';
 import { transformContentUrls } from '@/lib/wordpress/utils';
 import Script from 'next/script';
 import { resourcePostSchema } from '@/lib/schemas/resource-post-schema';
+import { indexContent } from '@/lib/indexContent'
+import organizeToc from '@/lib/organizeToc'
 export const revalidate = 3600;
 
 
@@ -79,14 +81,19 @@ async function Page({ params }) {
 
   let faqSchema = null;
   // Transform content URLs
-  if (resource?.content) {
-    resource.content = transformContentUrls(resource.content);
-    faqSchema = getFaqSchema(resource.content);
-  }
 
   if (!resource) {
     notFound();
   }
+
+  if (resource?.content) {
+    resource.content = transformContentUrls(resource.content);
+    faqSchema = getFaqSchema(resource.content);
+  }
+  const { new_content, list } = indexContent(resource.content)
+  const newList = organizeToc(list)
+  resource.content = new_content
+
   const response = await fetch(String(`${process.env.BACK_SITE_URL} /blog/resources / ${param.slug}?no_redirect = true`));
   const html = await response.text();
   const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
@@ -108,7 +115,9 @@ async function Page({ params }) {
           {JSON.stringify(faqSchema)}
         </Script>
       )}
-      <ResourceContentPage post={resource} />
+      <div className="bg-background">
+        <ResourceContentPage post={resource} toc={newList} />
+      </div>
     </>
   );
 }

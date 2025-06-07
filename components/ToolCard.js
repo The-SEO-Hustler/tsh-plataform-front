@@ -17,17 +17,15 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
     <Link
       href={href}
       className={cn(
-        "block group rounded-lg overflow-hidden h-full transition-all !no-underline",
-        featured
-          ? 'bg-primary/70 text-primary-foreground shadow-md'
-          : 'bg-card text-foreground shadow-sm hover:shadow-md'
+        "block group rounded-lg overflow-hidden h-full transition-all !no-underline bg-card text-foreground shadow-sm hover:shadow-md",
+
       )}
     >
       <div className="p-6">
         <div className="flex items-start mb-4">
           <div className={cn(
-            "w-24 h-24 rounded-md flex items-center justify-center",
-            featured ? 'bg-primary-foreground/20' : 'bg-accent/40'
+            "w-24 h-24 rounded-md flex items-center justify-center bg-accent/40",
+
           )}>
             {/* Display icon based on tool type */}
             {Icon && (
@@ -75,8 +73,8 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
             Try now
           </span>
           <svg xmlns="http://www.w3.org/2000/svg" className={cn(
-            "w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform",
-            featured ? 'text-primary-foreground' : 'text-primary'
+            "w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform text-primary",
+
           )} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
