@@ -12,9 +12,10 @@ import LoadingScreenKeyword from "@/components/LoadingScreenKeyword";
 import { onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Search, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download, Play } from 'lucide-react';
+import { Search, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download, Play, Share2, DownloadCloud } from 'lucide-react';
 import TimestampDisplay from "@/components/TimestampDisplay";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 // import { sample } from "./sample";
 import {
   Chart as ChartJS,
@@ -550,6 +551,73 @@ function AdvancedKeywordAnalysis() {
     );
   };
 
+  const handleShare = () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    navigator.clipboard.writeText(url);
+    toast.success("Link copied to clipboard");
+  };
+
+  const handleDownloadMarkdown = () => {
+    if (!analysisData) return;
+
+    let date;
+    if (typeof updatedAt.toDate === "function") {
+      date = updatedAt.toDate();
+    } else {
+      const ms = updatedAt.seconds * 1000 + Math.round(updatedAt.nanoseconds / 1e6);
+      date = new Date(ms);
+    }
+
+    // Format: Month Day, Year
+    const formatted = date.toLocaleDateString('en-US', {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    const markdown = `# ${analysisData.keyword} - Keyword Analysis
+
+## Search Intent
+- Primary Intent: ${analysisData.search_intent?.primary || 'N/A'}
+- Confidence: ${analysisData.search_intent?.confidence || 'N/A'}%
+
+## Keyword Metrics
+- Search Volume: ${analysisData.search_volume?.toLocaleString() || 'N/A'}
+- CPC: $${analysisData.cpc?.toFixed(2) || 'N/A'}
+- Competition: ${analysisData.competition || 'N/A'}
+
+## Key Topics
+${analysisData.key_topics?.map(topic => `- ${topic}`).join('\n') || 'N/A'}
+
+## People Also Asked
+${analysisData.paa_questions?.map(q => `- ${q}`).join('\n') || 'N/A'}
+
+## AI Overview
+${analysisData.ai_overview?.join('\n\n') || 'N/A'}
+
+## Related Keywords
+${analysisData.related_keywords?.map(kw => `- ${kw.keyword}: ${kw.monthly_searches[0]?.search_volume || 'N/A'} monthly searches`).join('\n') || 'N/A'}
+
+## Related Searches
+${analysisData.related_searches?.map(search => `- ${search}`).join('\n') || 'N/A'}
+
+## SERP Analysis
+${analysisData.serp_data?.map((result, index) => `
+### ${index + 1}. ${result.title}
+- **URL:** ${result.url}
+- **Type:** ${result.item_type}
+`).join('\n') || 'N/A'}
+
+*Analysis generated on ${formatted}*`;
+
+    const element = document.createElement('a');
+    const file = new Blob([markdown], { type: 'text/markdown' });
+    element.href = URL.createObjectURL(file);
+    element.download = `${analysisData.keyword}-analysis.md`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   if (!docId) {
     router.push("/advanced-keyword-analysis");
@@ -581,7 +649,7 @@ function AdvancedKeywordAnalysis() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Hero Header with Keyword Info */}
-      <section className="pt-28 pb-12 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
+      <section className="pt-28 pb-12 bg-gradient-to-br dark:from-[#4e503a] dark:to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -594,7 +662,8 @@ function AdvancedKeywordAnalysis() {
                 <path
                   d="M 40 0 L 0 0 0 40"
                   fill="none"
-                  stroke="#FFDD00"
+                  // stroke="#FFDD00"
+                  className="dark:stroke-primary stroke-foreground/80"
                   strokeWidth="0.5"
                 />
               </pattern>
@@ -608,19 +677,19 @@ function AdvancedKeywordAnalysis() {
             <span>
               <Link
                 href="/advanced-keyword-analysis"
-                className="hover:text-primary transition-colors text-white dark:text-foreground"
+                className="hover:text-primary transition-colors text-foreground dark:text-foreground"
               >
                 {" "}
                 Advanced Keyword Analysis
               </Link>
 
             </span>
-            <ChevronRight size={16} />
+            <ChevronRight size={16} className="text-primary" />
             <span className="text-primary font-semibold ">
               {analysisData.keyword || "New Content"}
             </span>
           </div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 text-white dark:text-foreground">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 text-foreground dark:text-foreground">
             <div>
               <h1 className="text-4xl md:text-5xl font-black mb-4 flex items-center ">
                 {analysisData.keyword}
@@ -633,13 +702,13 @@ function AdvancedKeywordAnalysis() {
                     >
                       {analysisData.search_intent.primary}
                     </div>
-                    <span className="text-gray-300 dark:text-foreground/80">
+                    <span className="text-foreground/80">
                       {analysisData.search_intent.confidence}% Confidence
                     </span>
                   </> :
                   <>
                     <div
-                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-gray-200 dark:bg-foreground/80 animate-pulse`}
+                      className={`whitespace-nowrap px-4 py-1 rounded-full text-transparent font-bold bg-foreground/80 dark:bg-foreground/80 animate-pulse`}
                     >
                       loading intent
                     </div>
@@ -649,16 +718,31 @@ function AdvancedKeywordAnalysis() {
                   </>
                 }
               </div>
-              <div className="text-gray-300 dark:text-foreground/80 text-sm mt-2">
+              <div className="text-foreground/80 dark:text-foreground/80 text-sm mt-2">
                 <TimestampDisplay ts={updatedAt} />
               </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleShare}
+                className="bg-card hover:bg-card/80 text-foreground px-4 py-2 rounded-md flex items-center gap-2 transition-all cursor-pointer border border-foreground/10"
+              >
+                <Share2 size={16} />
+                Share
+              </button>
+              <button
+                onClick={handleDownloadMarkdown}
+                className="bg-primary hover:bg-primary/90 text-black font-bold px-4 py-2 rounded-md flex items-center gap-2 transition-all cursor-pointer"
+              >
+                <DownloadCloud size={16} />
+                Download Analysis
+              </button>
             </div>
           </div>
         </Container>
       </section>
 
       {/* Sidebar and main content wrapper */}
-
       <div className="flex w-full max-w-[1600px] mx-auto">
         {/* Sidebar */}
         <nav className="hidden md:block sticky top-16 h-[calc(100vh-62px)] min-w-[260px] max-w-[260px] bg-background border-r border-foreground/10 py-8 px-4 text-foreground/90">

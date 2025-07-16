@@ -128,9 +128,8 @@ function SeoCheckHeroContent() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${
-                        isLoading ? "animate-pulse !bg-primary " : ""
-                      }`}
+                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${isLoading ? "animate-pulse !bg-primary " : ""
+                        }`}
                       disabled={
                         isLoading || usage?.remaining <= 0 || usage === null
                       }
@@ -595,9 +594,8 @@ function SeoCheckHeroContent() {
                 <Button
                   type="submit"
                   size="lg"
-                  className={`absolute bg-primary-foreground text-white cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300  ${
-                    isLoading ? "animate-pulse !bg-primary " : ""
-                  }`}
+                  className={`absolute bg-primary-foreground text-white cursor-pointer right-3 top-1/2 -translate-y-1/2 disabled:opacity-100 disabled:bg-gray-300  ${isLoading ? "animate-pulse !bg-primary " : ""
+                    }`}
                   disabled={
                     isLoading || usage?.remaining <= 0 || usage === null
                   }
@@ -844,60 +842,7 @@ function SeoCheckHeroContent() {
           </div>
         </Container>
       </section>
-      {/* FAQ Section */}
-      {/* <section className="py-16 bg-gray-100 border-t border-gray-100 text-black">
-        <Container>
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            FAQs About Our SEO Checker
-          </h2>
 
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">How accurate is this SEO checker?</h3>
-              <p className="text-black/80">
-                Unlike many automated tools, ours uses the same checks professional SEOs perform manually. We analyze over 30 critical factors that directly impact your rankings.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">Will fixing these issues guarantee I rank #1?</h3>
-              <p className="text-black/80">
-                No tool can promise that (and if they do, they're lying). But fixing these issues removes the barriers preventing your site from ranking to its full potential.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">How often should I check my site?</h3>
-              <p className="text-black/80">
-                At minimum, monthly. After major site updates or Google algorithm changes, run another check immediately.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">Is one page enough to check?</h3>
-              <p className="text-black/80">
-                No. While your homepage is important, check your top landing pages and key conversion pages separately for best results.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg">
-              <h3 className="text-xl font-bold mb-2">What makes this better than other free SEO checkers?</h3>
-              <p className="text-black/80">
-                Most free tools check 5-10 basic factors. Ours analyzes 30+ technical factors and provides specific, actionable fix instructions—not just vague warnings.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <p className="text-xl text-black/80 mb-6">
-              Try it now. What do you have to lose except poor rankings?
-            </p>
-            <Link href="#hero" className="bg-primary hover:bg-primary/90 text-black font-bold py-4 px-10 rounded-md text-xl transition-all">
-              Check My Site Now
-            </Link>
-          </div>
-        </Container>
-      </section> */}
     </main>
   );
 }

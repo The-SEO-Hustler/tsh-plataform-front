@@ -15,6 +15,7 @@ import { UsageProvider } from "@/lib/usage-context";
 import { ThemeProviderWrapper } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
 import EvaluationStatusCard from "@/components/EvaluateStatusCard";
+import SearchIntentStatusCard from "@/components/SearchIntentStatusCard";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -55,6 +56,7 @@ export default function RootLayout({ children }) {
                 <ContentPlanningStatusCard />
                 <LLMStatusCard />
                 <EvaluationStatusCard />
+                <SearchIntentStatusCard />
                 <Toaster
                   position="top-left"
                   toastOptions={{
