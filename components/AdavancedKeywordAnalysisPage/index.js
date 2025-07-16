@@ -8,7 +8,7 @@ import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"
-import LoadingScreenKeyword from "@/components/LoadingScreenKeyword";
+import LoadingScreen from "@/components/LoadingScreen";
 import { onSnapshot, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -213,12 +213,12 @@ function AdvancedKeywordAnalysis() {
     googleTrends: null,
   });
 
-  const { trackAdvancedKeywordAnalysis, currentAdvancedKeywordAnalysis, removeAdvancedKeywordAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
   const docId = searchParams.get("id");
   const [status, setStatus] = useState(
-    currentAdvancedKeywordAnalysis ? currentAdvancedKeywordAnalysis.status : "initializing"
+    currentAnalysis ? currentAnalysis.status : "initializing"
   );
   const [open, setOpen] = useState(false)
   const [selectedUrl, setSelectedUrl] = useState(null)
@@ -305,37 +305,44 @@ function AdvancedKeywordAnalysis() {
     // Start tracking this analysis in the global context.
 
     if (docId) {
-      trackAdvancedKeywordAnalysis(docId, keyword);
+      trackAnalysis({
+        type: "advanced-keyword-analysis",
+        docId: docId,
+        collection: "keywordAnalysis",
+        meta: {
+          keyword: keyword,
+        },
+      });
     }
-  }, [docId, router, trackAdvancedKeywordAnalysis, keyword]);
+  }, [docId, router, trackAnalysis, keyword]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
-    if (currentAdvancedKeywordAnalysis && currentAdvancedKeywordAnalysis.type === "advanced-keyword-analysis") {
-      setStatus(currentAdvancedKeywordAnalysis.status);
-      setAnalysisData(currentAdvancedKeywordAnalysis.data || null);
-      setSearchIntentState(currentAdvancedKeywordAnalysis.search_intent_state || false);
-      setGoogleTrendsState(currentAdvancedKeywordAnalysis.google_trends_state || false);
-      setSelectedKeyword(currentAdvancedKeywordAnalysis?.data?.related_keywords?.[0] || "");
-      setKeyword(currentAdvancedKeywordAnalysis.keyword || "");
-      setUpdatedAt(currentAdvancedKeywordAnalysis.updatedAt || "");
+    if (currentAnalysis && currentAnalysis.type === "advanced-keyword-analysis") {
+      setStatus(currentAnalysis.status);
+      setAnalysisData(currentAnalysis.data || null);
+      setSearchIntentState(currentAnalysis.search_intent_state || false);
+      setGoogleTrendsState(currentAnalysis.google_trends_state || false);
+      setSelectedKeyword(currentAnalysis?.data?.related_keywords?.[0] || "");
+      setKeyword(currentAnalysis.keyword || "");
+      setUpdatedAt(currentAnalysis.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
       if (
-        currentAdvancedKeywordAnalysis.preview
+        currentAnalysis.preview
       ) {
         setLoadingPage(false);
       } else {
         setLoadingPage(true);
       }
 
-      if (currentAdvancedKeywordAnalysis.error) {
-        setError(currentAdvancedKeywordAnalysis.error);
+      if (currentAnalysis.error) {
+        setError(currentAnalysis.error);
 
       }
 
     }
-  }, [currentAdvancedKeywordAnalysis]);
+  }, [currentAnalysis]);
 
   // Update chart data when selected keyword changes
 
@@ -501,7 +508,7 @@ function AdvancedKeywordAnalysis() {
     console.log('error effect', error)
     if (error) {
       console.log('removing analysis?')
-      removeAdvancedKeywordAnalysis();
+      clearAnalysis();
       if (toastIds.current.searchIntent) {
         toast.dismiss(toastIds.current.searchIntent);
         toastIds.current.searchIntent = null;
@@ -511,7 +518,7 @@ function AdvancedKeywordAnalysis() {
         toastIds.current.googleTrends = null;
       }
     }
-  }, [error, removeAdvancedKeywordAnalysis, toastIds])
+  }, [error, clearAnalysis, toastIds])
 
   // Function to render difficulty badge
   const getDifficultyBadge = (difficulty) => {
@@ -620,7 +627,7 @@ ${analysisData.serp_data?.map((result, index) => `
   };
 
   if (!docId) {
-    router.push("/advanced-keyword-analysis");
+    router.push(getPathname("advanced-keyword-analysis"));
   }
   if (error) {
 
@@ -641,7 +648,7 @@ ${analysisData.serp_data?.map((result, index) => `
   if (loadingPage) {
     return (
       <>
-        <LoadingScreenKeyword status={status} docId={docId} />
+        <LoadingScreen status={status} type="advanced-keyword-analysis" />
       </>
     );
   }
@@ -1234,7 +1241,7 @@ ${analysisData.serp_data?.map((result, index) => `
                       {analysisData.key_topics?.slice(0, 34).map((topic, index) => (
                         <span
                           key={index}
-                          className="dark:bg-accent bg-gray-200 hover:bg-primary hover:text-black transition-colors px-3 py-1 rounded-md text-sm "
+                          className="dark:bg-accent bg-gray-200 hover:bg-primary hover:text-foreground transition-colors px-3 py-1 rounded-md text-sm "
                         >
                           {topic}
                         </span>

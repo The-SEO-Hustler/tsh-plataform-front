@@ -10,7 +10,7 @@ import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import LoadingScreenSearchIntent from "@/components/LoadingScreenSearchIntent";
+import LoadingScreen from "@/components/LoadingScreen";
 
 function SearchIntent() {
   const [keyword, setKeyword] = useState("");
@@ -20,12 +20,12 @@ function SearchIntent() {
   const [updatedAt, setUpdatedAt] = useState("");
   const [url, setUrl] = useState("");
 
-  const { trackSearchIntent, currentSearchIntent, removeSearchIntent } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
   const docId = searchParams.get("id");
   const [status, setStatus] = useState(
-    currentSearchIntent ? currentSearchIntent.status : "initializing"
+    currentAnalysis ? currentAnalysis.status : "initializing"
   );
 
 
@@ -33,31 +33,38 @@ function SearchIntent() {
     // Start tracking this analysis in the global context.
 
     if (docId) {
-      trackSearchIntent(docId, keyword);
+      trackAnalysis({
+        type: "search-intent",
+        docId: docId,
+        collection: "searchIntent",
+        meta: {
+          keyword: keyword,
+        }
+      });
     }
-  }, [docId, router, trackSearchIntent, keyword]);
+  }, [docId, router, trackAnalysis, keyword]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
-    if (currentSearchIntent && currentSearchIntent.type === "search-intent") {
-      setStatus(currentSearchIntent.status);
-      setAnalysisData(currentSearchIntent.data || null);
-      setKeyword(currentSearchIntent.keyword || "");
-      setUrl(currentSearchIntent.url || "");
-      setUpdatedAt(currentSearchIntent.updatedAt || "");
+    if (currentAnalysis && currentAnalysis.type === "search-intent") {
+      setStatus(currentAnalysis.status);
+      setAnalysisData(currentAnalysis.data || null);
+      setKeyword(currentAnalysis.keyword || "");
+      setUrl(currentAnalysis.url || "");
+      setUpdatedAt(currentAnalysis.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
-      if (currentSearchIntent.preview) {
+      if (currentAnalysis.preview) {
         setLoadingPage(false);
       } else {
         setLoadingPage(true);
       }
 
-      if (currentSearchIntent.error) {
-        setError(currentSearchIntent.error);
+      if (currentAnalysis.error) {
+        setError(currentAnalysis.error);
       }
     }
-  }, [currentSearchIntent]);
+  }, [currentAnalysis]);
 
   // Function to get color based on intent type
   const getIntentColor = (intent) => {
@@ -287,7 +294,7 @@ function SearchIntent() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreenSearchIntent status={status} docId={docId} />
+        <LoadingScreen status={status} type="search-intent" />
       </>
     );
   }
@@ -342,6 +349,7 @@ function SearchIntent() {
       </div>
       <section className="py-12 bg-background border-t border-foreground/10">
         <Container>
+          {JSON.stringify(analysisData)}
 
           <div className="space-y-8">
             {/* Query Summary */}

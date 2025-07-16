@@ -4,6 +4,7 @@ import React, { Suspense } from "react";
 import { useFirebase } from "@/lib/firebase-context";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { getPathname } from "@/lib/getpathname";
 import {
   Loader2,
   CheckCircle,
@@ -18,7 +19,7 @@ import { getScoreAppearance } from "@/lib/getScoreAppearance";
 import { toast } from "sonner";
 
 function AnalysisStatusCardContent() {
-  const { currentAnalysis, removeAnalysis } = useFirebase();
+  const { currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -52,16 +53,17 @@ function AnalysisStatusCardContent() {
     }
   };
 
+
   // Function to handle viewing the analysis.
   const handleViewAnalysis = () => {
-    router.push(`/seo-check/result?id=${currentAnalysis?.docId}`);
+    router.push(`${getPathname(currentAnalysis?.type)}/result?id=${currentAnalysis?.docId}`);
   };
 
-  const scoreAppearance = getScoreAppearance(currentAnalysis?.score);
+  const scoreAppearance = getScoreAppearance(currentAnalysis?.score?.score);
   const ScoreIcon = scoreAppearance?.icon;
 
   // Do not render if there's no analysis or if we're already on the SEO check page with a docId.
-  if (!currentAnalysis || (pathname === "/seo-check/result" && docId)) {
+  if (!currentAnalysis || (pathname.includes("/result") && docId)) {
     return null;
   }
 
@@ -86,12 +88,12 @@ function AnalysisStatusCardContent() {
 
       <div className="flex items-center gap-2">
         <p className="text-sm !text-foreground/80 mb-3 truncate">
-          {currentAnalysis?.url}
+          {currentAnalysis?.url || currentAnalysis?.keyword || currentAnalysis?.query}
         </p>
         <button
           onClick={() => {
             navigator.clipboard.writeText(
-              `${process.env.NEXT_PUBLIC_FRONT_URL}/seo-check/result?id=${currentAnalysis?.docId}`
+              `${process.env.NEXT_PUBLIC_FRONT_URL}${getPathname(currentAnalysis?.type)}/result?id=${currentAnalysis?.docId}`
             );
             toast.success("Link to analysis copied to clipboard");
           }}
@@ -108,15 +110,15 @@ function AnalysisStatusCardContent() {
       )}
 
       <div className="flex justify-end items-center gap-2">
-        {currentAnalysis?.status === "completed" && (
+        {currentAnalysis?.status === "completed" && currentAnalysis?.score && (
           <div className="flex items-center gap-2 ">
             <div
-              className={`h-8 rounded-md gap-1.5 px-3 font-medium py-0.5 flex items-center border ${scoreAppearance.borderColor} ${scoreAppearance.bgColor} ${scoreAppearance.textColor}`}
+              className={`h-8 rounded-md gap-1.5 px-3 font-medium py-0.5 flex items-center border ${scoreAppearance?.borderColor} ${scoreAppearance?.bgColor} ${scoreAppearance?.textColor}`}
             >
-              <div className={`${scoreAppearance.textColor} flex items-center gap-1 text-sm md:text-base`}>
+              <div className={`${scoreAppearance?.textColor} flex items-center gap-1 text-sm md:text-base`}>
                 <ScoreIcon size={14} />
                 <span>
-                  Score: {currentAnalysis?.score || "N/A"}
+                  Score: {currentAnalysis?.score?.score || "N/A"}
                 </span>
               </div>
             </div>
@@ -134,7 +136,7 @@ function AnalysisStatusCardContent() {
       {(currentAnalysis?.status === "completed" ||
         currentAnalysis?.status === "failed") && (
           <button
-            onClick={() => removeAnalysis()}
+            onClick={() => clearAnalysis()}
             className="flex absolute top-0 right-0 items-center gap-1 cursor-pointer p-2 rounded-md hover:!bg-foreground/10"
           >
             <X className="h-4 w-4 !text-foreground/80" />

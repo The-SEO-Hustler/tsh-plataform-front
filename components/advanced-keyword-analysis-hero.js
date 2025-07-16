@@ -31,17 +31,16 @@ import {
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useUsage } from "@/lib/usage-context";
+import { getPathname } from "@/lib/getpathname";
 function AdvancedKeywordAnalysisHero() {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
   const {
-    currentAdvancedKeywordAnalysis,
-    trackAdvancedKeywordAnalysis,
-    removeAdvancedKeywordAnalysis,
-    removeLLMTxt,
-    removeContentPlanning,
+    currentAnalysis,
+    trackAnalysis,
+    clearAnalysis,
   } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -63,18 +62,18 @@ function AdvancedKeywordAnalysisHero() {
     }
 
     if (
-      currentAdvancedKeywordAnalysis &&
-      currentAdvancedKeywordAnalysis?.status !== "completed" &&
-      currentAdvancedKeywordAnalysis?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
 
     if (
-      currentAdvancedKeywordAnalysis &&
-      currentAdvancedKeywordAnalysis?.status !== "completed" &&
-      currentAdvancedKeywordAnalysis?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -99,11 +98,15 @@ function AdvancedKeywordAnalysisHero() {
 
       const data = await response.json();
       if (data.success) {
-        removeLLMTxt();
-        removeContentPlanning();
-        removeAdvancedKeywordAnalysis();
-        trackAdvancedKeywordAnalysis(data.docId, keyword);
-        router.push(`/advanced-keyword-analysis/result?id=${data.docId}`);
+        trackAnalysis({
+          type: "advanced-keyword-analysis",
+          docId: data.docId,
+          collection: "keywordAnalysis",
+          meta: {
+            keyword: keyword,
+          },
+        });
+        router.push(`${getPathname("advanced-keyword-analysis")}/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1,
@@ -158,7 +161,7 @@ function AdvancedKeywordAnalysisHero() {
                     type="text"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="Enter a keyword..."
+                    placeholder="e.g. Best Keto Diet Plan"
                     className="w-full px-4 sm:px-6 sm:pr-[240px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
                     required
                     disabled={loading}
@@ -166,9 +169,8 @@ function AdvancedKeywordAnalysisHero() {
                   <Button
                     type="submit"
                     size="lg"
-                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${
-                      loading ? "animate-pulse" : ""
-                    } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
+                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""
+                      } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
                     disabled={
                       loading || usage?.remaining <= 0 || usage === null
                     }
@@ -178,6 +180,7 @@ function AdvancedKeywordAnalysisHero() {
                     </span>
                     <ArrowRight className="sm:ml-2 sm:h-4 sm:w-4" />
                   </Button>
+                  <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Keyword</label>
                 </div>
               </form>
               {error && (

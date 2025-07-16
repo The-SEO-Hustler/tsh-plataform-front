@@ -12,6 +12,7 @@ import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useUsage } from "@/lib/usage-context";
+import { getPathname } from "@/lib/getpathname";
 
 function SeoCheckHeroContent() {
   const [url, setUrl] = useState("");
@@ -21,9 +22,6 @@ function SeoCheckHeroContent() {
   const {
     trackAnalysis,
     currentAnalysis,
-    removeContentPlanning,
-    removeLLMTxt,
-    removeAdvancedKeywordAnalysis,
   } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
@@ -70,11 +68,15 @@ function SeoCheckHeroContent() {
       const data = await response.json();
 
       if (data.success) {
-        removeContentPlanning();
-        removeLLMTxt();
-        removeAdvancedKeywordAnalysis();
-        trackAnalysis(data.docId, url);
-        router.push(`/seo-check/result?id=${data.docId}`);
+        trackAnalysis({
+          type: "seo-check",
+          docId: data.docId,
+          collection: "seoAnalyses",
+          meta: {
+            url: url,
+          },
+        });
+        router.push(`${getPathname("seo-check")}/result?id=${data.docId}`);
         setIsLoading(false);
         setUsage((prevUsage) => ({
           ...prevUsage,
@@ -139,6 +141,7 @@ function SeoCheckHeroContent() {
                       </span>
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
+                    <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Target URL</label>
                   </div>
                   {formError && <p className="text-red-500">{formError}</p>}
                 </form>
@@ -586,7 +589,7 @@ function SeoCheckHeroContent() {
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Enter your website URL"
+                  placeholder="Enter your webite URL"
                   required
                   disabled={isLoading}
                   className="w-full px-6 py-4 text-lg border-2 border-primary-foreground rounded-lg focus:ring-2 focus:ring-primary-foreground focus:border-transparent transition-all duration-200 text-primary-foreground bg-transparent placeholder:text-primary-foreground/50"
@@ -603,6 +606,7 @@ function SeoCheckHeroContent() {
                   {isLoading ? "Starting Analysis..." : "Analyze"}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
+
               </div>
               {formError && <p className="text-red-500">{formError}</p>}
             </form>

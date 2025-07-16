@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { statusMessages } from '@/lib/statusMessages';
 import { Loader2, Copy } from 'lucide-react';
+import { getPathname } from '@/lib/getpathname';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 
 // Status messages with their descriptions
 
 
-export default function LoadingScreen({ status = 'pending' }) {
+export default function LoadingScreen({ status = 'pending', type }) {
   // Get the message for the current status, or use the default 'pending' message
   const message = statusMessages[status] || statusMessages['pending'];
   const searchParams = useSearchParams();
@@ -107,7 +108,7 @@ export default function LoadingScreen({ status = 'pending' }) {
         <div className="mt-8 text-xs text-foreground/80 flex items-center gap-2">
           <p>This process may take a few minutes depending on the website size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {
-            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}/seo-check/result?id=${searchParams.get('id')}`)
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONT_URL}${getPathname(type)}/result?id=${searchParams.get('id')}`)
             toast.success("Link to analysis copied to clipboard")
           }
           }

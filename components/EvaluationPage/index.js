@@ -24,7 +24,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { JsonEditor, githubDarkTheme, githubLightTheme } from "json-edit-react";
 import { useTheme } from "next-themes";
-import LoadingScreenContentPlanning from "@/components/LoadingScreenContentPlanning";
+import LoadingScreen from "@/components/LoadingScreen";
+import { getPathname } from "@/lib/getpathname";
 import { Separator } from "@/components/ui/separator";
 
 const harmTooltips = {
@@ -132,13 +133,13 @@ function Evaluation() {
   const [updatedAt, setUpdatedAt] = useState("");
   const { resolvedTheme } = useTheme();
 
-  const { trackEvaluation, currentEvaluation, removeEvaluation } =
+  const { trackAnalysis, currentAnalysis, clearAnalysis } =
     useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
   const docId = searchParams.get("id");
   const [status, setStatus] = useState(
-    currentEvaluation ? currentEvaluation?.status : "initializing"
+    currentAnalysis ? currentAnalysis?.status : "initializing"
   );
   const [activeTab, setActiveTab] = useState("page-quality");
 
@@ -146,37 +147,47 @@ function Evaluation() {
     // Start tracking this analysis in the global context.
 
     if (docId) {
-      trackEvaluation(docId, url, query, userLocation, taskLocale);
+      trackAnalysis({
+        type: "evaluation",
+        docId: docId,
+        collection: "evaluations",
+        meta: {
+          url: url,
+          query: query,
+          userLocation: userLocation,
+          taskLocale: taskLocale,
+        },
+      });
     }
-  }, [docId, router, trackEvaluation, url, query, userLocation, taskLocale]);
+  }, [docId, router, trackAnalysis, url, query, userLocation, taskLocale]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
-    if (currentEvaluation && currentEvaluation?.type === "evaluation") {
-      setStatus(currentEvaluation?.status);
-      setEvaluation(currentEvaluation?.data || null);
-      setUrl(currentEvaluation?.url || "");
-      setQuery(currentEvaluation?.query || "");
-      setEvidence(currentEvaluation?.data?.supportingEvidence || {});
-      setUserLocation(currentEvaluation?.userLocation || "");
-      setTaskLocale(currentEvaluation?.taskLocale || "");
-      setUpdatedAt(currentEvaluation?.updatedAt || "");
+    if (currentAnalysis && currentAnalysis?.type === "evaluation") {
+      setStatus(currentAnalysis?.status);
+      setEvaluation(currentAnalysis?.data || null);
+      setUrl(currentAnalysis?.url || "");
+      setQuery(currentAnalysis?.query || "");
+      setEvidence(currentAnalysis?.data?.supportingEvidence || {});
+      setUserLocation(currentAnalysis?.userLocation || "");
+      setTaskLocale(currentAnalysis?.taskLocale || "");
+      setUpdatedAt(currentAnalysis?.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
 
       if (
-        currentEvaluation?.status === "completed" ||
-        currentEvaluation?.status === "failed"
+        currentAnalysis?.status === "completed" ||
+        currentAnalysis?.status === "failed"
       ) {
         setLoadingPage(false);
       } else {
         setLoadingPage(true);
       }
-      if (currentEvaluation?.error) {
-        setError(currentEvaluation?.error);
+      if (currentAnalysis?.error) {
+        setError(currentAnalysis?.error);
       }
     }
-  }, [currentEvaluation]);
+  }, [currentAnalysis]);
 
   // Function to copy text to clipboard
   const copyToClipboard = (text) => {
@@ -192,7 +203,7 @@ function Evaluation() {
 
   // If no docId, show the form
   if (!docId) {
-    router.push("/eeat-checker");
+    router.push(getPathname("evaluation"));
   }
 
   // If there's an error, show the error screen
@@ -216,7 +227,7 @@ function Evaluation() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreenContentPlanning status={status} docId={docId} />
+        <LoadingScreen status={status} type="evaluation" />
       </>
     );
   }
@@ -336,12 +347,12 @@ function Evaluation() {
                     </div>
                     <span className="text-sm text-foreground">
                       {evidence.Step14_Flags &&
-                      Object.keys(evidence.Step14_Flags).some(
-                        (key) => evidence.Step14_Flags[key]
-                      )
+                        Object.keys(evidence.Step14_Flags).some(
+                          (key) => evidence.Step14_Flags[key]
+                        )
                         ? Object.keys(evidence.Step14_Flags)
-                            .filter((key) => evidence.Step14_Flags[key])
-                            .join(", ")
+                          .filter((key) => evidence.Step14_Flags[key])
+                          .join(", ")
                         : "None"}
                     </span>
                   </div>

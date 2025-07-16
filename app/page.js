@@ -203,7 +203,7 @@ export default async function Home() {
         title="Powerful SEO Tools, Completely Free"
         description="Access professional-grade SEO tools that help you research, analyze, and optimize without spending a dime."
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {tools.filter(tool => tool.featured).map((tool, index) => (
             <ToolCard
               key={index}

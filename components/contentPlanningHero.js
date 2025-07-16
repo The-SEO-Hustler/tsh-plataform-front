@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useFirebase } from "@/lib/firebase-context";
 import { useRouter } from "next/navigation";
 import { useUsage } from "@/lib/usage-context";
+import { getPathname } from "@/lib/getpathname";
 import {
   Select,
   SelectContent,
@@ -35,11 +36,9 @@ function ContentPlanningHero() {
   const [error, setError] = useState(null);
   const router = useRouter();
   const {
-    trackContentPlanning,
-    currentContentPlanning,
-    removeLLMTxt,
-    removeAdvancedKeywordAnalysis,
-    removeAnalysis,
+    currentAnalysis,
+    trackAnalysis,
+    clearAnalysis,
   } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -52,9 +51,9 @@ function ContentPlanningHero() {
       return;
     }
     if (
-      currentContentPlanning &&
-      currentContentPlanning?.status !== "completed" &&
-      currentContentPlanning?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -66,9 +65,9 @@ function ContentPlanningHero() {
     }
 
     if (
-      currentContentPlanning &&
-      currentContentPlanning?.status !== "completed" &&
-      currentContentPlanning?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -95,11 +94,16 @@ function ContentPlanningHero() {
 
       const data = await response.json();
       if (data.success) {
-        removeAnalysis();
-        removeLLMTxt();
-        removeAdvancedKeywordAnalysis();
-        trackContentPlanning(data.docId, keyword);
-        router.push(`/content-planning/result?id=${data.docId}`);
+        clearAnalysis();
+        trackAnalysis({
+          type: "content-planning",
+          docId: data.docId,
+          collection: "contentPlanning",
+          meta: {
+            keyword: keyword,
+          },
+        });
+        router.push(`${getPathname("content-planning")}/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1,
@@ -154,11 +158,12 @@ function ContentPlanningHero() {
                     type="text"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="Enter a keyword..."
+                    placeholder="e.g. Best Keto Diet Plan"
                     className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
                     required
                     disabled={loading}
                   />
+                  <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Keyword</label>
                 </div>
                 <div className="relative">
                   <Select
@@ -184,13 +189,13 @@ function ContentPlanningHero() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <label htmlFor="contentType" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Content Type</label>
                 </div>
                 <Button
                   type="submit"
                   size="lg"
-                  className={`w-full ${
-                    loading ? "animate-pulse" : ""
-                  } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                  className={`w-full ${loading ? "animate-pulse" : ""
+                    } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
                   disabled={loading || usage?.remaining <= 0 || usage === null}
                 >
                   {loading ? "Analyzing..." : "Analyze Content Structure"}

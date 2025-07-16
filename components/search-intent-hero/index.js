@@ -11,26 +11,38 @@ import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useUsage } from "@/lib/usage-context";
+import { getPathname } from "@/lib/getpathname";
 
 function SearchIntentHeroContent() {
   const [url, setUrl] = useState("");
   const [keyword, setKeyword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState("");
+  const [sendToEmail, setSendToEmail] = useState(false);
+  const [email, setEmail] = useState("");
   const router = useRouter();
   const {
-    removeContentPlanning,
-    removeLLMTxt,
-    removeAdvancedKeywordAnalysis,
-    removeAnalysis,
-    trackSearchIntent,
-    currentSearchIntent,
+    currentAnalysis,
+    trackAnalysis,
+    clearAnalysis,
   } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
+
+    // Validate email if checkbox is checked
+    // if (sendToEmail && !email) {
+    //   setFormError("Please enter your email address to receive results.");
+    //   return;
+    // }
+
+    // if (sendToEmail && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    //   setFormError("Please enter a valid email address.");
+    //   return;
+    // }
+
     if (usage?.remaining <= 0) {
       toast.error(
         "You have reached your daily limit. Please try again tomorrow."
@@ -38,9 +50,9 @@ function SearchIntentHeroContent() {
       return;
     }
     if (
-      currentSearchIntent &&
-      currentSearchIntent?.status !== "completed" &&
-      currentSearchIntent?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -65,18 +77,30 @@ function SearchIntentHeroContent() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url, keyword, token }),
+        body: JSON.stringify({
+          url,
+          keyword,
+          token,
+          ...(sendToEmail && email && { email })
+        }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        removeContentPlanning();
-        removeLLMTxt();
-        removeAdvancedKeywordAnalysis();
-        removeAnalysis();
-        trackSearchIntent(data.docId, url);
-        router.push(`/search-intent/result?id=${data.docId}`);
+        trackAnalysis({
+          type: "search-intent",
+          docId: data.docId,
+          collection: "searchIntent",
+          meta: {
+            url: url,
+            keyword: keyword,
+            // sendToEmail: sendToEmail,
+            // email: email,
+            preview: false,
+          }
+        });
+        router.push(`${getPathname("search-intent")}/result?id=${data.docId}`);
         setIsLoading(false);
         setUsage((prevUsage) => ({
           ...prevUsage,
@@ -113,16 +137,19 @@ function SearchIntentHeroContent() {
                   Free <span className="text-primary">Search Intent Tool</span>{" "}
                   That Actually Helps You Grow
                 </h1>
-                <p className="text-xl text-foreground">
+                {/* <p className="text-xl text-foreground">
                   Is Your Website Invisible to Google? Let&apos;s Fix That.
-                </p>
+                </p> */}
                 <form onSubmit={handleSubmit} className="space-y-4  relative z-10">
                   <div className="relative">
                     <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target Keyword</label>
                     <input
                       type="text"
                       value={keyword}
-                      onChange={(e) => setKeyword(e.target.value)}
+                      onChange={(e) => {
+                        setKeyword(e.target.value);
+                        setFormError("");
+                      }}
                       placeholder="e.g., seo, content marketing"
                       required
                       disabled={isLoading}
@@ -133,7 +160,10 @@ function SearchIntentHeroContent() {
                     <input
                       type="url"
                       value={url}
-                      onChange={(e) => setUrl(e.target.value)}
+                      onChange={(e) => {
+                        setUrl(e.target.value);
+                        setFormError("");
+                      }}
                       placeholder="https://example.com"
                       required
                       disabled={isLoading}
@@ -141,6 +171,41 @@ function SearchIntentHeroContent() {
                     />
                     <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target URL</label>
                   </div>
+
+                  {/* Email checkbox and field */}
+                  {/* <div className="space-y-3">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={sendToEmail}
+                        onChange={(e) => {
+                          setSendToEmail(e.target.checked);
+                          setFormError("");
+                        }}
+                        disabled={isLoading}
+                        className="w-4 h-4 text-primary bg-transparent border-2 border-gray-300 dark:border-foreground/80 rounded focus:ring-2 focus:ring-primary focus:ring-offset-0"
+                      />
+                      <span className="text-sm text-foreground/80">Send results to my inbox</span>
+                    </label>
+
+                    {sendToEmail && (
+                      <div className="relative">
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            setFormError("");
+                          }}
+                          placeholder="your@email.com"
+                          required={sendToEmail}
+                          disabled={isLoading}
+                          className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
+                        />
+                        <label htmlFor="email" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1 translate-y-[-50%]">Email Address</label>
+                      </div>
+                    )}
+                  </div> */}
 
                   <Button
                     type="submit"

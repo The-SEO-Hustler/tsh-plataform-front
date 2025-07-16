@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useFirebase } from "@/lib/firebase-context";
 import { useRouter } from "next/navigation";
+import { getPathname } from "@/lib/getpathname";
 import { useUsage } from "@/lib/usage-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Link from "next/link";
@@ -16,7 +17,7 @@ function LLMTxtHero() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { trackLLMTxt, currentLLMTxt, removeLLMTxt } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const { usage, setUsage } = useUsage();
   const [mode, setMode] = useState("simple");
   const [advancedText, setAdvancedText] = useState("");
@@ -35,9 +36,9 @@ function LLMTxtHero() {
       return;
     }
     if (
-      currentLLMTxt &&
-      currentLLMTxt?.status !== "completed" &&
-      currentLLMTxt?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -48,14 +49,7 @@ function LLMTxtHero() {
       return;
     }
 
-    if (
-      currentLLMTxt &&
-      currentLLMTxt?.status !== "completed" &&
-      currentLLMTxt?.status !== "failed"
-    ) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
+
 
     setLoading(true);
     setError(null);
@@ -77,9 +71,16 @@ function LLMTxtHero() {
 
       const data = await response.json();
       if (data.success) {
-        removeLLMTxt();
-        trackLLMTxt(data.docId, url);
-        router.push(`/llms-txt-generator/result?id=${data.docId}`);
+        clearAnalysis();
+        trackAnalysis({
+          type: "llmstxt",
+          docId: data.docId,
+          collection: "llmstxt",
+          meta: {
+            url: url,
+          },
+        });
+        router.push(`${getPathname("llmstxt")}/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1,
@@ -133,19 +134,19 @@ function LLMTxtHero() {
                         type="url"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Enter a URL..."
+                        placeholder="https://example.com"
                         className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
                         required
                         disabled={loading}
                       />
+                      <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-40%]">Target URL</label>
                     </div>
 
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full ${
-                        loading ? "animate-pulse" : ""
-                      } disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
+                      className={`w-full ${loading ? "animate-pulse" : ""
+                        } disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
                       disabled={
                         loading || usage?.remaining <= 0 || usage === null
                       }
@@ -184,9 +185,8 @@ function LLMTxtHero() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full ${
-                        loading ? "animate-pulse" : ""
-                      } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                      className={`w-full ${loading ? "animate-pulse" : ""
+                        } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
                       disabled={
                         loading || usage?.remaining <= 0 || usage === null
                       }

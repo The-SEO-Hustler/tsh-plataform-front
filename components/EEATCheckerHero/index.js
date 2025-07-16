@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getPathname } from "@/lib/getpathname";
 
 const options = [
   { value: "english", label: "English" },
@@ -40,12 +41,9 @@ function EEATCheckerHero() {
   const [error, setError] = useState(null);
   const router = useRouter();
   const {
-    currentEvaluation,
-    trackEvaluation,
-    removeLLMTxt,
-    removeAdvancedKeywordAnalysis,
-    removeEvaluation,
-    removeAnalysis,
+    currentAnalysis,
+    trackAnalysis,
+    clearAnalysis,
   } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -58,9 +56,9 @@ function EEATCheckerHero() {
       return;
     }
     if (
-      currentEvaluation &&
-      currentEvaluation?.status !== "completed" &&
-      currentEvaluation?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -71,14 +69,7 @@ function EEATCheckerHero() {
       return;
     }
 
-    if (
-      currentEvaluation &&
-      currentEvaluation?.status !== "completed" &&
-      currentEvaluation?.status !== "failed"
-    ) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
+
 
     setLoading(true);
     setError(null);
@@ -102,12 +93,18 @@ function EEATCheckerHero() {
 
       const data = await response.json();
       if (data.success) {
-        removeAnalysis();
-        removeLLMTxt();
-        removeAdvancedKeywordAnalysis();
-        removeEvaluation();
-        trackEvaluation(data.docId, url);
-        router.push(`/eeat-checker/result?id=${data.docId}`);
+        trackAnalysis({
+          type: "evaluation",
+          docId: data.docId,
+          collection: "evaluations",
+          meta: {
+            url: url,
+            query: query,
+            userLocation: userLocation,
+            taskLocale: taskLocale,
+          },
+        });
+        router.push(`${getPathname("evaluation")}/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1,
@@ -167,6 +164,7 @@ function EEATCheckerHero() {
                     required
                     disabled={loading}
                   />
+                  <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Target URL</label>
                 </div>
                 <div className="relative">
                   <input
@@ -178,7 +176,9 @@ function EEATCheckerHero() {
                     required
                     disabled={loading}
                   />
+                  <label htmlFor="query" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Query</label>
                 </div>
+
                 <div className="relative">
                   <input
                     type="text"
@@ -189,6 +189,7 @@ function EEATCheckerHero() {
                     required
                     disabled={loading}
                   />
+                  <label htmlFor="userLocation" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">User Location</label>
                 </div>
                 <div className="relative">
                   <Select
@@ -214,13 +215,13 @@ function EEATCheckerHero() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <label htmlFor="taskLocale" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Task Locale</label>
                 </div>
                 <Button
                   type="submit"
                   size="lg"
-                  className={`w-full ${
-                    loading ? "animate-pulse" : ""
-                  } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                  className={`w-full ${loading ? "animate-pulse" : ""
+                    } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
                   disabled={loading || usage?.remaining <= 0 || usage === null}
                 >
                   {loading ? "Analyzing..." : "Evaluate Content"}

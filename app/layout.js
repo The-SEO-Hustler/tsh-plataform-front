@@ -6,16 +6,16 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { FirebaseProvider } from "@/lib/firebase-context";
 import { Toaster } from "@/components/ui/sonner";
 import AnalysisStatusCard from "@/components/AnalysisStatusCard";
-import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
-import KeywordAnalysisStatusCard from "@/components/KeywordAnalysisStatusCard";
-import LLMStatusCard from "@/components/LLMStatusCard";
+// import ContentPlanningStatusCard from "@/components/ContentPlanningStatusCard";
+// import KeywordAnalysisStatusCard from "@/components/KeywordAnalysisStatusCard";
+// import LLMStatusCard from "@/components/LLMStatusCard";
 import { UsageProvider } from "@/lib/usage-context";
 // import { ThemeProvider } from 'next-themes'
 // import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { ThemeProviderWrapper } from "@/components/ThemeProvider";
 import { Analytics } from "@vercel/analytics/react";
-import EvaluationStatusCard from "@/components/EvaluateStatusCard";
-import SearchIntentStatusCard from "@/components/SearchIntentStatusCard";
+// import EvaluationStatusCard from "@/components/EvaluateStatusCard";
+// import SearchIntentStatusCard from "@/components/SearchIntentStatusCard";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -51,12 +51,12 @@ export default function RootLayout({ children }) {
                 <Header />
                 {children}
                 <Footer />
-                <KeywordAnalysisStatusCard />
+                {/* <KeywordAnalysisStatusCard /> */}
                 <AnalysisStatusCard />
-                <ContentPlanningStatusCard />
-                <LLMStatusCard />
-                <EvaluationStatusCard />
-                <SearchIntentStatusCard />
+                {/* <ContentPlanningStatusCard /> */}
+                {/* <LLMStatusCard /> */}
+                {/* <EvaluationStatusCard /> */}
+                {/* <SearchIntentStatusCard /> */}
                 <Toaster
                   position="top-left"
                   toastOptions={{

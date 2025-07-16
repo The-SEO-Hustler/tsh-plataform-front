@@ -16,6 +16,7 @@ import PDFReport from "@/components/PDFReport";
 import { Input } from "@/components/ui/input";
 import { useFirebase } from "@/lib/firebase-context";
 import { getScoreAppearance } from "@/lib/getScoreAppearance";
+import { getPathname } from "@/lib/getpathname";
 
 function SEOAudit() {
   const [focusedCardId, setFocusedCardId] = useState(null);
@@ -45,17 +46,25 @@ function SEOAudit() {
     // Start tracking this analysis in the global context.
     // You can pass an initial URL if needed.
     if (docId) {
-      trackAnalysis(docId, url);
+      trackAnalysis({
+        type: "seo-check",
+        docId: docId,
+        collection: "seoAnalyses",
+        meta: {
+          url: url,
+        },
+      });
     }
   }, [docId, router, trackAnalysis, url]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
-    if (currentAnalysis) {
+    console.log("currentAnalysis: ", currentAnalysis);
+    if (currentAnalysis && currentAnalysis.type === "seo-check") {
       setStatus(currentAnalysis.status);
       setAnalysisData(currentAnalysis.data || []);
       setUrl(currentAnalysis.url || "");
-      setScore(currentAnalysis.score || 0);
+      setScore(currentAnalysis?.score?.score || 0);
       setUpdatedAt(currentAnalysis.updatedAt || "");
       // Stop loading when analysis is completed or failed.
       if (
@@ -76,7 +85,7 @@ function SEOAudit() {
     // Export JSON
     const exportData = {
       timestamp: new Date().toISOString(),
-      score: 75,
+      score: score,
       cards: analysisData,
     };
 
@@ -134,7 +143,7 @@ function SEOAudit() {
   const ScoreIcon = scoreAppearance.icon;
 
   if (!docId) {
-    router.push("/seo-check");
+    router.push(getPathname("seo-check"));
   }
 
   if (error) {
@@ -154,7 +163,7 @@ function SEOAudit() {
   }
 
   if (loading) {
-    return <LoadingScreen status={status} docId={docId} />;
+    return <LoadingScreen status={status} type="seo-check" />;
   }
 
   return (

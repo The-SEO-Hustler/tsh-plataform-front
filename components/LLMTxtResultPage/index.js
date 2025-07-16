@@ -7,9 +7,10 @@ import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import LoadingScreenLLM from "@/components/LoadingScreenLLM";
+import LoadingScreen from "@/components/LoadingScreen";
 import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { getPathname } from "@/lib/getpathname";
 
 function LLMTxtResult() {
   const [url, setUrl] = useState("");
@@ -20,12 +21,12 @@ function LLMTxtResult() {
   const [viewMode, setViewMode] = useState('markdown');
   const [activeTab, setActiveTab] = useState('llmtxt');
 
-  const { trackLLMTxt, currentLLMTxt } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
   const docId = searchParams.get("id");
   const [status, setStatus] = useState(
-    currentLLMTxt ? currentLLMTxt.status : "initializing"
+    currentAnalysis ? currentAnalysis.status : "initializing"
   );
 
   // For downloading the text
@@ -88,33 +89,40 @@ function LLMTxtResult() {
     // Start tracking this analysis in the global context.
     console.log('docId', docId);
     if (docId) {
-      trackLLMTxt(docId, url);
+      trackAnalysis({
+        type: "llmstxt",
+        docId: docId,
+        collection: "llmstxt",
+        meta: {
+          url: url,
+        },
+      });
     }
-  }, [docId, router, trackLLMTxt, url]);
+  }, [docId, router, trackAnalysis, url]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
-    if (currentLLMTxt && currentLLMTxt.type === "llmstxt") {
-      setStatus(currentLLMTxt.status);
-      setAnalysisData(currentLLMTxt.data || null);
-      setUrl(currentLLMTxt.url || "");
-      setUpdatedAt(currentLLMTxt.updatedAt || "");
+    if (currentAnalysis && currentAnalysis.type === "llmstxt") {
+      setStatus(currentAnalysis.status);
+      setAnalysisData(currentAnalysis.data || null);
+      setUrl(currentAnalysis.url || "");
+      setUpdatedAt(currentAnalysis.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
       if (
-        currentLLMTxt.status === "completed" ||
-        currentLLMTxt.status === "failed"
+        currentAnalysis.status === "completed" ||
+        currentAnalysis.status === "failed"
       ) {
         setLoadingPage(false);
       } else {
         setLoadingPage(true);
       }
 
-      if (currentLLMTxt.error) {
-        setError(currentLLMTxt.error);
+      if (currentAnalysis.error) {
+        setError(currentAnalysis.error);
       }
     }
-  }, [currentLLMTxt]);
+  }, [currentAnalysis]);
 
 
   // Function to copy text to clipboard
@@ -132,7 +140,7 @@ function LLMTxtResult() {
 
   // If no docId, show the form
   if (!docId) {
-    router.push("/llms-txt-generator");
+    router.push(getPathname("llmstxt"));
   }
 
   // If there's an error, show the error screen
@@ -156,7 +164,7 @@ function LLMTxtResult() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreenLLM status={status} docId={docId} />
+        <LoadingScreen status={status} type="llmstxt" />
       </>
     );
   }

@@ -9,7 +9,8 @@ import { useFirebase } from "@/lib/firebase-context";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import LoadingScreenContentPlanning from "@/components/LoadingScreenContentPlanning";
+import LoadingScreen from "@/components/LoadingScreen";
+import { getPathname } from "@/lib/getpathname";
 
 function ContentPlanning() {
   const [keyword, setKeyword] = useState("");
@@ -19,12 +20,12 @@ function ContentPlanning() {
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
 
-  const { trackContentPlanning, currentContentPlanning, removeAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
   const docId = searchParams.get("id");
   const [status, setStatus] = useState(
-    currentContentPlanning ? currentContentPlanning.status : "initializing"
+    currentAnalysis ? currentAnalysis.status : "initializing"
   );
   const [activeTab, setActiveTab] = useState('structure');
   // Initialize the first H1 to be expanded
@@ -42,34 +43,41 @@ function ContentPlanning() {
     // Start tracking this analysis in the global context.
 
     if (docId) {
-      trackContentPlanning(docId, keyword);
+      trackAnalysis({
+        type: "content-planning",
+        docId: docId,
+        collection: "contentPlanning",
+        meta: {
+          keyword: keyword,
+        },
+      });
     }
-  }, [docId, router, trackContentPlanning, keyword]);
+  }, [docId, router, trackAnalysis, keyword]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
-    if (currentContentPlanning && currentContentPlanning.type === "content-planning") {
-      setStatus(currentContentPlanning.status);
-      setAnalysisData(currentContentPlanning.data || null);
-      setKeyword(currentContentPlanning.keyword || "");
-      setContentType(currentContentPlanning.contentType || "blog_post");
-      setUpdatedAt(currentContentPlanning.updatedAt || "");
+    if (currentAnalysis && currentAnalysis.type === "content-planning") {
+      setStatus(currentAnalysis.status);
+      setAnalysisData(currentAnalysis.data || null);
+      setKeyword(currentAnalysis.keyword || "");
+      setContentType(currentAnalysis.contentType || "blog_post");
+      setUpdatedAt(currentAnalysis.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
       if (
-        currentContentPlanning.status === "completed" ||
-        currentContentPlanning.status === "failed"
+        currentAnalysis.status === "completed" ||
+        currentAnalysis.status === "failed"
       ) {
         setLoadingPage(false);
       } else {
         setLoadingPage(true);
       }
 
-      if (currentContentPlanning.error) {
-        setError(currentContentPlanning.error);
+      if (currentAnalysis.error) {
+        setError(currentAnalysis.error);
       }
     }
-  }, [currentContentPlanning]);
+  }, [currentAnalysis]);
 
   useEffect(() => {
     if (analysisData?.content_structure?.headings) {
@@ -128,7 +136,7 @@ function ContentPlanning() {
   // Function to render headings recursively
   const renderHeadings = (heading, depth = 0, index = 0) => {
     const hasChildren = heading.children && heading.children.length > 0;
-    const headingId = `heading-${depth}-${index}`;
+    const headingId = `heading-${depth}-${index}-${heading.text.replace(/\s+/g, '-').toLowerCase()}`;
     const isExpanded = expandedSections[headingId];
     const hasKeyPoints = heading.key_points && heading.key_points.length > 0;
 
@@ -194,7 +202,7 @@ function ContentPlanning() {
 
   // If no docId, show the form
   if (!docId) {
-    router.push("/content-planning");
+    router.push(getPathname("content-planning"));
   }
 
   // If there's an error, show the error screen
@@ -218,7 +226,7 @@ function ContentPlanning() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreenContentPlanning status={status} docId={docId} />
+        <LoadingScreen status={status} type="content-planning" />
       </>
     );
   }
