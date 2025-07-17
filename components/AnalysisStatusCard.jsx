@@ -148,11 +148,7 @@ function AnalysisStatusCardContent() {
 
 export default function AnalysisStatusCard() {
   return (
-    <Suspense fallback={<div className="min-w-[295px] fixed bottom-4 md:right-4 right-4 bg-card rounded-lg shadow-lg py-5 px-7 max-w-md border !border-foreground/10 z-50">
-      <p className="!text-foreground">
-        Loading analysis status...
-      </p>
-    </div>}>
+    <Suspense >
       <AnalysisStatusCardContent />
     </Suspense>
   );
