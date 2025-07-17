@@ -3,7 +3,7 @@ import advancedKeywordAnalysisEmailMessage from '@/lib/emailMessage/advancedKeyw
 import contentPlanningEmailMessage from '@/lib/emailMessage/contentPlanning';
 import seoCheckEmailMessage from '@/lib/emailMessage/seoCheck';
 import llmstxtEmailMessage from '@/lib/emailMessage/llmstxt';
-import eeatCheckEmailMessage from '@/lib/emailMessage/eeatCheck';
+import eeatCheckEmailMessage from '@/lib/emailMessage/searchQualityEvaluator';
 import searchIntentEmailMessage from '@/lib/emailMessage/searchIntent';
 
 const sendNotificationEmail = async (email, subject, body) => {
