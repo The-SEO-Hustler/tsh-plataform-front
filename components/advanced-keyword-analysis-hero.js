@@ -28,10 +28,10 @@ import {
   RotateCcw,
   Download,
 } from "lucide-react";
-import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useUsage } from "@/lib/usage-context";
 import { getPathname } from "@/lib/getpathname";
+import HeroTemplate from "./HeroTemplate";
 function AdvancedKeywordAnalysisHero() {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -123,116 +123,97 @@ function AdvancedKeywordAnalysisHero() {
   return (
     <main className="min-h-screen relative py-6 md:py-0 bg-background">
       {/* Hero Section*/}
-      <div className="absolute inset-0 opacity-30">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern
-              id="grid"
-              width="40"
-              height="40"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 40 0 L 0 0 0 40"
-                fill="none"
-                stroke="#FFDD00"
-                strokeWidth="0.5"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div>
-      <Container>
-        <section className="min-h-screen  flex items-center">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Keyword Input */}
-            <div className="space-y-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-                Advanced <span className="text-primary">Keyword Analysis</span>
-              </h1>
-              <p className="text-xl ">
-                Get detailed insights and recommendations to optimize your
-                keyword strategy.
-              </p>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="e.g. Best Keto Diet Plan"
-                    className="w-full px-4 sm:px-6 sm:pr-[240px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
-                    required
-                    disabled={loading}
-                  />
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""
-                      } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
-                    disabled={
-                      loading || usage?.remaining <= 0 || usage === null
-                    }
-                  >
-                    <span className="sm:block hidden">
-                      {loading ? "Analyzing..." : "Analyze Keyword"}
-                    </span>
-                    <ArrowRight className="sm:ml-2 sm:h-4 sm:w-4" />
-                  </Button>
-                  <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Keyword</label>
-                </div>
-              </form>
-              {error && (
-                <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
-                  <p>{error}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Right Column - Feature Preview */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-              <div className="bg-card p-8 rounded-2xl shadow-xl">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Search className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">Keyword Insights</h3>
-                      <p className="text-sm  text-foreground/80">
-                        Detailed analysis of keyword performance
-                      </p>
-                    </div>
+      <HeroTemplate noBg className="!md:pt-0 !pb-0 !md:pb-0 !mt-0 !pt-0 ">
+        <Container>
+          <section className="min-h-screen  flex items-center">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column - Keyword Input */}
+              <div className="space-y-8">
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+                  Advanced <span className="text-primary">Keyword Analysis</span>
+                </h1>
+                <p className="text-xl ">
+                  Get detailed insights and recommendations to optimize your
+                  keyword strategy.
+                </p>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={keyword}
+                      onChange={(e) => setKeyword(e.target.value)}
+                      placeholder="e.g. Best Keto Diet Plan"
+                      className="w-full px-4 sm:px-6 sm:pr-[240px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
+                      required
+                      disabled={loading}
+                    />
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading ? "animate-pulse" : ""
+                        } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
+                      disabled={
+                        loading || usage?.remaining <= 0 || usage === null
+                      }
+                    >
+                      <span className="sm:block hidden">
+                        {loading ? "Analyzing..." : "Analyze Keyword"}
+                      </span>
+                      <ArrowRight className="sm:ml-2 sm:h-4 sm:w-4" />
+                    </Button>
+                    <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Keyword</label>
                   </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Search Volume</span>
-                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
-                        High
-                      </span>
+                </form>
+                {error && (
+                  <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
+                    <p>{error}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column - Feature Preview */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
+                <div className="bg-card p-8 rounded-2xl shadow-xl">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Search className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Keyword Insights</h3>
+                        <p className="text-sm  text-foreground/80">
+                          Detailed analysis of keyword performance
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Competition</span>
-                      <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">
-                        Moderate
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Relevance</span>
-                      <span className="text-sm font-medium text-green-700 dark:text-green-500">
-                        Excellent
-                      </span>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Search Volume</span>
+                        <span className="text-sm font-medium text-green-700 dark:text-green-500">
+                          High
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Competition</span>
+                        <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">
+                          Moderate
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Relevance</span>
+                        <span className="text-sm font-medium text-green-700 dark:text-green-500">
+                          Excellent
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      </Container>
-
+          </section>
+        </Container>
+      </HeroTemplate>
       {/* How It Works Section */}
       <section className="py-16  dark:bg-black bg-card border-t border-foreground/10 z-10 relative">
         <Container>

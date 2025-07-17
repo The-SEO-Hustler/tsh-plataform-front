@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Container from "../container";
 import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import HeroTemplate from "../HeroTemplate";
 
 export default function Resources({ resources }) {
   const initValues = { name: "", email: "", message: "" };
@@ -62,8 +63,8 @@ export default function Resources({ resources }) {
         console.error("Error response:", data);
         setFormError(
           data.error ||
-            data.message ||
-            "There was an error sending your message. Please try again."
+          data.message ||
+          "There was an error sending your message. Please try again."
         );
       }
     } catch (error) {
@@ -103,28 +104,8 @@ export default function Resources({ resources }) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-background">
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="grid"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 40 0 L 0 0 0 40"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-yellow-400"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
+      <HeroTemplate className="md:pb-16">
+
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-foreground mb-6">
@@ -136,7 +117,8 @@ export default function Resources({ resources }) {
             to streamline your SEO workflow and get results faster.
           </p>
         </div>
-      </section>
+
+      </HeroTemplate>
 
       {/* Navigation */}
       <nav className="sticky top-16 z-20 bg-background border-b border-foreground/10 shadow-sm ">

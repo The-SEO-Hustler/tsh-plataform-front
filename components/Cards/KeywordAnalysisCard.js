@@ -72,13 +72,13 @@ export default function KeywordAnalysisCard({
               >
                 {showAll ? (
                   <>
-                    <ChevronUp className="w-4 h-4" />
-                    <span className="text-sm font-medium ">Show Less</span>
+                    <ChevronUp className="w-4 h-4 dark:text-foreground" />
+                    <span className="text-sm font-medium dark:text-foreground">Show Less</span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-4 h-4" />
-                    <span className="text-sm font-medium ">
+                    <ChevronDown className="w-4 h-4 dark:text-foreground" />
+                    <span className="text-sm font-medium dark:text-foreground">
                       Show {data.keywordUsage.length - 3} More
                     </span>
                   </>

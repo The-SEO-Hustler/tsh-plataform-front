@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useUsage } from "@/lib/usage-context";
 import { getPathname } from "@/lib/getpathname";
+import HeroTemplate from "../HeroTemplate";
 
 function SearchIntentHeroContent() {
   const [url, setUrl] = useState("");
@@ -128,52 +129,53 @@ function SearchIntentHeroContent() {
       {/* Hero Section*/}
 
       <section className="bg-background">
-        <Container id="hero">
-          <section className="min-h-[calc(100vh-10px)] flex items-center relative">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Column - URL Input */}
-              <div className="space-y-8">
-                <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-                  Free <span className="text-primary">Search Intent Tool</span>{" "}
-                  That Actually Helps You Grow
-                </h1>
-                {/* <p className="text-xl text-foreground">
+        <HeroTemplate noBg className="!md:pt-0 !pb-0 !md:pb-0 !mt-0 !pt-0 ">
+          <Container id="hero">
+            <section className="min-h-[calc(100vh-10px)] flex items-center relative">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* Left Column - URL Input */}
+                <div className="space-y-8">
+                  <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+                    Free <span className="text-primary">Search Intent Tool</span>{" "}
+                    That Actually Helps You Grow
+                  </h1>
+                  {/* <p className="text-xl text-foreground">
                   Is Your Website Invisible to Google? Let&apos;s Fix That.
                 </p> */}
-                <form onSubmit={handleSubmit} className="space-y-4  relative z-10">
-                  <div className="relative">
-                    <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target Keyword</label>
-                    <input
-                      type="text"
-                      value={keyword}
-                      onChange={(e) => {
-                        setKeyword(e.target.value);
-                        setFormError("");
-                      }}
-                      placeholder="e.g., seo, content marketing"
-                      required
-                      disabled={isLoading}
-                      className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
-                    />
-                  </div>
-                  <div className="relative">
-                    <input
-                      type="url"
-                      value={url}
-                      onChange={(e) => {
-                        setUrl(e.target.value);
-                        setFormError("");
-                      }}
-                      placeholder="https://example.com"
-                      required
-                      disabled={isLoading}
-                      className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
-                    />
-                    <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target URL</label>
-                  </div>
+                  <form onSubmit={handleSubmit} className="space-y-4  relative z-10">
+                    <div className="relative">
+                      <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target Keyword</label>
+                      <input
+                        type="text"
+                        value={keyword}
+                        onChange={(e) => {
+                          setKeyword(e.target.value);
+                          setFormError("");
+                        }}
+                        placeholder="e.g., seo, content marketing"
+                        required
+                        disabled={isLoading}
+                        className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
+                      />
+                    </div>
+                    <div className="relative">
+                      <input
+                        type="url"
+                        value={url}
+                        onChange={(e) => {
+                          setUrl(e.target.value);
+                          setFormError("");
+                        }}
+                        placeholder="https://example.com"
+                        required
+                        disabled={isLoading}
+                        className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
+                      />
+                      <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target URL</label>
+                    </div>
 
-                  {/* Email checkbox and field */}
-                  {/* <div className="space-y-3">
+                    {/* Email checkbox and field */}
+                    {/* <div className="space-y-3">
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -207,89 +209,90 @@ function SearchIntentHeroContent() {
                     )}
                   </div> */}
 
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className={`w-full disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${isLoading ? "animate-pulse !bg-primary " : ""
-                      }`}
-                    disabled={
-                      isLoading || usage?.remaining <= 0 || usage === null
-                    }
-                  >
-                    <span className="sm:block hidden">
-                      {isLoading ? "Starting Analysis..." : "Analyze Search Intent"}
-                    </span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  {formError && <p className="text-red-500">{formError}</p>}
-                </form>
-                <div className="flex gap-2 flex-col">
-                  <div className="flex items-center gap-4 text-foreground">
-                    <CheckCircle2 className="min-h-5 min-w-5 text-green-700 dark:text-green-400" />
-                    <span>
-                      No registration required. Free, instant results.
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <ShieldCheck className="min-h-5 min-w-5 text-foreground" />
-                    <span className="text-xs text-foreground">
-                      This site is protected by reCAPTCHA and the Google
-                      <a
-                        href="https://policies.google.com/privacy"
-                        className="text-primary ml-1  "
-                      >
-                        Privacy Policy
-                      </a>{" "}
-                      and
-                      <a
-                        href="https://policies.google.com/terms"
-                        className="text-primary ml-1"
-                      >
-                        Terms of Service
-                      </a>{" "}
-                      apply.
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column - Feature Preview */}
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-                <div className="bg-card p-8 rounded-2xl shadow-xl">
-                  <div className="space-y-6">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className={`w-full disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${isLoading ? "animate-pulse !bg-primary " : ""
+                        }`}
+                      disabled={
+                        isLoading || usage?.remaining <= 0 || usage === null
+                      }
+                    >
+                      <span className="sm:block hidden">
+                        {isLoading ? "Starting Analysis..." : "Analyze Search Intent"}
+                      </span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                    {formError && <p className="text-red-500">{formError}</p>}
+                  </form>
+                  <div className="flex gap-2 flex-col">
+                    <div className="flex items-center gap-4 text-foreground">
+                      <CheckCircle2 className="min-h-5 min-w-5 text-green-700 dark:text-green-400" />
+                      <span>
+                        No registration required. Free, instant results.
+                      </span>
+                    </div>
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Target strokeWidth={1.25} className="w-6 h-6 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">Search Intent</h3>
-                        <p className="text-sm text-foreground/80">
-                          Get a professional grade Needs Meet and Page Quality assessment for free.
-                        </p>
-                      </div>
+                      <ShieldCheck className="min-h-5 min-w-5 text-foreground" />
+                      <span className="text-xs text-foreground">
+                        This site is protected by reCAPTCHA and the Google
+                        <a
+                          href="https://policies.google.com/privacy"
+                          className="text-primary ml-1  "
+                        >
+                          Privacy Policy
+                        </a>{" "}
+                        and
+                        <a
+                          href="https://policies.google.com/terms"
+                          className="text-primary ml-1"
+                        >
+                          Terms of Service
+                        </a>{" "}
+                        apply.
+                      </span>
                     </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Needs Meet</span>
-                        <span className="text-sm font-medium text-green-700 dark:text-green-400">
-                          Optimized
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Page Quality</span>
-                        <span className="text-sm font-medium text-green-700 dark:text-green-400">
-                          Excellent
-                        </span>
-                      </div>
+                  </div>
+                </div>
 
+                {/* Right Column - Feature Preview */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
+                  <div className="bg-card p-8 rounded-2xl shadow-xl">
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Target strokeWidth={1.25} className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Search Intent</h3>
+                          <p className="text-sm text-foreground/80">
+                            Get a professional grade Needs Meet and Page Quality assessment for free.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">Needs Meet</span>
+                          <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                            Optimized
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">Page Quality</span>
+                          <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                            Excellent
+                          </span>
+                        </div>
+
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </Container>
+            </section>
+          </Container>
+        </HeroTemplate>
       </section >
 
       <section className="py-16 bg-background border-t border-foreground/10">

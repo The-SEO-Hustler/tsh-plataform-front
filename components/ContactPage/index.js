@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import FeatureSection from "@/components/FeatureSection";
 import Container from "../container";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import HeroTemplate from "../HeroTemplate";
 
 export default function Contact() {
   const initValues = { name: "", email: "", message: "" };
@@ -55,8 +56,8 @@ export default function Contact() {
         console.error("Error response:", data);
         setFormError(
           data.error ||
-            data.message ||
-            "There was an error sending your message. Please try again."
+          data.message ||
+          "There was an error sending your message. Please try again."
         );
       }
     } catch (error) {
@@ -123,29 +124,7 @@ export default function Contact() {
   return (
     <>
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="grid"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 40 0 L 0 0 0 40"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-yellow-400"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-
+      <HeroTemplate className="md:pb-16">
         <Container className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white dark:text-foreground mb-6">
             Get in <span className="text-yellow-400">Touch</span>
@@ -154,7 +133,8 @@ export default function Contact() {
             Questions, feedback, partnership inquiries? We're here to help.
           </p>
         </Container>
-      </section>
+      </HeroTemplate>
+
 
       {/* Contact Form and Info Section */}
       <FeatureSection>

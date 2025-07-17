@@ -23,20 +23,20 @@ export default function RequestCountCheckCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <span className="text-sm">Total Requests:</span>
-          <span className="font-medium">{count}</span>
+          <span className="text-sm dark:text-foreground">Total Requests:</span>
+          <span className="font-medium dark:text-foreground">{count}</span>
         </div>
 
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Resource Types:</h4>
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
               CSS Files: {resources.filter((r) => r.endsWith(".css")).length}
             </div>
-            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
               JS Files: {resources.filter((r) => r.endsWith(".js")).length}
             </div>
-            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
               Images:{" "}
               {
                 resources.filter((r) =>
@@ -44,7 +44,7 @@ export default function RequestCountCheckCard({
                 ).length
               }
             </div>
-            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm">
+            <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
               Other:{" "}
               {
                 resources.filter(

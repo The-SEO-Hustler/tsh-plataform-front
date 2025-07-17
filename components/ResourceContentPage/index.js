@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
-import { LinkedinIcon, Mail, AlignLeft } from "lucide-react";
+import { LinkedinIcon, Mail, AlignLeft, X } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import tocStyle from "@/components/TocItem/TocItem.module.css";
@@ -11,10 +11,19 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import TocItem from "@/components/TocItem";
 import { replaceComponents } from "@/lib/replaceComponents";
 import useScrollDirection from "@/components/header/scroll";
+import HeroTemplate from "@/components/HeroTemplate";
 function ResourceContentPage({ post, toc }) {
   const scrollDirection = useScrollDirection();
   const tocRef = useRef(null)
   const contentRef = useRef(null)
+  const mobileTocRef = useRef(null)
+  const [isTocOpen, setIsTocOpen] = useState(false);
+
+  // Auto-close drawer when TOC item is clicked
+  const handleTocItemClick = () => {
+    setIsTocOpen(false);
+  };
+
   const handleShare = (platform) => {
     const url = typeof window !== "undefined" ? window.location.href : "";
     const title = post.title;
@@ -51,6 +60,7 @@ function ResourceContentPage({ post, toc }) {
   useEffect(() => {
     const contentElement = contentRef.current;
     const tocElement = tocRef.current;
+    const mobileTocElement = mobileTocRef.current;
     const headings = contentElement?.querySelectorAll('h2, h3') ?? [];
     const observerOptions = {
       rootMargin: '0px',
@@ -64,10 +74,13 @@ function ResourceContentPage({ post, toc }) {
         if (entry.isIntersecting) {
           const targetId = entry.target.id;
           const activeLink = tocElement.querySelector(`[href="#${targetId}"]`);
-          if (activeLink) {
+          const mobileActiveLink = mobileTocElement.querySelector(`[href="#${targetId}"]`);
+          if (activeLink || mobileActiveLink) {
 
             tocElement?.querySelectorAll('a')?.forEach(link => link.classList.remove(tocStyle.active));
+            mobileTocElement?.querySelectorAll('a')?.forEach(link => link.classList.remove(tocStyle.active));
             activeLink?.classList.add(tocStyle.active);
+            mobileActiveLink?.classList.add(tocStyle.active);
           }
 
         }
@@ -83,33 +96,12 @@ function ResourceContentPage({ post, toc }) {
         observer.unobserve(heading)
       })
     }
-  }, [toc, tocRef, contentRef])
+  }, [toc, tocRef, contentRef, mobileTocRef])
 
   return (
     <>
       {/* Article Header */}
-      <section className="pt-16 md:pt-32 pb-10 bg-gradient-to-br dark:from-[rgb(78,80,58)] dark:to-black relative overflow-hidden border-b border-border">
-        <div className="absolute inset-0 opacity-30">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="grid"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 40 0 L 0 0 0 40"
-                  fill="none"
-                  className="dark:stroke-primary stroke-foreground/80"
-                  strokeWidth="0.5"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-
+      <HeroTemplate className="!md:pt-32 !pb-10 !md:pb-10 ">
         <div className="container lg:max-w-4xl mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-start flex-col md:flex-row gap-4 md:items-center mb-5">
@@ -178,7 +170,8 @@ function ResourceContentPage({ post, toc }) {
             </div>
           </div>
         </div>
-      </section>
+      </HeroTemplate>
+
 
       <Container>
 
@@ -189,6 +182,17 @@ function ResourceContentPage({ post, toc }) {
           <section className='flex flex-col md:pr-4 lg:pr-6 w-full md:w-[65%]'>
             <div className="container lg:max-w-4xl mx-auto">
               <div className="max-w-4xl mx-auto">
+
+                <div className="md:hidden mb-6">
+                  <button
+                    onClick={() => setIsTocOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    <AlignLeft strokeWidth={1.5} />
+                    Table of Contents
+                  </button>
+                </div>
+
                 {/* Social Sharing */}
 
 
@@ -472,7 +476,64 @@ function ResourceContentPage({ post, toc }) {
           </div>
         )} */}
       </Container>
+      {/* Mobile TOC Fixed Tip */}
+      <div className="md:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40">
+        <button
+          onClick={() => setIsTocOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-all duration-200 hover:scale-105"
+        >
+          <AlignLeft strokeWidth={1.5} className="w-4 h-4" />
+          <span className="text-sm font-medium">Contents</span>
+        </button>
+      </div>
 
+      {/* Mobile TOC Bottom Drawer */}
+      <div className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${isTocOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/50"
+          onClick={() => setIsTocOpen(false)}
+        />
+
+        {/* Drawer */}
+        <div className={`absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-2xl transition-transform duration-300 ${isTocOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+          {/* Drawer Handle */}
+          <div className="flex justify-center pt-3 pb-2">
+            <div className="w-12 h-1 bg-muted-foreground/30 rounded-full"></div>
+          </div>
+
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between px-6 pb-4 border-b border-border">
+            <h3 className="text-lg font-semibold text-foreground flex items-center">
+              <AlignLeft strokeWidth={1.5} className="mr-2" />
+              On This Article
+            </h3>
+            <button
+              onClick={() => setIsTocOpen(false)}
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
+            >
+              <X strokeWidth={1.5} />
+            </button>
+          </div>
+
+          {/* TOC Content */}
+          <div className="max-h-[60vh] overflow-y-auto px-6 py-4">
+            <ul ref={mobileTocRef}>
+              {toc.map(({ id: h2Id, title: h2Title, children, tag }) => (
+                <TocItem
+                  h2Id={h2Id}
+                  h2Title={h2Title}
+                  key={h2Id}
+                  tag={tag}
+                  onClick={handleTocItemClick}
+                >
+                  {children}
+                </TocItem>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
 
     </>
   );

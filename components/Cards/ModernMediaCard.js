@@ -27,16 +27,16 @@ export default function ModernMediaCard({
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg flex flex-col justify-between">
-            <div className="text-sm mb-1">Total Images</div>
-            <div className="text-lg font-medium">
+            <div className="text-sm mb-1 dark:text-foreground">Total Images</div>
+            <div className="text-lg font-medium dark:text-foreground">
               {totalImages}
             </div>
           </div>
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg flex flex-col justify-between">
-            <div className="text-sm mb-1">
+            <div className="text-sm mb-1 dark:text-foreground">
               Modern Format Images
             </div>
-            <div className="text-lg font-medium">
+            <div className="text-lg font-medium dark:text-foreground">
               {modernImages}
             </div>
           </div>
@@ -55,14 +55,14 @@ export default function ModernMediaCard({
                 <div className="flex-1 min-w-0">
 
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium">
+                    <span className="text-sm font-medium dark:text-foreground">
                       Format: {image.extension || "Unknown"}
                     </span>
-                    <span className="text-xs">
+                    <span className="text-xs dark:text-foreground">
                       {image.extension === "webp" || image.extension === "avif" ? "Modern" : "Legacy"}
                     </span>
                   </div>
-                  <div className="text-xs truncate w-full max-w-full">
+                  <div className="text-xs truncate w-full max-w-full dark:text-foreground">
                     {image.src}
                   </div>
                 </div>
@@ -76,13 +76,13 @@ export default function ModernMediaCard({
             >
               {showAll ? (
                 <>
-                  <ChevronUp className="w-4 h-4" />
-                  <span className="text-sm font-medium">Show Less</span>
+                  <ChevronUp className="w-4 h-4 dark:text-foreground" />
+                  <span className="text-sm font-medium dark:text-foreground">Show Less</span>
                 </>
               ) : (
                 <>
-                  <ChevronDown className="w-4 h-4" />
-                  <span className="text-sm font-medium">
+                  <ChevronDown className="w-4 h-4 dark:text-foreground" />
+                  <span className="text-sm font-medium dark:text-foreground">
                     Show {data.images.length - 3} More
                   </span>
                 </>

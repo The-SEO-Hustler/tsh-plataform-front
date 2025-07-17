@@ -33,8 +33,8 @@ export default function InlineCssCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <span className="text-sm ">Total Elements with Inline CSS:</span>
-          <span className="font-medium">{data.count}</span>
+          <span className="text-sm dark:text-foreground">Total Elements with Inline CSS:</span>
+          <span className="font-medium dark:text-foreground">{data.count}</span>
         </div>
 
         <div className="space-y-2">

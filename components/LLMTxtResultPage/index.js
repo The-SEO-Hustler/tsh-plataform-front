@@ -20,7 +20,7 @@ function LLMTxtResult() {
   const [updatedAt, setUpdatedAt] = useState("");
   const [viewMode, setViewMode] = useState('markdown');
   const [activeTab, setActiveTab] = useState('llmtxt');
-
+  const [sendToEmail, setSendToEmail] = useState(false);
   const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -87,7 +87,7 @@ function LLMTxtResult() {
 
   useEffect(() => {
     // Start tracking this analysis in the global context.
-    console.log('docId', docId);
+    // console.log('docId', docId);
     if (docId) {
       trackAnalysis({
         type: "llmstxt",
@@ -107,7 +107,7 @@ function LLMTxtResult() {
       setAnalysisData(currentAnalysis.data || null);
       setUrl(currentAnalysis.url || "");
       setUpdatedAt(currentAnalysis.updatedAt || "");
-
+      setSendToEmail(currentAnalysis?.sendToEmail || false);
       // Stop loading when analysis is completed or failed.
       if (
         currentAnalysis.status === "completed" ||
@@ -164,7 +164,7 @@ function LLMTxtResult() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="llmstxt" />
+        <LoadingScreen status={status} type="llmstxt" docId={docId} collection="llmstxt" sendToEmail={sendToEmail} />
       </>
     );
   }

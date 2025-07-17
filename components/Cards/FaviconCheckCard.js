@@ -28,7 +28,7 @@ export default function FaviconCheckCard({
               {faviconUrl ? (
                 <img src={faviconUrl} />
               ) : (
-                <ImageIcon className="w-8 h-8 text-gray-400" />
+                <ImageIcon className="w-8 h-8 text-gray-400 dark:text-foreground" />
               )}
             </div>
             <div className="flex items-center justify-center gap-2">
@@ -36,7 +36,7 @@ export default function FaviconCheckCard({
                 className={`w-2 h-2 rounded-full ${faviconPresent ? "bg-green-700 dark:bg-green-500" : "bg-red-500"
                   }`}
               />
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium dark:text-foreground">
                 {faviconPresent ? "Favicon Present" : "No Favicon Found"}
               </span>
             </div>

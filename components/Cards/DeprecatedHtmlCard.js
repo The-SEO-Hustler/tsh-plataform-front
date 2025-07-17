@@ -23,10 +23,10 @@ export default function DeprecatedHtmlCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <span className="text-sm">
+          <span className="text-sm dark:text-foreground">
             Deprecated Elements Found:
           </span>
-          <span className="font-medium">{count}</span>
+          <span className="font-medium dark:text-foreground">{count}</span>
         </div>
 
         {elements.length > 0 && (
@@ -38,8 +38,8 @@ export default function DeprecatedHtmlCard({
               {elements.map((element, index) => (
                 <div key={index} className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
                   <div className="flex items-start gap-2">
-                    <AlertTriangle className="w-4 h-4 text-yellow-700 mt-0.5" />
-                    <p className="text-sm">{element?.tag}</p>
+                    <AlertTriangle className="w-4 h-4 text-yellow-700 mt-0.5 dark:text-foreground" />
+                    <p className="text-sm dark:text-foreground">{element?.tag}</p>
                   </div>
                 </div>
               ))}

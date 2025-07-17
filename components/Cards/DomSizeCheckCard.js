@@ -24,19 +24,19 @@ export default function DomSizeCheckCard({
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
-            <div className="text-sm mb-1">Total Nodes</div>
-            <div className="text-lg font-medium">
+            <div className="text-sm mb-1 dark:text-foreground">Total Nodes</div>
+            <div className="text-lg font-medium dark:text-foreground">
               {totalNodes.toLocaleString()}
             </div>
           </div>
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
-            <div className="text-sm mb-1">Max Depth</div>
-            <div className="text-lg font-medium">{maxDepth}</div>
+            <div className="text-sm mb-1 dark:text-foreground">Max Depth</div>
+            <div className="text-lg font-medium dark:text-foreground">{maxDepth}</div>
           </div>
         </div>
 
         <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <div className="text-sm">
+          <div className="text-sm dark:text-foreground">
             {totalNodes > 1000
               ? "DOM size is above recommended limit (1000 nodes)"
               : "DOM size is within recommended limits"}

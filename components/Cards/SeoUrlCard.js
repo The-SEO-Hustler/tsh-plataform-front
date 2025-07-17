@@ -23,8 +23,8 @@ export default function SeoUrlCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <span className="text-sm ">URL:</span>
-          <span className="font-medium">{url}</span>
+          <span className="text-sm dark:text-foreground">URL:</span>
+          <span className="font-medium dark:text-foreground">{url}</span>
         </div>
 
         <div className="space-y-2">

@@ -54,15 +54,15 @@ export default function ImageAltCard({
               >
                 {showAll ? (
                   <>
-                    <ChevronUp className="w-4 h-4" />
-                    <span className="text-sm font-medium ">
+                    <ChevronUp className="w-4 h-4 dark:text-foreground" />
+                    <span className="text-sm font-medium dark:text-foreground">
                       Show Less
                     </span>
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-4 h-4" />
-                    <span className="text-sm font-medium ">
+                    <ChevronDown className="w-4 h-4 dark:text-foreground" />
+                    <span className="text-sm font-medium dark:text-foreground">
                       Show {data.imagesWithoutAlt.length - 6} More
                     </span>
                   </>

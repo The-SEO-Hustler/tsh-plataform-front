@@ -136,7 +136,7 @@ function Header() {
           `}
           orientation="rtl"
         >
-          <NavigationMenuList>
+          <NavigationMenuList >
             <NavigationMenuItem>
               <NavigationMenuTrigger className="cursor-pointer">
                 <Link href="/free-tools" className="!no-underline !font-bold ">
@@ -146,28 +146,16 @@ function Header() {
               <NavigationMenuContent
                 orientation="ltr"
                 dir="ltr"
-                className="shadow-lg rounded-md "
+                className="shadow-lg rounded-md"
               >
                 <ul className="flex flex-col gap-3 p-2">
                   {tools.map((tool, index) => (
                     <ListItem href={tool.href} title={tool.title} key={index} free>
                       <div className="flex items-center space-x-3">
-                        {/* {tool.Icon && (
-                          typeof tool.Icon === 'function' ? (
-                            <tool.Icon className={cn(
-                              "fill-red-600 text-red-600"
-                            )} />
-                          ) : (
-                            <div >
-                              {tool.Icon}
-                            </div>
-                          )
-                        )} */}
                         <span>{tool.description}</span>
                       </div>
                     </ListItem>
                   ))}
-
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>

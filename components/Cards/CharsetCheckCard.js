@@ -33,7 +33,7 @@ export default function CharsetCheckCard({
                 className={`w-2 h-2 rounded-full ${charsetDeclared ? "bg-green-700 dark:bg-green-500" : "bg-red-500"
                   }`}
               />
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium dark:text-foreground">
                 {charsetDeclared
                   ? "Charset Declared"
                   : "No Charset Declaration"}

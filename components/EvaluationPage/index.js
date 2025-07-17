@@ -132,6 +132,7 @@ function Evaluation() {
   const [evaluation, setEvaluation] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const { resolvedTheme } = useTheme();
+  const [sendToEmail, setSendToEmail] = useState(false);
 
   const { trackAnalysis, currentAnalysis, clearAnalysis } =
     useFirebase();
@@ -172,6 +173,7 @@ function Evaluation() {
       setUserLocation(currentAnalysis?.userLocation || "");
       setTaskLocale(currentAnalysis?.taskLocale || "");
       setUpdatedAt(currentAnalysis?.updatedAt || "");
+      setSendToEmail(currentAnalysis?.sendToEmail || false);
 
       // Stop loading when analysis is completed or failed.
 
@@ -227,7 +229,7 @@ function Evaluation() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="evaluation" />
+        <LoadingScreen status={status} type="evaluation" docId={docId} collection="evaluations" sendToEmail={sendToEmail} />
       </>
     );
   }

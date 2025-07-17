@@ -41,6 +41,8 @@ function SEOAudit() {
   const [status, setStatus] = useState(
     currentAnalysis ? currentAnalysis.status : "initializing"
   );
+  const [sendToEmail, setSendToEmail] = useState(false);
+
 
   useEffect(() => {
     // Start tracking this analysis in the global context.
@@ -66,6 +68,7 @@ function SEOAudit() {
       setUrl(currentAnalysis.url || "");
       setScore(currentAnalysis?.score?.score || 0);
       setUpdatedAt(currentAnalysis.updatedAt || "");
+      setSendToEmail(currentAnalysis.sendToEmail || false);
       // Stop loading when analysis is completed or failed.
       if (
         currentAnalysis.status === "completed" ||
@@ -163,7 +166,7 @@ function SEOAudit() {
   }
 
   if (loading) {
-    return <LoadingScreen status={status} type="seo-check" />;
+    return <LoadingScreen status={status} type="seo-check" docId={docId} collection="seoAnalyses" sendToEmail={sendToEmail} />;
   }
 
   return (

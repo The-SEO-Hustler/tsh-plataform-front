@@ -37,7 +37,7 @@ export async function POST(request) {
     );
 
     const data = await response.json();
-    console.log("data", data);
+    // console.log("data", data);
     return NextResponse.json({ ...data, docId: docId });
   } catch (error) {
     console.error("Error in analysis API route:", error);

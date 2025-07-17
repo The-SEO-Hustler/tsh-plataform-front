@@ -11,6 +11,7 @@ import { getPathname } from "@/lib/getpathname";
 import { useUsage } from "@/lib/usage-context";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Link from "next/link";
+import HeroTemplate from "./HeroTemplate";
 
 function LLMTxtHero() {
   const [url, setUrl] = useState("");
@@ -97,7 +98,6 @@ function LLMTxtHero() {
   return (
     <main className="min-h-screen relative bg-gradient-to-br bg-background py-6 md:py-0">
       {/* Hero Section*/}
-
       <Container>
         <section className="min-h-screen flex items-center pb-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -139,7 +139,7 @@ function LLMTxtHero() {
                         required
                         disabled={loading}
                       />
-                      <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-40%]">Target URL</label>
+                      <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-15%]">Target URL</label>
                     </div>
 
                     <Button
@@ -254,7 +254,6 @@ function LLMTxtHero() {
           </div>
         </section>
       </Container>
-
       {/* What is LLMs.txt Section */}
       <section className="py-16 dark:bg-black bg-card border-t border-foreground/10">
         <Container>

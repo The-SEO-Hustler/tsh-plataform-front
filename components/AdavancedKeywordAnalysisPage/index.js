@@ -198,6 +198,7 @@ function AdvancedKeywordAnalysis() {
 
   const [keyword, setKeyword] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
+  const [sendToEmail, setSendToEmail] = useState(false);
   const [error, setError] = useState(null);
   const [extractingPageIntent, setExtractingPageIntent] = useState(false);
   const [searchIntentState, setSearchIntentState] = useState(false);
@@ -326,7 +327,7 @@ function AdvancedKeywordAnalysis() {
       setSelectedKeyword(currentAnalysis?.data?.related_keywords?.[0] || "");
       setKeyword(currentAnalysis.keyword || "");
       setUpdatedAt(currentAnalysis.updatedAt || "");
-
+      setSendToEmail(currentAnalysis?.sendToEmail || false);
       // Stop loading when analysis is completed or failed.
       if (
         currentAnalysis.preview
@@ -648,7 +649,7 @@ ${analysisData.serp_data?.map((result, index) => `
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="advanced-keyword-analysis" />
+        <LoadingScreen status={status} type="advanced-keyword-analysis" docId={docId} collection="keywordAnalysis" sendToEmail={sendToEmail} />
       </>
     );
   }

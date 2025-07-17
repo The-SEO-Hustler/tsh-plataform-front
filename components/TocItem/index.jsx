@@ -1,8 +1,14 @@
 import React, { useRef } from 'react'
 import s from './TocItem.module.css'
-function TocItem({ h2Id, h2Title, tag, children }) {
+function TocItem({ h2Id, h2Title, tag, children, onClick }) {
   // add a eventlistner that toggles the attribute data-open
   const tabRef = useRef(null)
+
+  const handleClick = (e) => {
+    if (onClick) {
+      onClick();
+    }
+  };
 
   return (
     <li
@@ -11,7 +17,7 @@ function TocItem({ h2Id, h2Title, tag, children }) {
       <div className={s.topicW}>
 
 
-        <a href={`#${h2Id}`} className={`${s.topic} `} data-heading-type="h2" style={{ textDecoration: 'none' }}>
+        <a href={`#${h2Id}`} className={`${s.topic} `} data-heading-type="h2" style={{ textDecoration: 'none' }} onClick={handleClick}>
           <span>{h2Title}</span>
         </a>
 
@@ -22,7 +28,7 @@ function TocItem({ h2Id, h2Title, tag, children }) {
           <ul className={s.headingTab} ref={tabRef}>
             {children.map(({ id: h3Id, title: h3Title }) => (
               <li key={h3Id} className={`${s.topicWrapper} ${s.h3}`} >
-                <a href={`#${h3Id}`} className={`${s.topic} `} data-heading-type="h3" style={{ textDecoration: 'none' }}>
+                <a href={`#${h3Id}`} className={`${s.topic} `} data-heading-type="h3" style={{ textDecoration: 'none' }} onClick={handleClick}>
                   <span>{h3Title}</span>
                 </a>
               </li>

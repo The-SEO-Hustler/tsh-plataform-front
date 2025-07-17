@@ -25,8 +25,8 @@ export default function ConsoleErrorsCheckCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <span className="text-sm">Total Console Errors:</span>
-          <span className="font-medium">
+          <span className="text-sm dark:text-foreground">Total Console Errors:</span>
+          <span className="font-medium dark:text-foreground">
             {data.consoleErrors.length}
           </span>
         </div>
@@ -37,8 +37,8 @@ export default function ConsoleErrorsCheckCard({
             {displayedErrors.map((error, index) => (
               <div key={index} className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
                 <div className="flex items-start gap-2">
-                  <Terminal className="min-w-5 min-h-5 text-gray-500 mt-0.5" size={14} />
-                  <p className="text-sm line-clamp-5">{error}</p>
+                  <Terminal className="min-w-5 min-h-5 text-gray-500 mt-0.5 dark:text-foreground" size={14} />
+                  <p className="text-sm line-clamp-5 dark:text-foreground">{error}</p>
                 </div>
               </div>
             ))}
@@ -50,13 +50,13 @@ export default function ConsoleErrorsCheckCard({
             >
               {showAll ? (
                 <>
-                  <ChevronUp className="w-4 h-4" />
-                  <span className="text-sm font-medium">Show Less</span>
+                  <ChevronUp className="w-4 h-4 dark:text-foreground" />
+                  <span className="text-sm font-medium dark:text-foreground">Show Less</span>
                 </>
               ) : (
                 <>
-                  <ChevronDown className="w-4 h-4" />
-                  <span className="text-sm font-medium">
+                  <ChevronDown className="w-4 h-4 dark:text-foreground" />
+                  <span className="text-sm font-medium dark:text-foreground">
                     Show {data.consoleErrors.length - 3} More
                   </span>
                 </>

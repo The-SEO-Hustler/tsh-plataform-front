@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import FeatureSection from "@/components/FeatureSection";
+import HeroTemplate from "@/components/HeroTemplate";
 import BlogCard from "@/components/BlogCard";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/container";
@@ -18,17 +19,7 @@ export default function BlogClient({ categories, blogPosts }) {
   return (
     <>
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[#4e503a] to-black relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFDD00" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
+      <HeroTemplate className="md:pb-16">
 
         <Container>
           <div className="max-w-3xl mx-auto text-center relative z-10">
@@ -40,7 +31,7 @@ export default function BlogClient({ categories, blogPosts }) {
             </p>
           </div>
         </Container>
-      </section>
+      </HeroTemplate>
 
       {/* Filter Categories */}
       <section className="py-2 md:py-6 bg-background border-b border-foreground/10 sticky top-16 z-20">

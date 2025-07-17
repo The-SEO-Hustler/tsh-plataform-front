@@ -15,6 +15,7 @@ import { getPathname } from "@/lib/getpathname";
 function ContentPlanning() {
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
+  const [sendToEmail, setSendToEmail] = useState(false);
   const [loadingPage, setLoadingPage] = useState(true);
   const [error, setError] = useState(null);
   const [analysisData, setAnalysisData] = useState(null);
@@ -62,7 +63,7 @@ function ContentPlanning() {
       setKeyword(currentAnalysis.keyword || "");
       setContentType(currentAnalysis.contentType || "blog_post");
       setUpdatedAt(currentAnalysis.updatedAt || "");
-
+      setSendToEmail(currentAnalysis?.sendToEmail || false);
       // Stop loading when analysis is completed or failed.
       if (
         currentAnalysis.status === "completed" ||
@@ -226,7 +227,7 @@ function ContentPlanning() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="content-planning" />
+        <LoadingScreen status={status} type="content-planning" docId={docId} collection="contentPlanning" sendToEmail={sendToEmail} />
       </>
     );
   }

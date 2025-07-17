@@ -19,7 +19,7 @@ function SearchIntent() {
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const [url, setUrl] = useState("");
-
+  const [sendToEmail, setSendToEmail] = useState(false);
   const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -51,6 +51,7 @@ function SearchIntent() {
       setAnalysisData(currentAnalysis.data || null);
       setKeyword(currentAnalysis.keyword || "");
       setUrl(currentAnalysis.url || "");
+      setSendToEmail(currentAnalysis.sendToEmail || false);
       setUpdatedAt(currentAnalysis.updatedAt || "");
 
       // Stop loading when analysis is completed or failed.
@@ -65,6 +66,9 @@ function SearchIntent() {
       }
     }
   }, [currentAnalysis]);
+
+
+
 
   // Function to get color based on intent type
   const getIntentColor = (intent) => {
@@ -294,7 +298,7 @@ function SearchIntent() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="search-intent" />
+        <LoadingScreen status={status} type="search-intent" docId={docId} collection="searchIntent" sendToEmail={sendToEmail} />
       </>
     );
   }
@@ -349,7 +353,6 @@ function SearchIntent() {
       </div>
       <section className="py-12 bg-background border-t border-foreground/10">
         <Container>
-          {JSON.stringify(analysisData)}
 
           <div className="space-y-8">
             {/* Query Summary */}
