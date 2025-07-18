@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import LoadingScreen from "@/components/LoadingScreen";
 
-function SearchIntent() {
+function SearchIntent({ blogPosts }) {
   const [keyword, setKeyword] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
   const [error, setError] = useState(null);
@@ -298,7 +298,7 @@ function SearchIntent() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="search-intent" docId={docId} collection="searchIntent" sendToEmail={sendToEmail} />
+        <LoadingScreen status={status} type="search-intent" docId={docId} collection="searchIntent" sendToEmail={sendToEmail} blogPosts={blogPosts} />
       </>
     );
   }
@@ -587,10 +587,10 @@ function SearchIntent() {
   );
 }
 
-export default function SearchIntentPage() {
+export default function SearchIntentPage({ blogPosts }) {
   return (
     <Suspense>
-      <SearchIntent />
+      <SearchIntent blogPosts={blogPosts} />
     </Suspense>
   );
 }

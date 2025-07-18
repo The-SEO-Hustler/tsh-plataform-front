@@ -10,10 +10,11 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 // Status messages with their descriptions
 
-export default function LoadingScreen({ status = 'pending', type, docId, collection, sendToEmail }) {
+export default function LoadingScreen({ status = 'pending', type, docId, collection, sendToEmail, blogPosts = null }) {
   // Get the message for the current status, or use the default 'pending' message
   const message = statusMessages[status] || statusMessages['pending'];
   const searchParams = useSearchParams();
@@ -27,6 +28,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(sendToEmail || false);
+  const [showBlogPosts, setShowBlogPosts] = useState(false);
 
   // Load email from localStorage on component mount
   useEffect(() => {
@@ -38,6 +40,17 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
   useEffect(() => {
     setEmailSubmitted(sendToEmail || false);
   }, [sendToEmail]);
+
+  // Show blog posts after 3 seconds
+  useEffect(() => {
+    if (blogPosts && blogPosts.length > 0) {
+      const timer = setTimeout(() => {
+        setShowBlogPosts(true);
+      }, 2200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [blogPosts]);
 
 
   // Animate the progress bar when status changes
@@ -120,7 +133,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
   const IconComponent = message.icon;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center ">
+    <div className="min-h-screen flex flex-col items-center justify-center relative">
       <div className="text-center md:max-w-md p-8 bg-card rounded-xl shadow-lg max-w-[90%]">
         <div className="flex justify-center relative h-20 w-20 mx-auto mb-6">
           <Loader2 className="h-20 w-20 animate-spin text-primary absolute top-0" />
@@ -212,6 +225,8 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
           </div>
         )}
 
+
+
         <div className="mt-8 text-[11px] text-foreground/80 flex items-center gap-2">
           <p>This process may take a few minutes depending on the process size. You can leave this page and check back later in this page.</p>
           <button onClick={() => {
@@ -225,6 +240,61 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
           </button>
         </div>
       </div>
+
+
+      {/* Blog Posts Section */}
+      {blogPosts && blogPosts.length > 0 && (
+        <div className={`mb-6 mt-6 lg:absolute bottom-2 right-4 max-w-md transition-all duration-700 ease-out ${showBlogPosts
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-4 pointer-events-none'
+          }`}>
+          <h3 className="text-lg font-semibold mb-4 text-center">While you wait, check out our latest articles:</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {blogPosts.slice(0, 2).map((post, index) => (
+              <Link
+                key={index}
+                href={`/blog/${post.slug}`}
+                className="block bg-card border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all group no-underline"
+              >
+                {/* Image Container */}
+                {post.featuredImage && (
+                  <div className="relative h-32 w-full bg-muted overflow-hidden">
+                    <img
+                      src={post.featuredImage}
+                      alt={post.featuredImageAlt || post.title}
+                      className="object-cover w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="p-4">
+
+
+                  {/* Title */}
+                  <h4 className="text-sm font-bold mb-2 text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                    {post.title}
+                  </h4>
+
+                  {/* Excerpt */}
+                  <p className="text-xs text-muted-foreground mb-3 line-clamp-2 dark:text-foreground/70">
+                    {post.excerpt}
+                  </p>
+
+                  {/* Date and Read More */}
+                  <div className="flex items-center text-xs">
+                    <span className="text-foreground/80">
+                      {post.date}
+                    </span>
+
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

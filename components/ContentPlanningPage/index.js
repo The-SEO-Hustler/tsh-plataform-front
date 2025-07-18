@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import LoadingScreen from "@/components/LoadingScreen";
 import { getPathname } from "@/lib/getpathname";
 
-function ContentPlanning() {
+function ContentPlanning({ blogPosts }) {
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
   const [sendToEmail, setSendToEmail] = useState(false);
@@ -227,7 +227,7 @@ function ContentPlanning() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="content-planning" docId={docId} collection="contentPlanning" sendToEmail={sendToEmail} />
+        <LoadingScreen status={status} type="content-planning" docId={docId} collection="contentPlanning" sendToEmail={sendToEmail} blogPosts={blogPosts} />
       </>
     );
   }
@@ -635,10 +635,10 @@ function ContentPlanning() {
   );
 }
 
-export default function ContentPlanningPage() {
+export default function ContentPlanningPage({ blogPosts }) {
   return (
     <Suspense>
-      <ContentPlanning />
+      <ContentPlanning blogPosts={blogPosts} />
     </Suspense>
   );
 }

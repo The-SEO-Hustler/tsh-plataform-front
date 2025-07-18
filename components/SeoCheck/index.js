@@ -18,7 +18,7 @@ import { useFirebase } from "@/lib/firebase-context";
 import { getScoreAppearance } from "@/lib/getScoreAppearance";
 import { getPathname } from "@/lib/getpathname";
 
-function SEOAudit() {
+function SEOAudit({ blogPosts }) {
   const [focusedCardId, setFocusedCardId] = useState(null);
   const [analysisData, setAnalysisData] = useState([]);
   const [url, setUrl] = useState("");
@@ -166,7 +166,7 @@ function SEOAudit() {
   }
 
   if (loading) {
-    return <LoadingScreen status={status} type="seo-check" docId={docId} collection="seoAnalyses" sendToEmail={sendToEmail} />;
+    return <LoadingScreen status={status} type="seo-check" docId={docId} collection="seoAnalyses" sendToEmail={sendToEmail} blogPosts={blogPosts} />;
   }
 
   return (
@@ -966,10 +966,10 @@ function SEOAudit() {
   );
 }
 
-export default function SEOAuditPage() {
+export default function SEOAuditPage({ blogPosts }) {
   return (
     <Suspense>
-      <SEOAudit />
+      <SEOAudit blogPosts={blogPosts} />
     </Suspense>
   );
 }

@@ -194,7 +194,7 @@ const VideoRow = ({ result, idx }) => (
 
 
 
-function AdvancedKeywordAnalysis() {
+function AdvancedKeywordAnalysis({ blogPosts }) {
 
   const [keyword, setKeyword] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
@@ -649,7 +649,7 @@ ${analysisData.serp_data?.map((result, index) => `
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="advanced-keyword-analysis" docId={docId} collection="keywordAnalysis" sendToEmail={sendToEmail} />
+        <LoadingScreen status={status} type="advanced-keyword-analysis" docId={docId} collection="keywordAnalysis" sendToEmail={sendToEmail} blogPosts={blogPosts} />
       </>
     );
   }
@@ -1936,10 +1936,10 @@ ${analysisData.serp_data?.map((result, index) => `
   );
 }
 
-export default function AdvancedKeywordAnalysisPage() {
+export default function AdvancedKeywordAnalysisPage({ blogPosts }) {
   return (
     <Suspense>
-      <AdvancedKeywordAnalysis />
+      <AdvancedKeywordAnalysis blogPosts={blogPosts} />
     </Suspense>
   );
 }

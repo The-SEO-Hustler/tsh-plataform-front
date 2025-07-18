@@ -12,7 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { getPathname } from "@/lib/getpathname";
 
-function LLMTxtResult() {
+function LLMTxtResult({ blogPosts }) {
   const [url, setUrl] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
   const [error, setError] = useState(null);
@@ -164,7 +164,7 @@ function LLMTxtResult() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="llmstxt" docId={docId} collection="llmstxt" sendToEmail={sendToEmail} />
+        <LoadingScreen status={status} type="llmstxt" docId={docId} collection="llmstxt" sendToEmail={sendToEmail} blogPosts={blogPosts} />
       </>
     );
   }
@@ -334,10 +334,10 @@ function LLMTxtResult() {
   );
 }
 
-export default function LLMTxtResultPage() {
+export default function LLMTxtResultPage({ blogPosts }) {
   return (
     <Suspense>
-      <LLMTxtResult />
+      <LLMTxtResult blogPosts={blogPosts} />
     </Suspense>
   );
 }

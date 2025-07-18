@@ -121,7 +121,7 @@ const flagsTooltips = {
   didNotLoad: "The page failed to load during evaluation.",
 };
 
-function Evaluation() {
+function Evaluation({ blogPosts }) {
   const [url, setUrl] = useState("");
   const [query, setQuery] = useState("");
   const [userLocation, setUserLocation] = useState("");
@@ -229,7 +229,7 @@ function Evaluation() {
   if (loadingPage) {
     return (
       <>
-        <LoadingScreen status={status} type="evaluation" docId={docId} collection="evaluations" sendToEmail={sendToEmail} />
+        <LoadingScreen status={status} type="evaluation" docId={docId} collection="evaluations" sendToEmail={sendToEmail} blogPosts={blogPosts} />
       </>
     );
   }
@@ -1882,10 +1882,10 @@ function Evaluation() {
   );
 }
 
-export default function EvaluationPage() {
+export default function EvaluationPage({ blogPosts }) {
   return (
     <Suspense>
-      <Evaluation />
+      <Evaluation blogPosts={blogPosts} />
     </Suspense>
   );
 }
