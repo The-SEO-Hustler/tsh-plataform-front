@@ -1,8 +1,10 @@
 import Link from "next/link";
 import Container from "@/components/container";
+import ToolsStatus from "../toolsStatus";
 
 export default function Footer() {
   // Footer link sections
+
   const sections = [
     {
       title: "Resources",
@@ -78,6 +80,9 @@ export default function Footer() {
               execute SEO and organic growth by themselves. Get sh*t done with
               our free tools, in-depth playbooks, and resources.
             </p>
+            <div className="mt-6">
+              <ToolsStatus />
+            </div>
             <div className="mt-6 flex space-x-4">
               {socialLinks.map((social) => (
                 <a

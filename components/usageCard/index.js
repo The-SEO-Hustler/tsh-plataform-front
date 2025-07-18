@@ -16,10 +16,13 @@ function UsageCard() {
     height: "8px",
     backgroundColor: "#4caf50",
   };
+  if (usage?.status === 'error') {
+    return null;
+  }
 
   return (
     <div className="bg-card p-3 px-4 rounded-lg shadow-lg fixed bottom-2 left-1/2 transform -translate-x-1/2 z-10 w-64 border border-foreground/10 text-foreground">
-      {usage ? (
+      {usage && usage?.status !== 'loading' ? (
         <div>
           <div className="flex mb-2 text-sm text-center justify-center">
             <span>

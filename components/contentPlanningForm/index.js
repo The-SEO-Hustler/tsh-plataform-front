@@ -31,7 +31,7 @@ function ContentPlanningForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { usage, setUsage } = useUsage();
-  const { trackContentPlanning, currentContentPlanning, removeLLMTxt, removeAdvancedKeywordAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis } = useFirebase();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,7 +39,7 @@ function ContentPlanningForm() {
       toast.error("You have reached your daily limit. Please try again tomorrow.");
       return;
     }
-    if (currentContentPlanning && (currentContentPlanning?.status !== "completed" && currentContentPlanning?.status !== "failed")) {
+    if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
@@ -50,9 +50,9 @@ function ContentPlanningForm() {
     }
 
     if (
-      currentContentPlanning &&
-      currentContentPlanning?.status !== "completed" &&
-      currentContentPlanning?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -79,10 +79,14 @@ function ContentPlanningForm() {
 
       const data = await response.json();
       if (data.success) {
-        removeAnalysis();
-        removeLLMTxt();
-        removeAdvancedKeywordAnalysis();
-        trackContentPlanning(data.docId, keyword);
+        trackAnalysis({
+          type: "content-planning",
+          docId: data.docId,
+          collection: "contentPlanning",
+          meta: {
+            keyword: keyword,
+          },
+        });
         setUsage(prevUsage => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1

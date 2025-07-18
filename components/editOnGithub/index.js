@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { pageToFileMap } from "@/lib/githuMap";
+import { getFilePathForPathname } from "@/lib/githuMap";
 
 export default function EditOnGitHub() {
   const [show, setShow] = useState(false);
@@ -26,9 +26,9 @@ export default function EditOnGitHub() {
   if (!show) return null;
 
   const githubBase = "https://github.com/The-SEO-Hustler/tsh-plataform-front/tree/main";
-  // first try the static map…
-  let filePath = pageToFileMap[pathname];
-  // …if it wasn’t in the map, resolve dynamic or fallback
+  // Use the helper function that supports both exact matches and wildcard patterns
+  let filePath = getFilePathForPathname(pathname);
+  // …if it wasn't found, return null
   if (!filePath) {
     return null;
   }

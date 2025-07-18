@@ -18,7 +18,7 @@ function SeoCheckForm() {
   const [url, setUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState('');
-  const { trackAnalysis, currentAnalysis, removeContentPlanning, removeLLMTxt, removeAdvancedKeywordAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
 
@@ -60,10 +60,14 @@ function SeoCheckForm() {
       const data = await response.json();
 
       if (data.success) {
-        removeContentPlanning();
-        removeLLMTxt();
-        removeAdvancedKeywordAnalysis();
-        trackAnalysis(data.docId, url);
+        trackAnalysis({
+          type: "seo-check",
+          docId: data.docId,
+          collection: "seoAnalyses",
+          meta: {
+            url: url,
+          },
+        });
         // router.push(`/seo-check/result?id=${data.docId}`);
         setIsLoading(false);
         setUsage(prevUsage => ({

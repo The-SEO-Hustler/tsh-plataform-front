@@ -12,7 +12,7 @@ function LLMForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { usage, setUsage } = useUsage();
-  const { trackLLMTxt, currentLLMTxt, removeLLMTxt } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -20,7 +20,7 @@ function LLMForm() {
       toast.error("You have reached your daily limit. Please try again tomorrow.");
       return;
     }
-    if (currentLLMTxt && (currentLLMTxt?.status !== "completed" && currentLLMTxt?.status !== "failed")) {
+    if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
@@ -31,9 +31,9 @@ function LLMForm() {
     }
 
     if (
-      currentLLMTxt &&
-      currentLLMTxt?.status !== "completed" &&
-      currentLLMTxt?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
@@ -59,8 +59,14 @@ function LLMForm() {
 
       const data = await response.json();
       if (data.success) {
-        removeLLMTxt();
-        trackLLMTxt(data.docId, url);
+        trackAnalysis({
+          type: "llmstxt",
+          docId: data.docId,
+          collection: "llmstxt",
+          meta: {
+            url: url,
+          },
+        });
         setUsage(prevUsage => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1

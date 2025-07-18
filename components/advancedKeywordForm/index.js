@@ -11,11 +11,8 @@ function AdvancedKeywordForm() {
   const [loading, setLoading] = useState(false);
   const { usage, setUsage } = useUsage();
   const {
-    trackAdvancedKeywordAnalysis,
-    currentAdvancedKeywordAnalysis,
-    removeAdvancedKeywordAnalysis,
-    removeLLMTxt,
-    removeContentPlanning,
+    trackAnalysis,
+    currentAnalysis,
   } = useFirebase();
   const [error, setError] = useState(null);
 
@@ -38,22 +35,14 @@ function AdvancedKeywordForm() {
     }
 
     if (
-      currentAdvancedKeywordAnalysis &&
-      currentAdvancedKeywordAnalysis?.status !== "completed" &&
-      currentAdvancedKeywordAnalysis?.status !== "failed"
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
     ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
 
-    if (
-      currentAdvancedKeywordAnalysis &&
-      currentAdvancedKeywordAnalysis?.status !== "completed" &&
-      currentAdvancedKeywordAnalysis?.status !== "failed"
-    ) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
 
     setLoading(true);
     setError(null);
@@ -74,10 +63,14 @@ function AdvancedKeywordForm() {
 
       const data = await response.json();
       if (data.success) {
-        removeLLMTxt();
-        removeContentPlanning();
-        removeAdvancedKeywordAnalysis();
-        trackAdvancedKeywordAnalysis(data.docId, keyword);
+        trackAnalysis({
+          type: "advanced-keyword-analysis",
+          docId: data.docId,
+          collection: "keywordAnalysis",
+          meta: {
+            keyword: keyword,
+          },
+        });
         // router.push(`/advanced-keyword-analysis/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
@@ -108,11 +101,10 @@ function AdvancedKeywordForm() {
           <Button
             type="submit"
             size="lg"
-            className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${
-              loading
-                ? "animate-pulse !bg-primary !text-primary-foreground"
-                : ""
-            } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
+            className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 ${loading
+              ? "animate-pulse !bg-primary !text-primary-foreground"
+              : ""
+              } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
             disabled={loading || usage?.remaining <= 0 || usage === null}
           >
             <span className="sm:block hidden">

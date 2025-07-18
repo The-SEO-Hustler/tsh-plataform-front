@@ -70,14 +70,7 @@ function AdvancedKeywordAnalysisHero() {
       return;
     }
 
-    if (
-      currentAnalysis &&
-      currentAnalysis?.status !== "completed" &&
-      currentAnalysis?.status !== "failed"
-    ) {
-      toast.error("Please wait for the previous analysis to complete.");
-      return;
-    }
+
 
     setLoading(true);
     setError(null);

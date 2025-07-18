@@ -27,8 +27,9 @@ export async function GET(req) {
   }
   catch (error) {
     console.log(error);
+    return NextResponse.json({ status: 'error', message: 'Systems down' }, { status: 503 });
   }
 
 
-  return NextResponse.json({ ip });
+  // return NextResponse.json({ ip });
 }
