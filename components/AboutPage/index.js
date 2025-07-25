@@ -105,7 +105,7 @@ export default function About() {
             We Cut Through the <span className="text-primary">BS</span> So You Can <span className="text-primary">Dominate Search</span>
           </h1>
           <p className="text-xl text-white/90 dark:text-foreground/90 mb-8 max-w-3xl mx-auto">
-            Look, the SEO world is full of smoke and mirrors. We're not about that life.
+            Look, the SEO world is full of smoke and mirrors. We&apos;re not about that life.
           </p>
         </Container>
       </section>
@@ -117,10 +117,10 @@ export default function About() {
             <div className="bg-card rounded-lg p-8 transform -rotate-1 shadow-lg animate-float">
               <div className="transform rotate-1">
                 <p className="text-xl md:text-2xl font-bold mb-6 leading-relaxed">
-                  Agencies charging $5K/month for "proprietary strategies" that are really just basic backlinks and keyword stuffing. Gurus peddling courses that teach outdated tactics. And a whole lot of people who talk big but can't actually move the needle on traffic or revenue.
+                  Agencies charging $5K/month for &quot;proprietary strategies&quot; that are really just basic backlinks and keyword stuffing. Gurus peddling courses that teach outdated tactics. And a whole lot of people who talk big but can&apos;t actually move the needle on traffic or revenue.
                 </p>
                 <p className="text-xl md:text-2xl font-black text-primary">
-                  We're not about that life.
+                  We&apos;re not about that life.
                 </p>
               </div>
             </div>
@@ -132,10 +132,10 @@ export default function About() {
       <FeatureSection >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl font-bold mb-6">We've Been in the Trenches</h2>
+            <h2 className="text-3xl font-bold mb-6">We&apos;ve Been in the Trenches</h2>
             <div className="space-y-6">
               <p className="text-lg">
-                Back when I was hustling websites on Fiverr for $50 a pop, I learned the hard way how brutal the search game can be. One Google update wiped out six months of work overnight. That's when I stopped following the "experts" and started testing everything myself.
+                Back when I was hustling websites on Fiverr for $50 a pop, I learned the hard way how brutal the search game can be. One Google update wiped out six months of work overnight. That&apos;s when I stopped following the &quot;experts&quot; and started testing everything myself.
               </p>
               <p className="text-lg">
                 Fifteen years and $100M+ in generated organic revenue later, here we are.
@@ -147,13 +147,13 @@ export default function About() {
             <div className="relative bg-foreground md:animate-float rounded-md shadow-md overflow-hidden p-8 text-background">
               <h3 className="font-black text-2xl mb-4 text-primary">Who We Are</h3>
               <p className="mb-4">
-                The SEO Hustler was founded by Zac Almeida, a search veteran with 15+ years of enterprise experience who's seen every algorithm update, AI breakthrough, and industry shift you can imagine. After helping enterprise clients and scrappy startups alike turn complex SEO challenges into growth engines, one thing became clear:
+                The SEO Hustler was founded by Zac Almeida, a search veteran with 15+ years of enterprise experience who&apos;s seen every algorithm update, AI breakthrough, and industry shift you can imagine. After helping enterprise clients and scrappy startups alike turn complex SEO challenges into growth engines, one thing became clear:
               </p>
               <p className="font-bold text-xl">
                 Most businesses are drowning in SEO information but starving for real results.
               </p>
               <p className="mt-4">
-                That's why TSH exists. We're on a mission to democratize no-BS search strategies for everyone from solopreneurs to in-house teams at established brands.
+                That&apos;s why TSH exists. We&apos;re on a mission to democratize no-BS search strategies for everyone from solopreneurs to in-house teams at established brands.
               </p>
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function About() {
       <section className="py-20 bg-gray-200 dark:bg-background/70">
         <Container>
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-bold mb-6">What We're About</h2>
+            <h2 className="text-3xl font-bold mb-6">What We&apos;re About</h2>
             <p className="text-xl text-on-surface-variant">
               These core principles guide everything we do
             </p>
@@ -208,7 +208,7 @@ export default function About() {
                 1
               </div>
               <p className="text-lg font-semibold leading-relaxed">
-                Business owners shouldn't need a PhD in computer science to understand SEO
+                Business owners shouldn&apos;t need a PhD in computer science to understand SEO
               </p>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function About() {
                 3
               </div>
               <p className="text-lg font-semibold leading-relaxed">
-                If advice doesn't lead to actual traffic, rankings, or revenue growth, it's just hot air
+                If advice doesn&apos;t lead to actual traffic, rankings, or revenue growth, it&apos;s just hot air
               </p>
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function About() {
 
         <div className="text-center mt-12">
           <p className="text-xl font-bold text-primary">
-            The tools are free. The playing field is wide open. What's your excuse?
+            The tools are free. The playing field is wide open. What&apos;s your excuse?
           </p>
         </div>
       </FeatureSection>
@@ -283,19 +283,19 @@ export default function About() {
           <div className="max-w-4xl mx-auto ">
             <div className="bg-[#333] p-8 rounded-lg transform rotate-1 shadow-md overflow-hidden">
               <div className="transform -rotate-1">
-                <h2 className="text-3xl font-black mb-6 dark:text-foreground">Real Talk: This Isn't For Everyone</h2>
+                <h2 className="text-3xl font-black mb-6 dark:text-foreground">Real Talk: This Isn&apos;t For Everyone</h2>
                 <div className="space-y-4 text-lg">
                   <p>
-                    Let's be real — no one's reading a 1,500-word blog post about alt text unless it's helping them rank or save time.
+                    Let&apos;s be real — no one&apos;s reading a 1,500-word blog post about alt text unless it&apos;s helping them rank or save time.
                   </p>
                   <p>
-                    We don't sugar-coat things. We'll tell you when your website looks like it was built in 2010 (because it probably was). We'll call out when your content reads like AI garbage. And we'll definitely let you know if you're wasting time on tactics that stopped working years ago.
+                    We don&apos;t sugar-coat things. We&apos;ll tell you when your website looks like it was built in 2010 (because it probably was). We&apos;ll call out when your content reads like AI garbage. And we&apos;ll definitely let you know if you&apos;re wasting time on tactics that stopped working years ago.
                   </p>
                   <p>
-                    If you want gentle pats on the back and validation, there are plenty of "gurus" who'll take your money for that.
+                    If you want gentle pats on the back and validation, there are plenty of &quot;gurus&quot; who&apos;ll take your money for that.
                   </p>
                   <p className="font-bold">
-                    But if you want someone who'll help you cut through the BS and actually grow your organic traffic? You're in the right place.
+                    But if you want someone who&apos;ll help you cut through the BS and actually grow your organic traffic? You&apos;re in the right place.
                   </p>
                 </div>
               </div>

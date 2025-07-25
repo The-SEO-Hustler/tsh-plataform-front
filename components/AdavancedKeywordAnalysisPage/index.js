@@ -315,7 +315,7 @@ function AdvancedKeywordAnalysis({ blogPosts }) {
         },
       });
     }
-  }, [docId, router, trackAnalysis, keyword]);
+  }, [docId, router, trackAnalysis]);
 
   // Listen for changes in the global analysis state.
   useEffect(() => {
@@ -386,7 +386,7 @@ function AdvancedKeywordAnalysis({ blogPosts }) {
       }
     }
 
-  }, [googleTrendsState, searchIntentState])
+  }, [googleTrendsState, searchIntentState, keyword])
 
 
   useEffect(() => {
@@ -1295,7 +1295,7 @@ ${analysisData.serp_data?.map((result, index) => `
                     </ul>
                   ) : (
                     <p className="text-foreground/80">
-                      No "People Also Ask" questions available for this keyword.
+                      No &quot;People Also Ask&quot; questions available for this keyword.
                     </p>
                   )}
                 </div>
@@ -1644,7 +1644,7 @@ ${analysisData.serp_data?.map((result, index) => `
                                             )}
                                             <div>
                                               <div className="flex items-center gap-2">
-                                                <img src={`https://icons.duckduckgo.com/ip3/${item.domain}.ico`} className="w-4 h-4 aspect-square object-cover min-w-4 min-h-4 max-w-4 max-h-4" />
+                                                <img src={`https://icons.duckduckgo.com/ip3/${item.domain}.ico`} className="w-4 h-4 aspect-square object-cover min-w-4 min-h-4 max-w-4 max-h-4" alt={item.domain} />
                                                 <div className="text-sm text-foreground/80">{item.source}</div>
                                               </div>
                                               <div className="font-medium">
@@ -1897,7 +1897,7 @@ ${analysisData.serp_data?.map((result, index) => `
                     No SERP Data Available
                   </h3>
                   <p className="text-foreground/80 max-w-md mx-auto">
-                    We couldn't find any search engine results for this keyword.
+                    We couldn&apos;t find any search engine results for this keyword.
                     This might be due to very low search volume or a highly
                     specific query.
                   </p>

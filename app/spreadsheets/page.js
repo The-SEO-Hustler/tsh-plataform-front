@@ -20,7 +20,7 @@ async function SpreadsheetsPage() {
       <div className="max-w-4xl mx-auto mb-12">
         <h1 className="text-4xl font-bold mb-4">SEO Spreadsheets</h1>
         <p className="text-xl text-muted-foreground">
-          Useful spreadsheets to help you track and improve your website's performance.
+          Useful spreadsheets to help you track and improve your website&apos;s performance.
         </p>
       </div>
 

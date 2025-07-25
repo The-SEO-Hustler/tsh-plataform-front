@@ -255,7 +255,7 @@ function Evaluation({ blogPosts }) {
                     Query
                   </h4>
                   <p className="text-sm text-foreground">
-                    "{evaluation?.userQuery}"
+                    &quot;{evaluation?.userQuery}&quot;
                   </p>
 
                   <h4 className="text-sm font-medium text-foreground/60 mt-3">
@@ -321,9 +321,9 @@ function Evaluation({ blogPosts }) {
                           className="max-w-[200px] p-2"
                           side="right"
                         >
-                          <p>"FailsM" (Fails Meets)</p>
-                          "SM" (Slightly Meets) "MM" (Moderately Meets) "HM"
-                          (Highly Meets) "FullyM" (Fully Meets)
+                          <p>&quot;FailsM&quot; (Fails Meets)</p>
+                          &quot;SM&quot; (Slightly Meets) &quot;MM&quot; (Moderately Meets) &quot;HM&quot;
+                          (Highly Meets) &quot;FullyM&quot; (Fully Meets)
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -1090,9 +1090,9 @@ function Evaluation({ blogPosts }) {
                                   className="max-w-[200px] p-2"
                                   side="right"
                                 >
-                                  Indicates how important the user’s geographic
+                                  Indicates how important the user&apos;s geographic
                                   location is to the query. Example:
-                                  "Restaurants near me" has high location
+                                  &quot;Restaurants near me&quot; has high location
                                   relevance.
                                 </TooltipContent>
                               </Tooltip>

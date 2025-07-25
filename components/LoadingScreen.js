@@ -11,6 +11,8 @@ import { db } from '@/lib/firebase';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Container from './container';
+import Image from 'next/image';
 
 // Status messages with their descriptions
 
@@ -133,7 +135,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
   const IconComponent = message.icon;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative">
+    <Container className="min-h-screen flex flex-col items-center justify-center relative">
       <div className="text-center md:max-w-md p-8 bg-card rounded-xl shadow-lg max-w-[90%]">
         <div className="flex justify-center relative h-20 w-20 mx-auto mb-6">
           <Loader2 className="h-20 w-20 animate-spin text-primary absolute top-0" />
@@ -154,7 +156,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
 
         {/* Email Notification Section */}
         {!emailSubmitted && (
-          <div className="mb-6 p-4 bg-accent/50 rounded-lg border border-border">
+          <div className="mb-6 p-4 bg-background dark:bg-accent/50 rounded-lg border border-border">
             <div className="flex items-center gap-2 mb-3">
               <Bell className="h-5 w-5 text-primary" />
               <h3 className="font-semibold text-sm">Get notified when this process is complete</h3>
@@ -169,7 +171,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
                   onClick={() => setShowEmailForm(true)}
                   variant="outline"
                   size="sm"
-                  className="w-full"
+                  className="w-full text-foreground/80"
                 >
                   <Mail className="h-4 w-4 mr-2" />
                   Enable Email Notifications
@@ -205,6 +207,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
                     type="button"
                     variant="outline"
                     size="sm"
+                    className="text-foreground/80"
                     onClick={() => setShowEmailForm(false)}
                     disabled={isSubmitting}
                   >
@@ -241,7 +244,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
         </div>
       </div>
 
-
+      {/* TODO comment out the blog section, take a screenhot of the loading screen, try to edit it with figa and put it on seo-check hero */}
       {/* Blog Posts Section */}
       {blogPosts && blogPosts.length > 0 && (
         <div className={`mb-6 mt-6 lg:absolute bottom-2 right-4 max-w-md transition-all duration-700 ease-out ${showBlogPosts
@@ -259,7 +262,7 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
                 {/* Image Container */}
                 {post.featuredImage && (
                   <div className="relative h-32 w-full bg-muted overflow-hidden">
-                    <img
+                    <Image
                       src={post.featuredImage}
                       alt={post.featuredImageAlt || post.title}
                       className="object-cover w-full h-full"
@@ -295,6 +298,6 @@ export default function LoadingScreen({ status = 'pending', type, docId, collect
           </div>
         </div>
       )}
-    </div>
+    </Container>
   );
 } 

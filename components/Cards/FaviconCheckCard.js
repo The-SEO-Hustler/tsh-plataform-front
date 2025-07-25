@@ -26,7 +26,7 @@ export default function FaviconCheckCard({
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gray-100 dark:bg-background flex items-center justify-center">
               {faviconUrl ? (
-                <img src={faviconUrl} />
+                <img src={faviconUrl} alt="Favicon" />
               ) : (
                 <ImageIcon className="w-8 h-8 text-gray-400 dark:text-foreground" />
               )}

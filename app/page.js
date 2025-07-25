@@ -299,7 +299,7 @@ export default async function Home() {
             </h2>
             <p className="text-xl mb-8 text-black">
               Join thousands of website owners who are growing their traffic
-              with The SEO Hustler's free tools and resources.
+              with The SEO Hustler&apos;s free tools and resources.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="secondary" size="lg" href="/free-tools">
@@ -359,7 +359,7 @@ export default async function Home() {
                 ))}
               </div>
               <p className="text-on-surface-variant mb-4">
-                "{testimonial.text}"
+                &quot;{testimonial.text}&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center">

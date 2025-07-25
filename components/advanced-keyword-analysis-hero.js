@@ -226,7 +226,7 @@ function AdvancedKeywordAnalysisHero() {
               </div>
               <p className=" leading-relaxed">
                 Type in any keyword or phrase you want to explore (for example,
-                "keto diet") and hit{" "}
+                &quot;keto diet&quot;) and hit{" "}
                 <span className="text-primary font-semibold">
                   Analyze Keyword
                 </span>
@@ -274,7 +274,7 @@ function AdvancedKeywordAnalysisHero() {
                   />
                   <div>
                     <span className="font-semibold">Intent & PAA:</span> We
-                    classify overall search intent and collect "People Also Ask"
+                    classify overall search intent and collect &quot;People Also Ask&quot;
                     questions.
                   </div>
                 </div>
@@ -285,7 +285,7 @@ function AdvancedKeywordAnalysisHero() {
                   />
                   <div>
                     <span className="font-semibold">Related Insights:</span> We
-                    merge in "People Also Search For," related keywords, and
+                    merge in &quot;People Also Search For,&quot; related keywords, and
                     Google Trends data.
                   </div>
                 </div>
@@ -526,8 +526,8 @@ function AdvancedKeywordAnalysisHero() {
                         </li>
                         <li>• Identify gaps in coverage</li>
                         <li>
-                          • If every competitor has an "H2: Health Benefits,"
-                          you know that's a must-cover section
+                          • If every competitor has an &quot;H2: Health Benefits,&quot;
+                          you know that&apos;s a must-cover section
                         </li>
                       </ul>
                     </div>
@@ -611,7 +611,7 @@ function AdvancedKeywordAnalysisHero() {
                             </span>
                             <p className="text-foreground/80 text-sm">
                               Use the slider to exclude ultra-competitive terms
-                              if you're a smaller site.
+                              if you&apos;re a smaller site.
                             </p>
                           </div>
                         </div>
@@ -625,7 +625,7 @@ function AdvancedKeywordAnalysisHero() {
                               Combine Metrics:
                             </span>
                             <p className="text-foreground/80 text-sm">
-                              Don't pick purely on volume—aim for "sweet spot"
+                              Don&apos;t pick purely on volume—aim for &quot;sweet spot&quot;
                               keywords with volume × CPC ÷ difficulty.
                             </p>
                           </div>

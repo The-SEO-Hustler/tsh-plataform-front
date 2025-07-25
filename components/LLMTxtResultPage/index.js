@@ -296,13 +296,13 @@ function LLMTxtResult({ blogPosts }) {
             <div className="bg-card p-6 rounded-lg">
               <h3 className="text-xl font-bold mb-3 text-primary">Why This Matters for SEO</h3>
               <p className="text-foreground/80 mb-4">
-                This text representation shows how search engines and AI systems might understand your website's content. Analyzing this can help you:
+                This text representation shows how search engines and AI systems might understand your website&apos;s content. Analyzing this can help you:
               </p>
               <ul className="list-disc list-inside space-y-2 text-foreground/80">
                 <li>Identify content gaps and opportunities</li>
                 <li>Ensure your main topics and keywords are clearly represented</li>
                 <li>Check if your site structure is being correctly interpreted</li>
-                <li>Verify that important content isn't being missed by crawlers</li>
+                <li>Verify that important content isn&apos;t being missed by crawlers</li>
               </ul>
             </div>
           </div>

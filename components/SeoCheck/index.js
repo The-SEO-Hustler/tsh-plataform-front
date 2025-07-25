@@ -390,10 +390,10 @@ function SEOAudit({ blogPosts }) {
                 <h2 className="text-3xl font-bold mb-6 text-primary">Understanding Your SEO Score</h2>
 
                 <p className="text-lg text-foreground mb-4">
-                  Your overall SEO score isn't just a vanity metric — it's a business health indicator. Every point below 100 represents potential traffic, leads, and revenue you're leaving on the table.
+                  Your overall SEO score isn&apos;t just a vanity metric — it&apos;s a business health indicator. Every point below 100 represents potential traffic, leads, and revenue you&apos;re leaving on the table.
                 </p>
                 <p className="text-lg text-foreground mb-4">
-                  Think of it like a credit score for your website's visibility. The higher the score, the more Google trusts and rewards your site.
+                  Think of it like a credit score for your website&apos;s visibility. The higher the score, the more Google trusts and rewards your site.
                 </p>
               </div>
 
@@ -416,7 +416,7 @@ function SEOAudit({ blogPosts }) {
                   </p>
 
                   <p className="text-lg text-foreground">
-                    <span className="font-bold">Timeline to fix:</span> ASAP — ideally within 7 days. Every day these issues persist, you're hemorrhaging potential traffic.
+                    <span className="font-bold">Timeline to fix:</span> ASAP — ideally within 7 days. Every day these issues persist, you&apos;re hemorrhaging potential traffic.
                   </p>
                 </div>
 
@@ -424,7 +424,7 @@ function SEOAudit({ blogPosts }) {
                   <h3 className="text-2xl font-bold mb-4 text-yellow-500">Warning Issues (Yellow)</h3>
 
                   <p className="text-lg text-foreground mb-3">
-                    <span className="font-bold">What they are:</span> These won't immediately tank your site, but they're putting a ceiling on how well you can rank.
+                    <span className="font-bold">What they are:</span> These won&apos;t immediately tank your site, but they&apos;re putting a ceiling on how well you can rank.
                   </p>
 
                   <p className="text-lg text-foreground mb-3">
@@ -444,7 +444,7 @@ function SEOAudit({ blogPosts }) {
                   </p>
 
                   <p className="text-lg text-foreground mb-3">
-                    <span className="font-bold">Business impact:</span> The difference between ranking #5 and #1 often comes down to who's addressed these optimizations.
+                    <span className="font-bold">Business impact:</span> The difference between ranking #5 and #1 often comes down to who&apos;s addressed these optimizations.
                   </p>
 
                   <p className="text-lg text-foreground">
@@ -461,7 +461,7 @@ function SEOAudit({ blogPosts }) {
                   <h3 className="text-2xl font-bold mb-4 text-primary">Title Tag</h3>
 
                   <p className="text-lg text-foreground mb-4">
-                    <span className="font-bold">What we check:</span> Length, keyword usage, uniqueness, and formatting of your page's title tag.
+                    <span className="font-bold">What we check:</span> Length, keyword usage, uniqueness, and formatting of your page&apos;s title tag.
                   </p>
 
                   <p className="text-lg text-foreground mb-4">
@@ -473,7 +473,7 @@ function SEOAudit({ blogPosts }) {
                     <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Too long (over 60 characters) — Google will truncate it</li>
                       <li>Too short (under 30 characters) — Wasted opportunity</li>
-                      <li>Missing keywords — Google doesn't know what your page is about</li>
+                      <li>Missing keywords — Google doesn&apos;t know what your page is about</li>
                       <li>Duplicate across multiple pages — Confuses search engines</li>
                     </ul>
                   </div>
@@ -531,7 +531,7 @@ function SEOAudit({ blogPosts }) {
                   </p>
 
                   <p className="text-lg text-foreground mb-4">
-                    <span className="font-bold">Why it matters:</span> Heading tags create a content hierarchy that helps Google understand your page's structure and main topics.
+                    <span className="font-bold">Why it matters:</span> Heading tags create a content hierarchy that helps Google understand your page&apos;s structure and main topics.
                   </p>
 
                   <div className="mb-4">
@@ -570,7 +570,7 @@ function SEOAudit({ blogPosts }) {
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
                     <ul className="list-disc pl-8 text-foreground space-y-1">
-                      <li>Missing alt text — Google can't "see" what the image is about</li>
+                      <li>Missing alt text — Google can&apos;t &quot;see&quot; what the image is about</li>
                       <li>Oversized images — Slow down page load</li>
                       <li>Non-descriptive filenames — Missed SEO opportunity</li>
                       <li>Wrong dimensions — Causes layout shifts (bad for user experience)</li>
@@ -603,7 +603,7 @@ function SEOAudit({ blogPosts }) {
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
                     <ul className="list-disc pl-8 text-foreground space-y-1">
-                      <li>Non-responsive design — Site doesn't adapt to screen size</li>
+                      <li>Non-responsive design — Site doesn&apos;t adapt to screen size</li>
                       <li>Tiny tap targets — Links/buttons too small for fingers</li>
                       <li>Horizontal scrolling required — Poor user experience</li>
                       <li>Text too small to read — Frustrates users</li>
@@ -638,7 +638,7 @@ function SEOAudit({ blogPosts }) {
                     <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Slow Largest Contentful Paint (LCP) — Main content takes too long to load</li>
                       <li>Poor Cumulative Layout Shift (CLS) — Page elements move around as page loads</li>
-                      <li>High Total Blocking Time (TBT) — Page appears loaded but isn't interactive</li>
+                      <li>High Total Blocking Time (TBT) — Page appears loaded but isn&apos;t interactive</li>
                       <li>Unoptimized images and scripts — Unnecessary weight slowing everything down</li>
                     </ul>
                   </div>
@@ -663,13 +663,13 @@ function SEOAudit({ blogPosts }) {
                   </p>
 
                   <p className="text-lg text-foreground mb-4">
-                    <span className="font-bold">Why it matters:</span> Content is the foundation of SEO. Thin or low-quality content rarely ranks well, especially after Google's helpful content updates.
+                    <span className="font-bold">Why it matters:</span> Content is the foundation of SEO. Thin or low-quality content rarely ranks well, especially after Google&apos;s helpful content updates.
                   </p>
 
                   <div className="mb-4">
                     <p className="text-lg font-bold mb-2">Common issues:</p>
                     <ul className="list-disc pl-8 text-foreground space-y-1">
-                      <li>Thin content (under 300 words) — Doesn't demonstrate expertise</li>
+                      <li>Thin content (under 300 words) — Doesn&apos;t demonstrate expertise</li>
                       <li>Keyword stuffing — Looks spammy to Google</li>
                       <li>Poor readability — High bounce rates hurt rankings</li>
                       <li>Duplicate content — Confuses Google about which version to rank</li>
@@ -769,7 +769,7 @@ function SEOAudit({ blogPosts }) {
                     <p className="text-lg font-bold mb-2">Common issues:</p>
                     <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Missing schema entirely — No chance for rich snippets</li>
-                      <li>Incorrect implementation — Won't be recognized by Google</li>
+                      <li>Incorrect implementation — Won&apos;t be recognized by Google</li>
                       <li>Wrong schema type — Mismatched with content purpose</li>
                       <li>Incomplete properties — Missing required fields</li>
                     </ul>
@@ -779,7 +779,7 @@ function SEOAudit({ blogPosts }) {
                     <p className="text-lg font-bold mb-2">How to fix it:</p>
                     <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Implement appropriate schema for your content type</li>
-                      <li>Use Google's Structured Data Testing Tool to validate</li>
+                      <li>Use Google&apos;s Structured Data Testing Tool to validate</li>
                       <li>Include all required properties</li>
                       <li>Match schema type to your content purpose</li>
                     </ul>
@@ -828,7 +828,7 @@ function SEOAudit({ blogPosts }) {
                   </p>
 
                   <p className="text-lg text-foreground mb-4">
-                    <span className="font-bold">Why it matters:</span> HTTPS is a confirmed Google ranking factor and builds user trust. Sites without SSL certificates appear as "Not Secure" in browsers.
+                    <span className="font-bold">Why it matters:</span> HTTPS is a confirmed Google ranking factor and builds user trust. Sites without SSL certificates appear as &quot;Not Secure&quot; in browsers.
                   </p>
 
                   <div className="mb-4">
@@ -879,8 +879,8 @@ function SEOAudit({ blogPosts }) {
                     <ul className="list-disc pl-8 text-foreground space-y-1">
                       <li>Create a proper robots.txt file if missing</li>
                       <li>Use proper syntax for directives</li>
-                      <li>Don't block CSS and JavaScript files</li>
-                      <li>Only block content that shouldn't be indexed</li>
+                      <li>Don&apos;t block CSS and JavaScript files</li>
+                      <li>Only block content that shouldn&apos;t be indexed</li>
                     </ul>
                   </div>
                 </div>
@@ -927,7 +927,7 @@ function SEOAudit({ blogPosts }) {
                   </p>
 
                   <p className="text-lg text-foreground mb-4">
-                    <span className="font-bold">Why it matters:</span> Tells search engines which version of similar pages should be considered the "master" to prevent duplicate content issues.
+                    <span className="font-bold">Why it matters:</span> Tells search engines which version of similar pages should be considered the &quot;master&quot; to prevent duplicate content issues.
                   </p>
 
                   <div className="mb-4">
@@ -946,7 +946,7 @@ function SEOAudit({ blogPosts }) {
                       <li>Add canonical tags to all pages with similar/duplicate content</li>
                       <li>Add self-referencing canonicals to all other pages</li>
                       <li>Ensure the URL in the canonical tag is correct</li>
-                      <li>Make sure other directives don't contradict your canonical tags</li>
+                      <li>Make sure other directives don&apos;t contradict your canonical tags</li>
                     </ul>
                   </div>
                 </div>

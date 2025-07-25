@@ -130,7 +130,7 @@ export default function Contact() {
             Get in <span className="text-yellow-400">Touch</span>
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto dark:text-foreground/80">
-            Questions, feedback, partnership inquiries? We're here to help.
+            Questions, feedback, partnership inquiries? We&apos;re here to help.
           </p>
         </Container>
       </HeroTemplate>
@@ -144,8 +144,8 @@ export default function Contact() {
             <h2 className="text-3xl font-bold mb-6">How Can We Help?</h2>
             <p className="mb-8 text-foreground">
               Whether you need help with our tools, have questions about our
-              courses, or want to explore partnership opportunities, we're here
-              to assist. Fill out the form and we'll get back to you as soon as
+              courses, or want to explore partnership opportunities, we&apos;re here
+              to assist. Fill out the form and we&apos;ll get back to you as soon as
               possible.
             </p>
 
@@ -225,7 +225,7 @@ export default function Contact() {
                 <div className="bg-yellow-400/20 p-6 rounded-lg mb-4">
                   <h3 className="font-bold text-lg mb-2">Message Sent!</h3>
                   <p className="text-foreground">
-                    Thanks for reaching out. We've received your message and
+                    Thanks for reaching out. We&apos;ve received your message and
                     will get back to you as soon as possible.
                   </p>
                   <Button

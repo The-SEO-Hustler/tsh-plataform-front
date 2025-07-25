@@ -70,7 +70,8 @@ function BlogContentPage({ post, blogPostsData, toc }) {
       threshold: 0,
     };
     if (!tocElement) return
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
 

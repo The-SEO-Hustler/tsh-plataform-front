@@ -16,6 +16,7 @@ import {
 import { blogPostSchema } from "@/lib/schemas/blog-post-schema";
 // import getReactContentWithLazyBlocks from "@/lib/get-react-content-with-lazy-blocks";
 import BlogContentPage from "@/components/BlogContent";
+import MoveUpButton from "@/components/MoveUpButton";
 export const revalidate = 3600;
 
 // Generate static params for all blog posts
@@ -163,9 +164,10 @@ export default async function BlogPost({ params }) {
   return (
     <>
       {styles && <style dangerouslySetInnerHTML={{ __html: styles }} />}
-      <script type="application/ld+json">{JSON.stringify(schemaMarkup)}</script>
+      <script type="application/ld+json" id="schema-markup">{JSON.stringify(schemaMarkup)}</script>
       {faqSchema && (
         <Script
+          id="faq-schema"
           type="application/ld+json"
           strategy="afterInteractive"
         >
@@ -179,7 +181,7 @@ export default async function BlogPost({ params }) {
         toc={newList}
       // content={contentWithLazyBlocks}
       />
-
+      <MoveUpButton />
     </>
   );
 }

@@ -40,7 +40,7 @@ export default function EditOnGitHub() {
       href={editUrl}
       target="_blank"
       rel="noopener"
-      className="fixed border border-foreground/10 no-underline shadow-lg bottom-4 right-4 z-50 bg-primary text-black px-3 py-2 rounded-lg hover:opacity-90"
+      className="fixed border border-foreground/10 no-underline shadow-lg bottom-4 left-4 z-50 bg-primary text-black px-3 py-2 rounded-lg hover:opacity-90"
       title="Edit this page on GitHub"
     >
       ✏️ Edit

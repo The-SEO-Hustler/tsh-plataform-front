@@ -14,11 +14,22 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useUsage } from "@/lib/usage-context";
 import { getPathname } from "@/lib/getpathname";
 import HeroTemplate from "./HeroTemplate";
+import CardSwap, { Card } from "./CardSwap";
+import Image from "next/image";
+import RotatingText from "./RotatingText";
+import { useTheme } from "next-themes";
+import Stepper, { Step } from './Stepper';
+import SpotlightCard from './SpotlighCard';
 
 function SeoCheckHeroContent() {
+  const { resolvedTheme } = useTheme();
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const router = useRouter();
   const {
     trackAnalysis,
@@ -113,10 +124,21 @@ function SeoCheckHeroContent() {
                 <div className="space-y-8">
                   <h1 className="text-4xl md:text-5xl font-bold text-foreground">
                     Free <span className="text-primary">SEO Checker Tool</span>{" "}
-                    That Actually Helps You Grow
+                    <RotatingText
+                      texts={['That Actually Helps You Grow', 'That Boosts Your Google Rankings', 'That Unlocks Your SEO Potential', 'That Drives Real Traffic Growth']}
+                      // mainClassName="px-2 sm:px-2 md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+                      staggerFrom={"first"}
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "-120%" }}
+                      staggerDuration={0.025}
+                      splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                      transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                      rotationInterval={3500}
+                    />
                   </h1>
                   <p className="text-xl text-foreground">
-                    Is Your Website Invisible to Google? Let's Fix That.
+                    Is Your Website Invisible to Google? Let&apos;s Fix That.
                   </p>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="relative">
@@ -180,7 +202,7 @@ function SeoCheckHeroContent() {
                 {/* Right Column - Feature Preview */}
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
-                  <div className="bg-card p-8 rounded-2xl shadow-xl">
+                  {/* <div className="bg-card p-8 rounded-2xl shadow-xl">
                     <div className="space-y-6">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -214,6 +236,35 @@ function SeoCheckHeroContent() {
                         </div>
                       </div>
                     </div>
+                  </div> */}
+                  <div className="md:h-[334px] h-[200px] relative">
+                    {mounted && (resolvedTheme === "light" || resolvedTheme === "dark") ? (
+                      <CardSwap
+                        cardDistance={60}
+                        verticalDistance={70}
+                        delay={5000}
+                        width={600}
+                        height={334}
+                        pauseOnHover={false}
+                      >
+                        <Card>
+                          <Image src={resolvedTheme === "dark" ? "/screenshots/seo-check-screenshot.webp" : "/screenshots/seo-check-screenshot-light.webp"} alt="SEO Check 1" className="object-cover rounded-xl" fill sizes="600px" />
+                        </Card>
+                        <Card>
+                          <Image src={resolvedTheme === "dark" ? "/screenshots/loading.webp" : "/screenshots/loading-light.webp"} alt="SEO Check 2" className="object-cover rounded-xl" fill sizes="600px" />
+                        </Card>
+                        <Card>
+                          <Image src={resolvedTheme === "dark" ? "/screenshots/explanation.webp" : "/screenshots/explanation-light.webp"} alt="SEO Check 3" className="object-cover rounded-xl" fill sizes="600px" />
+                        </Card>
+                      </CardSwap>
+                    ) : (
+                      <div className="absolute bottom-0 right-0 transform translate-x-[5%] translate-y-[20%] origin-bottom-right perspective-[900px] overflow-visible max-[768px]:translate-x-[25%] max-[768px]:translate-y-[25%] max-[768px]:scale-[0.75] max-[480px]:translate-x-[25%] max-[480px]:translate-y-[25%] max-[480px]:scale-[0.55] " style={{ width: 600, height: 334 }}>
+                        {/* 3 stacked loading cards, diagonally offset */}
+                        <div className="absolute top-1/2 left-1/2 w-[600px] h-[334px] rounded-xl border border-foreground bg-card animate-pulse " style={{ transform: 'translate(-50%, -50%) skewY(6deg)', zIndex: 3 }} />
+                        <div className="absolute top-1/2 left-1/2 w-[600px] h-[334px] rounded-xl border border-foreground bg-card animate-pulse" style={{ transform: 'translate(calc(-50% + 60px), calc(-50% - 70px)) skewY(6deg)', zIndex: 2 }} />
+                        <div className="absolute top-1/2 left-1/2 w-[600px] h-[334px] rounded-xl border border-foreground bg-card animate-pulse" style={{ transform: 'translate(calc(-50% + 120px), calc(-50% - 140px)) skewY(6deg)', zIndex: 1 }} />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -225,12 +276,12 @@ function SeoCheckHeroContent() {
         <Container className="relative z-10">
           <div className="max-w-4xl mx-auto text-center text-foreground/80">
             <p className="text-lg mb-6">
-              Think your website's fine because it looks pretty? Think again.
+              Think your website&apos;s fine because it looks pretty? Think again.
               Most sites are leaking traffic (and money) due to basic SEO issues
               that take minutes to fix.
             </p>
             <p className="text-lg mb-10">
-              Our free SEO checker doesn't just find problems — it shows you
+              Our free SEO checker doesn&apos;t just find problems — it shows you
               exactly how to fix them and why they matter to your bottom line.
             </p>
             <p className="text-xl font-bold text-primary mb-6">
@@ -249,21 +300,24 @@ function SeoCheckHeroContent() {
           </h2>
           <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
             Remember when SEO tools were either too complicated or too basic?
-            This one's different:
+            This one&apos;s different:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            <div className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all">
-              <div className="bg-primary h-12 w-12 flex items-center justify-center rounded-full text-black font-bold text-xl mb-4">
-                1
-              </div>
-              <h3 className="text-xl font-bold mb-3">
-                Zero registration required
-              </h3>
-              <p className="text-foreground/80">Just enter your URL and go</p>
-            </div>
+            <SpotlightCard className=" p-6 rounded-lg hover:translate-y-[-5px] transition-all" spotlightColor="#ffcc0050">
 
-            <div className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+              <div>
+                <div className="bg-primary h-12 w-12 flex items-center justify-center rounded-full text-black font-bold text-xl mb-4">
+                  1
+                </div>
+                <h3 className="text-xl font-bold mb-3">
+                  Zero registration required
+                </h3>
+                <p className="text-foreground/80">Just enter your URL and go</p>
+              </div>
+            </SpotlightCard>
+
+            <SpotlightCard className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all" spotlightColor="#ffcc0050">
               <div className="bg-primary h-12 w-12 flex items-center justify-center rounded-full text-black font-bold text-xl mb-4">
                 2
               </div>
@@ -271,9 +325,9 @@ function SeoCheckHeroContent() {
               <p className="text-foreground/80">
                 30+ critical checks that actually matter
               </p>
-            </div>
+            </SpotlightCard>
 
-            <div className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <SpotlightCard className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all" spotlightColor="#ffcc0050">
               <div className="bg-primary h-12 w-12 flex items-center justify-center rounded-full text-black font-bold text-xl mb-4">
                 3
               </div>
@@ -281,17 +335,17 @@ function SeoCheckHeroContent() {
                 Plain English explanations
               </h3>
               <p className="text-foreground/80">No confusing tech jargon</p>
-            </div>
+            </SpotlightCard>
 
-            <div className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all">
+            <SpotlightCard className="bg-card p-6 rounded-lg hover:translate-y-[-5px] transition-all" spotlightColor="#ffcc0050">
               <div className="bg-primary h-12 w-12 flex items-center justify-center rounded-full text-black font-bold text-xl mb-4">
                 4
               </div>
               <h3 className="text-xl font-bold mb-3">Actionable fixes</h3>
               <p className="text-foreground/80">
-                Not just what's wrong, but how to fix it
+                Not just what&apos;s wrong, but how to fix it
               </p>
-            </div>
+            </SpotlightCard>
           </div>
         </Container>
       </section>
@@ -309,8 +363,8 @@ function SeoCheckHeroContent() {
                 Meta Tags & On-Page Basics
               </h3>
               <p className="text-foreground/80 mb-6">
-                Your website's first impression to Google isn't your fancy
-                design — it's your meta tags. Get these wrong, and you're
+                Your website&apos;s first impression to Google isn&apos;t your fancy
+                design — it&apos;s your meta tags. Get these wrong, and you&apos;re
                 starting the race with a broken leg.
               </p>
               <ul className="space-y-4">
@@ -321,8 +375,8 @@ function SeoCheckHeroContent() {
                   <div>
                     <p className="font-bold">Title Tag Analysis</p>
                     <p className="text-foreground/80">
-                      Too long? Too short? Missing keywords? We'll tell you
-                      what's hurting your click-through rates.
+                      Too long? Too short? Missing keywords? We&apos;ll tell you
+                      what&apos;s hurting your click-through rates.
                     </p>
                   </div>
                 </li>
@@ -357,7 +411,7 @@ function SeoCheckHeroContent() {
                   <div>
                     <p className="font-bold">URL Structure Check</p>
                     <p className="text-foreground/80">
-                      Messy URLs are conversion killers. We'll show you what to
+                      Messy URLs are conversion killers. We&apos;ll show you what to
                       clean up.
                     </p>
                   </div>
@@ -370,8 +424,8 @@ function SeoCheckHeroContent() {
                 Content Quality Assessment
               </h3>
               <p className="text-foreground/80 mb-6">
-                Content isn't king — the RIGHT content is. Our tool analyzes
-                what's actually on your page:
+                Content isn&apos;t king — the RIGHT content is. Our tool analyzes
+                what&apos;s actually on your page:
               </p>
               <ul className="space-y-4">
                 <li className="flex items-start">
@@ -393,7 +447,7 @@ function SeoCheckHeroContent() {
                   <div>
                     <p className="font-bold">Content Length Check</p>
                     <p className="text-foreground/80">
-                      Too thin? Too bloated? We'll tell you how your content
+                      Too thin? Too bloated? We&apos;ll tell you how your content
                       stacks up against competitors.
                     </p>
                   </div>
@@ -406,7 +460,7 @@ function SeoCheckHeroContent() {
                     <p className="font-bold">Readability Score</p>
                     <p className="text-foreground/80">
                       Is your content actually readable by humans? (Hint: most
-                      isn't)
+                      isn&apos;t)
                     </p>
                   </div>
                 </li>
@@ -452,7 +506,7 @@ function SeoCheckHeroContent() {
                   <div>
                     <p className="font-bold">Mobile Responsiveness</p>
                     <p className="text-foreground/80">
-                      With Google's mobile-first indexing, this isn't optional
+                      With Google&apos;s mobile-first indexing, this isn&apos;t optional
                       anymore.
                     </p>
                   </div>
@@ -465,7 +519,7 @@ function SeoCheckHeroContent() {
                     <p className="font-bold">Broken Link Detection</p>
                     <p className="text-foreground/80">
                       Find and fix the broken links that are bleeding your
-                      site's authority.
+                      site&apos;s authority.
                     </p>
                   </div>
                 </li>
@@ -552,7 +606,7 @@ function SeoCheckHeroContent() {
             Get Your Free SEO Analysis in 60 Seconds
           </h2>
           <p className="text-lg text-primary-foreground/80 max-w-3xl mx-auto mb-8">
-            Stop guessing what's wrong with your site. Our SEO checker gives you
+            Stop guessing what&apos;s wrong with your site. Our SEO checker gives you
             a clear roadmap to better rankings in just one minute:
           </p>
 
@@ -633,8 +687,8 @@ function SeoCheckHeroContent() {
               Your SEO Score: The Truth About Your Site
             </h3>
             <p className="text-foreground/80 mb-8">
-              Your score isn't just a vanity metric — it's a reality check.
-              Here's what your number means:
+              Your score isn&apos;t just a vanity metric — it&apos;s a reality check.
+              Here&apos;s what your number means:
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -659,7 +713,7 @@ function SeoCheckHeroContent() {
                   50-69
                 </div>
                 <p className="text-foreground/80">
-                  Serious problems need addressing ASAP. You're leaving money on
+                  Serious problems need addressing ASAP. You&apos;re leaving money on
                   the table.
                 </p>
               </div>
@@ -700,7 +754,7 @@ function SeoCheckHeroContent() {
                 <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
                 <span className="text-foreground/80">
                   <span className="font-bold">Red:</span> Critical issue — fix
-                  this ASAP! It's actively hurting your visibility.
+                  this ASAP! It&apos;s actively hurting your visibility.
                 </span>
               </div>
             </div>
@@ -710,7 +764,7 @@ function SeoCheckHeroContent() {
                 Every issue we identify comes with:
               </p>
               <ul className="space-y-2 text-foreground/80 list-disc list-inside pl-4">
-                <li>What's wrong</li>
+                <li>What&apos;s wrong</li>
                 <li>Why it matters to your rankings</li>
                 <li>How to fix it (in plain English)</li>
                 <li>Priority level (what to fix first)</li>
@@ -728,7 +782,7 @@ function SeoCheckHeroContent() {
 
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-foreground/80 mb-10">
-              Let's cut the BS — not all SEO factors are created equal. In 2025,
+              Let&apos;s cut the BS — not all SEO factors are created equal. In 2025,
               these are the ones that actually move the needle:
             </p>
 
@@ -738,8 +792,8 @@ function SeoCheckHeroContent() {
                   Page Speed
                 </h3>
                 <p className="text-foreground/80">
-                  Google's Core Web Vitals are now crucial ranking factors. Slow
-                  sites don't rank, period.
+                  Google&apos;s Core Web Vitals are now crucial ranking factors. Slow
+                  sites don&apos;t rank, period.
                 </p>
               </div>
               <div className="bg-card p-6 rounded-lg">
@@ -756,7 +810,7 @@ function SeoCheckHeroContent() {
                   Content Quality
                 </h3>
                 <p className="text-foreground/80">
-                  AI-generated fluff won't cut it. Google rewards depth,
+                  AI-generated fluff won&apos;t cut it. Google rewards depth,
                   expertise and user-focused content.
                 </p>
               </div>
@@ -782,7 +836,7 @@ function SeoCheckHeroContent() {
 
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-foreground/80 mb-8">
-              After your analysis, you'll get a prioritized list of fixes. Start
+              After your analysis, you&apos;ll get a prioritized list of fixes. Start
               at the top and work down:
             </p>
 
@@ -829,7 +883,7 @@ function SeoCheckHeroContent() {
             </div>
 
             <p className="text-lg text-foreground/80 mb-8">
-              Remember: SEO isn't a one-time thing. Run this checker monthly to
+              Remember: SEO isn&apos;t a one-time thing. Run this checker monthly to
               catch new issues and track your progress.
             </p>
 

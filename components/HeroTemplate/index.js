@@ -73,8 +73,8 @@ export default function HeroTemplate({ children, className, noBg = false }) {
               y1="0"
               x2={x}
               y2={height}
-              stroke="#FFDD00"
-              strokeWidth="0.5"
+              className='stroke-foreground dark:stroke-primary'
+              strokeWidth="0.65"
               opacity={opacity}
             />
           );
@@ -96,8 +96,8 @@ export default function HeroTemplate({ children, className, noBg = false }) {
               y1={y}
               x2={width}
               y2={y}
-              stroke="#FFDD00"
-              strokeWidth="0.5"
+              className='stroke-foreground dark:stroke-primary'
+              strokeWidth="0.65"
               opacity={opacity}
             />
           );

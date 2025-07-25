@@ -52,7 +52,7 @@ export default function Privacy() {
           <div className="max-w-4xl mx-auto bg-card rounded-md p-8 md:p-12 shadow-md">
             <div className="prose max-w-none">
               <p className="lead text-lg mb-8">
-                This Privacy Policy describes how The SEO Hustler ("we", "us", or "our") collects, uses, and discloses your personal information when you visit our website, use our tools, or engage with our services (collectively, the "Services"). Please read this Privacy Policy carefully to understand our practices regarding your personal information.
+                This Privacy Policy describes how The SEO Hustler (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) collects, uses, and discloses your personal information when you visit our website, use our tools, or engage with our services (collectively, the &quot;Services&quot;). Please read this Privacy Policy carefully to understand our practices regarding your personal information.
               </p>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">1. Information We Collect</h2>
@@ -168,7 +168,7 @@ export default function Privacy() {
               <p>Most web browsers are set to accept cookies by default. You can usually choose to set your browser to remove or reject cookies. Please note that removing or rejecting cookies could affect the availability and functionality of our Services.</p>
 
               <h3 className="text-xl font-semibold mt-6 mb-3">4.4 Do Not Track</h3>
-              <p>We do not currently respond to "Do Not Track" signals or other mechanisms that provide consumer choice regarding the collection of information about your online activities over time and across third-party websites.</p>
+              <p>We do not currently respond to &quot;Do Not Track&quot; signals or other mechanisms that provide consumer choice regarding the collection of information about your online activities over time and across third-party websites.</p>
 
               <h3 className="text-xl font-semibold mt-6 mb-3">4.5 Google Account Data</h3>
               <p>If you have connected your Google account to our Services, you can:</p>
@@ -184,7 +184,7 @@ export default function Privacy() {
               <h2 className="text-2xl font-bold mt-10 mb-4">6. Third-Party Links and Services</h2>
               <p>Our Services may contain links to third-party websites, tools, or services that are not owned or controlled by us. This Privacy Policy only applies to our Services. We have no control over and assume no responsibility for the privacy policies or practices of any third-party sites or services.</p>
 
-              <h2 className="text-2xl font-bold mt-10 mb-4">7. Children's Privacy</h2>
+              <h2 className="text-2xl font-bold mt-10 mb-4">7. Children&apos;s Privacy</h2>
               <p>Our Services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe we have collected information from your child under 13, please contact us, and we will delete such information.</p>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">8. International Data Transfers</h2>
@@ -198,7 +198,7 @@ export default function Privacy() {
                 <li>The right to opt out of the sale of your personal information</li>
                 <li>The right to non-discrimination for exercising your CCPA rights</li>
               </ul>
-              <p>To exercise these rights, please contact us using the information provided in the "Contact Us" section.</p>
+              <p>To exercise these rights, please contact us using the information provided in the &quot;Contact Us&quot; section.</p>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">10. Changes to Our Privacy Policy</h2>
               <p>We may update our Privacy Policy from time to time. If we make material changes, we will notify you by email or by posting a notice on our website prior to the change becoming effective. We encourage you to review our Privacy Policy periodically for the latest information on our privacy practices.</p>

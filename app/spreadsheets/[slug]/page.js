@@ -104,9 +104,10 @@ async function Page({ params }) {
       {styles && (
         <style dangerouslySetInnerHTML={{ __html: styles }} />
       )}
-      <script type="application/ld+json">{JSON.stringify(schema)}</script>
+      <script type="application/ld+json" id="schema-markup">{JSON.stringify(schema)}</script>
       {faqSchema && (
         <Script
+          id="faq-schema"
           type="application/ld+json"
           strategy="afterInteractive"
         >

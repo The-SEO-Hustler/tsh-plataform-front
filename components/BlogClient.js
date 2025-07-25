@@ -27,7 +27,7 @@ export default function BlogClient({ categories, blogPosts }) {
               SEO Blog & Resources
             </h1>
             <p className="text-xl text-gray-300 mb-8 dark:text-foreground/80">
-              Expert insights, strategies, and tips to help you improve your website's search engine rankings.
+              Expert insights, strategies, and tips to help you improve your website&apos;s search engine rankings.
             </p>
           </div>
         </Container>

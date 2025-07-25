@@ -245,7 +245,7 @@ function LLMTxtHero() {
                     </li>
                   </ul>
                   <p className="text-sm text-foreground/80 italic">
-                    *Don't worry, you can browse around our website and we will
+                    *Don&apos;t worry, you can browse around our website and we will
                     notify you
                   </p>
                 </div>
@@ -262,10 +262,10 @@ function LLMTxtHero() {
           </h2>
           <div className="max-w-4xl mx-auto dark:bg-card bg-background p-8 rounded-lg">
             <p className="text-xl text-foreground/80 mb-6">
-              Think of LLMs.txt as your website's AI tour guide.
+              Think of LLMs.txt as your website&apos;s AI tour guide.
             </p>
             <p className="text-lg text-foreground/80 mb-6">
-              It's a specialized file that tells AI exactly what your site is
+              It&apos;s a specialized file that tells AI exactly what your site is
               about and where to find your most valuable content. Without it, AI
               systems are left guessing — crawling through navigation menus and
               sidebars instead of focusing on what matters.
@@ -293,7 +293,7 @@ function LLMTxtHero() {
           </h2>
           <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
             Right now, AI systems are forming first impressions of your business
-            without your input. That's like letting strangers describe your
+            without your input. That&apos;s like letting strangers describe your
             products to potential customers.
           </p>
 
@@ -358,7 +358,7 @@ function LLMTxtHero() {
                     Future-proof your site
                   </h3>
                   <p className="text-foreground/80">
-                    AI search isn't just coming, it's already here
+                    AI search isn&apos;t just coming, it&apos;s already here
                   </p>
                 </div>
               </div>
@@ -374,7 +374,7 @@ function LLMTxtHero() {
             How Our Generator Works
           </h2>
           <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
-            We don't just scrape your site and call it a day. Our multi-step
+            We don&apos;t just scrape your site and call it a day. Our multi-step
             process is designed to truly understand what your website offers:
           </p>
 
@@ -446,7 +446,7 @@ function LLMTxtHero() {
                 </li>
               </ol>
               <p className="text-foreground/80 mt-6 italic">
-                It's trying to do what it takes many SEOs hours to accomplish
+                It&apos;s trying to do what it takes many SEOs hours to accomplish
                 manually.
               </p>
             </div>
@@ -469,7 +469,7 @@ function LLMTxtHero() {
                 </h3>
                 <p className="text-foreground mb-6">
                   Just input your homepage URL and let us do the heavy lifting.
-                  Perfect if you're not sure which pages matter most.
+                  Perfect if you&apos;re not sure which pages matter most.
                 </p>
               </div>
               <Button
@@ -516,7 +516,7 @@ function LLMTxtHero() {
             Why Our Generator Beats the Competition
           </h2>
           <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
-            Not all LLMs.txt generators are created equal. Here's what makes
+            Not all LLMs.txt generators are created equal. Here&apos;s what makes
             ours different:
           </p>
 
@@ -527,7 +527,7 @@ function LLMTxtHero() {
               </span>
               <h3 className="text-xl font-bold mb-3">Multi-layered analysis</h3>
               <p className="text-foreground/80">
-                We don't just scrape; we understand
+                We don&apos;t just scrape; we understand
               </p>
             </div>
 
@@ -575,7 +575,7 @@ function LLMTxtHero() {
               <div className="h-full flex flex-col justify-between">
                 <div>
                   <p className="text-foreground/80 italic">
-                    While basic generators just list your pages, we're creating
+                    While basic generators just list your pages, we&apos;re creating
                     a semantic roadmap of your business that AI can actually
                     understand.
                   </p>
@@ -590,7 +590,7 @@ function LLMTxtHero() {
       <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            How to Use Our Generator (It's Dead Simple)
+            How to Use Our Generator (It&apos;s Dead Simple)
           </h2>
 
           <div className="max-w-4xl mx-auto">
@@ -623,7 +623,7 @@ function LLMTxtHero() {
                   <div>
                     <h3 className="text-xl font-bold">Initiate generation</h3>
                     <p className="text-foreground/80">
-                      Click the button and we'll start working
+                      Click the button and we&apos;ll start working
                     </p>
                   </div>
                 </li>
@@ -635,7 +635,7 @@ function LLMTxtHero() {
                     <h3 className="text-xl font-bold">Wait briefly</h3>
                     <p className="text-foreground/80">
                       The process takes up to 10 minutes (feel free to browse
-                      elsewhere; we'll notify you)
+                      elsewhere; we&apos;ll notify you)
                     </p>
                   </div>
                 </li>
@@ -657,13 +657,13 @@ function LLMTxtHero() {
                   <div>
                     <h3 className="text-xl font-bold">Implement</h3>
                     <p className="text-foreground/80">
-                      Upload to your website's root directory
+                      Upload to your website&apos;s root directory
                     </p>
                   </div>
                 </li>
               </ol>
               <p className="text-foreground/80 mt-6 text-center font-bold">
-                That's it! Your website is now optimized for the next generation
+                That&apos;s it! Your website is now optimized for the next generation
                 of AI search.
               </p>
             </div>
@@ -675,7 +675,7 @@ function LLMTxtHero() {
       <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-            What You'll Get
+            What You&apos;ll Get
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -736,13 +736,13 @@ function LLMTxtHero() {
 
           <div className="max-w-4xl bg-background mx-auto p-8 rounded-lg">
             <p className="text-lg text-foreground/80 mb-6">
-              While LLMs.txt isn't an official standard yet, it's rapidly
+              While LLMs.txt isn&apos;t an official standard yet, it&apos;s rapidly
               gaining adoption. The cost to implement is minimal, but the
               potential upside is huge.
             </p>
             <p className="text-lg text-foreground/80 mb-6">
-              Remember when "mobile-friendly" websites were optional? The
-              businesses that moved first won big. Don't be the last one to this
+              Remember when &quot;mobile-friendly&quot; websites were optional? The
+              businesses that moved first won big. Don&apos;t be the last one to this
               party.
             </p>
           </div>

@@ -61,8 +61,8 @@ export default function NotFoundLayout() {
               </h1>
 
               <p className="text-xl mb-8 text-white/80">
-                Well, sh*t happens. The page you're looking for doesn't exist or has been moved.
-                But don't worry, we've got plenty of other valuable SEO resources to help you rank higher.
+                Well, sh*t happens. The page you&apos;re looking for doesn&apos;t exist or has been moved.
+                But don&apos;t worry, we&apos;ve got plenty of other valuable SEO resources to help you rank higher.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -132,7 +132,7 @@ export default function NotFoundLayout() {
                   <span className="text-white/50 text-xs">terminal</span>
                 </div>
 
-                <div className="text-green-400">$ find -name "page-you-requested.html"</div>
+                <div className="text-green-400">$ find -name &quot;page-you-requested.html&quot;</div>
                 <div className="text-white mb-2">find: No matches found</div>
 
                 <div className="text-green-400">$ run seo-hustler-rescue-command</div>
@@ -142,8 +142,8 @@ export default function NotFoundLayout() {
                   <span className="text-primary">Recommended action: Navigate to homepage or explore existing resources</span>
                 </div>
 
-                <div className="text-green-400">$ echo "Don't worry, we've got your back!"</div>
-                <div className="text-white">Don't worry, we've got your back!</div>
+                <div className="text-green-400">$ echo &quot;Don&apos;t worry, we&apos;ve got your back!&quot;</div>
+                <div className="text-white">Don&apos;t worry, we&apos;ve got your back!</div>
 
                 <div className="mt-4 flex items-center">
                   <div className="w-2 h-5 bg-primary animate-pulse"></div>

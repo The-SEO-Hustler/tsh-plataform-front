@@ -224,7 +224,7 @@ export default function Resources({ resources }) {
                 <div className="bg-yellow-400/20 p-6 rounded-lg mb-4">
                   <h3 className="font-bold text-lg mb-2">Message Sent!</h3>
                   <p className="text-foreground">
-                    Thanks for reaching out. We've received your message and
+                    Thanks for reaching out. We&apos;ve received your message and
                     will get back to you as soon as possible.
                   </p>
                   <Button

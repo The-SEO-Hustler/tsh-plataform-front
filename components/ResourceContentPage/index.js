@@ -12,6 +12,7 @@ import TocItem from "@/components/TocItem";
 import { replaceComponents } from "@/lib/replaceComponents";
 import useScrollDirection from "@/components/header/scroll";
 import HeroTemplate from "@/components/HeroTemplate";
+import MoveUpButton from "../MoveUpButton";
 function ResourceContentPage({ post, toc }) {
   const scrollDirection = useScrollDirection();
   const tocRef = useRef(null)
@@ -67,7 +68,8 @@ function ResourceContentPage({ post, toc }) {
       threshold: 0,
     };
     if (!tocElement) return
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
 
@@ -172,7 +174,7 @@ function ResourceContentPage({ post, toc }) {
         </div>
       </HeroTemplate>
 
-
+      <MoveUpButton />
       <Container>
 
         <div className="flex flex-col md:flex-row flex-wrap w-full pt-16 max-w-full relative py-12 bg-background">

@@ -52,7 +52,7 @@ export default function Terms() {
             <div className="prose max-w-none">
 
               <p className="lead text-lg mb-8">
-                Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the websites, tools, and services (collectively, the "Services") operated by The SEO Hustler ("us", "we", "our").
+                Please read these Terms of Service (&quot;Terms&quot;, &quot;Terms of Service&quot;) carefully before using the websites, tools, and services (collectively, the &quot;Services&quot;) operated by The SEO Hustler (&quot;us&quot;, &quot;we&quot;, &quot;our&quot;).
               </p>
               <p className="lead text-lg mb-8">
                 Your access to and use of the Services is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the Services.
@@ -76,7 +76,7 @@ export default function Terms() {
 
               <h2 className="text-2xl font-bold mt-10 mb-4">3. Free and Premium Services</h2>
               <h3 className="text-xl font-semibold mt-6 mb-3">3.1 Free Services</h3>
-              <p>Free services are provided "as is" without warranty of any kind. We reserve the right to modify, suspend, or discontinue free services at any time without notice.</p>
+              <p>Free services are provided &quot;as is&quot; without warranty of any kind. We reserve the right to modify, suspend, or discontinue free services at any time without notice.</p>
               <h3 className="text-xl font-semibold mt-6 mb-3">3.2 Premium Services</h3>
               <p>Premium services require payment. By purchasing premium services, you agree to pay all fees associated with the services you select. All purchases are final unless otherwise specified in our refund policy.</p>
 
@@ -84,7 +84,7 @@ export default function Terms() {
               <h3 className="text-xl font-semibold mt-6 mb-3">4.1 Our Content</h3>
               <p>The Services and their original content, features, and functionality are and will remain the exclusive property of The SEO Hustler and its licensors. The Services are protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of The SEO Hustler.</p>
               <h3 className="text-xl font-semibold mt-6 mb-3">4.2 User Content</h3>
-              <p>When you provide content through our Services ("User Content"), you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, and display such content in connection with providing and promoting the Services.</p>
+              <p>When you provide content through our Services (&quot;User Content&quot;), you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, and display such content in connection with providing and promoting the Services.</p>
               <p>You represent and warrant that:</p>
               <ul className="list-disc pl-6 my-4 space-y-2">
                 <li>You own or have the right to use and authorize us to use your User Content</li>
@@ -97,9 +97,9 @@ export default function Terms() {
               <ul className="list-disc pl-6 my-4 space-y-2">
                 <li>In any way that violates any applicable federal, state, local, or international law or regulation</li>
                 <li>For the purpose of exploiting, harming, or attempting to exploit or harm minors</li>
-                <li>To transmit any material that is defamatory, obscene, invasive of another's privacy, hateful, or otherwise objectionable</li>
+                <li>To transmit any material that is defamatory, obscene, invasive of another&apos;s privacy, hateful, or otherwise objectionable</li>
                 <li>To impersonate or attempt to impersonate The SEO Hustler, an employee, another user, or any other person or entity</li>
-                <li>To engage in any conduct that restricts or inhibits anyone's use or enjoyment of the Services</li>
+                <li>To engage in any conduct that restricts or inhibits anyone&apos;s use or enjoyment of the Services</li>
                 <li>To attempt to gain unauthorized access to, interfere with, damage, or disrupt any parts of the Services</li>
                 <li>To use any robot, spider, or other automatic device, process, or means to access the Services for any purpose</li>
                 <li>To introduce any viruses, trojan horses, worms, logic bombs, or other material which is malicious or technologically harmful</li>
@@ -110,7 +110,7 @@ export default function Terms() {
               <p>You acknowledge and agree that The SEO Hustler shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods, or services available on or through any such websites or services.</p>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">7. Disclaimer of Warranties</h2>
-              <p>The Services are provided on an "AS IS" and "AS AVAILABLE" basis. The SEO Hustler makes no warranties, expressed or implied, regarding the operation of the Services or the information, content, materials, or products included.</p>
+              <p>The Services are provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. The SEO Hustler makes no warranties, expressed or implied, regarding the operation of the Services or the information, content, materials, or products included.</p>
               <p>We do not guarantee that:</p>
               <ul className="list-disc pl-6 my-4 space-y-2">
                 <li>The Services will meet your specific requirements</li>
@@ -130,7 +130,7 @@ export default function Terms() {
               <p>The total liability of The SEO Hustler for any claim arising out of or relating to these Terms or our Services, regardless of the form of the action, is limited to the amount paid, if any, by you to The SEO Hustler for the Services in the 12 months prior to the claim.</p>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">9. Indemnification</h2>
-              <p>You agree to defend, indemnify, and hold harmless The SEO Hustler and its licensees and licensors, and their employees, contractors, agents, officers, and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees), resulting from or arising out of:</p>
+              <p>You agree to defend, indemnify, and hold harmless The SEO Hustler and its licensees and licensors, and their employees, contractors, agents, officers, and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney&apos;s fees), resulting from or arising out of:</p>
               <ul className="list-disc pl-6 my-4 space-y-2">
                 <li>Your use and access of the Services</li>
                 <li>Your violation of any term of these Terms</li>
@@ -139,7 +139,7 @@ export default function Terms() {
               </ul>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">10. Changes to Terms</h2>
-              <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
+              <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days&apos; notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
               <p>By continuing to access or use our Services after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Services.</p>
 
               <h2 className="text-2xl font-bold mt-10 mb-4">11. Governing Law</h2>
