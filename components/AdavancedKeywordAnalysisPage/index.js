@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Search, Tag, ChevronRight, AlignLeft, BarChart2, CheckCircle, AlertTriangle, ExternalLink, ArrowRightLeft, Download, Play, Share2, DownloadCloud } from 'lucide-react';
 import TimestampDisplay from "@/components/TimestampDisplay";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-
+import CostDisplay from "@/components/CostDisplay";
 // import { sample } from "./sample";
 import {
   Chart as ChartJS,
@@ -1932,6 +1932,7 @@ ${analysisData.serp_data?.map((result, index) => `
           </div>
         </Container>
       </section>
+      <CostDisplay evaluationCost={analysisData?.cost} />
     </div>
   );
 }

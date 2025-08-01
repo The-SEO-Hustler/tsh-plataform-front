@@ -11,7 +11,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { getPathname } from "@/lib/getpathname";
-
+import CostDisplay from "@/components/CostDisplay";
 function LLMTxtResult({ blogPosts }) {
   const [url, setUrl] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
@@ -21,6 +21,7 @@ function LLMTxtResult({ blogPosts }) {
   const [viewMode, setViewMode] = useState('markdown');
   const [activeTab, setActiveTab] = useState('llmtxt');
   const [sendToEmail, setSendToEmail] = useState(false);
+  const [cost, setCost] = useState(null);
   const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -108,6 +109,7 @@ function LLMTxtResult({ blogPosts }) {
       setUrl(currentAnalysis.url || "");
       setUpdatedAt(currentAnalysis.updatedAt || "");
       setSendToEmail(currentAnalysis?.sendToEmail || false);
+      setCost(currentAnalysis?.cost || null);
       // Stop loading when analysis is completed or failed.
       if (
         currentAnalysis.status === "completed" ||
@@ -330,6 +332,7 @@ function LLMTxtResult({ blogPosts }) {
           </div>
         </Container>
       </section>
+      <CostDisplay evaluationCost={cost} />
     </main>
   );
 }

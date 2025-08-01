@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import LoadingScreen from "@/components/LoadingScreen";
 
+import CostDisplay from "@/components/CostDisplay";
+
 function SearchIntent({ blogPosts }) {
   const [keyword, setKeyword] = useState("");
   const [loadingPage, setLoadingPage] = useState(true);
@@ -581,7 +583,7 @@ function SearchIntent({ blogPosts }) {
 
 
 
-
+      <CostDisplay evaluationCost={analysisData?.cost} />
 
     </div>
   );

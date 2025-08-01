@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useFirebase } from "@/lib/firebase-context";
 import { getScoreAppearance } from "@/lib/getScoreAppearance";
 import { getPathname } from "@/lib/getpathname";
+import CostDisplay from "@/components/CostDisplay";
 
 function SEOAudit({ blogPosts }) {
   const [focusedCardId, setFocusedCardId] = useState(null);
@@ -37,6 +38,7 @@ function SEOAudit({ blogPosts }) {
   const [alwaysShowTooltips, setAlwaysShowTooltips] = useState(false);
   const [layout, setLayout] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
+  const [cost, setCost] = useState({});
   const { trackAnalysis, currentAnalysis } = useFirebase();
   const [status, setStatus] = useState(
     currentAnalysis ? currentAnalysis.status : "initializing"
@@ -65,6 +67,7 @@ function SEOAudit({ blogPosts }) {
     if (currentAnalysis && currentAnalysis.type === "seo-check") {
       setStatus(currentAnalysis.status);
       setAnalysisData(currentAnalysis.data || []);
+      setCost(currentAnalysis.cost || {});
       setUrl(currentAnalysis.url || "");
       setScore(currentAnalysis?.score?.score || 0);
       setUpdatedAt(currentAnalysis.updatedAt || "");
@@ -962,6 +965,8 @@ function SEOAudit({ blogPosts }) {
           </div>
         </div>
       </div>
+      {JSON.stringify(analysisData)}
+      <CostDisplay evaluationCost={cost} />
     </Container>
   );
 }

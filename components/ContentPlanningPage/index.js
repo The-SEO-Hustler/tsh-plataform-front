@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import LoadingScreen from "@/components/LoadingScreen";
 import { getPathname } from "@/lib/getpathname";
-
+import CostDisplay from "@/components/CostDisplay";
 function ContentPlanning({ blogPosts }) {
   const [keyword, setKeyword] = useState("");
   const [contentType, setContentType] = useState("blog_post");
@@ -613,24 +613,7 @@ function ContentPlanning({ blogPosts }) {
         )}
       </Container>
 
-      {/* Action Bar */}
-      {/* <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 py-4 px-6 z-20">
-        <Container className="flex flex-wrap items-center justify-between gap-4">
-          <div className="text-gray-300">
-            <span className="font-bold text-primary">Keyword:</span> {contentData.keyword}
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-md flex items-center gap-2 transition-all">
-              <FileText size={16} />
-              Save as Template
-            </button>
-            <button className="bg-primary hover:bg-primary/90 text-black font-bold px-4 py-2 rounded-md flex items-center gap-2 transition-all">
-              <Edit size={16} />
-              Start Writing
-            </button>
-          </div>
-        </Container>
-      </div> */}
+      <CostDisplay evaluationCost={analysisData?.cost} />
     </div>
   );
 }

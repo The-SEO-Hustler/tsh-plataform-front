@@ -27,6 +27,7 @@ import { useTheme } from "next-themes";
 import LoadingScreen from "@/components/LoadingScreen";
 import { getPathname } from "@/lib/getpathname";
 import { Separator } from "@/components/ui/separator";
+import CostDisplay from "@/components/CostDisplay";
 
 const harmTooltips = {
   maliciousBehavior: "Scans for scams, phishing links, or malware indicators.",
@@ -1878,6 +1879,9 @@ function Evaluation({ blogPosts }) {
           </div>
         </div>
       </div>
+
+      {/* Cost Display Component */}
+      <CostDisplay evaluationCost={evaluation?.cost} />
     </Container>
   );
 }

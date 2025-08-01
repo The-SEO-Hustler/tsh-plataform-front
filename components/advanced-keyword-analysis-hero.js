@@ -60,6 +60,19 @@ function AdvancedKeywordAnalysisHero() {
       );
       return;
     }
+    if (usage.status === "error" || !usage) {
+      toast.error("Please try again later, our team is working on it.");
+      fetch("/api/notifySlack", {
+        method: "POST",
+        body: JSON.stringify({
+          status: "info",
+          docId: "No response from server",
+          route: "advanced-keyword-analysis",
+        }),
+      });
+
+      return;
+    }
 
     if (
       currentAnalysis &&

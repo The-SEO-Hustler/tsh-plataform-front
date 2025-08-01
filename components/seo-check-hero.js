@@ -18,7 +18,6 @@ import CardSwap, { Card } from "./CardSwap";
 import Image from "next/image";
 import RotatingText from "./RotatingText";
 import { useTheme } from "next-themes";
-import Stepper, { Step } from './Stepper';
 import SpotlightCard from './SpotlighCard';
 
 function SeoCheckHeroContent() {
@@ -44,6 +43,19 @@ function SeoCheckHeroContent() {
       toast.error(
         "You have reached your daily limit. Please try again tomorrow."
       );
+      return;
+    }
+    if (usage.status === "error" || !usage) {
+      toast.error("Please try again later, our team is working on it.");
+      fetch("/api/notifySlack", {
+        method: "POST",
+        body: JSON.stringify({
+          status: "info",
+          docId: "No response from server, Alex Local environment test",
+          route: "seo-check",
+        }),
+      });
+
       return;
     }
     if (
@@ -138,6 +150,7 @@ function SeoCheckHeroContent() {
                     />
                   </h1>
                   <p className="text-xl text-foreground">
+
                     Is Your Website Invisible to Google? Let&apos;s Fix That.
                   </p>
                   <form onSubmit={handleSubmit} className="space-y-4">
