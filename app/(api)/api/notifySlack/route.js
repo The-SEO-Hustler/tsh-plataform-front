@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 
 async function notifySlack(status, docId, route) {
   const endpoint = process.env.NOTIFICATION_ENDPOINT;
-  const env = process.env.NODE_ENV;
 
-  // if (env === "production" && endpoint) {
   try {
     const response = await fetch(`${endpoint}?status=${status}&docId=${docId}&route=${route}`);
 
@@ -17,12 +15,7 @@ async function notifySlack(status, docId, route) {
     console.error('Error sending Slack notification:', error);
     throw error;
   }
-  // }
-
-  // In development, just log the notification
-  if (env !== "production") {
-    console.log('Slack notification (dev):', { status, docId, route });
-  }
+  
 }
 
 export async function POST(request) {
