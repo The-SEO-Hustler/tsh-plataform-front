@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck } from "lucide-react";
 import RecaptchaProvider from "@/components/RecaptchaProvider";
-import { ArrowRight, CheckCircle2, Search, Target, Gauge, Lightbulb } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Search,
+  Target,
+  Gauge,
+  Lightbulb,
+} from "lucide-react";
 import Container from "@/components/container";
 import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
@@ -22,11 +29,7 @@ function SearchIntentHeroContent() {
   const [sendToEmail, setSendToEmail] = useState(false);
   const [email, setEmail] = useState("");
   const router = useRouter();
-  const {
-    currentAnalysis,
-    trackAnalysis,
-    clearAnalysis,
-  } = useFirebase();
+  const { currentAnalysis, trackAnalysis, clearAnalysis } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -95,7 +98,7 @@ function SearchIntentHeroContent() {
           url,
           keyword,
           token,
-          ...(sendToEmail && email && { email })
+          ...(sendToEmail && email && { email }),
         }),
       });
 
@@ -112,7 +115,7 @@ function SearchIntentHeroContent() {
             // sendToEmail: sendToEmail,
             // email: email,
             preview: false,
-          }
+          },
         });
         router.push(`${getPathname("search-intent")}/result?id=${data.docId}`);
         setIsLoading(false);
@@ -149,15 +152,24 @@ function SearchIntentHeroContent() {
                 {/* Left Column - URL Input */}
                 <div className="space-y-8">
                   <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-                    Free <span className="text-primary">Search Intent Tool</span>{" "}
+                    Free{" "}
+                    <span className="text-primary">Search Intent Tool</span>{" "}
                     That Actually Helps You Grow
                   </h1>
                   {/* <p className="text-xl text-foreground">
                   Is Your Website Invisible to Google? Let&apos;s Fix That.
                 </p> */}
-                  <form onSubmit={handleSubmit} className="space-y-4  relative z-10">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-4  relative z-10"
+                  >
                     <div className="relative">
-                      <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target Keyword</label>
+                      <label
+                        htmlFor="keyword"
+                        className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]"
+                      >
+                        Target Keyword
+                      </label>
                       <input
                         type="text"
                         value={keyword}
@@ -184,7 +196,12 @@ function SearchIntentHeroContent() {
                         disabled={isLoading}
                         className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
                       />
-                      <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]">Target URL</label>
+                      <label
+                        htmlFor="url"
+                        className="text-xs text-foreground/80 top-0 left-2 absolute bg-background px-2 py-1  translate-y-[-50%]"
+                      >
+                        Target URL
+                      </label>
                     </div>
 
                     {/* Email checkbox and field */}
@@ -225,14 +242,17 @@ function SearchIntentHeroContent() {
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${isLoading ? "animate-pulse !bg-primary " : ""
-                        }`}
+                      className={`w-full disabled:opacity-100 disabled:bg-gray-300 dark:disabled:bg-foreground/80 ${
+                        isLoading ? "animate-pulse !bg-primary " : ""
+                      }`}
                       disabled={
                         isLoading || usage?.remaining <= 0 || usage === null
                       }
                     >
                       <span className="sm:block hidden">
-                        {isLoading ? "Starting Analysis..." : "Analyze Search Intent"}
+                        {isLoading
+                          ? "Starting Analysis..."
+                          : "Analyze Search Intent"}
                       </span>
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -275,12 +295,16 @@ function SearchIntentHeroContent() {
                     <div className="space-y-6">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Target strokeWidth={1.25} className="w-6 h-6 text-primary" />
+                          <Target
+                            strokeWidth={1.25}
+                            className="w-6 h-6 text-primary"
+                          />
                         </div>
                         <div>
                           <h3 className="font-semibold">Search Intent</h3>
                           <p className="text-sm text-foreground/80">
-                            Get a professional grade Needs Meet and Page Quality assessment for free.
+                            Get a professional grade Needs Meet and Page Quality
+                            assessment for free.
                           </p>
                         </div>
                       </div>
@@ -297,7 +321,6 @@ function SearchIntentHeroContent() {
                             Excellent
                           </span>
                         </div>
-
                       </div>
                     </div>
                   </div>
@@ -306,7 +329,7 @@ function SearchIntentHeroContent() {
             </section>
           </Container>
         </HeroTemplate>
-      </section >
+      </section>
 
       <section className="py-16 bg-background border-t border-foreground/10">
         <Container>
@@ -315,32 +338,39 @@ function SearchIntentHeroContent() {
               What You&apos;ll Get from This Analysis
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-gray-100 dark:bg-black rounded-lg p-6 text-center border border-foreground/10">
+              <div className="bg-card rounded-lg p-6 text-center border border-foreground/10">
                 <div className="bg-green-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white">
                   <Target size={24} />
                 </div>
                 <h3 className="font-bold mb-2">Intent Classification</h3>
-                <p className="text-foreground/80 text-sm">Understand if users want information, navigation, comparison, or to buy</p>
+                <p className="text-foreground/80 text-sm">
+                  Understand if users want information, navigation, comparison,
+                  or to buy
+                </p>
               </div>
-              <div className="bg-gray-100 dark:bg-black rounded-lg p-6 text-center border border-foreground/10">
+              <div className="bg-card rounded-lg p-6 text-center border border-foreground/10">
                 <div className="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white">
                   <Gauge size={24} />
                 </div>
                 <h3 className="font-bold mb-2">URL Alignment Score</h3>
-                <p className="text-foreground/80 text-sm">See how well your content matches search intent expectations</p>
+                <p className="text-foreground/80 text-sm">
+                  See how well your content matches search intent expectations
+                </p>
               </div>
-              <div className="bg-gray-100 dark:bg-black rounded-lg p-6 text-center border border-foreground/10">
+              <div className="bg-card rounded-lg p-6 text-center border border-foreground/10">
                 <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white">
                   <Lightbulb size={24} />
                 </div>
                 <h3 className="font-bold mb-2">Actionable Suggestions</h3>
-                <p className="text-foreground/80 text-sm">Get specific recommendations to improve content alignment</p>
+                <p className="text-foreground/80 text-sm">
+                  Get specific recommendations to improve content alignment
+                </p>
               </div>
             </div>
           </div>
         </Container>
       </section>
-    </main >
+    </main>
   );
 }
 

@@ -63,19 +63,52 @@ function LLMTxtHero() {
       return;
     }
 
+    // Validate additional URLs in advanced mode
+    if (mode === "advanced" && advancedText.trim()) {
+      const additionalUrls = advancedText
+        .split(",")
+        .map((url) => url.trim())
+        .filter((url) => url.length > 0);
 
+      if (additionalUrls.length > 10) {
+        setError("Maximum 10 additional URLs allowed");
+        return;
+      }
+
+      // Basic URL validation
+      const urlRegex = /^https?:\/\/.+/;
+      const invalidUrls = additionalUrls.filter((url) => !urlRegex.test(url));
+      if (invalidUrls.length > 0) {
+        setError(`Invalid URLs: ${invalidUrls.join(", ")}`);
+        return;
+      }
+    }
 
     setLoading(true);
     setError(null);
-    // setAnalysisData(null);
-    console.log("url", url);
-    try {
-      const formData = new FormData();
-      formData.append("url", url);
 
-      const response = await fetch("/api/llmstxt", {
+    try {
+      // Prepare the request body based on mode
+      let requestBody = {
+        url: url,
+        mode: mode,
+      };
+
+      // Add additional URLs for advanced mode
+      if (mode === "advanced" && advancedText.trim()) {
+        const additionalUrls = advancedText
+          .split(",")
+          .map((url) => url.trim())
+          .filter((url) => url.length > 0);
+        requestBody.additionalUrls = additionalUrls;
+      }
+
+      const response = await fetch("/api/llmstxt-native", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -92,6 +125,9 @@ function LLMTxtHero() {
           collection: "llmstxt",
           meta: {
             url: url,
+            mode: mode,
+            additionalUrls:
+              mode === "advanced" ? requestBody.additionalUrls : undefined,
           },
         });
         router.push(`${getPathname("llmstxt")}/result?id=${data.docId}`);
@@ -124,15 +160,11 @@ function LLMTxtHero() {
                 how AI sees and represents your business.
               </p>
               <Tabs value={mode} onValueChange={handleTabChange}>
-                <TabsList>
+                <TabsList className="ml-auto">
                   <TabsTrigger value="simple" className="cursor-pointer">
                     Simple
                   </TabsTrigger>
-                  <TabsTrigger
-                    value="advanced"
-                    className="cursor-not-allowed"
-                    disabled
-                  >
+                  <TabsTrigger value="advanced" className="cursor-pointer">
                     Advanced
                   </TabsTrigger>
                 </TabsList>
@@ -140,7 +172,8 @@ function LLMTxtHero() {
                   <form
                     onSubmit={handleSubmit}
                     className="space-y-4 relative z-10"
-                    id="#tool"
+                    style={{ scrollMarginTop: "200px" }}
+                    id="tool"
                   >
                     <div className="relative">
                       <input
@@ -152,14 +185,20 @@ function LLMTxtHero() {
                         required
                         disabled={loading}
                       />
-                      <label htmlFor="url" className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-15%]">Target URL</label>
+                      <label
+                        htmlFor="url"
+                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
+                      >
+                        Target URL
+                      </label>
                     </div>
 
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full ${loading ? "animate-pulse" : ""
-                        } disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
+                      className={`w-full ${
+                        loading ? "animate-pulse" : ""
+                      } disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
                       disabled={
                         loading || usage?.remaining <= 0 || usage === null
                       }
@@ -179,27 +218,40 @@ function LLMTxtHero() {
                         type="url"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Enter a URL..."
-                        className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                        placeholder="https://example.com"
+                        className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
                         required
                         disabled={loading}
                       />
+                      <label
+                        htmlFor="url"
+                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
+                      >
+                        Target URL
+                      </label>
                     </div>
                     <div className="relative">
                       <textarea
                         value={advancedText}
                         onChange={(e) => setAdvancedText(e.target.value)}
-                        placeholder="Enter additional text..."
-                        className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                        placeholder="https://example.com/about, https://example.com/services, https://example.com/blog"
+                        className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
                         rows="4"
                       />
+                      <label
+                        htmlFor="additionalUrls"
+                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
+                      >
+                        Additional URLs (up to 10, comma-separated)
+                      </label>
                     </div>
 
                     <Button
                       type="submit"
                       size="lg"
-                      className={`w-full ${loading ? "animate-pulse" : ""
-                        } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
+                      className={`w-full ${
+                        loading ? "animate-pulse" : ""
+                      } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
                       disabled={
                         loading || usage?.remaining <= 0 || usage === null
                       }
@@ -258,8 +310,8 @@ function LLMTxtHero() {
                     </li>
                   </ul>
                   <p className="text-sm text-foreground/80 italic">
-                    *Don&apos;t worry, you can browse around our website and we will
-                    notify you
+                    *Don&apos;t worry, you can browse around our website and we
+                    will notify you
                   </p>
                 </div>
               </div>
@@ -278,10 +330,10 @@ function LLMTxtHero() {
               Think of LLMs.txt as your website&apos;s AI tour guide.
             </p>
             <p className="text-lg text-foreground/80 mb-6">
-              It&apos;s a specialized file that tells AI exactly what your site is
-              about and where to find your most valuable content. Without it, AI
-              systems are left guessing — crawling through navigation menus and
-              sidebars instead of focusing on what matters.
+              It&apos;s a specialized file that tells AI exactly what your site
+              is about and where to find your most valuable content. Without it,
+              AI systems are left guessing — crawling through navigation menus
+              and sidebars instead of focusing on what matters.
             </p>
             <p className="text-lg text-foreground/80 mb-6">
               In a world where more people are using AI search tools like
@@ -387,8 +439,9 @@ function LLMTxtHero() {
             How Our Generator Works
           </h2>
           <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
-            We don&apos;t just scrape your site and call it a day. Our multi-step
-            process is designed to truly understand what your website offers:
+            We don&apos;t just scrape your site and call it a day. Our
+            multi-step process is designed to truly understand what your website
+            offers:
           </p>
 
           <div className="max-w-4xl mx-auto">
@@ -459,8 +512,8 @@ function LLMTxtHero() {
                 </li>
               </ol>
               <p className="text-foreground/80 mt-6 italic">
-                It&apos;s trying to do what it takes many SEOs hours to accomplish
-                manually.
+                It&apos;s trying to do what it takes many SEOs hours to
+                accomplish manually.
               </p>
             </div>
           </div>
@@ -486,19 +539,17 @@ function LLMTxtHero() {
                 </p>
               </div>
               <Button
-                href="/llms-txt-generator#tool"
+                onClick={() => {
+                  setMode("simple");
+                  window.scrollTo(0, 0);
+                }}
                 className="w-full bg-primary hover:bg-primary text-black py-3 rounded-md transition-all"
               >
                 Use Basic Mode
               </Button>
             </div>
 
-            <div className="relative bg-card p-9 rounded-lg border-2 border-transparent  flex flex-col justify-between opacity-80 cursor-not-allowed">
-              {/* Coming Soon Badge */}
-              <div className="absolute top-3 right-3 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full">
-                Coming Soon
-              </div>
-
+            <div className="bg-card p-9 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between">
               <div>
                 <h3 className="text-2xl font-bold mb-4 text-primary">
                   Advanced Mode
@@ -509,13 +560,14 @@ function LLMTxtHero() {
                   pages you want AI to focus on.
                 </p>
               </div>
-              {/* Button disabled or styled */}
               <Button
-                href="#"
-                disabled
-                className="w-full bg-primary text-black font-bold py-3 rounded-md transition-all cursor-not-allowed"
+                onClick={() => {
+                  setMode("advanced");
+                  window.scrollTo(0, 0);
+                }}
+                className="w-full bg-primary hover:bg-primary text-black py-3 rounded-md transition-all"
               >
-                Coming Soon
+                Use Advanced Mode
               </Button>
             </div>
           </div>
@@ -529,8 +581,8 @@ function LLMTxtHero() {
             Why Our Generator Beats the Competition
           </h2>
           <p className="text-lg text-foreground/80 max-w-4xl mx-auto mb-12 text-center">
-            Not all LLMs.txt generators are created equal. Here&apos;s what makes
-            ours different:
+            Not all LLMs.txt generators are created equal. Here&apos;s what
+            makes ours different:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -588,9 +640,9 @@ function LLMTxtHero() {
               <div className="h-full flex flex-col justify-between">
                 <div>
                   <p className="text-foreground/80 italic">
-                    While basic generators just list your pages, we&apos;re creating
-                    a semantic roadmap of your business that AI can actually
-                    understand.
+                    While basic generators just list your pages, we&apos;re
+                    creating a semantic roadmap of your business that AI can
+                    actually understand.
                   </p>
                 </div>
               </div>
@@ -676,8 +728,8 @@ function LLMTxtHero() {
                 </li>
               </ol>
               <p className="text-foreground/80 mt-6 text-center font-bold">
-                That&apos;s it! Your website is now optimized for the next generation
-                of AI search.
+                That&apos;s it! Your website is now optimized for the next
+                generation of AI search.
               </p>
             </div>
           </div>
@@ -749,14 +801,14 @@ function LLMTxtHero() {
 
           <div className="max-w-4xl bg-background mx-auto p-8 rounded-lg">
             <p className="text-lg text-foreground/80 mb-6">
-              While LLMs.txt isn&apos;t an official standard yet, it&apos;s rapidly
-              gaining adoption. The cost to implement is minimal, but the
-              potential upside is huge.
+              While LLMs.txt isn&apos;t an official standard yet, it&apos;s
+              rapidly gaining adoption. The cost to implement is minimal, but
+              the potential upside is huge.
             </p>
             <p className="text-lg text-foreground/80 mb-6">
-              Remember when &quot;mobile-friendly&quot; websites were optional? The
-              businesses that moved first won big. Don&apos;t be the last one to this
-              party.
+              Remember when &quot;mobile-friendly&quot; websites were optional?
+              The businesses that moved first won big. Don&apos;t be the last
+              one to this party.
             </p>
           </div>
         </Container>
@@ -775,7 +827,11 @@ function LLMTxtHero() {
 
           <div className="flex justify-center">
             <Button
-              href="/llms-txt-generator#tool"
+              onClick={() => {
+                document
+                  .getElementById("tool")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
               size="lg"
               className="bg-primary-foreground text-white cursor-pointer hover:bg-primary-foreground/80  font-bold py-4 px-10 rounded-md text-xl transition-all"
             >
