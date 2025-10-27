@@ -46,7 +46,21 @@ function LLMTxtResult({ blogPosts }) {
   const [sendToEmail, setSendToEmail] = useState(false);
   const [cost, setCost] = useState(null);
   const [currentUrl, setCurrentUrl] = useState("");
+  const [contentFormats, setContentFormats] = useState({});
   const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
+
+  // Helper function to toggle content format for a specific page
+  const toggleContentFormat = (pageIndex) => {
+    setContentFormats((prev) => ({
+      ...prev,
+      [pageIndex]: prev[pageIndex] === "txt" ? "markdown" : "txt",
+    }));
+  };
+
+  // Helper function to get content format for a specific page
+  const getContentFormat = (pageIndex) => {
+    return contentFormats[pageIndex] || "markdown";
+  };
   const router = useRouter();
   const searchParams = useSearchParams();
   const docId = searchParams.get("id");
@@ -317,11 +331,17 @@ function LLMTxtResult({ blogPosts }) {
         <Container>
           <div className="max-w-6xl mx-auto">
             <Tabs
-              defaultValue="overview"
+              defaultValue="pages"
               className="w-full"
               onValueChange={(value) => setActiveTab(value)}
             >
               <TabsList className="w-full flex mb-6 flex-col md:flex-row">
+                <TabsTrigger
+                  value="pages"
+                  className="flex-1 cursor-pointer max-md:!w-full"
+                >
+                  Pages Analysis
+                </TabsTrigger>
                 <TabsTrigger
                   value="overview"
                   className="flex-1 cursor-pointer max-md:!w-full"
@@ -340,12 +360,7 @@ function LLMTxtResult({ blogPosts }) {
                 >
                   Content Insights
                 </TabsTrigger>
-                <TabsTrigger
-                  value="pages"
-                  className="flex-1 cursor-pointer max-md:!w-full"
-                >
-                  Pages Analysis
-                </TabsTrigger>
+
                 <TabsTrigger
                   value="recommendations"
                   className="flex-1 cursor-pointer max-md:!w-full"
@@ -714,6 +729,237 @@ function LLMTxtResult({ blogPosts }) {
 
               <TabsContent value="pages" className="focus:outline-none">
                 <div className="space-y-6">
+                  {analysisData?.markdownPages &&
+                    analysisData?.markdownPages?.length > 0 && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Markdown Content Preview</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <Tabs defaultValue="page0" className="w-full">
+                            <TabsList className="w-full md:flex-row flex-col">
+                              {analysisData?.markdownPages?.map(
+                                (page, index) => (
+                                  <TabsTrigger
+                                    key={index}
+                                    value={`page${index}`}
+                                    className="flex-1 max-md:!w-full"
+                                  >
+                                    {page.title && page.title.length > 20
+                                      ? `${page.title.substring(0, 20)}...`
+                                      : page.title || `Page ${index + 1}`}
+                                  </TabsTrigger>
+                                )
+                              )}
+                            </TabsList>
+                            {analysisData?.markdownPages?.map((page, index) => (
+                              <TabsContent
+                                key={index}
+                                value={`page${index}`}
+                                className="focus:outline-none"
+                              >
+                                <div className="relative">
+                                  {/* Format toggle and action buttons positioned at top */}
+                                  <div className="absolute top-2 right-2 z-10 flex gap-2">
+                                    {/* Format Toggle */}
+                                    <div className="flex bg-background/80 backdrop-blur-sm rounded-md border">
+                                      <Button
+                                        size="sm"
+                                        onClick={() =>
+                                          toggleContentFormat(index)
+                                        }
+                                        className={`h-7 px-3 text-xs rounded-r-none bg-accent backdrop-blur-sm hover:text-black ${
+                                          getContentFormat(index) === "markdown"
+                                            ? "bg-primary"
+                                            : "bg-accent text-foreground"
+                                        }`}
+                                      >
+                                        .md
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        onClick={() =>
+                                          toggleContentFormat(index)
+                                        }
+                                        className={`h-7 px-3 text-xs rounded-l-none bg-accent backdrop-blur-sm hover:text-black ${
+                                          getContentFormat(index) === "txt"
+                                            ? "bg-primary"
+                                            : "bg-accent text-foreground"
+                                        }`}
+                                      >
+                                        .txt
+                                      </Button>
+                                    </div>
+
+                                    {/* Copy Button */}
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        if (
+                                          page.content &&
+                                          typeof page.content === "string"
+                                        ) {
+                                          const format =
+                                            getContentFormat(index);
+                                          const content =
+                                            format === "txt"
+                                              ? page.content
+                                                  .replace(/#{1,6}\s+/g, "")
+                                                  .replace(
+                                                    /\*\*(.*?)\*\*/g,
+                                                    "$1"
+                                                  )
+                                                  .replace(/\*(.*?)\*/g, "$1")
+                                              : page.content;
+
+                                          navigator.clipboard.writeText(
+                                            content
+                                          );
+                                          toast.success(
+                                            `${format.toUpperCase()} content copied to clipboard!`
+                                          );
+                                        }
+                                      }}
+                                      className="h-7 w-7 p-0 bg-background/80 backdrop-blur-sm"
+                                    >
+                                      <Copy className="h-3 w-3 text-foreground" />
+                                    </Button>
+
+                                    {/* Download Button */}
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        if (
+                                          page.content &&
+                                          typeof page.content === "string"
+                                        ) {
+                                          const format =
+                                            getContentFormat(index);
+                                          const content =
+                                            format === "txt"
+                                              ? page.content
+                                                  .replace(/#{1,6}\s+/g, "")
+                                                  .replace(
+                                                    /\*\*(.*?)\*\*/g,
+                                                    "$1"
+                                                  )
+                                                  .replace(/\*(.*?)\*/g, "$1")
+                                              : page.content;
+
+                                          const blob = new Blob([content], {
+                                            type:
+                                              format === "txt"
+                                                ? "text/plain"
+                                                : "text/markdown",
+                                          });
+                                          const url = URL.createObjectURL(blob);
+                                          const a = document.createElement("a");
+                                          a.href = url;
+                                          a.download = `${
+                                            page.title || `page-${index + 1}`
+                                          }.${format}`;
+                                          document.body.appendChild(a);
+                                          a.click();
+                                          document.body.removeChild(a);
+                                          URL.revokeObjectURL(url);
+                                          toast.success(
+                                            `${format.toUpperCase()} file downloaded!`
+                                          );
+                                        }
+                                      }}
+                                      className="h-7 w-7 p-0 bg-background/80 backdrop-blur-sm"
+                                    >
+                                      <DownloadCloud className="h-3 w-3 text-foreground" />
+                                    </Button>
+                                  </div>
+
+                                  <div className="bg-gray-100 dark:bg-accent dark:text-foreground p-4 rounded-md max-h-96 overflow-auto">
+                                    <div className="prose prose-sm max-w-none">
+                                      {page.content &&
+                                      typeof page.content === "string" ? (
+                                        getContentFormat(index) ===
+                                        "markdown" ? (
+                                          <ReactMarkdown
+                                            components={{
+                                              h1: ({ node, ...props }) => (
+                                                <h1
+                                                  {...props}
+                                                  className="text-xl font-bold mb-2"
+                                                />
+                                              ),
+                                              h2: ({ node, ...props }) => (
+                                                <h2
+                                                  {...props}
+                                                  className="text-lg font-bold mb-2"
+                                                />
+                                              ),
+                                              h3: ({ node, ...props }) => (
+                                                <h3
+                                                  {...props}
+                                                  className="text-base font-bold mb-1"
+                                                />
+                                              ),
+                                              h4: ({ node, ...props }) => (
+                                                <h4
+                                                  {...props}
+                                                  className="text-sm font-bold mb-1"
+                                                />
+                                              ),
+                                              p: ({ node, ...props }) => (
+                                                <p
+                                                  {...props}
+                                                  className="mb-2 text-sm"
+                                                />
+                                              ),
+                                              ul: ({ node, ...props }) => (
+                                                <ul
+                                                  {...props}
+                                                  className="list-disc pl-4 mb-2 text-sm"
+                                                />
+                                              ),
+                                              li: ({ node, ...props }) => (
+                                                <li
+                                                  {...props}
+                                                  className="mb-1"
+                                                />
+                                              ),
+                                              a: ({ node, ...props }) => (
+                                                <a
+                                                  {...props}
+                                                  className="text-blue-600 hover:underline"
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                />
+                                              ),
+                                            }}
+                                          >
+                                            {page.content}
+                                          </ReactMarkdown>
+                                        ) : (
+                                          <pre className="whitespace-pre-wrap text-sm font-mono">
+                                            {page.content
+                                              .replace(/#{1,6}\s+/g, "")
+                                              .replace(/\*\*(.*?)\*\*/g, "$1")
+                                              .replace(/\*(.*?)\*/g, "$1")}
+                                          </pre>
+                                        )
+                                      ) : (
+                                        <div className="text-sm text-muted-foreground">
+                                          No content available for this page.
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </TabsContent>
+                            ))}
+                          </Tabs>
+                        </CardContent>
+                      </Card>
+                    )}
+
                   <Card>
                     <CardHeader>
                       <CardTitle>Pages Analysis</CardTitle>
@@ -750,106 +996,6 @@ function LLMTxtResult({ blogPosts }) {
                       </div>
                     </CardContent>
                   </Card>
-
-                  {analysisData?.markdownPages &&
-                    analysisData?.markdownPages?.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Markdown Content Preview</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <Tabs defaultValue="page0" className="w-full">
-                            <TabsList className="w-full md:flex-row flex-col">
-                              {analysisData?.markdownPages?.map(
-                                (page, index) => (
-                                  <TabsTrigger
-                                    key={index}
-                                    value={`page${index}`}
-                                    className="flex-1 max-md:!w-full"
-                                  >
-                                    {page.title && page.title.length > 20
-                                      ? `${page.title.substring(0, 20)}...`
-                                      : page.title || `Page ${index + 1}`}
-                                  </TabsTrigger>
-                                )
-                              )}
-                            </TabsList>
-                            {analysisData?.markdownPages?.map((page, index) => (
-                              <TabsContent
-                                key={index}
-                                value={`page${index}`}
-                                className="focus:outline-none"
-                              >
-                                <div className="bg-gray-100 dark:bg-accent dark:text-foreground p-4 rounded-md max-h-96 overflow-auto">
-                                  <div className="prose prose-sm max-w-none">
-                                    {page.content &&
-                                    typeof page.content === "string" ? (
-                                      <ReactMarkdown
-                                        components={{
-                                          h1: ({ node, ...props }) => (
-                                            <h1
-                                              {...props}
-                                              className="text-xl font-bold mb-2"
-                                            />
-                                          ),
-                                          h2: ({ node, ...props }) => (
-                                            <h2
-                                              {...props}
-                                              className="text-lg font-bold mb-2"
-                                            />
-                                          ),
-                                          h3: ({ node, ...props }) => (
-                                            <h3
-                                              {...props}
-                                              className="text-base font-bold mb-1"
-                                            />
-                                          ),
-                                          h4: ({ node, ...props }) => (
-                                            <h4
-                                              {...props}
-                                              className="text-sm font-bold mb-1"
-                                            />
-                                          ),
-                                          p: ({ node, ...props }) => (
-                                            <p
-                                              {...props}
-                                              className="mb-2 text-sm"
-                                            />
-                                          ),
-                                          ul: ({ node, ...props }) => (
-                                            <ul
-                                              {...props}
-                                              className="list-disc pl-4 mb-2 text-sm"
-                                            />
-                                          ),
-                                          li: ({ node, ...props }) => (
-                                            <li {...props} className="mb-1" />
-                                          ),
-                                          a: ({ node, ...props }) => (
-                                            <a
-                                              {...props}
-                                              className="text-blue-600 hover:underline"
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                            />
-                                          ),
-                                        }}
-                                      >
-                                        {page.content}
-                                      </ReactMarkdown>
-                                    ) : (
-                                      <div className="text-sm text-muted-foreground">
-                                        No content available for this page.
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </TabsContent>
-                            ))}
-                          </Tabs>
-                        </CardContent>
-                      </Card>
-                    )}
                 </div>
               </TabsContent>
 
