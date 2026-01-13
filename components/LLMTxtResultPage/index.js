@@ -42,7 +42,6 @@ function LLMTxtResult({ blogPosts }) {
   const [analysisData, setAnalysisData] = useState(null);
   const [updatedAt, setUpdatedAt] = useState("");
   const [viewMode, setViewMode] = useState("markdown");
-  const [activeTab, setActiveTab] = useState("overview");
   const [sendToEmail, setSendToEmail] = useState(false);
   const [cost, setCost] = useState(null);
   const [currentUrl, setCurrentUrl] = useState("");
@@ -330,704 +329,252 @@ function LLMTxtResult({ blogPosts }) {
       <section className="py-12">
         <Container>
           <div className="max-w-6xl mx-auto">
-            <Tabs
-              defaultValue="pages"
-              className="w-full"
-              onValueChange={(value) => setActiveTab(value)}
-            >
-              <TabsList className="w-full flex mb-6 flex-col md:flex-row">
-                <TabsTrigger
-                  value="pages"
-                  className="flex-1 cursor-pointer max-md:!w-full"
-                >
-                  Pages Analysis
-                </TabsTrigger>
-                <TabsTrigger
-                  value="overview"
-                  className="flex-1 cursor-pointer max-md:!w-full"
-                >
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger
-                  value="seo"
-                  className="flex-1 cursor-pointer max-md:!w-full"
-                >
-                  SEO Analysis
-                </TabsTrigger>
-                <TabsTrigger
-                  value="content"
-                  className="flex-1 cursor-pointer max-md:!w-full"
-                >
-                  Content Insights
-                </TabsTrigger>
-
-                <TabsTrigger
-                  value="recommendations"
-                  className="flex-1 cursor-pointer max-md:!w-full"
-                >
-                  Recommendations
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="overview" className="focus:outline-none">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        SEO Score
-                      </CardTitle>
-                      <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-primary">
-                        {(() => {
-                          const score = analysisData?.seoAnalysis?.seoScore;
-                          if (!score) return "N/A";
-
-                          if (typeof score === "string") {
-                            const parts = score.split(" - ");
-                            return parts[0] || score;
-                          } else if (typeof score === "number") {
-                            return score.toString();
-                          }
-                          return "N/A";
-                        })()}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {(() => {
-                          const score = analysisData?.seoAnalysis?.seoScore;
-                          if (!score) return "N/A";
-
-                          if (typeof score === "string") {
-                            const parts = score.split(" - ");
-                            return parts[1] || "";
-                          } else if (typeof score === "number") {
-                            return "Score";
-                          }
-                          return "N/A";
-                        })()}
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Total Pages
-                      </CardTitle>
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-primary">
-                        {analysisData?.crawlSummary?.totalPages}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {analysisData?.crawledPages} crawled
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Total Words
-                      </CardTitle>
-                      <BookOpen className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-primary">
-                        {analysisData?.crawlSummary?.totalWords?.toLocaleString()}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Avg: {analysisData?.crawlSummary?.avgWordsPerPage} per
-                        page
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Content Quality
-                      </CardTitle>
-                      <Target className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-primary">
-                        {(() => {
-                          const quality =
-                            analysisData?.websiteOverview?.contentQuality || 0;
-                          if (!quality) return "N/A";
-
-                          if (typeof quality === "string") {
-                            const parts = quality.split(" - ");
-                            return parts[0] || quality;
-                          } else if (typeof quality === "number") {
-                            return quality.toString();
-                          }
-                          return "N/A";
-                        })()}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {(() => {
-                          const quality =
-                            analysisData?.websiteOverview?.contentQuality || 0;
-                          if (!quality) return "N/A";
-
-                          if (typeof quality === "string") {
-                            const parts = quality.split(" - ");
-                            return parts[1] || "";
-                          } else if (typeof quality === "number") {
-                            return "Quality Score";
-                          }
-                          return "N/A";
-                        })()}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-6">
+              {analysisData?.markdownPages &&
+                analysisData?.markdownPages?.length > 0 && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Users className="h-5 w-5" />
-                        Target Audience
-                      </CardTitle>
+                      <CardTitle>Markdown Content Preview</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-foreground/80">
-                        {analysisData?.websiteOverview?.targetAudience}
-                      </p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5" />
-                        Main Topic
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-foreground/80">
-                        {analysisData?.websiteOverview?.mainTopic}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5" />
-                      Key Insights
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {analysisData?.keyInsights?.map((insight, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-foreground/80">{insight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="seo" className="focus:outline-none">
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>SEO Analysis</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h4 className="font-semibold mb-2 dark:text-primary">
-                          Content Structure
-                        </h4>
-                        <p className="text-foreground/80">
-                          {analysisData?.seoAnalysis?.contentStructure}
-                        </p>
-                      </div>
-                      <Separator />
-                      <div>
-                        <h4 className="font-semibold mb-2 dark:text-primary">
-                          Keyword Density
-                        </h4>
-                        <p className="text-foreground/80">
-                          {analysisData?.seoAnalysis?.keywordDensity}
-                        </p>
-                      </div>
-                      <Separator />
-                      <div>
-                        <h4 className="font-semibold mb-2 dark:text-primary">
-                          Internal Linking
-                        </h4>
-                        <p className="text-foreground/80">
-                          {analysisData?.seoAnalysis?.internalLinking}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Content Gaps</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {analysisData?.contentGaps?.map((gap, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <AlertCircle className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                            <span className="text-foreground/80">{gap}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Topics</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2">
-                        {analysisData?.topics?.map((topic, index) => (
-                          <Badge key={index} variant="secondary">
-                            {topic}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="content" className="focus:outline-none">
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Content Insights</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">
-                            {analysisData?.contentInsights?.totalWords?.toLocaleString()}
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Total Words
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">
-                            {analysisData?.contentInsights?.totalPages}
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Total Pages
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">
-                            {analysisData?.contentInsights?.avgWordsPerPage}
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Avg Words/Page
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Word Count Distribution</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">
-                            {
-                              analysisData?.contentInsights
-                                ?.wordCountDistribution.short
-                            }
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Short Pages
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">
-                            {
-                              analysisData?.contentInsights
-                                ?.wordCountDistribution.medium
-                            }
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Medium Pages
-                          </p>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-foreground">
-                            {
-                              analysisData?.contentInsights
-                                ?.wordCountDistribution.long
-                            }
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            Long Pages
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Content Metadata</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-semibold mb-2 dark:text-primary">
-                            Pages with Titles
-                          </h4>
-                          <p className="text-foreground/80">
-                            {analysisData?.contentInsights?.pagesWithTitles}/
-                            {analysisData?.contentInsights?.totalPages}
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-2 dark:text-primary">
-                            Pages with Descriptions
-                          </h4>
-                          <p className="text-foreground/80">
-                            {
-                              analysisData?.contentInsights
-                                ?.pagesWithDescriptions
-                            }
-                            /{analysisData?.contentInsights?.totalPages}
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold mb-2 dark:text-primary">
-                            Pages with Keywords
-                          </h4>
-                          <p className="text-foreground/80">
-                            {analysisData?.contentInsights?.pagesWithKeywords}/
-                            {analysisData?.contentInsights?.totalPages}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="pages" className="focus:outline-none">
-                <div className="space-y-6">
-                  {analysisData?.markdownPages &&
-                    analysisData?.markdownPages?.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Markdown Content Preview</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <Tabs defaultValue="page0" className="w-full">
-                            <TabsList className="w-full md:flex-row flex-col">
-                              {analysisData?.markdownPages?.map(
-                                (page, index) => (
-                                  <TabsTrigger
-                                    key={index}
-                                    value={`page${index}`}
-                                    className="flex-1 max-md:!w-full"
+                      <Tabs defaultValue="page0" className="w-full">
+                        <TabsList className="w-full md:flex-row flex-col">
+                          {analysisData?.markdownPages?.map((page, index) => (
+                            <TabsTrigger
+                              key={index}
+                              value={`page${index}`}
+                              className="flex-1 max-md:!w-full"
+                            >
+                              {page.title && page.title.length > 20
+                                ? `${page.title.substring(0, 20)}...`
+                                : page.title || `Page ${index + 1}`}
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+                        {analysisData?.markdownPages?.map((page, index) => (
+                          <TabsContent
+                            key={index}
+                            value={`page${index}`}
+                            className="focus:outline-none"
+                          >
+                            <div className="relative">
+                              {/* Format toggle and action buttons positioned at top */}
+                              <div className="absolute top-2 right-2 z-10 flex gap-2">
+                                {/* Format Toggle */}
+                                <div className="flex bg-background/80 backdrop-blur-sm rounded-md border">
+                                  <Button
+                                    size="sm"
+                                    onClick={() => toggleContentFormat(index)}
+                                    className={`h-7 px-3 text-xs rounded-r-none bg-accent backdrop-blur-sm hover:text-black ${
+                                      getContentFormat(index) === "markdown"
+                                        ? "bg-primary"
+                                        : "bg-accent text-foreground"
+                                    }`}
                                   >
-                                    {page.title && page.title.length > 20
-                                      ? `${page.title.substring(0, 20)}...`
-                                      : page.title || `Page ${index + 1}`}
-                                  </TabsTrigger>
-                                )
-                              )}
-                            </TabsList>
-                            {analysisData?.markdownPages?.map((page, index) => (
-                              <TabsContent
-                                key={index}
-                                value={`page${index}`}
-                                className="focus:outline-none"
-                              >
-                                <div className="relative">
-                                  {/* Format toggle and action buttons positioned at top */}
-                                  <div className="absolute top-2 right-2 z-10 flex gap-2">
-                                    {/* Format Toggle */}
-                                    <div className="flex bg-background/80 backdrop-blur-sm rounded-md border">
-                                      <Button
-                                        size="sm"
-                                        onClick={() =>
-                                          toggleContentFormat(index)
-                                        }
-                                        className={`h-7 px-3 text-xs rounded-r-none bg-accent backdrop-blur-sm hover:text-black ${
-                                          getContentFormat(index) === "markdown"
-                                            ? "bg-primary"
-                                            : "bg-accent text-foreground"
-                                        }`}
-                                      >
-                                        .md
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        onClick={() =>
-                                          toggleContentFormat(index)
-                                        }
-                                        className={`h-7 px-3 text-xs rounded-l-none bg-accent backdrop-blur-sm hover:text-black ${
-                                          getContentFormat(index) === "txt"
-                                            ? "bg-primary"
-                                            : "bg-accent text-foreground"
-                                        }`}
-                                      >
-                                        .txt
-                                      </Button>
-                                    </div>
+                                    .md
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => toggleContentFormat(index)}
+                                    className={`h-7 px-3 text-xs rounded-l-none bg-accent backdrop-blur-sm hover:text-black ${
+                                      getContentFormat(index) === "txt"
+                                        ? "bg-primary"
+                                        : "bg-accent text-foreground"
+                                    }`}
+                                  >
+                                    .txt
+                                  </Button>
+                                </div>
 
-                                    {/* Copy Button */}
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => {
-                                        if (
-                                          page.content &&
-                                          typeof page.content === "string"
-                                        ) {
-                                          const format =
-                                            getContentFormat(index);
-                                          const content =
-                                            format === "txt"
-                                              ? page.content
-                                                  .replace(/#{1,6}\s+/g, "")
-                                                  .replace(
-                                                    /\*\*(.*?)\*\*/g,
-                                                    "$1"
-                                                  )
-                                                  .replace(/\*(.*?)\*/g, "$1")
-                                              : page.content;
-
-                                          navigator.clipboard.writeText(
-                                            content
-                                          );
-                                          toast.success(
-                                            `${format.toUpperCase()} content copied to clipboard!`
-                                          );
-                                        }
-                                      }}
-                                      className="h-7 w-7 p-0 bg-background/80 backdrop-blur-sm"
-                                    >
-                                      <Copy className="h-3 w-3 text-foreground" />
-                                    </Button>
-
-                                    {/* Download Button */}
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => {
-                                        if (
-                                          page.content &&
-                                          typeof page.content === "string"
-                                        ) {
-                                          const format =
-                                            getContentFormat(index);
-                                          const content =
-                                            format === "txt"
-                                              ? page.content
-                                                  .replace(/#{1,6}\s+/g, "")
-                                                  .replace(
-                                                    /\*\*(.*?)\*\*/g,
-                                                    "$1"
-                                                  )
-                                                  .replace(/\*(.*?)\*/g, "$1")
-                                              : page.content;
-
-                                          const blob = new Blob([content], {
-                                            type:
-                                              format === "txt"
-                                                ? "text/plain"
-                                                : "text/markdown",
-                                          });
-                                          const url = URL.createObjectURL(blob);
-                                          const a = document.createElement("a");
-                                          a.href = url;
-                                          a.download = `${
-                                            page.title || `page-${index + 1}`
-                                          }.${format}`;
-                                          document.body.appendChild(a);
-                                          a.click();
-                                          document.body.removeChild(a);
-                                          URL.revokeObjectURL(url);
-                                          toast.success(
-                                            `${format.toUpperCase()} file downloaded!`
-                                          );
-                                        }
-                                      }}
-                                      className="h-7 w-7 p-0 bg-background/80 backdrop-blur-sm"
-                                    >
-                                      <DownloadCloud className="h-3 w-3 text-foreground" />
-                                    </Button>
-                                  </div>
-
-                                  <div className="bg-gray-100 dark:bg-accent dark:text-foreground p-4 rounded-md max-h-96 overflow-auto">
-                                    <div className="prose prose-sm max-w-none">
-                                      {page.content &&
-                                      typeof page.content === "string" ? (
-                                        getContentFormat(index) ===
-                                        "markdown" ? (
-                                          <ReactMarkdown
-                                            components={{
-                                              h1: ({ node, ...props }) => (
-                                                <h1
-                                                  {...props}
-                                                  className="text-xl font-bold mb-2"
-                                                />
-                                              ),
-                                              h2: ({ node, ...props }) => (
-                                                <h2
-                                                  {...props}
-                                                  className="text-lg font-bold mb-2"
-                                                />
-                                              ),
-                                              h3: ({ node, ...props }) => (
-                                                <h3
-                                                  {...props}
-                                                  className="text-base font-bold mb-1"
-                                                />
-                                              ),
-                                              h4: ({ node, ...props }) => (
-                                                <h4
-                                                  {...props}
-                                                  className="text-sm font-bold mb-1"
-                                                />
-                                              ),
-                                              p: ({ node, ...props }) => (
-                                                <p
-                                                  {...props}
-                                                  className="mb-2 text-sm"
-                                                />
-                                              ),
-                                              ul: ({ node, ...props }) => (
-                                                <ul
-                                                  {...props}
-                                                  className="list-disc pl-4 mb-2 text-sm"
-                                                />
-                                              ),
-                                              li: ({ node, ...props }) => (
-                                                <li
-                                                  {...props}
-                                                  className="mb-1"
-                                                />
-                                              ),
-                                              a: ({ node, ...props }) => (
-                                                <a
-                                                  {...props}
-                                                  className="text-blue-600 hover:underline"
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                />
-                                              ),
-                                            }}
-                                          >
-                                            {page.content}
-                                          </ReactMarkdown>
-                                        ) : (
-                                          <pre className="whitespace-pre-wrap text-sm font-mono">
-                                            {page.content
+                                {/* Copy Button */}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    if (
+                                      page.content &&
+                                      typeof page.content === "string"
+                                    ) {
+                                      const format = getContentFormat(index);
+                                      const content =
+                                        format === "txt"
+                                          ? page.content
                                               .replace(/#{1,6}\s+/g, "")
                                               .replace(/\*\*(.*?)\*\*/g, "$1")
-                                              .replace(/\*(.*?)\*/g, "$1")}
-                                          </pre>
-                                        )
-                                      ) : (
-                                        <div className="text-sm text-muted-foreground">
-                                          No content available for this page.
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </TabsContent>
-                            ))}
-                          </Tabs>
-                        </CardContent>
-                      </Card>
-                    )}
+                                              .replace(/\*(.*?)\*/g, "$1")
+                                          : page.content;
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Pages Analysis</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {analysisData?.crawlSummary?.pages?.map(
-                          (page, index) => (
-                            <div
-                              key={index}
-                              className="border rounded-lg p-4 border-primary"
-                            >
-                              <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-semibold text-primary">
-                                  {page.title}
-                                </h4>
-                                <Badge
-                                  variant="outline"
-                                  className="border-foreground/80"
+                                      navigator.clipboard.writeText(content);
+                                      toast.success(
+                                        `${format.toUpperCase()} content copied to clipboard!`
+                                      );
+                                    }
+                                  }}
+                                  className="h-7 w-7 p-0 bg-background/80 backdrop-blur-sm"
                                 >
-                                  {page.wordCount} words
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-muted-foreground mb-2">
-                                {page.url}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Analyzed:{" "}
-                                {new Date(page.timestamp).toLocaleString()}
-                              </p>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
+                                  <Copy className="h-3 w-3 text-foreground" />
+                                </Button>
 
-              <TabsContent
-                value="recommendations"
-                className="focus:outline-none"
-              >
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Recommendations</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-3">
-                        {analysisData?.recommendations?.map(
-                          (recommendation, index) => (
-                            <li key={index} className="flex items-start gap-3">
-                              <div className="bg-primary text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
-                                {index + 1}
+                                {/* Download Button */}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    if (
+                                      page.content &&
+                                      typeof page.content === "string"
+                                    ) {
+                                      const format = getContentFormat(index);
+                                      const content =
+                                        format === "txt"
+                                          ? page.content
+                                              .replace(/#{1,6}\s+/g, "")
+                                              .replace(/\*\*(.*?)\*\*/g, "$1")
+                                              .replace(/\*(.*?)\*/g, "$1")
+                                          : page.content;
+
+                                      const blob = new Blob([content], {
+                                        type:
+                                          format === "txt"
+                                            ? "text/plain"
+                                            : "text/markdown",
+                                      });
+                                      const url = URL.createObjectURL(blob);
+                                      const a = document.createElement("a");
+                                      a.href = url;
+                                      a.download = `${
+                                        page.title || `page-${index + 1}`
+                                      }.${format}`;
+                                      document.body.appendChild(a);
+                                      a.click();
+                                      document.body.removeChild(a);
+                                      URL.revokeObjectURL(url);
+                                      toast.success(
+                                        `${format.toUpperCase()} file downloaded!`
+                                      );
+                                    }
+                                  }}
+                                  className="h-7 w-7 p-0 bg-background/80 backdrop-blur-sm"
+                                >
+                                  <DownloadCloud className="h-3 w-3 text-foreground" />
+                                </Button>
                               </div>
-                              <span className="text-foreground/80">
-                                {recommendation}
-                              </span>
-                            </li>
-                          )
-                        )}
-                      </ul>
+
+                              <div className="bg-gray-100 dark:bg-accent dark:text-foreground p-4 rounded-md max-h-96 overflow-auto">
+                                <div className="prose prose-sm max-w-none">
+                                  {page.content &&
+                                  typeof page.content === "string" ? (
+                                    getContentFormat(index) === "markdown" ? (
+                                      <ReactMarkdown
+                                        components={{
+                                          h1: ({ node, ...props }) => (
+                                            <h1
+                                              {...props}
+                                              className="text-xl font-bold mb-2"
+                                            />
+                                          ),
+                                          h2: ({ node, ...props }) => (
+                                            <h2
+                                              {...props}
+                                              className="text-lg font-bold mb-2"
+                                            />
+                                          ),
+                                          h3: ({ node, ...props }) => (
+                                            <h3
+                                              {...props}
+                                              className="text-base font-bold mb-1"
+                                            />
+                                          ),
+                                          h4: ({ node, ...props }) => (
+                                            <h4
+                                              {...props}
+                                              className="text-sm font-bold mb-1"
+                                            />
+                                          ),
+                                          p: ({ node, ...props }) => (
+                                            <p
+                                              {...props}
+                                              className="mb-2 text-sm"
+                                            />
+                                          ),
+                                          ul: ({ node, ...props }) => (
+                                            <ul
+                                              {...props}
+                                              className="list-disc pl-4 mb-2 text-sm"
+                                            />
+                                          ),
+                                          li: ({ node, ...props }) => (
+                                            <li {...props} className="mb-1" />
+                                          ),
+                                          a: ({ node, ...props }) => (
+                                            <a
+                                              {...props}
+                                              className="text-blue-600 hover:underline"
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                            />
+                                          ),
+                                        }}
+                                      >
+                                        {page.content}
+                                      </ReactMarkdown>
+                                    ) : (
+                                      <pre className="whitespace-pre-wrap text-sm font-mono">
+                                        {page.content
+                                          .replace(/#{1,6}\s+/g, "")
+                                          .replace(/\*\*(.*?)\*\*/g, "$1")
+                                          .replace(/\*(.*?)\*/g, "$1")}
+                                      </pre>
+                                    )
+                                  ) : (
+                                    <div className="text-sm text-muted-foreground">
+                                      No content available for this page.
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </TabsContent>
+                        ))}
+                      </Tabs>
                     </CardContent>
                   </Card>
-                </div>
-              </TabsContent>
-            </Tabs>
+                )}
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pages Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analysisData?.crawlSummary?.pages?.map((page, index) => (
+                      <div
+                        key={index}
+                        className="border rounded-lg p-4 border-primary"
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-semibold text-primary">
+                            {page.title}
+                          </h4>
+                          <Badge
+                            variant="outline"
+                            className="border-foreground/80"
+                          >
+                            {page.wordCount} words
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {page.url}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Analyzed: {new Date(page.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </Container>
       </section>

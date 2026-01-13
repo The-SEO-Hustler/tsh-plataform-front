@@ -9,7 +9,6 @@ import { useFirebase } from "@/lib/firebase-context";
 import { useRouter } from "next/navigation";
 import { getPathname } from "@/lib/getpathname";
 import { useUsage } from "@/lib/usage-context";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Link from "next/link";
 import HeroTemplate from "./HeroTemplate";
 
@@ -20,12 +19,7 @@ function LLMTxtHero() {
   const router = useRouter();
   const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
   const { usage, setUsage } = useUsage();
-  const [mode, setMode] = useState("simple");
-  const [advancedText, setAdvancedText] = useState("");
-
-  const handleTabChange = (selectedMode) => {
-    setMode(selectedMode);
-  };
+  const [maxUrls, setMaxUrls] = useState(1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,45 +57,22 @@ function LLMTxtHero() {
       return;
     }
 
-    // Validate additional URLs in advanced mode
-    if (mode === "advanced" && advancedText.trim()) {
-      const additionalUrls = advancedText
-        .split(",")
-        .map((url) => url.trim())
-        .filter((url) => url.length > 0);
-
-      if (additionalUrls.length > 10) {
-        setError("Maximum 10 additional URLs allowed");
-        return;
-      }
-
-      // Basic URL validation
-      const urlRegex = /^https?:\/\/.+/;
-      const invalidUrls = additionalUrls.filter((url) => !urlRegex.test(url));
-      if (invalidUrls.length > 0) {
-        setError(`Invalid URLs: ${invalidUrls.join(", ")}`);
-        return;
-      }
+    // Validate maxUrls
+    if (maxUrls < 1 || maxUrls > 10) {
+      setError("Number of pages must be between 1 and 10");
+      return;
     }
 
     setLoading(true);
     setError(null);
 
     try {
-      // Prepare the request body based on mode
-      let requestBody = {
+      // Prepare the request body
+      const requestBody = {
         url: url,
-        mode: mode,
+        mode: "firecrawl",
+        maxUrls: maxUrls,
       };
-
-      // Add additional URLs for advanced mode
-      if (mode === "advanced" && advancedText.trim()) {
-        const additionalUrls = advancedText
-          .split(",")
-          .map((url) => url.trim())
-          .filter((url) => url.length > 0);
-        requestBody.additionalUrls = additionalUrls;
-      }
 
       const response = await fetch("/api/llmstxt-native", {
         method: "POST",
@@ -125,9 +96,8 @@ function LLMTxtHero() {
           collection: "llmstxt",
           meta: {
             url: url,
-            mode: mode,
-            additionalUrls:
-              mode === "advanced" ? requestBody.additionalUrls : undefined,
+            mode: "firecrawl",
+            maxUrls: maxUrls,
           },
         });
         router.push(`${getPathname("llmstxt")}/result?id=${data.docId}`);
@@ -159,109 +129,61 @@ function LLMTxtHero() {
                 Create optimized LLMs.txt files in minutes, not hours. Control
                 how AI sees and represents your business.
               </p>
-              <Tabs value={mode} onValueChange={handleTabChange}>
-                <TabsList className="ml-auto">
-                  <TabsTrigger value="simple" className="cursor-pointer">
-                    Simple
-                  </TabsTrigger>
-                  <TabsTrigger value="advanced" className="cursor-pointer">
-                    Advanced
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="simple">
-                  <form
-                    onSubmit={handleSubmit}
-                    className="space-y-4 relative z-10"
-                    style={{ scrollMarginTop: "200px" }}
-                    id="tool"
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-4 relative z-10"
+                style={{ scrollMarginTop: "200px" }}
+                id="tool"
+              >
+                <div className="relative">
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://example.com"
+                    className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
+                    required
+                    disabled={loading}
+                  />
+                  <label
+                    htmlFor="url"
+                    className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
                   >
-                    <div className="relative">
-                      <input
-                        type="url"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                        placeholder="https://example.com"
-                        className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
-                        required
-                        disabled={loading}
-                      />
-                      <label
-                        htmlFor="url"
-                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
-                      >
-                        Target URL
-                      </label>
-                    </div>
+                    Target URL
+                  </label>
+                </div>
 
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className={`w-full ${
-                        loading ? "animate-pulse" : ""
-                      } disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
-                      disabled={
-                        loading || usage?.remaining <= 0 || usage === null
-                      }
-                    >
-                      {loading ? "Initializing..." : "Generate Text"}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </form>
-                </TabsContent>
-                <TabsContent value="advanced">
-                  <form
-                    onSubmit={handleSubmit}
-                    className="space-y-4 relative z-10"
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={maxUrls}
+                    onChange={(e) => setMaxUrls(parseInt(e.target.value) || 1)}
+                    className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
+                    required
+                    disabled={loading}
+                  />
+                  <label
+                    htmlFor="maxUrls"
+                    className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
                   >
-                    <div className="relative">
-                      <input
-                        type="url"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                        placeholder="https://example.com"
-                        className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
-                        required
-                        disabled={loading}
-                      />
-                      <label
-                        htmlFor="url"
-                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
-                      >
-                        Target URL
-                      </label>
-                    </div>
-                    <div className="relative">
-                      <textarea
-                        value={advancedText}
-                        onChange={(e) => setAdvancedText(e.target.value)}
-                        placeholder="https://example.com/about, https://example.com/services, https://example.com/blog"
-                        className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground/50 placeholder:text-foreground/50"
-                        rows="4"
-                      />
-                      <label
-                        htmlFor="additionalUrls"
-                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-1 py-[2px] absolute translate-y-[-8px]"
-                      >
-                        Additional URLs (up to 10, comma-separated)
-                      </label>
-                    </div>
+                    Number of Pages to Scrape (1-10)
+                  </label>
+                </div>
 
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className={`w-full ${
-                        loading ? "animate-pulse" : ""
-                      } disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300`}
-                      disabled={
-                        loading || usage?.remaining <= 0 || usage === null
-                      }
-                    >
-                      {loading ? "Analyzing..." : "Generate Text"}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className={`w-full ${
+                    loading ? "animate-pulse" : ""
+                  } disabled:opacity-100 disabled:cursor-not-allowed dark:disabled:bg-foreground/80 disabled:bg-gray-300`}
+                  disabled={loading || usage?.remaining <= 0 || usage === null}
+                >
+                  {loading ? "Initializing..." : "Generate Text"}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </form>
               {error && (
                 <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
                   <p>{error}</p>
@@ -538,37 +460,6 @@ function LLMTxtHero() {
                   Perfect if you&apos;re not sure which pages matter most.
                 </p>
               </div>
-              <Button
-                onClick={() => {
-                  setMode("simple");
-                  window.scrollTo(0, 0);
-                }}
-                className="w-full bg-primary hover:bg-primary text-black py-3 rounded-md transition-all"
-              >
-                Use Basic Mode
-              </Button>
-            </div>
-
-            <div className="bg-card p-9 rounded-lg border-2 border-transparent hover:border-primary transition-all flex flex-col justify-between">
-              <div>
-                <h3 className="text-2xl font-bold mb-4 text-primary">
-                  Advanced Mode
-                </h3>
-                <p className="text-foreground mb-6">
-                  Input your homepage plus up to 10 key pages you want to
-                  prioritize. Ideal for larger sites or when you have specific
-                  pages you want AI to focus on.
-                </p>
-              </div>
-              <Button
-                onClick={() => {
-                  setMode("advanced");
-                  window.scrollTo(0, 0);
-                }}
-                className="w-full bg-primary hover:bg-primary text-black py-3 rounded-md transition-all"
-              >
-                Use Advanced Mode
-              </Button>
             </div>
           </div>
         </Container>
@@ -666,8 +557,10 @@ function LLMTxtHero() {
                     1
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">Choose your mode</h3>
-                    <p className="text-foreground/80">Basic or Advanced</p>
+                    <h3 className="text-xl font-bold">Enter your URL</h3>
+                    <p className="text-foreground/80">
+                      Input your homepage URL
+                    </p>
                   </div>
                 </li>
                 <li className="flex">
@@ -675,9 +568,11 @@ function LLMTxtHero() {
                     2
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">Enter your URL(s)</h3>
+                    <h3 className="text-xl font-bold">
+                      Select number of pages
+                    </h3>
                     <p className="text-foreground/80">
-                      Just your homepage or add specific key pages
+                      Choose how many pages to scrape (1-10)
                     </p>
                   </div>
                 </li>

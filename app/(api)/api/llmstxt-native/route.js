@@ -19,52 +19,40 @@ export async function POST(request) {
 
     // Read JSON data from the request
     const body = await request.json();
-    const { url, mode, additionalUrls } = body;
+    const { url, mode, maxUrls } = body;
 
     // Validate required fields
     if (!url) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
-    if (!mode || !["simple", "advanced"].includes(mode)) {
+    if (!mode || mode !== "firecrawl") {
       return NextResponse.json(
-        { error: "Mode must be 'simple' or 'advanced'" },
+        { error: "Mode must be 'firecrawl'" },
         { status: 400 }
       );
     }
 
-    // Validate additional URLs for advanced mode
-    if (mode === "advanced" && additionalUrls) {
-      if (!Array.isArray(additionalUrls)) {
-        return NextResponse.json(
-          { error: "additionalUrls must be an array" },
-          { status: 400 }
-        );
-      }
+    // Validate maxUrls
+    if (maxUrls === undefined || maxUrls === null) {
+      return NextResponse.json(
+        { error: "maxUrls is required" },
+        { status: 400 }
+      );
+    }
 
-      if (additionalUrls.length > 10) {
-        return NextResponse.json(
-          { error: "Maximum 10 additional URLs allowed" },
-          { status: 400 }
-        );
-      }
-
-      // Validate each URL format
-      const urlRegex = /^https?:\/\/.+/;
-      const invalidUrls = additionalUrls.filter((url) => !urlRegex.test(url));
-      if (invalidUrls.length > 0) {
-        return NextResponse.json(
-          { error: `Invalid URLs: ${invalidUrls.join(", ")}` },
-          { status: 400 }
-        );
-      }
+    if (typeof maxUrls !== "number" || maxUrls < 1 || maxUrls > 10) {
+      return NextResponse.json(
+        { error: "maxUrls must be a number between 1 and 10" },
+        { status: 400 }
+      );
     }
 
     // Create document in Firestore
     docRef = await addDoc(collection(db, "llmstxt"), {
       url,
       mode,
-      additionalUrls: mode === "advanced" ? additionalUrls : [],
+      maxUrls,
       type: "llmstxt",
       status: "pending",
       createdAt: new Date(),
@@ -76,12 +64,8 @@ export async function POST(request) {
       url: url,
       docId: docRef.id,
       mode: mode,
+      maxUrls: maxUrls,
     };
-
-    // Add additional URLs for advanced mode
-    if (mode === "advanced" && additionalUrls && additionalUrls.length > 0) {
-      requestBody.additionalUrls = additionalUrls;
-    }
 
     // Forward the request to your dedicated Node.js service endpoint
     const response = await fetch(`${process.env.API_ENDPOINT}/llmstxt-native`, {
