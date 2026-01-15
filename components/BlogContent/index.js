@@ -11,14 +11,18 @@ import { replaceComponents } from "@/lib/replaceComponents";
 import TocItem from "@/components/TocItem";
 import tocStyle from "@/components/TocItem/TocItem.module.css";
 import Container from "@/components/container";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import useScrollDirection from "@/components/header/scroll";
 // import useStickyTableHeaders from '@/lib/useStickyTableHeaders'
 
 function BlogContentPage({ post, blogPostsData, toc }) {
-  const tocRef = useRef(null)
-  const mobileTocRef = useRef(null)
-  const contentRef = useRef(null)
+  const tocRef = useRef(null);
+  const mobileTocRef = useRef(null);
+  const contentRef = useRef(null);
   const scrollDirection = useScrollDirection();
   const [isTocOpen, setIsTocOpen] = useState(false);
 
@@ -64,43 +68,44 @@ function BlogContentPage({ post, blogPostsData, toc }) {
     const contentElement = contentRef.current;
     const tocElement = tocRef.current;
     const mobileTocElement = mobileTocRef.current;
-    const headings = contentElement?.querySelectorAll('h2, h3') ?? [];
+    const headings = contentElement?.querySelectorAll("h2, h3") ?? [];
     const observerOptions = {
-      rootMargin: '0px',
+      rootMargin: "0px",
       threshold: 0,
     };
-    if (!tocElement) return
-
+    if (!tocElement) return;
 
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
-
         if (entry.isIntersecting) {
           const targetId = entry.target.id;
           const activeLink = tocElement.querySelector(`[href="#${targetId}"]`);
-          const mobileActiveLink = mobileTocElement.querySelector(`[href="#${targetId}"]`);
+          const mobileActiveLink = mobileTocElement.querySelector(
+            `[href="#${targetId}"]`
+          );
           if (activeLink || mobileActiveLink) {
-
-            tocElement?.querySelectorAll('a')?.forEach(link => link.classList.remove(tocStyle.active));
-            mobileTocElement?.querySelectorAll('a')?.forEach(link => link.classList.remove(tocStyle.active));
+            tocElement
+              ?.querySelectorAll("a")
+              ?.forEach((link) => link.classList.remove(tocStyle.active));
+            mobileTocElement
+              ?.querySelectorAll("a")
+              ?.forEach((link) => link.classList.remove(tocStyle.active));
             activeLink?.classList.add(tocStyle.active);
             mobileActiveLink?.classList.add(tocStyle.active);
           }
-
         }
-
-      })
-    }, observerOptions)
+      });
+    }, observerOptions);
 
     headings.forEach((heading) => {
       observer.observe(heading);
-    })
+    });
     return () => {
       headings.forEach((heading) => {
-        observer.unobserve(heading)
-      })
-    }
-  }, [toc, tocRef, contentRef, mobileTocRef])
+        observer.unobserve(heading);
+      });
+    };
+  }, [toc, tocRef, contentRef, mobileTocRef]);
   return (
     <>
       {/* Article Header */}
@@ -111,7 +116,7 @@ function BlogContentPage({ post, blogPostsData, toc }) {
               <span className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium">
                 {post.category}
               </span>
-              <span className=" text-foreground/70 dark:text-foreground/70 flex items-center text-sm">
+              <span className=" text-white dark:text-foreground/70 flex items-center text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-1"
@@ -125,18 +130,15 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span>
-
-                  {`${post.readTime}  min read`}
-                </span>
+                <span className="text-white dark:text-foreground/70">{`${post.readTime}  min read`}</span>
               </span>
-              <span className=" text-foreground/70 dark:text-foreground/70 text-sm">
+              <span className=" text-white dark:text-foreground/70 text-sm">
                 {post.date}
               </span>
             </div>
 
             <h1
-              className={`text-3xl md:text-4xl lg:text-5xl font-black !text-foreground dark:!text-foreground mb-6 leading-tight ${styles.title}`}
+              className={`text-3xl md:text-4xl lg:text-5xl font-black !text-white dark:!text-foreground mb-6 leading-tight ${styles.title}`}
             >
               {post.title}
             </h1>
@@ -166,10 +168,10 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                 </svg>
               </div>
               <div>
-                <p className="text-foreground dark:text-foreground font-medium">
+                <p className="text-white dark:text-foreground font-medium">
                   {post.author}
                 </p>
-                <p className="text-foreground/60 dark:text-foreground/60 text-sm">
+                <p className="text-white dark:text-foreground/60 text-sm">
                   SEO Consultant & Founder
                 </p>
               </div>
@@ -179,12 +181,9 @@ function BlogContentPage({ post, blogPostsData, toc }) {
       </HeroTemplate>
 
       <Container>
-
         <div className="flex flex-col md:flex-row flex-wrap w-full pt-16 max-w-full relative py-12 bg-background">
-
-
           {/* Article Content */}
-          <section className='flex flex-col md:pr-4 lg:pr-6 w-full md:w-[65%]'>
+          <section className="flex flex-col md:pr-4 lg:pr-6 w-full md:w-[65%]">
             <div className="container lg:max-w-4xl mx-auto">
               <div className="max-w-4xl mx-auto">
                 {/* Mobile TOC Toggle Button */}
@@ -200,10 +199,11 @@ function BlogContentPage({ post, blogPostsData, toc }) {
 
                 {/* Social Sharing */}
 
-
                 {/* Main Article Content */}
-                <article className={`${styles.content} wp-article`} ref={contentRef}>
-
+                <article
+                  className={`${styles.content} wp-article`}
+                  ref={contentRef}
+                >
                   {replaceComponents(post.content)}
                 </article>
                 {/* {content && <Content html={content} />} */}
@@ -221,18 +221,21 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                     ))}
                   </div>
                 </div>
-
-
               </div>
             </div>
           </section>
           {/* Toc */}
           <div className="w-full md:w-[35%] hidden  md:flex flex-col lg:pl-10 xl:items-start xl:pl-20">
-
-
-            <div className={`${scrollDirection === "up" ? "sticky top-[70px] md:h-[calc(100vh-88px)]" : "sticky top-[8px] md:h-[calc(100vh-18px)]"} transition-all duration-300  overflow-auto`}>
-
-              <h3 className='mb-2 text-lg dark:text-primary text-foreground flex items-center font-semibold'><AlignLeft strokeWidth={1.5} className='mr-1' /> On This Article</h3>
+            <div
+              className={`${
+                scrollDirection === "up"
+                  ? "sticky top-[70px] md:h-[calc(100vh-88px)]"
+                  : "sticky top-[8px] md:h-[calc(100vh-18px)]"
+              } transition-all duration-300  overflow-auto`}
+            >
+              <h3 className="mb-2 text-lg dark:text-primary text-foreground flex items-center font-semibold">
+                <AlignLeft strokeWidth={1.5} className="mr-1" /> On This Article
+              </h3>
               <ul ref={tocRef}>
                 {toc.map(({ id: h2Id, title: h2Title, children, tag }) => (
                   <TocItem h2Id={h2Id} h2Title={h2Title} key={h2Id} tag={tag}>
@@ -247,7 +250,6 @@ function BlogContentPage({ post, blogPostsData, toc }) {
           <div className="fixed xl:right-4 right-4 top-[50%] translate-y-[-50%] hidden md:block">
             <div className="flex flex-col items-center gap-4">
               <Tooltip>
-
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => handleShare("facebook")}
@@ -268,14 +270,10 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Share on Facebook
-                </TooltipContent>
-
+                <TooltipContent>Share on Facebook</TooltipContent>
               </Tooltip>
 
               <Tooltip>
-
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => handleShare("twitter")}
@@ -296,9 +294,7 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Share on Twitter
-                </TooltipContent>
+                <TooltipContent>Share on Twitter</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -323,9 +319,7 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Share on LinkedIn
-                </TooltipContent>
+                <TooltipContent>Share on LinkedIn</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -356,11 +350,8 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Copy Link
-                </TooltipContent>
+                <TooltipContent>Copy Link</TooltipContent>
               </Tooltip>
-
             </div>
           </div>
         </div>
@@ -396,16 +387,14 @@ function BlogContentPage({ post, blogPostsData, toc }) {
               >
                 {post.author}
               </h3>
-              <p className="text-muted-foreground">
-                SEO Consultant & Founder
-              </p>
+              <p className="text-muted-foreground">SEO Consultant & Founder</p>
             </div>
           </div>
           <p className="mt-4 text-foreground">
-            Zac is an SEO consultant with over 10 years of experience
-            helping businesses achieve measurable growth through search. He
-            specializes in technical SEO audits, content strategy, and
-            driving e-commerce conversions.
+            Zac is an SEO consultant with over 10 years of experience helping
+            businesses achieve measurable growth through search. He specializes
+            in technical SEO audits, content strategy, and driving e-commerce
+            conversions.
           </p>
           <div className="mt-4 flex items-center space-x-4">
             <a
@@ -490,7 +479,11 @@ function BlogContentPage({ post, blogPostsData, toc }) {
       </div>
 
       {/* Mobile TOC Bottom Drawer */}
-      <div className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${isTocOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      <div
+        className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${
+          isTocOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
         {/* Backdrop */}
         <div
           className="absolute inset-0 bg-black/50"
@@ -498,7 +491,11 @@ function BlogContentPage({ post, blogPostsData, toc }) {
         />
 
         {/* Drawer */}
-        <div className={`absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-2xl transition-transform duration-300 ${isTocOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-2xl transition-transform duration-300 ${
+            isTocOpen ? "translate-y-0" : "translate-y-full"
+          }`}
+        >
           {/* Drawer Handle */}
           <div className="flex justify-center pt-3 pb-2">
             <div className="w-12 h-1 bg-muted-foreground/30 rounded-full"></div>
@@ -536,7 +533,6 @@ function BlogContentPage({ post, blogPostsData, toc }) {
           </div>
         </div>
       </div>
-
     </>
   );
 }
