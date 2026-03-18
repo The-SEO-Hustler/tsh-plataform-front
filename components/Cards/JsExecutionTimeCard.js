@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import BaseCard from "./BaseCard";
 import { iconMapping } from "@/lib/config";
 import { AlertCircle, Clock, AlertTriangle } from "lucide-react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { commonOptions } from "@/lib/commonOptions";
+import { useTheme } from "next-themes";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -15,6 +16,9 @@ export default function JsExecutionTimeCard({
   onFocus,
   analysis,
 }) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const {
     totalScripts,
     totalScriptTime,
@@ -45,6 +49,43 @@ export default function JsExecutionTimeCard({
     ]
   };
 
+  const chartOptions = useMemo(() => {
+    const grid = isDark ? "rgba(255,255,255,0.10)" : "rgba(17,24,39,0.10)";
+    const ticks = isDark ? "rgba(255,255,255,0.78)" : "rgba(17,24,39,0.75)";
+    const legend = ticks;
+
+    return {
+      ...commonOptions,
+      plugins: {
+        ...commonOptions.plugins,
+        legend: {
+          ...commonOptions.plugins?.legend,
+          labels: {
+            ...(commonOptions.plugins?.legend?.labels || {}),
+            color: legend,
+          },
+        },
+        tooltip: {
+          ...commonOptions.plugins?.tooltip,
+          backgroundColor: isDark ? "#111827" : "white",
+          titleColor: isDark ? "#F9FAFB" : "#111827",
+          bodyColor: isDark ? "#E5E7EB" : "#374151",
+          borderColor: isDark ? "rgba(255,255,255,0.18)" : "#E5E7EB",
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: ticks },
+          grid: { color: grid, drawBorder: false },
+        },
+        y: {
+          ticks: { color: ticks },
+          grid: { color: grid, drawBorder: false },
+        },
+      },
+    };
+  }, [isDark]);
+
   return (
     <BaseCard
       id="js-execution-time"
@@ -57,7 +98,7 @@ export default function JsExecutionTimeCard({
     >
       <div className="space-y-4">
         <div className="h-[200px] w-full">
-          <Bar data={chartData} options={commonOptions} />
+          <Bar data={chartData} options={chartOptions} />
         </div>
 
         <div className="flex flex-col gap-2">

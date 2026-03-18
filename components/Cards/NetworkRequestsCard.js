@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import BaseCard from "./BaseCard";
 import { iconMapping } from "@/lib/config";
 import { Download, AlertCircle, RefreshCw } from "lucide-react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { commonOptions } from "@/lib/commonOptions";
+import { useTheme } from "next-themes";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -15,6 +16,9 @@ export default function NetworkRequestsCard({
   onFocus,
   analysis,
 }) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const {
     totalRequests,
     totalSize,
@@ -74,6 +78,39 @@ export default function NetworkRequestsCard({
     ],
   };
 
+  const chartOptions = useMemo(() => {
+    const ticks = isDark ? "rgba(255,255,255,0.78)" : "rgba(55,65,81,0.9)";
+    const grid = isDark ? "rgba(255,255,255,0.10)" : "rgba(17,24,39,0.10)";
+
+    return {
+      ...commonOptions,
+      plugins: {
+        ...commonOptions.plugins,
+        legend: {
+          ...commonOptions.plugins?.legend,
+          labels: {
+            ...(commonOptions.plugins?.legend?.labels || {}),
+            color: ticks,
+          },
+        },
+        tooltip: {
+          ...commonOptions.plugins?.tooltip,
+          backgroundColor: isDark ? "#111827" : "white",
+          titleColor: isDark ? "#F9FAFB" : "#111827",
+          bodyColor: isDark ? "#E5E7EB" : "#374151",
+          borderColor: isDark ? "rgba(255,255,255,0.18)" : "#E5E7EB",
+        },
+      },
+      // Pie doesn't use scales, but keeping grid color avoids regressions if chart.js expands config
+      scales: commonOptions.scales
+        ? commonOptions.scales
+        : {
+            x: { ticks: { color: ticks }, grid: { color: grid, drawBorder: false } },
+            y: { ticks: { color: ticks }, grid: { color: grid, drawBorder: false } },
+          },
+    };
+  }, [isDark]);
+
   return (
     <BaseCard
       id="network-requests"
@@ -86,7 +123,7 @@ export default function NetworkRequestsCard({
     >
       <div className="space-y-4">
         <div className="h-[200px] w-full">
-          <Pie data={chartData} options={commonOptions} />
+          <Pie data={chartData} options={chartOptions} />
         </div>
 
         <div className="flex flex-col gap-2">

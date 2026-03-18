@@ -10,7 +10,9 @@ export default function HtmlSizeCheckCard({
   onFocus,
   isFocused,
 }) {
-  const { sizeInBytes, sizeInKB } = data;
+  const sizeInBytes =
+    typeof data?.sizeInBytes === "number" ? data.sizeInBytes : null;
+  const sizeInKB = typeof data?.sizeInKB === "number" ? data.sizeInKB : null;
 
   return (
     <BaseCard
@@ -27,20 +29,20 @@ export default function HtmlSizeCheckCard({
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
             <div className="text-sm mb-1 dark:text-foreground">Size in Bytes</div>
             <div className="text-lg font-medium dark:text-foreground">
-              {sizeInBytes.toLocaleString()}
+              {sizeInBytes === null ? "—" : sizeInBytes.toLocaleString()}
             </div>
           </div>
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
             <div className="text-sm mb-1 dark:text-foreground">Size in KB</div>
             <div className="text-lg font-medium dark:text-foreground">
-              {sizeInKB} KB
+              {sizeInKB === null ? "—" : `${sizeInKB} KB`}
             </div>
           </div>
         </div>
 
         <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
           <div className="text-sm dark:text-foreground">
-            {parseFloat(sizeInKB) > 500
+            {typeof sizeInKB === "number" && sizeInKB > 500
               ? "HTML size is above recommended limit (500KB)"
               : "HTML size is within recommended limits"}
           </div>

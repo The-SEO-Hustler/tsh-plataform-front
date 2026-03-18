@@ -9,7 +9,11 @@ export default function DomSizeCheckCard({
   onFocus,
   isFocused,
 }) {
-  const { totalNodes, maxDepth, maxChildren } = data;
+  const totalNodes =
+    typeof data?.totalNodes === "number" ? data.totalNodes : null;
+  const maxDepth = typeof data?.maxDepth === "number" ? data.maxDepth : null;
+  const maxChildren =
+    typeof data?.maxChildren === "number" ? data.maxChildren : null;
 
   return (
     <BaseCard
@@ -26,13 +30,13 @@ export default function DomSizeCheckCard({
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
             <div className="text-sm mb-1 dark:text-foreground">Total Nodes</div>
             <div className="text-lg font-medium dark:text-foreground">
-              {totalNodes.toLocaleString()}
+              {totalNodes === null ? "—" : totalNodes.toLocaleString()}
             </div>
           </div>
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
             <div className="text-sm mb-1 dark:text-foreground">Max Depth</div>
             <div className="text-lg font-medium dark:text-foreground">
-              {maxDepth}
+              {maxDepth === null ? "—" : maxDepth}
             </div>
           </div>
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
@@ -40,14 +44,14 @@ export default function DomSizeCheckCard({
               Max Children
             </div>
             <div className="text-lg font-medium dark:text-foreground">
-              {maxChildren}
+              {maxChildren === null ? "—" : maxChildren}
             </div>
           </div>
         </div>
 
         <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
           <div className="text-sm dark:text-foreground">
-            {totalNodes > 1500
+            {typeof totalNodes === "number" && totalNodes > 1500
               ? "DOM size is above recommended limit (1500 nodes)"
               : "DOM size is within recommended limits"}
           </div>
