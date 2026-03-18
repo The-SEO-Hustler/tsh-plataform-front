@@ -33,7 +33,9 @@ export default function ImageResponsivenessCard({
     if (!a.score && !b.score) return 0;
     return a.score - b.score;
   });
-  const displayedDetails = showAll ? orderedDetails : orderedDetails.slice(0, 3);
+  const displayedDetails = showAll
+    ? orderedDetails
+    : orderedDetails.slice(0, 3);
 
   const renderImageDetails = (detail) => {
     // Support both old and new shapes
@@ -53,8 +55,8 @@ export default function ImageResponsivenessCard({
         <div className="space-y-1 text-xs sm:text-sm">
           {currentWidth && (
             <p>
-              <span className="font-medium">Served width:</span>{" "}
-              {currentWidth}px
+              <span className="font-medium">Served width:</span> {currentWidth}
+              px
               {currentHeight ? ` × ${currentHeight}px` : ""}
             </p>
           )}
@@ -74,8 +76,7 @@ export default function ImageResponsivenessCard({
           )}
           {ratio && (
             <p>
-              <span className="font-medium">Width ratio:</span>{" "}
-              {ratio}×
+              <span className="font-medium">Width ratio:</span> {ratio}×
             </p>
           )}
           {detail?.hasExplicitDimensions && (
@@ -119,8 +120,7 @@ export default function ImageResponsivenessCard({
           <div className="flex flex-wrap gap-3 items-center">
             {typeof totalImages === "number" && (
               <span>
-                Total images:{" "}
-                <span className="font-medium">{totalImages}</span>
+                Total images: <span className="font-medium">{totalImages}</span>
               </span>
             )}
             {typeof evaluatedImages === "number" && (
@@ -133,7 +133,8 @@ export default function ImageResponsivenessCard({
             )}
             {typeof failedImages === "number" && failedImages > 0 && (
               <span className="text-xs sm:text-sm text-red-600 dark:text-red-400">
-                Failed: {failedImages}
+                {failedImages} image(s) were pending or lazy-loaded during the
+                test.
               </span>
             )}
             {typeof skippedSvgs === "number" && skippedSvgs > 0 && (
@@ -150,8 +151,8 @@ export default function ImageResponsivenessCard({
                   score >= 80
                     ? "text-green-600"
                     : score >= 50
-                    ? "text-amber-600"
-                    : "text-red-600"
+                      ? "text-amber-600"
+                      : "text-red-600"
                 }`}
               >
                 {score}/100
@@ -174,9 +175,7 @@ export default function ImageResponsivenessCard({
                     {ratioDisplay && (
                       <span className="text-xs font-medium text-muted-foreground">
                         Ratio:{" "}
-                        <span className="text-foreground">
-                          {ratioDisplay}×
-                        </span>
+                        <span className="text-foreground">{ratioDisplay}×</span>
                       </span>
                     )}
                     {detail?.alt && (
@@ -191,10 +190,10 @@ export default function ImageResponsivenessCard({
                         !detail.score
                           ? "text-gray-400"
                           : detail.score >= 80
-                          ? "text-green-600"
-                          : detail.score >= 50
-                          ? "text-amber-600"
-                          : "text-red-600"
+                            ? "text-green-600"
+                            : detail.score >= 50
+                              ? "text-amber-600"
+                              : "text-red-600"
                       }`}
                     >
                       {detail.score ? `Score: ${detail.score}/100` : "N/A"}
