@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useMemo } from "react";
 import Container from "@/components/container";
 import s from "./styles.module.css";
 import Sidebar from "@/components/sidebar";
 import { useSearchParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
-import { cardComponents } from "@/lib/config";
+import { cardComponents, categoryMap } from "@/lib/config";
 import {
   Download,
   Eye,
@@ -16,6 +16,7 @@ import {
   Search,
   FileJson,
   FileText,
+  ChevronDown,
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,10 @@ import { useFirebase } from "@/lib/firebase-context";
 import { getScoreAppearance } from "@/lib/getScoreAppearance";
 import { getPathname } from "@/lib/getpathname";
 import CostDisplay from "@/components/CostDisplay";
+import { toast } from "sonner";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import RecaptchaProvider from "@/components/RecaptchaProvider";
+import { useUsage } from "@/lib/usage-context";
 
 function SEOAudit({ blogPosts }) {
   const [focusedCardId, setFocusedCardId] = useState(null);
@@ -49,10 +54,84 @@ function SEOAudit({ blogPosts }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [cost, setCost] = useState({});
   const { trackAnalysis, currentAnalysis } = useFirebase();
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const { usage, setUsage } = useUsage();
   const [status, setStatus] = useState(
-    currentAnalysis ? currentAnalysis.status : "initializing"
+    currentAnalysis ? currentAnalysis.status : "initializing",
   );
   const [sendToEmail, setSendToEmail] = useState(false);
+  const [scoreChange, setScoreChange] = useState(null);
+  const [improvedChecks, setImprovedChecks] = useState([]);
+  const [regressedChecks, setRegressedChecks] = useState([]);
+  const [aiRecommendations, setAiRecommendations] = useState([]);
+  const [screenshotBase64, setscreenshotBase64] = useState(null);
+  const [diff, setDiff] = useState(null);
+  const [isScreenshotOpen, setIsScreenshotOpen] = useState(false);
+  const [isRerunLoading, setIsRerunLoading] = useState(false);
+  const [showAllRecommendations, setShowAllRecommendations] = useState(false);
+  const [categoryFilters, setCategoryFilters] = useState(() =>
+    Object.keys(categoryMap).reduce(
+      (acc, label) => ({ ...acc, [label]: true }),
+      {},
+    ),
+  );
+
+  const normalizedRecommendations = useMemo(() => {
+    const recs = Array.isArray(aiRecommendations) ? aiRecommendations : [];
+
+    const normalized = recs.map((rec) => {
+      if (typeof rec === "string") {
+        return {
+          priority: 0,
+          category: "Optimization",
+          title: rec,
+          recommendation: rec,
+          impact: undefined,
+          effort: undefined,
+          description: "",
+          steps: [],
+        };
+      }
+
+      // tolerate older object shapes that used `recommendation`
+      const title = rec?.title || rec?.recommendation || "";
+      return {
+        priority: typeof rec?.priority === "number" ? rec.priority : 0,
+        category: rec?.category || "Optimization",
+        title,
+        recommendation: rec?.recommendation,
+        impact: rec?.impact,
+        effort: rec?.effort,
+        description: rec?.description || "",
+        steps: Array.isArray(rec?.steps) ? rec.steps : [],
+      };
+    });
+
+    // Sort by priority desc when present; otherwise keep input order
+    const hasAnyPriority = normalized.some((r) => (r.priority || 0) > 0);
+    return hasAnyPriority
+      ? normalized.slice().sort((a, b) => (b.priority || 0) - (a.priority || 0))
+      : normalized;
+  }, [aiRecommendations]);
+
+  // Category sub-nav "pinning" (avoid sticky inside nested containers)
+  const [isCategoryNavPinned, setIsCategoryNavPinned] = useState(false);
+  const [activeCategoryLabel, setActiveCategoryLabel] = useState(
+    Object.keys(categoryMap)[0] || "",
+  );
+  const categoryNavRef = React.useRef(null);
+
+  const screenshotSrc = useMemo(() => {
+    if (!screenshotBase64) return null;
+    try {
+      const bytes = new Uint8Array(screenshotBase64.split(",").map(Number));
+      let binary = "";
+      bytes.forEach((b) => (binary += String.fromCharCode(b)));
+      return `data:image/jpeg;base64,${btoa(binary)}`;
+    } catch {
+      return null;
+    }
+  }, [screenshotBase64]);
 
   useEffect(() => {
     // Start tracking this analysis in the global context.
@@ -80,6 +159,12 @@ function SEOAudit({ blogPosts }) {
       setScore(currentAnalysis?.score?.score || 0);
       setUpdatedAt(currentAnalysis.updatedAt || "");
       setSendToEmail(currentAnalysis.sendToEmail || false);
+      setScoreChange(currentAnalysis?.score?.scoreChange ?? null);
+      setImprovedChecks(currentAnalysis?.score?.improvedChecks || []);
+      setRegressedChecks(currentAnalysis?.score?.regressedChecks || []);
+      setAiRecommendations(currentAnalysis?.recommendations || []);
+      setscreenshotBase64(currentAnalysis?.screenshotBase64 || null);
+      setDiff(currentAnalysis?.diff || null);
       // Stop loading when analysis is completed or failed.
       if (
         currentAnalysis.status === "completed" ||
@@ -95,25 +180,130 @@ function SEOAudit({ blogPosts }) {
     }
   }, [currentAnalysis]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const headerOffset = 64; // header uses h-16 in components/header
+
+    const handleScroll = () => {
+      const navEl = categoryNavRef.current;
+      if (!navEl) return;
+      const rect = navEl.getBoundingClientRect();
+      setIsCategoryNavPinned(rect.top <= headerOffset);
+
+      // Compute which category section is closest to the header, and highlight it.
+      const anchorY = headerOffset + 8;
+      let bestLabel = activeCategoryLabel;
+      let bestDistance = Number.POSITIVE_INFINITY;
+
+      Object.keys(categoryMap).forEach((label) => {
+        const categoryId = `category-${label
+          .replace(/[^a-z0-9]+/gi, "-")
+          .toLowerCase()}`;
+        const el = document.getElementById(categoryId);
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const distance = Math.abs(r.top - anchorY);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestLabel = label;
+        }
+      });
+
+      if (bestLabel && bestLabel !== activeCategoryLabel) {
+        setActiveCategoryLabel(bestLabel);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeCategoryLabel]);
+
   const handleExportReport = () => {
     // Export JSON
     const exportData = {
       timestamp: new Date().toISOString(),
-      score: score,
+      tool: "seo-check",
+      docId,
+      url,
+      status,
+      updatedAt,
+      score: {
+        score,
+        scoreChange,
+        improvedChecks,
+        regressedChecks,
+      },
+      diff,
+      recommendations: aiRecommendations,
+      cost,
+      screenshotBase64,
       cards: analysisData,
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
       type: "application/json",
     });
-    const url = URL.createObjectURL(blob);
+    const blobUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
+    a.href = blobUrl;
     a.download = `seo-report-${new Date().toLocaleDateString()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(blobUrl);
+  };
+
+  const handleRerun = async () => {
+    if (!url) return;
+    if (isRerunLoading) return;
+
+    if (usage?.remaining <= 0) {
+      toast.error(
+        "You have reached your daily limit. Please try again tomorrow.",
+      );
+      return;
+    }
+
+    if (!executeRecaptcha) {
+      toast.error("Recaptcha not ready. Please try again later.");
+      return;
+    }
+
+    try {
+      setIsRerunLoading(true);
+      const token = await executeRecaptcha("seo_check_rerun");
+
+      const response = await fetch("/api/seo-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, token }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data?.success) {
+        throw new Error(data?.error || "Failed to start re-run");
+      }
+
+      trackAnalysis({
+        type: "seo-check",
+        docId: data.docId,
+        collection: "seoAnalyses",
+        meta: { url },
+      });
+
+      setUsage((prevUsage) => ({
+        ...prevUsage,
+        remaining: prevUsage.remaining - 1,
+      }));
+
+      router.push(`${getPathname("seo-check")}/result?id=${data.docId}`);
+    } catch (e) {
+      toast.error(e?.message || "Failed to start re-run");
+    } finally {
+      setIsRerunLoading(false);
+    }
   };
 
   const handleFilterChange = (status) => {
@@ -140,7 +330,7 @@ function SEOAudit({ blogPosts }) {
         if (typeof item.data === "object") {
           return Object.values(item.data).some(
             (value) =>
-              typeof value === "string" && value.toLowerCase().includes(query)
+              typeof value === "string" && value.toLowerCase().includes(query),
           );
         }
       }
@@ -150,8 +340,62 @@ function SEOAudit({ blogPosts }) {
   };
 
   const filteredData = filterDataBySearch(
-    analysisData.filter((card) => statusFilters[card.status || "normal"])
+    analysisData.filter((card) => statusFilters[card.status || "normal"]),
   );
+
+  const groupedCards = useMemo(() => {
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      return [];
+    }
+
+    const severityRank = (status) => {
+      if (status === "error") return 0;
+      if (status === "warning") return 1;
+      return 2;
+    };
+
+    // Map type -> original index to preserve stable ordering within same severity
+    const indexMap = new Map();
+    filteredData.forEach((card, idx) => {
+      indexMap.set(card.type, idx);
+    });
+
+    const result = [];
+    const assignedTypes = new Set();
+
+    Object.entries(categoryMap).forEach(([categoryLabel, types]) => {
+      if (categoryFilters && categoryFilters[categoryLabel] === false) return;
+
+      const cardsInCategory = filteredData
+        .filter((card) => types.includes(card.type))
+        .sort((a, b) => {
+          const rankDiff =
+            severityRank(a.status || "normal") -
+            severityRank(b.status || "normal");
+          if (rankDiff !== 0) return rankDiff;
+          return (indexMap.get(a.type) ?? 0) - (indexMap.get(b.type) ?? 0);
+        });
+
+      cardsInCategory.forEach((c) => assignedTypes.add(c.type));
+
+      if (cardsInCategory.length > 0) {
+        result.push({ label: categoryLabel, cards: cardsInCategory });
+      }
+    });
+
+    return result;
+  }, [filteredData, categoryFilters]);
+
+  const cardTypeOrder = useMemo(() => {
+    const order = {};
+    let i = 0;
+    groupedCards.forEach((group) => {
+      group.cards.forEach((card) => {
+        order[card.type] = i++;
+      });
+    });
+    return order;
+  }, [groupedCards]);
 
   const scoreAppearance = getScoreAppearance(score);
   const ScoreIcon = scoreAppearance.icon;
@@ -202,12 +446,14 @@ function SEOAudit({ blogPosts }) {
             alwaysShowTooltips={alwaysShowTooltips}
             data={filteredData}
             statusFilters={statusFilters}
+            categoryFilters={categoryFilters}
+            typeOrder={cardTypeOrder}
           />
         </div>
         <div className="py-4 overflow-hidden">
           {/* Header */}
-          <div className="flex flex-col gap-5 md:gap-2 md:flex-row md:items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 md:gap-2 md:flex-row md:items-center justify-between mb-4">
+            <div className="flex items-start md:items-center gap-3 md:gap-4 flex-1 min-w-0">
               <div className="relative">
                 <div
                   className={`w-16 h-16 rounded-full bg-gradient-to-r ${scoreAppearance.gradient} flex items-center justify-center shadow-lg`}
@@ -219,186 +465,546 @@ function SEOAudit({ blogPosts }) {
                 >
                   {score ? score : "N/A"}/100
                 </div>
+                {scoreChange !== null && (
+                  <div
+                    className={`absolute -top-2 -right-2 rounded-full px-2 py-0.5 text-xs font-bold shadow-sm ${scoreChange > 0 ? "bg-green-100 text-green-700 border border-green-300" : scoreChange < 0 ? "bg-red-100 text-red-700 border border-red-300" : "bg-gray-100 text-gray-600 border border-gray-300"}`}
+                  >
+                    {scoreChange > 0 ? `+${scoreChange}` : scoreChange}
+                  </div>
+                )}
               </div>
-              <div>
-                <h1 className="text-2xl font-bold mb-1">{url}</h1>
-                <p className="text-muted-foreground text-sm">
-                  Last updated:{" "}
-                  {updatedAt
-                    ? new Date(updatedAt.seconds * 1000).toLocaleDateString(
-                        "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )
-                    : "N/A"}
-                </p>
+              <div className="flex-1 min-w-0 space-y-1">
+                <h1 className="text-lg sm:text-2xl font-bold text-foreground break-words sm:truncate">
+                  {url}
+                </h1>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm">
+                  <p className="text-muted-foreground">
+                    Last updated:{" "}
+                    {updatedAt
+                      ? new Date(updatedAt.seconds * 1000).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          },
+                        )
+                      : "N/A"}
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-7 px-3 text-[11px] sm:text-xs text-foreground/80 border-foreground/20 w-max"
+                    onClick={handleRerun}
+                    disabled={isRerunLoading}
+                  >
+                    {isRerunLoading ? "Re-running…" : "Re-run"}
+                  </Button>
+                </div>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap justify-start md:justify-end">
               <button
                 onClick={handleExportReport}
-                className="px-4 py-2 bg-primary text-primary-foreground  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer !no-underline"
+                className="px-3 py-2 bg-primary text-primary-foreground rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer !no-underline text-xs sm:text-sm"
               >
                 <FileJson className="w-4 h-4" />
-                <span className="hidden md:inline">Export JSON</span>
+                <span>Download JSON</span>
               </button>
               <PDFDownloadLink
-                document={<PDFReport data={analysisData} score={75} />}
-                fileName={`seo-report-${new Date().toLocaleDateString()}.pdf`}
-                className="px-4 py-2 bg-primary text-primary-foreground  rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer !no-underline"
+                document={
+                  <PDFReport
+                    data={analysisData}
+                    score={score}
+                    meta={{
+                      url,
+                      docId,
+                      status,
+                      updatedAt,
+                      scoreChange,
+                      improvedChecks,
+                      regressedChecks,
+                      diff,
+                      recommendations: aiRecommendations,
+                      cost,
+                    }}
+                  />
+                }
+                fileName={`seo-report-${new Date().toLocaleDateString()}-${docId || "run"}.pdf`}
+                className="px-3 py-2 bg-primary text-primary-foreground rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors cursor-pointer !no-underline text-xs sm:text-sm"
               >
                 <FileText className="w-4 h-4" />
-                <span className="hidden md:inline ">Export PDF</span>
+                <span>Download PDF</span>
               </PDFDownloadLink>
             </div>
           </div>
 
-          {/* Filter Section */}
-          <div className="mb-6 bg-card p-4 rounded-lg sticky top-1 border border-foreground/10 shadow-sm z-[10]">
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div className="lg:flex items-center gap-2 hidden">
-                <div className="relative w-full md:w-64">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
-                  <Input
-                    type="text"
-                    placeholder="Search..."
-                    className="pl-10"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+          {/* AI Recommendations - Professional Action Plan */}
+          {normalizedRecommendations.length > 0 && (
+            <div className="mb-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2 mt-6">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg sm:text-xl font-bold">Action Plan</h2>
+                  <span className="text-[11px] sm:text-sm font-normal text-muted-foreground dark:text-foreground/80 bg-muted px-2 py-1 rounded-full border border-border">
+                    Prioritized by Impact
+                  </span>
+                </div>
+                {normalizedRecommendations.length > 3 && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-3 text-[11px] sm:text-xs text-foreground/80 border-foreground/20 w-max dark:bg-card border"
+                    onClick={() => setShowAllRecommendations((prev) => !prev)}
+                  >
+                    {showAllRecommendations
+                      ? "Show top 3"
+                      : `Show all ${normalizedRecommendations.length}`}
+                  </Button>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                {(showAllRecommendations
+                  ? normalizedRecommendations
+                  : normalizedRecommendations.slice(0, 3)
+                ).map((rec, i) => {
+                  // Dynamic badge colors based on severity
+                  const getImpactColor = (impact) => {
+                    const val = (impact || "").toLowerCase();
+                    if (val === "high")
+                      return "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:border-red-800/40 dark:text-red-300 dark:border-red-800/40";
+                    if (val === "medium")
+                      return "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-300 dark:border-amber-800/40";
+                    return "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800/40 dark:text-blue-300 dark:border-blue-800/40";
+                  };
+
+                  const getEffortColor = (effort) => {
+                    const val = (effort || "").toLowerCase();
+                    if (val === "high")
+                      return "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-850/20 dark:border-orange-800/40 dark:text-orange-300 dark:border-orange-800/40";
+                    if (val === "medium")
+                      return "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950/30 dark:border-slate-800/40 dark:text-slate-300 dark:border-slate-800/40";
+                    return "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:border-green-800/40 dark:text-green-300 dark:border-green-800/40";
+                  };
+
+                  return (
+                    <details
+                      key={`${rec.title}-${i}`}
+                      className="group border border-border bg-card rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden shadow-sm"
+                    >
+                      <summary className="flex items-center justify-between gap-3 px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors">
+                        {/* Left: number + compact title/labels */}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex-shrink-0 w-7 h-7 rounded-full bg-muted text-muted-foreground dark:bg-foreground/10 dark:text-foreground font-semibold flex items-center justify-center text-xs">
+                            {i + 1}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-wide mb-0.5">
+                              <span className="font-semibold">
+                                {rec.category || "Optimization"}
+                              </span>
+                              {rec.impact && (
+                                <span
+                                  className={`px-1.5 py-0.5 rounded-full border text-[10px] font-semibold ${getImpactColor(
+                                    rec.impact,
+                                  )}`}
+                                >
+                                  Impact: {rec.impact}
+                                </span>
+                              )}
+                              {rec.effort && (
+                                <span
+                                  className={`px-1.5 py-0.5 rounded-full border text-[10px] font-semibold ${getEffortColor(
+                                    rec.effort,
+                                  )}`}
+                                >
+                                  Effort: {rec.effort}
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="text-sm font-medium text-foreground dark:text-white truncate">
+                              {rec.title || rec.recommendation}
+                            </h3>
+                          </div>
+                        </div>
+
+                        {/* Right: chevron only */}
+                        <ChevronDown className="flex-shrink-0 w-4 h-4 text-muted-foreground group-open:rotate-180 transition-transform duration-200" />
+                      </summary>
+
+                      {/* Expandable Content Area */}
+                      <div className="px-4 pb-5 pt-2 md:pl-16 border-t border-border/50 bg-muted/10">
+                        {rec.description && (
+                          <p className="text-sm text-foreground/80 mb-4 leading-relaxed">
+                            {rec.description}
+                          </p>
+                        )}
+
+                        {rec.steps && rec.steps.length > 0 && (
+                          <div className="space-y-2 bg-background border border-border rounded-md p-4">
+                            <h4 className="text-sm font-semibold text-foreground">
+                              How to fix this:
+                            </h4>
+                            <ul className="space-y-2">
+                              {rec.steps.map((step, stepIndex) => (
+                                <li
+                                  key={stepIndex}
+                                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                                >
+                                  <span className="text-primary mt-0.5">•</span>
+                                  <span>{step}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </details>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {/* Diff / Historical comparison */}
+          {diff && (
+            <div className="mb-4 bg-card border border-foreground/10 rounded-lg p-4 flex flex-col md:flex-row gap-4">
+              <div className="flex-1 space-y-2">
+                <p className="text-sm font-semibold text-muted-foreground dark:text-foreground/80 uppercase tracking-wide">
+                  vs. Previous Run
+                </p>
+                {diff.previousAnalysisId && (
+                  <p className="text-xs text-primary underline cursor-pointer">
+                    <Link
+                      href={`${getPathname("seo-check")}/result?id=${diff.previousAnalysisId}`}
+                    >
+                      View previous analysis
+                    </Link>
+                  </p>
+                )}
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl font-bold text-muted-foreground">
+                    {diff.previousScore}
+                  </span>
+                  <span className="text-muted-foreground">→</span>
+                  <span className="text-2xl font-bold">{score}</span>
+                  <span
+                    className={`text-sm font-bold px-2 py-0.5 rounded-full ${
+                      diff.scoreChange > 0
+                        ? "bg-green-100 text-green-700"
+                        : diff.scoreChange < 0
+                          ? "bg-red-100 text-red-700"
+                          : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {diff.scoreChange > 0
+                      ? `+${diff.scoreChange}`
+                      : diff.scoreChange}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-4 text-xs">
+                  {diff.improvedChecks?.length > 0 && (
+                    <div>
+                      <p className="font-medium text-green-700 mb-1">
+                        ↑ Improved ({diff.improvedChecks.length})
+                      </p>
+                      <ul className="space-y-0.5">
+                        {diff.improvedChecks.map((c) => (
+                          <li key={c} className="text-green-600">
+                            {c}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {diff.regressedChecks?.length > 0 && (
+                    <div>
+                      <p className="font-medium text-red-700 mb-1">
+                        ↓ Regressed ({diff.regressedChecks.length})
+                      </p>
+                      <ul className="space-y-0.5">
+                        {diff.regressedChecks.map((c) => (
+                          <li key={c} className="text-red-600">
+                            {c}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {diff.improvedChecks?.length === 0 &&
+                    diff.regressedChecks?.length === 0 && (
+                      <p className="text-muted-foreground">
+                        No changes since last run.
+                      </p>
+                    )}
+                </div>
+              </div>
+
+              {screenshotSrc && (
+                <div className="flex-shrink-0">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+                    Page Screenshot
+                  </p>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={screenshotSrc}
+                    alt="Page screenshot"
+                    className="w-40 h-auto rounded border border-foreground/10 object-cover cursor-pointer"
+                    onClick={() => setIsScreenshotOpen(true)}
                   />
                 </div>
+              )}
+            </div>
+          )}
+
+          {/* Screenshot only (no diff) */}
+          {!diff && screenshotSrc && (
+            <div className="mb-4 flex justify-end">
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+                  Page Screenshot
+                </p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={screenshotSrc}
+                  alt="Page screenshot"
+                  className="w-40 h-auto rounded border border-foreground/10 object-cover cursor-pointer"
+                  onClick={() => setIsScreenshotOpen(true)}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Filter Section */}
+          <div className="mb-6 bg-card p-4 rounded-lg sticky top-1 border border-foreground/10 shadow-sm z-[10]">
+            <div className="flex flex-col gap-4 justify-between">
+              <div className="flex flex-1 flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                <div className="lg:flex items-center gap-2 hidden">
+                  <div className="relative w-full md:w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <Input
+                      type="text"
+                      placeholder="Search..."
+                      className="pl-10"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-4">
+                  <div className="hidden md:flex gap-2">
+                    <button
+                      onClick={() => setLayout("grid")}
+                      aria-label="grid layout"
+                      className="cursor-pointer"
+                    >
+                      <LayoutGrid
+                        size={22}
+                        className={`${
+                          layout === "grid"
+                            ? "text-foreground"
+                            : "text-foreground/30"
+                        }`}
+                      />
+                    </button>
+                    <button
+                      className="cursor-pointer"
+                      aria-label="row layout"
+                      onClick={() => setLayout("row")}
+                    >
+                      <Rows2
+                        size={22}
+                        className={`${
+                          layout === "row"
+                            ? "text-foreground"
+                            : "text-foreground/30"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <div className="flex items-center md:gap-4 gap-2">
+                    <div className="flex items-center space-x-1 md:space-x-2">
+                      <Checkbox
+                        className="cursor-pointer"
+                        id="normal"
+                        checked={statusFilters.normal}
+                        onCheckedChange={() => handleFilterChange("normal")}
+                      />
+                      <label
+                        htmlFor="normal"
+                        className="flex cursor-pointer items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-green-600"></span>
+                        Normal
+                      </label>
+                    </div>
+
+                    <div className="flex items-center space-x-1 md:space-x-2">
+                      <Checkbox
+                        id="warning"
+                        className="cursor-pointer"
+                        checked={statusFilters.warning}
+                        onCheckedChange={() => handleFilterChange("warning")}
+                      />
+                      <label
+                        htmlFor="warning"
+                        className="flex cursor-pointer items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
+                        Warning
+                      </label>
+                    </div>
+
+                    <div className="flex items-center space-x-1 md:space-x-2">
+                      <Checkbox
+                        className="cursor-pointer"
+                        id="error"
+                        checked={statusFilters.error}
+                        onCheckedChange={() => handleFilterChange("error")}
+                      />
+                      <label
+                        htmlFor="error"
+                        className="flex items-center cursor-pointer gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                        Error
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="hidden md:block md:border-l md:pl-4">
+                    <button
+                      className="flex items-center justify-start !pl-0 gap-2 h-auto p-0 hover:bg-transparent bg-card text-foreground"
+                      onClick={() => setAlwaysShowTooltips((prev) => !prev)}
+                    >
+                      {alwaysShowTooltips ? (
+                        <Eye className="w-4 h-4" />
+                      ) : (
+                        <EyeOff className="w-4 h-4" />
+                      )}
+                      <span className="text-sm font-medium">
+                        Always Show Tooltips
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* Category sub-nav anchor (in flow). When it scrolls under the header, we render a fixed duplicate. */}
+              <div ref={categoryNavRef} className="w-full bg-transparent">
+                <div className="flex gap-2 flex-wrap text-xs ">
+                  {Object.keys(categoryMap).map((label) => {
+                    const categoryId = `category-${label
+                      .replace(/[^a-z0-9]+/gi, "-")
+                      .toLowerCase()}`;
+                    const isActive = activeCategoryLabel === label;
+                    return (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => {
+                          const el = document.getElementById(categoryId);
+                          if (el) {
+                            el.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }
+                        }}
+                        className={`px-3 py-1 rounded-sm border border-foreground/15 bg-background/60 hover:bg-background text-xs sm:text-sm font-medium text-foreground transition-colors ${
+                          isActive
+                            ? "!border-primary !bg-primary !text-black font-medium"
+                            : ""
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                <div className="hidden md:flex gap-2">
-                  <button
-                    onClick={() => setLayout("grid")}
-                    aria-label="grid layout"
-                    className="cursor-pointer"
-                  >
-                    <LayoutGrid
-                      size={22}
-                      className={`${
-                        layout === "grid"
-                          ? "text-foreground"
-                          : "text-foreground/30"
-                      }`}
-                    />
-                  </button>
-                  <button
-                    className="cursor-pointer"
-                    aria-label="row layout"
-                    onClick={() => setLayout("row")}
-                  >
-                    <Rows2
-                      size={22}
-                      className={`${
-                        layout === "row"
-                          ? "text-foreground"
-                          : "text-foreground/30"
-                      }`}
-                    />
-                  </button>
-                </div>
-                <div className="flex items-center md:gap-4 gap-2">
-                  <div className="flex items-center space-x-1 md:space-x-2">
-                    <Checkbox
-                      className="cursor-pointer"
-                      id="normal"
-                      checked={statusFilters.normal}
-                      onCheckedChange={() => handleFilterChange("normal")}
-                    />
-                    <label
-                      htmlFor="normal"
-                      className="flex cursor-pointer items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      <span className="w-2 h-2 rounded-full bg-green-600"></span>
-                      Normal
-                    </label>
-                  </div>
-
-                  <div className="flex items-center space-x-1 md:space-x-2">
-                    <Checkbox
-                      id="warning"
-                      className="cursor-pointer"
-                      checked={statusFilters.warning}
-                      onCheckedChange={() => handleFilterChange("warning")}
-                    />
-                    <label
-                      htmlFor="warning"
-                      className="flex cursor-pointer items-center gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-                      Warning
-                    </label>
-                  </div>
-
-                  <div className="flex items-center space-x-1 md:space-x-2">
-                    <Checkbox
-                      className="cursor-pointer"
-                      id="error"
-                      checked={statusFilters.error}
-                      onCheckedChange={() => handleFilterChange("error")}
-                    />
-                    <label
-                      htmlFor="error"
-                      className="flex items-center cursor-pointer gap-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                      Error
-                    </label>
+              {/* Fixed full-width category sub-nav (only when pinned) */}
+              {isCategoryNavPinned && (
+                <div className="fixed top-16 left-0 right-0 z-[30] bg-background border-t border-foreground/10 border-b">
+                  <div className="flex overflow-auto gap-2 text-xs py-2 px-2 sm:px-4 md:items-center md:justify-center">
+                    {Object.keys(categoryMap).map((label) => {
+                      const categoryId = `category-${label
+                        .replace(/[^a-z0-9]+/gi, "-")
+                        .toLowerCase()}`;
+                      const isActive = activeCategoryLabel === label;
+                      return (
+                        <button
+                          key={label}
+                          type="button"
+                          onClick={() => {
+                            const el = document.getElementById(categoryId);
+                            if (el) {
+                              el.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start",
+                              });
+                            }
+                          }}
+                          className={`px-3 py-1 rounded-sm border border-foreground/15 bg-background/60 hover:bg-background text-xs sm:text-sm font-medium text-foreground transition-colors whitespace-nowrap ${
+                            isActive
+                              ? "!border-primary !bg-primary !text-black font-medium"
+                              : ""
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-
-                <div className="hidden md:block md:border-l md:pl-4">
-                  <button
-                    className="flex items-center justify-start !pl-0 gap-2 h-auto p-0 hover:bg-transparent bg-card text-foreground"
-                    onClick={() => setAlwaysShowTooltips((prev) => !prev)}
-                  >
-                    {alwaysShowTooltips ? (
-                      <Eye className="w-4 h-4" />
-                    ) : (
-                      <EyeOff className="w-4 h-4" />
-                    )}
-                    <span className="text-sm font-medium">
-                      Always Show Tooltips
-                    </span>
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
-          {/* Grid Layout */}
-          <div
-            className={`gap-2.5 grid ${
-              layout === "grid"
-                ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
-                : "grid-cols-1 max-w-[700px] m-auto"
-            } `}
-          >
-            {filteredData.map((card, index) => {
-              const CardComponent = cardComponents[card.type];
-              console.log("search for card: ", card.type, CardComponent);
-              if (!CardComponent) return null;
+          {/* Categorized Grid Layout */}
+          {groupedCards.map((group) => {
+            const categoryId = `category-${group.label
+              .replace(/[^a-z0-9]+/gi, "-")
+              .toLowerCase()}`;
+            return (
+              <div
+                key={group.label}
+                id={categoryId}
+                className="mb-8 scroll-mt-[120px]"
+              >
+                <h3 className="text-lg font-semibold mb-3 text-foreground">
+                  {group.label}
+                </h3>
+                <div
+                  className={`gap-2.5 grid ${
+                    layout === "grid"
+                      ? "xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
+                      : "grid-cols-1 max-w-[700px] m-auto"
+                  } `}
+                >
+                  {group.cards.map((card) => {
+                    const CardComponent = cardComponents[card.type];
+                    if (!CardComponent) return null;
 
-              return (
-                <CardComponent
-                  key={card.type}
-                  data={card.data}
-                  status={card.status}
-                  isFocused={focusedCardId === card.type}
-                  onFocus={setFocusedCardId}
-                  analysis={card.analysis}
-                />
-              );
-            })}
-          </div>
+                    return (
+                      <CardComponent
+                        key={card.type}
+                        data={card.data}
+                        status={card.status}
+                        isFocused={focusedCardId === card.type}
+                        onFocus={setFocusedCardId}
+                        analysis={card.analysis}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
           <div className="mt-12">
             <section className=" py-16 relative overflow-hidden">
               <div className="container mx-auto px-4 relative z-10">
@@ -1265,6 +1871,293 @@ function SEOAudit({ blogPosts }) {
                   </div>
                 </div>
 
+                {/* Core Web Vitals */}
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">
+                    Core Web Vitals
+                  </h3>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">What we check:</span> LCP
+                    (Largest Contentful Paint), CLS (Cumulative Layout Shift),
+                    FID (First Input Delay), and TTFB (Time to First Byte)
+                    against Google&apos;s official thresholds.
+                  </p>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">Why it matters:</span> Core Web
+                    Vitals are a direct ranking signal since 2021. Poor scores
+                    mean Google actively suppresses your pages in favor of
+                    faster competitors.
+                  </p>
+                  <div className="mb-4">
+                    <p className="text-lg font-bold mb-2">
+                      Google&apos;s thresholds:
+                    </p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        LCP: Good &lt;2.5s, Needs Improvement 2.5–4s, Poor
+                        &gt;4s
+                      </li>
+                      <li>
+                        CLS: Good &lt;0.1, Needs Improvement 0.1–0.25, Poor
+                        &gt;0.25
+                      </li>
+                      <li>
+                        FID: Good &lt;100ms, Needs Improvement 100–300ms, Poor
+                        &gt;300ms
+                      </li>
+                      <li>
+                        TTFB: Good &lt;800ms, Needs Improvement 800ms–1.8s, Poor
+                        &gt;1.8s
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold mb-2">How to fix it:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Optimize LCP: preload hero images, use a CDN, reduce
+                        server response time
+                      </li>
+                      <li>
+                        Fix CLS: set explicit width/height on images and embeds
+                      </li>
+                      <li>
+                        Improve FID/INP: reduce JavaScript execution time, break
+                        up long tasks
+                      </li>
+                      <li>
+                        Reduce TTFB: use edge hosting, caching, or a faster
+                        server
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Hreflang */}
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">
+                    Hreflang Tags
+                  </h3>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">What we check:</span> Presence
+                    and validity of hreflang tags, x-default tag, and locale
+                    code formatting for multilingual sites.
+                  </p>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">Why it matters:</span> Without
+                    hreflang, Google may serve the wrong language version to
+                    users or treat alternate-language pages as duplicate
+                    content, hurting rankings in all target markets.
+                  </p>
+                  <div className="mb-4">
+                    <p className="text-lg font-bold mb-2">Common issues:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Missing x-default tag — No fallback for unmatched
+                        locales
+                      </li>
+                      <li>
+                        Invalid locale codes (e.g. &quot;EN&quot; instead of
+                        &quot;en&quot;) — Tags are ignored
+                      </li>
+                      <li>
+                        Missing reciprocal tags — Each page must reference all
+                        its alternates
+                      </li>
+                      <li>Pointing to redirected URLs — Weakens signal</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold mb-2">How to fix it:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Add hreflang tags only if you have genuinely translated
+                        content
+                      </li>
+                      <li>
+                        Include an x-default tag pointing to the
+                        default/fallback page
+                      </li>
+                      <li>
+                        Use correct BCP 47 locale codes (e.g. en-US, fr-FR)
+                      </li>
+                      <li>
+                        Ensure every alternate page includes the full set of
+                        reciprocal tags
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Redirect Chains */}
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">
+                    Redirect Chains
+                  </h3>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">What we check:</span> HTTP
+                    redirect chains, HTTP→HTTPS upgrades, and circular
+                    redirects.
+                  </p>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">Why it matters:</span> Each
+                    redirect hop wastes crawl budget, dilutes link equity, and
+                    adds latency. Chains of 3+ hops can cause Googlebot to give
+                    up crawling entirely.
+                  </p>
+                  <div className="mb-4">
+                    <p className="text-lg font-bold mb-2">Common issues:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        HTTP→HTTP redirect before HTTPS — Extra unnecessary hop
+                      </li>
+                      <li>
+                        Chains (A→B→C→D) — Accumulated latency and equity loss
+                      </li>
+                      <li>
+                        Circular redirects — Causes infinite loops, pages become
+                        inaccessible
+                      </li>
+                      <li>
+                        Mixed HTTP/HTTPS in chain — Security and trust issues
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold mb-2">How to fix it:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Update all internal links to point directly to the final
+                        destination URL
+                      </li>
+                      <li>
+                        Collapse redirect chains into a single 301 redirect
+                      </li>
+                      <li>
+                        Ensure HTTP always redirects directly to the HTTPS final
+                        URL
+                      </li>
+                      <li>
+                        Audit your server config for circular redirect rules
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Security Headers */}
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">
+                    Security Headers
+                  </h3>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">What we check:</span> HTTPS
+                    enforcement, HSTS, Content Security Policy (CSP),
+                    X-Frame-Options, Referrer-Policy, and Permissions-Policy
+                    headers.
+                  </p>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">Why it matters:</span> Security
+                    headers protect users from attacks and signal
+                    trustworthiness to both visitors and Google. Sites with weak
+                    security headers are more vulnerable to clickjacking, XSS,
+                    and data leaks.
+                  </p>
+                  <div className="mb-4">
+                    <p className="text-lg font-bold mb-2">Common issues:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Missing HSTS — Browser doesn&apos;t enforce HTTPS on
+                        repeat visits
+                      </li>
+                      <li>
+                        Missing CSP — Opens door to cross-site scripting attacks
+                      </li>
+                      <li>
+                        Missing X-Frame-Options — Page can be embedded in
+                        iframes (clickjacking risk)
+                      </li>
+                      <li>
+                        Missing Referrer-Policy — Leaks sensitive URL data to
+                        third parties
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold mb-2">How to fix it:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Add{" "}
+                        <code>
+                          Strict-Transport-Security: max-age=31536000;
+                          includeSubDomains
+                        </code>
+                      </li>
+                      <li>
+                        Implement a Content-Security-Policy appropriate for your
+                        site
+                      </li>
+                      <li>
+                        Set <code>X-Frame-Options: SAMEORIGIN</code> or use CSP
+                        frame-ancestors
+                      </li>
+                      <li>
+                        Add{" "}
+                        <code>
+                          Referrer-Policy: strict-origin-when-cross-origin
+                        </code>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Broken Images */}
+                <div className="bg-card p-8 rounded-lg shadow-lg mb-8">
+                  <h3 className="text-2xl font-bold mb-4 text-primary">
+                    Broken Images
+                  </h3>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">What we check:</span> Whether
+                    images on your page actually load (HTTP 4xx/5xx responses) —
+                    separate from missing alt text.
+                  </p>
+                  <p className="text-lg text-foreground mb-4">
+                    <span className="font-bold">Why it matters:</span> Broken
+                    images create a poor user experience, waste bandwidth, and
+                    signal to Google that your site is poorly maintained — all
+                    of which hurt rankings.
+                  </p>
+                  <div className="mb-4">
+                    <p className="text-lg font-bold mb-2">Common causes:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>
+                        Images deleted from the server but still referenced in
+                        HTML
+                      </li>
+                      <li>
+                        Incorrect image paths after site migrations or redesigns
+                      </li>
+                      <li>External image sources that have gone offline</li>
+                      <li>Typos in image URLs</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold mb-2">How to fix it:</p>
+                    <ul className="list-disc pl-8 text-foreground space-y-1">
+                      <li>Replace or remove each broken image URL</li>
+                      <li>
+                        Self-host critical images rather than relying on
+                        external sources
+                      </li>
+                      <li>
+                        Set up monitoring to catch broken images before users do
+                      </li>
+                      <li>
+                        Use a CDN with fallback behavior for image delivery
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
                 {/* Action Button */}
                 <div className="text-center mt-12">
                   <Link
@@ -1279,15 +2172,40 @@ function SEOAudit({ blogPosts }) {
           </div>
         </div>
       </div>
+      {isScreenshotOpen && screenshotSrc && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-pointer"
+          onClick={() => setIsScreenshotOpen(false)}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={screenshotSrc}
+            alt="Full-size page screenshot"
+            className="max-w-full max-h-full rounded shadow-lg border border-foreground/20"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
       <CostDisplay evaluationCost={cost} />
     </Container>
   );
 }
 
 export default function SEOAuditPage({ blogPosts }) {
+  React.useEffect(() => {
+    // reCAPTCHA badge is injected at the document/body level,
+    // so hide via a body class (not via a child wrapper div).
+    document.body.classList.add("hide-badge");
+    return () => {
+      document.body.classList.remove("hide-badge");
+    };
+  }, []);
+
   return (
-    <Suspense>
-      <SEOAudit blogPosts={blogPosts} />
-    </Suspense>
+    <RecaptchaProvider>
+      <Suspense>
+        <SEOAudit blogPosts={blogPosts} />
+      </Suspense>
+    </RecaptchaProvider>
   );
 }

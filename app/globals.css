@@ -274,6 +274,6 @@ code.language-plaintext {
   color: rgb(var(--foreground)) !important;
 }
 
-#references-tsh li{
+#references-tsh li {
   scroll-margin-top: 64px;
 }

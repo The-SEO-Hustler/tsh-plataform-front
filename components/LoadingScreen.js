@@ -25,6 +25,27 @@ export default function LoadingScreen({
   blogPosts = null,
   currentUrl,
 }) {
+  const decodeHtmlEntities = (str) => {
+    if (typeof str !== "string" || !str) return str || "";
+
+    // Decode a few common named entities first
+    let decoded = str
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&apos;/g, "'")
+      .replace(/&#39;/g, "'");
+
+    // Decode numeric entities like &#8217;
+    decoded = decoded.replace(/&#(\d+);/g, (_, code) => {
+      const num = parseInt(code, 10);
+      return Number.isFinite(num) ? String.fromCharCode(num) : _;
+    });
+
+    return decoded;
+  };
+
   // Get the message for the current status, or use the default 'pending' message
   const message = statusMessages[status] || statusMessages["pending"];
   const searchParams = useSearchParams();
@@ -312,7 +333,7 @@ export default function LoadingScreen({
 
                   {/* Excerpt */}
                   <p className="text-xs text-muted-foreground mb-3 line-clamp-2 dark:text-foreground/70">
-                    {post.excerpt}
+                    {decodeHtmlEntities(post.excerpt)}
                   </p>
 
                   {/* Date and Read More */}

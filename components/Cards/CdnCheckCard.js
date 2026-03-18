@@ -3,7 +3,8 @@ import BaseCard from "./BaseCard";
 import { Network } from "lucide-react";
 
 export default function CdnCheckCard({ data, status, analysis, onFocus, isFocused }) {
-  const { usesCDN, cdnCount, resources } = data;
+  const { usesCDN, cdnCount, resources, provider } = data || {};
+  const resourceList = Array.isArray(resources) ? resources : [];
 
   return (
     <BaseCard
@@ -23,19 +24,30 @@ export default function CdnCheckCard({ data, status, analysis, onFocus, isFocuse
           </span>
         </div>
 
-        {usesCDN && (
+        {usesCDN && provider && (
+          <div className="p-2 bg-gray-50 dark:bg-accent rounded-md">
+            <span className="text-sm font-medium dark:text-foreground">Provider: </span>
+            <span className="text-sm dark:text-foreground">{provider}</span>
+          </div>
+        )}
+
+        {usesCDN && (cdnCount != null || resourceList.length > 0) && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-accent   rounded-md">
-              <span className="text-sm font-medium dark:text-foreground">CDN Resources:</span>
-              <span className="text-sm dark:text-foreground">{cdnCount}</span>
-            </div>
-            <div className="space-y-2">
-              {resources.slice(0, 3).map((resource, index) => (
-                <div key={index} className="p-2 bg-gray-50 dark:bg-accent rounded-md">
-                  <div className="text-sm truncate dark:text-foreground">{resource}</div>
-                </div>
-              ))}
-            </div>
+            {cdnCount != null && (
+              <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-accent rounded-md">
+                <span className="text-sm font-medium dark:text-foreground">CDN Resources:</span>
+                <span className="text-sm dark:text-foreground">{cdnCount}</span>
+              </div>
+            )}
+            {resourceList.length > 0 && (
+              <div className="space-y-2">
+                {resourceList.slice(0, 3).map((resource, index) => (
+                  <div key={index} className="p-2 bg-gray-50 dark:bg-accent rounded-md">
+                    <div className="text-sm truncate dark:text-foreground">{resource}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

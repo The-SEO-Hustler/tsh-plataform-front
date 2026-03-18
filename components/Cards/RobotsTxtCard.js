@@ -28,7 +28,13 @@ export default function RobotsTxtCard({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
           <span>Status:</span>
-          <span className={data.exists ? "text-green-700 dark:text-green-500" : "text-red-500 dark:text-red-500"}>
+          <span
+            className={
+              data.exists
+                ? "text-green-700 dark:text-green-500"
+                : "text-red-500 dark:text-red-500"
+            }
+          >
             {data.exists ? "Present ✓" : "Missing ✕"}
           </span>
         </div>
@@ -36,9 +42,10 @@ export default function RobotsTxtCard({
           <div className="mt-2">
             <span className="font-medium">Disallowed Paths:</span>
             <div
-              className={`relative ${!showAll &&
-                `md:after:absolute md:after:bottom-0 md:after:left-0 md:after:w-full md:after:h-12 md:after:bg-gradient-to-t  ${status === "normal" ? "md:after:from-[#eff1f6]" : status === "warning" ? "md:after:from-[#f9f5c4]" : "md:after:from-[#f9dfe1]"} md:after:to-transparent`
-                }`}
+              className={`relative ${
+                !showAll &&
+                `md:after:absolute md:after:bottom-0 md:after:left-0 md:after:w-full md:after:h-12 md:after:bg-gradient-to-t  ${status === "normal" ? "md:after:from-[#eff1f6] dark:md:after:from-[#171717]" : status === "warning" ? "md:after:from-[#f9f5c4]" : "md:after:from-[#f9dfe1]"} md:after:to-transparent`
+              }`}
             >
               <ul className="mt-1 space-y-1">
                 {displayedPaths.map((path, index) => (

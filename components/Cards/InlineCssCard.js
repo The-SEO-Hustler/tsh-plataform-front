@@ -14,7 +14,7 @@ export default function InlineCssCard({
   const displayedElements = data.elements.slice(0, displayCount);
 
   const handleShowMore = () => {
-    setDisplayCount(prev => Math.min(prev + 5, data.elements.length));
+    setDisplayCount((prev) => Math.min(prev + 5, data.elements.length));
   };
 
   const handleShowLess = () => {
@@ -33,7 +33,9 @@ export default function InlineCssCard({
     >
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
-          <span className="text-sm dark:text-foreground">Total Elements with Inline CSS:</span>
+          <span className="text-sm dark:text-foreground">
+            Total Elements with Inline CSS:
+          </span>
           <span className="font-medium dark:text-foreground">{data.count}</span>
         </div>
 
@@ -41,12 +43,15 @@ export default function InlineCssCard({
           <h4 className="text-sm font-medium">Sample Elements:</h4>
           <div className="space-y-2">
             {displayedElements.map((element, index) => (
-              <div key={index} className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
+              <div
+                key={index}
+                className="p-3 bg-gray-50 dark:bg-accent rounded-lg"
+              >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium dark:text-foreground ">
                     {element.tag}
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 dark:text-foreground/80">
                     {element.style.length} characters
                   </span>
                 </div>
@@ -55,7 +60,7 @@ export default function InlineCssCard({
                     {element.style}
                   </code>
                   <div className="absolute top-1 right-1">
-                    <Code className="w-3 h-3 text-gray-400" />
+                    <Code className="w-3 h-3 text-gray-400 dark:text-foreground/80" />
                   </div>
                 </div>
               </div>
@@ -68,12 +73,12 @@ export default function InlineCssCard({
             >
               {displayCount > 3 ? (
                 <>
-                  <ChevronUp className="w-4 h-4" />
+                  <ChevronUp className="w-4 h-4 dark:text-foreground" />
                   <span className="text-sm font-medium">Show Less</span>
                 </>
               ) : (
                 <>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className="w-4 h-4 dark:text-foreground" />
                   <span className="text-sm font-medium">
                     Show 5 More Examples
                   </span>
@@ -85,4 +90,4 @@ export default function InlineCssCard({
       </div>
     </BaseCard>
   );
-} 
+}

@@ -33,12 +33,29 @@ function SeoCheckHeroContent() {
   const { trackAnalysis, currentAnalysis } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
+
+  const normalizeUrl = (raw) => {
+    const input = String(raw || "").trim();
+    if (!input) return "";
+    const withScheme = /^https?:\/\//i.test(input) ? input : `https://${input}`;
+    try {
+      const u = new URL(withScheme);
+      return u.toString();
+    } catch {
+      return "";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!url) return;
+    const normalizedUrl = normalizeUrl(url);
+    if (!normalizedUrl) {
+      setFormError("Please enter a valid website (e.g. example.com).");
+      return;
+    }
     if (usage?.remaining <= 0) {
       toast.error(
-        "You have reached your daily limit. Please try again tomorrow."
+        "You have reached your daily limit. Please try again tomorrow.",
       );
       return;
     }
@@ -83,7 +100,7 @@ function SeoCheckHeroContent() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url, token }),
+        body: JSON.stringify({ url: normalizedUrl, token }),
       });
 
       const data = await response.json();
@@ -94,7 +111,7 @@ function SeoCheckHeroContent() {
           docId: data.docId,
           collection: "seoAnalyses",
           meta: {
-            url: url,
+            url: normalizedUrl,
           },
         });
         router.push(`${getPathname("seo-check")}/result?id=${data.docId}`);
@@ -123,8 +140,8 @@ function SeoCheckHeroContent() {
   return (
     <main className="min-h-screen relative  py-6 md:py-0">
       {/* Hero Section*/}
-
-      <section className="bg-background">
+      <section className="relative">
+        <div className="bg-yellow-500/10 absolute z-0 w-full h-full"></div>
         <HeroTemplate noBg className="!md:pt-0 !pb-0 !md:pb-0 !mt-0 !pt-0 ">
           <Container id="hero">
             <section className="min-h-[calc(100vh-10px)] flex items-center relative">
@@ -161,10 +178,13 @@ function SeoCheckHeroContent() {
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="relative">
                       <input
-                        type="url"
+                        type="text"
+                        inputMode="url"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
-                        placeholder="Enter your website URL"
+                        placeholder="example.com"
                         required
                         disabled={isLoading}
                         className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
@@ -186,11 +206,21 @@ function SeoCheckHeroContent() {
                       </Button>
                       <label
                         htmlFor="url"
-                        className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]"
+                        className="text-xs text-foreground/80 top-0 left-2 dark:bg-[#26210f] bg-[#] px-2 py-1 absolute translate-y-[-50%]"
                       >
                         Target URL
                       </label>
                     </div>
+                    <p className="text-sm text-foreground/80">
+                      ⚡{" "}
+                      <span className="font-semibold text-foreground">
+                        {typeof usage?.remaining === "number"
+                          ? usage.remaining
+                          : "—"}
+                        /{typeof usage?.limit === "number" ? usage.limit : "—"}
+                      </span>{" "}
+                      free scans remaining today
+                    </p>
                     {formError && <p className="text-red-500">{formError}</p>}
                   </form>
                   <div className="flex gap-2 flex-col">
@@ -225,7 +255,7 @@ function SeoCheckHeroContent() {
 
                 {/* Right Column - Feature Preview */}
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-2xl -z-10" />
+                  <div className="absolute inset-0  rounded-2xl -z-10" />
                   {/* <div className="bg-card p-8 rounded-2xl shadow-xl">
                     <div className="space-y-6">
                       <div className="flex items-center gap-4">
@@ -733,10 +763,13 @@ function SeoCheckHeroContent() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="relative">
                 <input
-                  type="url"
+                  type="text"
+                  inputMode="url"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Enter your webite URL"
+                  placeholder="example.com"
                   required
                   disabled={isLoading}
                   className="w-full px-6 py-4 text-lg border-2 border-primary-foreground rounded-lg focus:ring-2 focus:ring-primary-foreground focus:border-transparent transition-all duration-200 text-primary-foreground bg-transparent placeholder:text-primary-foreground/50"
@@ -757,6 +790,14 @@ function SeoCheckHeroContent() {
               </div>
               {formError && <p className="text-red-500">{formError}</p>}
             </form>
+            <p className="text-primary-foreground/90 text-sm mt-3">
+              ⚡{" "}
+              <span className="font-semibold text-primary-foreground">
+                {typeof usage?.remaining === "number" ? usage.remaining : "—"}/
+                {typeof usage?.limit === "number" ? usage.limit : "—"}
+              </span>{" "}
+              free scans remaining today
+            </p>
             <p className="text-primary-foreground text-sm mt-3">
               No registration, no email required. Just instant SEO insights that
               actually help.

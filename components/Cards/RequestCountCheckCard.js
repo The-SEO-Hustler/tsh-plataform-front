@@ -9,7 +9,7 @@ export default function RequestCountCheckCard({
   onFocus,
   isFocused,
 }) {
-  const { count, resources } = data;
+  const { count, resources, counts } = data;
 
   return (
     <BaseCard
@@ -31,26 +31,32 @@ export default function RequestCountCheckCard({
           <h4 className="text-sm font-medium">Resource Types:</h4>
           <div className="grid grid-cols-2 gap-2">
             <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
-              CSS Files: {resources.filter((r) => r.endsWith(".css")).length}
+              CSS Files:{" "}
+              {counts
+                ? counts?.css
+                : resources.filter((r) => r.endsWith(".css")).length}
             </div>
             <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
-              JS Files: {resources.filter((r) => r.endsWith(".js")).length}
+              JS Files:{" "}
+              {counts
+                ? counts?.js
+                : resources.filter((r) => r.endsWith(".js")).length}
             </div>
             <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
               Images:{" "}
-              {
-                resources.filter((r) =>
-                  r.match(/\.(jpg|jpeg|png|gif|webp|avif)/i)
-                ).length
-              }
+              {counts
+                ? counts?.images
+                : resources.filter((r) =>
+                    r.match(/\.(jpg|jpeg|png|gif|webp|avif)/i),
+                  ).length}
             </div>
             <div className="p-2 bg-gray-50 dark:bg-accent rounded-md text-sm dark:text-foreground">
               Other:{" "}
-              {
-                resources.filter(
-                  (r) => !r.match(/\.(css|js|jpg|jpeg|png|gif|webp|avif)/i)
-                ).length
-              }
+              {counts
+                ? counts?.other
+                : resources.filter(
+                    (r) => !r.match(/\.(css|js|jpg|jpeg|png|gif|webp|avif)/i),
+                  ).length}
             </div>
           </div>
         </div>

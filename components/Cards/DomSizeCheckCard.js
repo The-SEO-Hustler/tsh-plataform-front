@@ -9,7 +9,7 @@ export default function DomSizeCheckCard({
   onFocus,
   isFocused,
 }) {
-  const { totalNodes, maxDepth } = data;
+  const { totalNodes, maxDepth, maxChildren } = data;
 
   return (
     <BaseCard
@@ -31,14 +31,24 @@ export default function DomSizeCheckCard({
           </div>
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
             <div className="text-sm mb-1 dark:text-foreground">Max Depth</div>
-            <div className="text-lg font-medium dark:text-foreground">{maxDepth}</div>
+            <div className="text-lg font-medium dark:text-foreground">
+              {maxDepth}
+            </div>
+          </div>
+          <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
+            <div className="text-sm mb-1 dark:text-foreground">
+              Max Children
+            </div>
+            <div className="text-lg font-medium dark:text-foreground">
+              {maxChildren}
+            </div>
           </div>
         </div>
 
         <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
           <div className="text-sm dark:text-foreground">
-            {totalNodes > 1000
-              ? "DOM size is above recommended limit (1000 nodes)"
+            {totalNodes > 1500
+              ? "DOM size is above recommended limit (1500 nodes)"
               : "DOM size is within recommended limits"}
           </div>
         </div>

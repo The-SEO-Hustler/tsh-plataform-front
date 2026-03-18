@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Gauge, ChevronDown, ChevronUp } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { commonOptions } from "@/lib/commonOptions";
 import { iconMapping } from "@/lib/config";
+import { useTheme } from "next-themes";
 
 export default function KeywordAnalysisCard({
   data,
@@ -13,6 +14,8 @@ export default function KeywordAnalysisCard({
   analysis,
 }) {
   const [showAll, setShowAll] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   const displayedKeywords = showAll
     ? data.keywordUsage
     : data.keywordUsage.slice(0, 3);
@@ -23,10 +26,49 @@ export default function KeywordAnalysisCard({
       {
         label: "Count",
         data: data.topKeywords.map((k) => k.count),
-        backgroundColor: "#8884d8",
+        backgroundColor: "rgba(234, 179, 8, 0.85)", // brand yellow
+        borderColor: "rgba(234, 179, 8, 1)",
+        borderWidth: 1,
       },
     ],
   };
+
+  const chartOptions = useMemo(() => {
+    const grid = isDark ? "rgba(255,255,255,0.10)" : "rgba(17,24,39,0.10)";
+    const ticks = isDark ? "rgba(255,255,255,0.78)" : "rgba(17,24,39,0.75)";
+    const legend = isDark ? "rgba(255,255,255,0.78)" : "rgba(55,65,81,0.9)";
+
+    return {
+      ...commonOptions,
+      plugins: {
+        ...commonOptions.plugins,
+        legend: {
+          ...commonOptions.plugins?.legend,
+          labels: {
+            ...(commonOptions.plugins?.legend?.labels || {}),
+            color: legend,
+          },
+        },
+        tooltip: {
+          ...commonOptions.plugins?.tooltip,
+          backgroundColor: isDark ? "#111827" : "white",
+          titleColor: isDark ? "#F9FAFB" : "#111827",
+          bodyColor: isDark ? "#E5E7EB" : "#374151",
+          borderColor: isDark ? "rgba(255,255,255,0.18)" : "#E5E7EB",
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: ticks },
+          grid: { color: grid, drawBorder: false },
+        },
+        y: {
+          ticks: { color: ticks },
+          grid: { color: grid, drawBorder: false },
+        },
+      },
+    };
+  }, [isDark]);
 
   return (
     <BaseCard
@@ -50,7 +92,7 @@ export default function KeywordAnalysisCard({
           </div>
         </div>
         <div className="w-full h-[200px]">
-          <Bar data={chartData} options={commonOptions} />
+          <Bar data={chartData} options={chartOptions} />
         </div>
         {data.keywordUsage && data.keywordUsage.length > 0 && (
           <div>
@@ -58,8 +100,10 @@ export default function KeywordAnalysisCard({
             <ul className="mt-1 space-y-1">
               {displayedKeywords.map((keyword, index) => (
                 <li key={index} className="flex justify-between items-center">
-                  <span>{keyword.word}</span>
-                  <span className="text-gray-500">
+                  <span className="text-foreground dark:text-foreground/80">
+                    {keyword.word}
+                  </span>
+                  <span className="text-gray-500 dark:text-foreground">
                     {keyword.count} ({keyword.percentage})
                   </span>
                 </li>
@@ -73,7 +117,9 @@ export default function KeywordAnalysisCard({
                 {showAll ? (
                   <>
                     <ChevronUp className="w-4 h-4 dark:text-foreground" />
-                    <span className="text-sm font-medium dark:text-foreground">Show Less</span>
+                    <span className="text-sm font-medium dark:text-foreground">
+                      Show Less
+                    </span>
                   </>
                 ) : (
                   <>

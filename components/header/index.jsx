@@ -80,7 +80,7 @@ function Header() {
   const checkScrollPath = () => {
     // Check if the path matches the pattern of a single post
     // e.g., /blog/post-name, /guides/guide-name, etc.
-    const pathSegments = pathname.split('/').filter(Boolean);
+    const pathSegments = pathname.split("/").filter(Boolean);
 
     // Must have exactly 2 segments (category/post-name)
     if (pathSegments.length !== 2) return false;
@@ -88,7 +88,7 @@ function Header() {
     const [category, post] = pathSegments;
 
     // Check if it's one of our target categories
-    const validCategories = ['blog', 'guides', 'playbooks', 'spreadsheets'];
+    const validCategories = ["blog", "guides", "playbooks", "spreadsheets"];
 
     return validCategories.includes(category) && post.length > 0;
   };
@@ -136,7 +136,7 @@ function Header() {
           `}
           orientation="rtl"
         >
-          <NavigationMenuList >
+          <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger className="cursor-pointer">
                 <Link href="/free-tools" className="!no-underline !font-bold ">
@@ -146,16 +146,24 @@ function Header() {
               <NavigationMenuContent
                 orientation="ltr"
                 dir="ltr"
-                className="shadow-lg rounded-md"
+                className="shadow-lg rounded-md md:right-0 md:left-auto w-[calc(100vw-2rem)] sm:w-[520px] lg:w-[640px] max-w-[calc(100vw-2rem)] overflow-hidden"
               >
-                <ul className="flex flex-col gap-3 p-2">
-                  {tools.map((tool, index) => (
-                    <ListItem href={tool.href} title={tool.title} key={index} free>
-                      <div className="flex items-center space-x-3">
-                        <span>{tool.description}</span>
-                      </div>
-                    </ListItem>
-                  ))}
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 w-full max-h-[calc(100vh-7rem)] overflow-y-auto">
+                  {tools.map((tool, index) => {
+                    const shortDescription = String(tool.description || "")
+                      .split(".")
+                      .filter(Boolean)[0];
+                    return (
+                      <ListItem
+                        href={tool.href}
+                        title={tool.title}
+                        key={index}
+                        icon={tool.Icon}
+                      >
+                        {shortDescription ? `${shortDescription}.` : ""}
+                      </ListItem>
+                    );
+                  })}
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -240,24 +248,23 @@ function Header() {
                     href={tool.href}
                     className="text-sm !text-foreground  flex items-center space-x-1 !no-underline !font-bold whitespace-nowrap"
                   >
-                    {tool.Icon && (
-                      typeof tool.Icon === 'function' ? (
-                        <tool.Icon className={cn(
-                          "w-5 h-5 text-primary-foreground dark:text-foreground dark:fill-foreground"
-                        )} />
+                    {tool.Icon &&
+                      (typeof tool.Icon === "function" ? (
+                        <tool.Icon
+                          className={cn(
+                            "w-5 h-5 text-primary-foreground dark:text-foreground dark:fill-foreground",
+                          )}
+                        />
                       ) : (
                         <div className="max-w-5 max-h-5 flex items-center justify-center text-primary-foreground dark:text-foreground dark:fill-foreground">
                           {tool.Icon}
                         </div>
-                      )
-                    )}
+                      ))}
 
                     <span>{tool.title}</span>
                   </Link>
                 </SheetClose>
               ))}
-
-
 
               <SheetClose asChild>
                 <Link
@@ -295,8 +302,8 @@ function Header() {
   );
 }
 const ListItem = (
-  { className, title, children, href, free = false, ...props },
-  ref
+  { className, title, children, href, free = false, icon = null, ...props },
+  ref,
 ) => {
   const pathname = usePathname();
   const [fullPath, setFullPath] = useState("");
@@ -312,25 +319,33 @@ const ListItem = (
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none !no-underline !font-bold outline-none transition-colors  hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
+            "block select-none rounded-md p-3 !no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className,
           )}
           href={href}
           {...props}
         >
-          <div
-            className={cn(
-              "text-sm whitespace-nowrap  leading-none !text-foreground"
-              // Compare full path (including hash) with href
-            )}
-          >
-            {title}{" "}
-            {free && (
-              <span className="ml-2 text-green-600 font-semibold">FREE</span>
-            )}
-          </div>
-          <div className="line-clamp-2 text-xs leading-snug text-[#555] dark:text-foreground/60">
-            {children}
+          <div className="flex items-start gap-3">
+            {icon ? (
+              <div className="shrink-0 rounded-md bg-primary/10 text-primary p-2 [&_svg]:w-5 [&_svg]:h-5">
+                {icon}
+              </div>
+            ) : null}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <div className="text-sm font-bold leading-none !text-foreground truncate">
+                  {title}
+                </div>
+                {free && (
+                  <span className="text-[10px] leading-none px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300 border border-green-200 dark:border-green-800">
+                    FREE
+                  </span>
+                )}
+              </div>
+              <div className="line-clamp-1 text-xs leading-snug text-[#555] dark:text-foreground/60 mt-1">
+                {children}
+              </div>
+            </div>
           </div>
         </a>
       </NavigationMenuLink>

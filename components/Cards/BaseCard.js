@@ -2,8 +2,9 @@ import React from "react";
 import s from "@/components/SeoCheck/styles.module.css";
 
 const statusClasses = {
-  error: `!bg-red-100/90  hover:bg-red-200  ${s.cardError}`,
-  warning: `!bg-yellow-100/90  hover:bg-yellow-200  ${s.cardWarning}`,
+  // Keep a neutral background; use borders/headings for status
+  error: `${s.cardError}`,
+  warning: `${s.cardWarning}`,
   normal: `${s.cardNormal}`,
 };
 
@@ -20,8 +21,14 @@ export default function BaseCard({
 }) {
   return (
     <div
-      className={`${s.card} ${statusClasses[status]} ${isFocused ? s.focused : ""
-        } ${className} bg-card text-foreground`}
+      className={`${s.card} ${statusClasses[status]} ${
+        isFocused ? s.focused : ""
+      } ${className} bg-card text-foreground md:max-h-[600px] md:min-h-[600px] overflow-y-auto rounded-lg pr-2 
+  [&::-webkit-scrollbar]:w-1.5 
+  [&::-webkit-scrollbar-track]:bg-transparent 
+  [&::-webkit-scrollbar-thumb]:bg-white/10 
+  [&::-webkit-scrollbar-thumb]:rounded-full 
+  hover:[&::-webkit-scrollbar-thumb]:bg-white/20`}
       id={id}
     >
       <div>

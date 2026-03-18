@@ -1,6 +1,6 @@
 // export const runtime = "edge";
 import { NextResponse } from "next/server";
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 export async function POST(req) {
   try {
@@ -9,12 +9,15 @@ export async function POST(req) {
         { error: "Method Not Allowed" },
         {
           status: 405,
-        }
+        },
       );
     }
 
     // Log the raw request for debugging
-    console.log("Request headers:", JSON.stringify(Object.fromEntries(req.headers)));
+    console.log(
+      "Request headers:",
+      JSON.stringify(Object.fromEntries(req.headers)),
+    );
 
     // Try to get the raw body text first for debugging
     const rawBody = await req.text();
@@ -29,7 +32,7 @@ export async function POST(req) {
       console.error("JSON parse error:", parseError);
       return NextResponse.json(
         { error: "Invalid JSON format", details: parseError.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -47,10 +50,13 @@ export async function POST(req) {
     console.log("reCAPTCHA verification response:", recaptchaData);
 
     if (!recaptchaData.success) {
-      console.error("reCAPTCHA verification failed:", recaptchaData["error-codes"]);
+      console.error(
+        "reCAPTCHA verification failed:",
+        recaptchaData["error-codes"],
+      );
       return NextResponse.json(
         { error: "reCAPTCHA verification failed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -59,7 +65,7 @@ export async function POST(req) {
       console.error("Missing required fields:", { name, email, message });
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -70,14 +76,13 @@ export async function POST(req) {
     if (!notionDatabaseId || !integrationToken) {
       console.error("Missing environment variables:", {
         hasNotionDbId: !!notionDatabaseId,
-        hasIntegrationToken: !!integrationToken
+        hasIntegrationToken: !!integrationToken,
       });
       return NextResponse.json(
         { error: "Server configuration error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
-
 
     const date = new Date().toISOString();
 
@@ -114,7 +119,7 @@ export async function POST(req) {
         },
         status: {
           select: {
-            name: 'new',
+            name: "new",
           },
         },
 
@@ -149,13 +154,13 @@ export async function POST(req) {
         { message: error.message || "Error saving to Notion" },
         {
           status: 500,
-        }
+        },
       );
     }
 
     // Send email notification
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // e.g., 'gmail'
+      service: "gmail", // e.g., 'gmail'
       auth: {
         user: process.env.EMAIL_USER, // your email
         pass: process.env.EMAIL_PASS, // your email password
@@ -164,8 +169,8 @@ export async function POST(req) {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: 'contact@theseohustler.com',
-      subject: 'Form Submission The SEO Hustler',
+      to: "contact@theseohustler.com",
+      subject: "Form Submission The SEO Hustler",
       text: `Name: ${name},\nMessage: "${message}".\nEmail: ${email}`,
     };
 
@@ -180,7 +185,7 @@ export async function POST(req) {
       { message: "Internal Server Error", details: error.message },
       {
         status: 500,
-      }
+      },
     );
   }
 }

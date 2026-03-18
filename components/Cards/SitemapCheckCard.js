@@ -24,7 +24,9 @@ export default function SitemapCheckCard({
           <span>Found in Robots.txt:</span>
           <span
             className={
-              data.foundInRobots ? "text-green-700 dark:text-green-500" : "text-yellow-700 "
+              data.foundInRobots
+                ? "text-green-700 dark:text-green-500"
+                : "text-yellow-700 "
             }
           >
             {data.foundInRobots ? "Yes ✓" : "No ✕"}
@@ -43,8 +45,10 @@ export default function SitemapCheckCard({
                   <div className="flex justify-between items-center truncate">
                     <span>{sitemap.url}</span>
                   </div>
-                  <span className="text-gray-500">Level {sitemap.level}</span>
-                  <div className="text-xs text-gray-500">
+                  <span className="text-gray-500 dark:text-foreground/80">
+                    Level {sitemap.depth}
+                  </span>
+                  <div className="text-xs text-gray-500 dark:text-foreground">
                     URLs: {sitemap.urlCount}
                   </div>
                 </li>
