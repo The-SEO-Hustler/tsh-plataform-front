@@ -1,12 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { statusMessages } from "@/lib/statusMessages";
 import { Loader2, Copy, Mail, Bell } from "lucide-react";
 import { getPathname } from "@/lib/getpathname";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection as fsCollection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +22,87 @@ import Container from "./container";
 import Image from "next/image";
 
 // Status messages with their descriptions
+const STATUS_TO_PERCENT = {
+  processing: 3,
+  fetching: 15,
+  analyzing_meta: 42,
+  analyzing_images: 58,
+  analyzing_robots: 65,
+  analyzing_performance: 88,
+  analyzing_links: 95,
+  compiling_results: 98,
+  completed: 100,
+  failed: 100,
+};
+
+const STAGE_CHECK_TOTALS = {
+  analyzing_meta: 18,
+  analyzing_images: 10,
+  analyzing_robots: 2,
+  analyzing_performance: 5,
+  analyzing_links: 4,
+};
+
+const STAGE_RANGES = {
+  analyzing_meta: [22, 42],
+  analyzing_images: [42, 58],
+  analyzing_robots: [58, 65],
+  analyzing_performance: [65, 88],
+  analyzing_links: [88, 95],
+};
+
+function percentFromStatus(status) {
+  return STATUS_TO_PERCENT[status] ?? 8;
+}
+
+function computeProgress(status, events) {
+  if (status === "completed" || status === "failed") return 100;
+
+  const base = percentFromStatus(status);
+  const stageTotal = STAGE_CHECK_TOTALS[status];
+  const stageRange = STAGE_RANGES[status];
+
+  if (!stageTotal || !stageRange || !Array.isArray(events)) return base;
+
+  const finishedInStage = events.filter(
+    (event) =>
+      event?.check &&
+      typeof event?.message === "string" &&
+      event.message.toLowerCase().includes("finished"),
+  ).length;
+
+  const ratio = Math.max(0, Math.min(1, finishedInStage / stageTotal));
+  const [start, end] = stageRange;
+  const smooth = Math.round(start + (end - start) * ratio);
+
+  return Math.max(base, smooth);
+}
+
+function subscribeSeoProgress(docId, handlers) {
+  const analysisRef = doc(db, "seoAnalyses", docId);
+  const eventsQuery = query(
+    fsCollection(db, "seoAnalyses", docId, "events"),
+    orderBy("createdAt", "asc"),
+  );
+
+  const unsubAnalysis = onSnapshot(analysisRef, (snapshot) => {
+    const data = snapshot.exists() ? snapshot.data() : null;
+    handlers?.onAnalysis?.(data);
+  });
+
+  const unsubEvents = onSnapshot(eventsQuery, (snapshot) => {
+    const events = snapshot.docs.map((item) => ({
+      id: item.id,
+      ...item.data(),
+    }));
+    handlers?.onEvents?.(events);
+  });
+
+  return () => {
+    unsubAnalysis();
+    unsubEvents();
+  };
+}
 
 export default function LoadingScreen({
   status = "pending",
@@ -60,6 +148,13 @@ export default function LoadingScreen({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(sendToEmail || false);
   const [showBlogPosts, setShowBlogPosts] = useState(false);
+  const [seoConsoleLines, setSeoConsoleLines] = useState([]);
+  const [seoAnalysis, setSeoAnalysis] = useState(null);
+  const [seoLiveStatus, setSeoLiveStatus] = useState("");
+  const [isConsoleAutoScrollEnabled, setIsConsoleAutoScrollEnabled] =
+    useState(true);
+  const seoConsoleContainerRef = useRef(null);
+  const isSeoCheck = type === "seo-check";
 
   // Load email from localStorage on component mount
   useEffect(() => {
@@ -83,13 +178,73 @@ export default function LoadingScreen({
     }
   }, [blogPosts]);
 
-  // Animate the progress bar when status changes
   useEffect(() => {
-    // Get the target progress value
+    if (!isSeoCheck || !docId) return;
+
+    return subscribeSeoProgress(docId, {
+      onAnalysis: (analysisData) => {
+        setSeoAnalysis(analysisData);
+        setSeoLiveStatus(analysisData?.status || "");
+      },
+      onEvents: (events) => {
+        const lines = events.map((event) => {
+          const createdAtValue = event?.createdAt;
+          return {
+            id: event.id,
+            level: event?.level || "info",
+            message: event?.message || "",
+            check: event?.check || "",
+            createdAt: createdAtValue?.toDate?.() || null,
+          };
+        });
+        setSeoConsoleLines(lines);
+      },
+    });
+  }, [docId, isSeoCheck]);
+
+  useEffect(() => {
+    if (!isSeoCheck) return;
+
+    const computedProgress = computeProgress(seoLiveStatus, seoConsoleLines);
+    setProgress((prev) => Math.max(prev, computedProgress));
+  }, [isSeoCheck, seoConsoleLines, seoLiveStatus]);
+
+  useEffect(() => {
+    if (!isSeoCheck) {
+      setIsConsoleAutoScrollEnabled(true);
+      return;
+    }
+
+    const container = seoConsoleContainerRef.current;
+    if (!container) return;
+
+    const handleConsoleScroll = () => {
+      const distanceToBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight;
+      setIsConsoleAutoScrollEnabled(distanceToBottom < 24);
+    };
+
+    container.addEventListener("scroll", handleConsoleScroll);
+    return () => {
+      container.removeEventListener("scroll", handleConsoleScroll);
+    };
+  }, [isSeoCheck]);
+
+  useEffect(() => {
+    if (!isSeoCheck || !isConsoleAutoScrollEnabled) return;
+    if (!seoConsoleContainerRef.current) return;
+
+    seoConsoleContainerRef.current.scrollTop =
+      seoConsoleContainerRef.current.scrollHeight;
+  }, [isSeoCheck, isConsoleAutoScrollEnabled, seoConsoleLines]);
+
+  // Animate the progress bar when status changes (non-SEO loaders).
+  useEffect(() => {
+    if (isSeoCheck) return;
+
     const targetProgress = message.progress;
 
-    // Animate to the target progress value
-    const duration = 1000; // 1 second animation
+    const duration = 1000;
     const steps = 20;
     const increment = (targetProgress - progress) / steps;
     const interval = duration / steps;
@@ -105,18 +260,28 @@ export default function LoadingScreen({
     }, interval);
 
     return () => clearInterval(timer);
-  }, [status, message.progress, progress]);
+  }, [isSeoCheck, message.progress, progress]);
 
   // Rotate through descriptions
+  const displayMessage = useMemo(() => {
+    if (!isSeoCheck) return message;
+    return statusMessages[seoLiveStatus] || message;
+  }, [isSeoCheck, message, seoLiveStatus]);
+
   useEffect(() => {
+    setCurrentDescriptionIndex(0);
+  }, [displayMessage]);
+
+  useEffect(() => {
+    const descriptions = displayMessage?.descriptions || [];
+    if (descriptions.length <= 1) return;
+
     const descriptionTimer = setInterval(() => {
-      setCurrentDescriptionIndex(
-        (prev) => (prev + 1) % message.descriptions.length
-      );
-    }, 3000); // Change description every 3 seconds
+      setCurrentDescriptionIndex((prev) => (prev + 1) % descriptions.length);
+    }, 3000);
 
     return () => clearInterval(descriptionTimer);
-  }, [message.descriptions.length]);
+  }, [displayMessage]);
 
   // Handle email notification submission
   const handleEmailSubmit = async (e) => {
@@ -148,7 +313,7 @@ export default function LoadingScreen({
 
       setEmailSubmitted(true);
       toast.success(
-        "Email notification enabled! You'll receive an email when the process is complete."
+        "Email notification enabled! You'll receive an email when the process is complete.",
       );
     } catch (error) {
       console.error("Error updating document:", error);
@@ -159,10 +324,39 @@ export default function LoadingScreen({
   };
 
   // Get the current description
-  const currentDescription = message.descriptions[currentDescriptionIndex];
+  const currentDescription =
+    displayMessage.descriptions[currentDescriptionIndex] ||
+    displayMessage.descriptions[0];
 
   // Get the icon component
-  const IconComponent = message.icon;
+  const IconComponent = displayMessage.icon;
+  const effectiveSeoStatus = seoLiveStatus || status;
+
+  const seoPhaseLabel = useMemo(() => {
+    if (!effectiveSeoStatus) return "waiting";
+    return String(effectiveSeoStatus).replace(/_/g, " ");
+  }, [effectiveSeoStatus]);
+
+  const seoStatusBadgeClass = useMemo(() => {
+    if (effectiveSeoStatus === "failed") {
+      return "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-800";
+    }
+    if (effectiveSeoStatus === "completed") {
+      return "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-200 dark:border-green-800";
+    }
+    return "bg-foreground/10 text-foreground border-foreground/20 dark:bg-foreground/90/30 dark:text-foreground dark:border-foreground/80";
+  }, [effectiveSeoStatus]);
+
+  const levelPresentation = {
+    ok: { prefix: "[OK]", color: "text-green-600 dark:text-green-400" },
+    info: {
+      prefix: "[INFO]",
+      color: "text-gray-600 dark:text-foreground/80",
+    },
+    warn: { prefix: "[WARN]", color: "text-yellow-600 dark:text-yellow-400" },
+    error: { prefix: "[ERR]", color: "text-red-600 dark:text-red-400" },
+    done: { prefix: "[Done]", color: "text-green-600 dark:text-green-400" },
+  };
 
   return (
     <Container className="min-h-screen flex flex-col items-center justify-center relative">
@@ -171,10 +365,23 @@ export default function LoadingScreen({
           <Loader2 className="h-20 w-20 animate-spin text-primary absolute top-0" />
           <IconComponent className="h-10 w-10 text-primary absolute top-5" />
         </div>
-        <h2 className="text-2xl font-bold mb-2">{message.title}</h2>
-        <div className="h-16 flex items-center justify-center">
-          <p className="text-foreground/80 mb-3">{currentDescription}</p>
-        </div>
+        {!isSeoCheck && (
+          <h2 className="text-2xl font-bold mb-2">{displayMessage.title}</h2>
+        )}
+        {isSeoCheck && (
+          <div className="mb-3">
+            <span
+              className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium capitalize ${seoStatusBadgeClass}`}
+            >
+              Phase: {seoPhaseLabel}
+            </span>
+          </div>
+        )}
+        {!isSeoCheck && (
+          <div className="h-16 flex items-center justify-center">
+            <p className="text-foreground/80 mb-3">{currentDescription}</p>
+          </div>
+        )}
 
         {currentUrl && (
           <div className="h-16 flex items-center justify-center">
@@ -189,6 +396,38 @@ export default function LoadingScreen({
             style={{ width: `${progress}%` }}
           ></div>
         </div>
+
+        {isSeoCheck && (
+          <div className="mb-6">
+            <div className="text-left">
+              <h3 className="text-sm font-semibold mb-2">SEO console</h3>
+              <div
+                ref={seoConsoleContainerRef}
+                className="h-52 overflow-y-auto rounded-lg border border-border bg-zinc-950 p-3 text-xs font-mono"
+              >
+                {seoConsoleLines.length === 0 ? (
+                  <p className="text-zinc-400">[INFO] Waiting for events...</p>
+                ) : (
+                  seoConsoleLines.map((line) => {
+                    const level =
+                      levelPresentation[line.level] || levelPresentation.info;
+                    return (
+                      <div
+                        key={line.id}
+                        className="mb-1 text-zinc-100 break-words"
+                      >
+                        <span className={level.color}>{level.prefix}</span>{" "}
+                        <span className="text-muted-foreground/80">
+                          {line.message}
+                        </span>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Email Notification Section */}
         {!emailSubmitted && (
@@ -278,8 +517,8 @@ export default function LoadingScreen({
             onClick={() => {
               navigator.clipboard.writeText(
                 `${process.env.NEXT_PUBLIC_FRONT_URL}${getPathname(
-                  type
-                )}/result?id=${searchParams.get("id")}`
+                  type,
+                )}/result?id=${searchParams.get("id")}`,
               );
               toast.success("Link to analysis copied to clipboard");
             }}

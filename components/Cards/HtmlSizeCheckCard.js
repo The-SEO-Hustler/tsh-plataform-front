@@ -12,7 +12,7 @@ export default function HtmlSizeCheckCard({
 }) {
   const sizeInBytes =
     typeof data?.sizeInBytes === "number" ? data.sizeInBytes : null;
-  const sizeInKB = typeof data?.sizeInKB === "number" ? data.sizeInKB : null;
+  const sizeInKB = data?.sizeInKB ? data.sizeInKB : null;
 
   return (
     <BaseCard
@@ -24,10 +24,13 @@ export default function HtmlSizeCheckCard({
       icon={iconMapping.htmlSizeCheck}
       analysis={analysis}
     >
+      {/* {JSON.stringify({ data, status, analysis }, null, 2)} */}
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg">
-            <div className="text-sm mb-1 dark:text-foreground">Size in Bytes</div>
+            <div className="text-sm mb-1 dark:text-foreground">
+              Size in Bytes
+            </div>
             <div className="text-lg font-medium dark:text-foreground">
               {sizeInBytes === null ? "—" : sizeInBytes.toLocaleString()}
             </div>
@@ -42,9 +45,9 @@ export default function HtmlSizeCheckCard({
 
         <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
           <div className="text-sm dark:text-foreground">
-            {typeof sizeInKB === "number" && sizeInKB > 500
-              ? "HTML size is above recommended limit (500KB)"
-              : "HTML size is within recommended limits"}
+            {status === "error"
+              ? "Critical Size Warning"
+              : "Size is within recommended limits"}
           </div>
         </div>
       </div>

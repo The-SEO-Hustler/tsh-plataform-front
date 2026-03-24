@@ -39,17 +39,20 @@ export default function SitemapCheckCard({
         {data.sitemaps && data.sitemaps.length > 0 && (
           <div className="mt-2">
             <span className="font-medium">Sitemaps:</span>
-            <ul className="mt-1 space-y-1">
+            <ul className="mt-1 space-y-3">
               {data.sitemaps.map((sitemap, index) => (
-                <li key={index} className="break-words mb-2">
-                  <div className="flex justify-between items-center truncate">
-                    <span>{sitemap.url}</span>
+                <li
+                  key={index}
+                  className="border-b border-gray-800 dark:border-foreground/30 last:border-0 py-2"
+                >
+                  <div className="flex justify-between items-center break-all mb-2">
+                    <span title={sitemap.url}>{sitemap.url}</span>
                   </div>
                   <span className="text-gray-500 dark:text-foreground/80">
                     Level {sitemap.depth}
                   </span>
                   <div className="text-xs text-gray-500 dark:text-foreground">
-                    URLs: {sitemap.urlCount}
+                    URLs: {sitemap.urlCount ?? "Index (No direct URLs)"}
                   </div>
                 </li>
               ))}

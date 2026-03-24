@@ -339,8 +339,26 @@ function SEOAudit({ blogPosts }) {
     });
   };
 
+  const displayAnalysisData = useMemo(() => {
+    if (!Array.isArray(analysisData)) return [];
+
+    const hasNetworkRequests = analysisData.some(
+      (card) => card?.type === "network-requests",
+    );
+
+    // Prefer merged network card when both are present.
+    if (hasNetworkRequests) {
+      return analysisData.filter((card) => card?.type !== "requestCountCheck");
+    }
+
+    // Legacy fallback: keep requestCountCheck when network-requests is absent.
+    return analysisData;
+  }, [analysisData]);
+
   const filteredData = filterDataBySearch(
-    analysisData.filter((card) => statusFilters[card.status || "normal"]),
+    displayAnalysisData.filter(
+      (card) => statusFilters[card.status || "normal"],
+    ),
   );
 
   const groupedCards = useMemo(() => {

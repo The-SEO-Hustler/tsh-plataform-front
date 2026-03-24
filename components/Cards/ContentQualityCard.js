@@ -46,6 +46,7 @@ export default function ContentQualityCard({
       icon={iconMapping["contentQuality"] || FileText}
       analysis={analysis}
     >
+      {/* {JSON.stringify({ data, status, analysis }, null, 2)} */}
       <div className="space-y-2.5 text-sm">
         <div className="grid grid-cols-2 gap-2">
           <div className="bg-muted/40 dark:bg-muted/30 rounded-md p-2 text-center border border-foreground/10">

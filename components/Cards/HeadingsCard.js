@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import { Code } from "lucide-react";
 import BaseCard from "./BaseCard";
 import { commonOptions } from "@/lib/commonOptions";
 import { iconMapping } from "@/lib/config";
 import { useTheme } from "next-themes";
+
 export default function HeadingsCard({
   data,
   status,
@@ -15,12 +15,20 @@ export default function HeadingsCard({
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
+  // Safely fallback to 0 in case the backend payload is missing a tier
   const chartData = {
-    labels: ["h3", "h4", "h5", "h6"],
+    labels: ["H1", "H2", "H3", "H4", "H5", "H6"],
     datasets: [
       {
         label: "Count",
-        data: [data.h3.count, data.h4.count, data.h5.count, data.h6.count],
+        data: [
+          data?.h1?.count || 0,
+          data?.h2?.count || 0,
+          data?.h3?.count || 0,
+          data?.h4?.count || 0,
+          data?.h5?.count || 0,
+          data?.h6?.count || 0,
+        ],
         backgroundColor: "#8884d8",
       },
     ],
@@ -58,10 +66,18 @@ export default function HeadingsCard({
         y: {
           ticks: { color: ticks },
           grid: { color: grid, drawBorder: false },
+          // Force the Y-axis to start at 0 so the bars don't look disjointed
+          beginAtZero: true,
         },
       },
     };
   }, [isDark]);
+  // Safety check: If the backend sends the old object structure (cached data),
+  // format it into a string. Otherwise, use the new string directly.
+  const safeAnalysis =
+    typeof analysis === "object" && analysis !== null
+      ? `H3: ${analysis.h3?.count || analysis.h3} | H4: ${analysis.h4} | H5: ${analysis.h5} | H6: ${analysis.h6}`
+      : analysis;
 
   return (
     <BaseCard
@@ -71,8 +87,10 @@ export default function HeadingsCard({
       onFocus={onFocus}
       title="Headings Structure"
       icon={iconMapping.headings}
-      analysis={`H3: ${analysis.h3} | H4: ${analysis.h4} | H5: ${analysis.h5} | H6: ${analysis.h6} `}
+      analysis={safeAnalysis}
     >
+      {/* REMOVED: The JSON.stringify debug block that was leaking into the UI */}
+
       <div className="w-full h-[200px] mt-4">
         <Bar data={chartData} options={chartOptions} />
       </div>

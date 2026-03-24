@@ -84,11 +84,15 @@ export default function KeywordAnalysisCard({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <span className="font-medium">Total Words:</span>
-            <span className="ml-2">{data.totalWords}</span>
+            <span className="ml-2">
+              {data.totalWords || data?.value?.totalWords}
+            </span>
           </div>
           <div>
             <span className="font-medium">Unique Words:</span>
-            <span className="ml-2">{data.uniqueWords}</span>
+            <span className="ml-2">
+              {data.uniqueWords || data?.value?.uniqueWords}
+            </span>
           </div>
         </div>
         <div className="w-full h-[200px]">
@@ -104,7 +108,7 @@ export default function KeywordAnalysisCard({
                     {keyword.word}
                   </span>
                   <span className="text-gray-500 dark:text-foreground">
-                    {keyword.count} ({keyword.percentage})
+                    {keyword.count} ({keyword.percentage}%)
                   </span>
                 </li>
               ))}

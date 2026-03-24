@@ -10,7 +10,11 @@ export default function DomSizeCheckCard({
   isFocused,
 }) {
   const totalNodes =
-    typeof data?.totalNodes === "number" ? data.totalNodes : null;
+    typeof data?.totalNodes === "number"
+      ? data.totalNodes
+      : data?.totalElements
+        ? data?.totalElements
+        : null;
   const maxDepth = typeof data?.maxDepth === "number" ? data.maxDepth : null;
   const maxChildren =
     typeof data?.maxChildren === "number" ? data.maxChildren : null;

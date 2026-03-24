@@ -11,7 +11,8 @@ export default function ModernMediaCard({
   isFocused,
 }) {
   const [showAll, setShowAll] = useState(false);
-  const displayedImages = showAll ? data.images : data.images.slice(0, 3);
+  const images = data?.images ?? [];
+  const displayedImages = showAll ? images : images.slice(0, 3);
   const { totalImages, modernImages } = data;
 
   return (
@@ -27,7 +28,9 @@ export default function ModernMediaCard({
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-gray-50 dark:bg-accent rounded-lg flex flex-col justify-between">
-            <div className="text-sm mb-1 dark:text-foreground">Total Images</div>
+            <div className="text-sm mb-1 dark:text-foreground">
+              Total Images
+            </div>
             <div className="text-lg font-medium dark:text-foreground">
               {totalImages}
             </div>
@@ -46,30 +49,44 @@ export default function ModernMediaCard({
           <h4 className="text-sm font-medium">Image Details:</h4>
           <div className="space-y-2">
             {displayedImages.map((image, index) => (
-              <div key={index} className="p-3 bg-gray-50 dark:bg-accent rounded-lg flex items-center gap-2">
-
+              <div
+                key={index}
+                className="p-3 bg-gray-50 dark:bg-accent rounded-lg flex items-center gap-2"
+              >
                 <div className="w-10 h-10">
-                  <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover rounded-xs" />
+                  <img
+                    src={image.src}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-full object-cover rounded-xs"
+                  />
                 </div>
 
                 <div className="flex-1 min-w-0">
-
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-medium dark:text-foreground">
                       Format: {image.extension || "Unknown"}
                     </span>
                     <span className="text-xs dark:text-foreground">
-                      {image.extension === "webp" || image.extension === "avif" ? "Modern" : "Legacy"}
+                      {image.extension === "webp" ||
+                      image.extension === "avif" ||
+                      image.extension === "svg"
+                        ? "Modern"
+                        : image.extension === "unknown"
+                          ? "Unknown"
+                          : "Legacy Format"}
                     </span>
                   </div>
-                  <div className="text-xs truncate w-full max-w-full dark:text-foreground">
+                  <div
+                    className="text-xs truncate w-full max-w-full dark:text-foreground"
+                    title={image.src}
+                  >
                     {image.src}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          {data.images.length > 3 && (
+          {images.length > 3 && (
             <button
               onClick={() => setShowAll(!showAll)}
               className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-gray-50 dark:bg-accent hover:bg-gray-100 dark:hover:bg-accent rounded-lg transition-colors duration-200 cursor-pointer"
@@ -77,13 +94,15 @@ export default function ModernMediaCard({
               {showAll ? (
                 <>
                   <ChevronUp className="w-4 h-4 dark:text-foreground" />
-                  <span className="text-sm font-medium dark:text-foreground">Show Less</span>
+                  <span className="text-sm font-medium dark:text-foreground">
+                    Show Less
+                  </span>
                 </>
               ) : (
                 <>
                   <ChevronDown className="w-4 h-4 dark:text-foreground" />
                   <span className="text-sm font-medium dark:text-foreground">
-                    Show {data.images.length - 3} More
+                    Show {images.length - 3} More
                   </span>
                 </>
               )}

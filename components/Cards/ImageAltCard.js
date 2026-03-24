@@ -27,11 +27,15 @@ export default function ImageAltCard({
       <div className="space-y-2 text-sm">
         <div className="flex justify-between items-center">
           <span>Total Images:</span>
-          <span className="text-blue-500 dark:text-blue-500">{data.totalImages}</span>
+          <span className="text-blue-500 dark:text-blue-500">
+            {data.totalImages}
+          </span>
         </div>
         <div className="flex justify-between items-center">
           <span>Images with Alt:</span>
-          <span className="text-green-700 dark:text-green-500">{data.imagesWithAlt}</span>
+          <span className="text-green-700 dark:text-green-500">
+            {data.imagesWithAlt}
+          </span>
         </div>
         {data.imagesWithoutAlt && data.imagesWithoutAlt.length > 0 && (
           <div className="mt-2">
@@ -43,7 +47,12 @@ export default function ImageAltCard({
                   className="break-words border rounded-md overflow-hidden
                    h-full flex items-center aspect-square"
                 >
-                  <img src={image.src} alt={`Image ${index + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={image.src}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    title={image.src}
+                  />
                 </li>
               ))}
             </ul>

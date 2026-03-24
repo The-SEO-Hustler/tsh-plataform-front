@@ -6,7 +6,9 @@ import { Link, CheckCircle, XCircle } from "lucide-react";
 function StatusRow({ label, value }) {
   return (
     <div className="flex items-center justify-between text-sm">
-      <span className="text-muted-foreground">{label}</span>
+      <span className="text-muted-foreground dark:text-foreground/80">
+        {label}
+      </span>
       {value ? (
         <CheckCircle className="w-4 h-4 text-green-600" />
       ) : (
@@ -16,8 +18,15 @@ function StatusRow({ label, value }) {
   );
 }
 
-export default function CanonicalCheckCard({ data, status, isFocused, onFocus, analysis }) {
-  const { present, canonicalUrl, currentUrl, isSelfReferencing, isAbsolute } = data || {};
+export default function CanonicalCheckCard({
+  data,
+  status,
+  isFocused,
+  onFocus,
+  analysis,
+}) {
+  const { present, canonicalUrl, currentUrl, isSelfReferencing, isAbsolute } =
+    data || {};
 
   return (
     <BaseCard
@@ -35,7 +44,10 @@ export default function CanonicalCheckCard({ data, status, isFocused, onFocus, a
         <StatusRow label="Self-referencing" value={isSelfReferencing} />
         {canonicalUrl && (
           <div className="pt-1 text-xs text-muted-foreground break-all border-t border-foreground/10">
-            <span className="font-medium">Canonical: </span>{canonicalUrl}
+            <span className="font-medium dark:text-foreground">
+              Canonical:{" "}
+            </span>
+            {canonicalUrl}
           </div>
         )}
       </div>

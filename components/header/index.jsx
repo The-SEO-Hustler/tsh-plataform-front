@@ -131,11 +131,7 @@ function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <NavigationMenu
-          className={`hidden md:flex 
-          `}
-          orientation="rtl"
-        >
+        <NavigationMenu className="hidden lg:flex" orientation="rtl">
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuTrigger className="cursor-pointer">
@@ -219,11 +215,11 @@ function Header() {
 
         {/* Mobile Menu */}
         <Sheet>
-          <SheetTrigger asChild className="md:hidden !bg-card">
+          <SheetTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="border border-border"
+              className="lg:hidden !bg-card border border-border"
             >
               <Menu className="h-5 w-5 text-foreground" />
               <span className="sr-only">Toggle menu</span>

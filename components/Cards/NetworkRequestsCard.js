@@ -1,13 +1,7 @@
-import React, { useMemo } from "react";
+import React from "react";
 import BaseCard from "./BaseCard";
 import { iconMapping } from "@/lib/config";
-import { Download, AlertCircle, RefreshCw } from "lucide-react";
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { commonOptions } from "@/lib/commonOptions";
-import { useTheme } from "next-themes";
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import { Download, RefreshCw } from "lucide-react";
 
 export default function NetworkRequestsCard({
   data,
@@ -16,100 +10,42 @@ export default function NetworkRequestsCard({
   onFocus,
   analysis,
 }) {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const summary =
+    data?.summary && typeof data.summary === "object" ? data.summary : {};
+  const bars = Array.isArray(data?.horizontalBar) ? data.horizontalBar : [];
+  const requestBreakdown =
+    data?.requestBreakdown && typeof data.requestBreakdown === "object"
+      ? data.requestBreakdown
+      : null;
 
-  const {
-    totalRequests,
-    totalSize,
-    totalTime,
-    failedRequests,
-    redirects,
-    crossOriginHidden,
-    resourceTypes,
-  } = data || {};
+  // New payload labels from backend; keep legacy fallbacks.
+  const totalRequestsValue = summary.totalRequests ?? data?.totalRequests ?? 0;
+  const totalPayloadLabel =
+    summary.totalPayloadLabel ??
+    (typeof data?.totalSize === "number"
+      ? `${(data.totalSize / (1024 * 1024)).toFixed(2)} MB`
+      : "—");
+  const totalTimeLabel =
+    summary.totalTimeLabel ??
+    (typeof data?.totalTime === "number"
+      ? `${data.totalTime.toFixed(0)} ms`
+      : "—");
 
-  // Backward/forward compatible numeric guards
-  const totalRequestsCount =
-    typeof totalRequests === "number" ? totalRequests : 0;
-  const totalSizeBytes = typeof totalSize === "number" ? totalSize : 0;
-  const totalTimeMs = typeof totalTime === "number" ? totalTime : 0;
-  const redirectsCount = typeof redirects === "number" ? redirects : 0;
-  const failedCount =
-    typeof failedRequests === "number"
-      ? failedRequests
-      : Array.isArray(failedRequests)
-        ? failedRequests.length
-        : 0;
-  const crossOriginHiddenCount =
-    typeof crossOriginHidden === "number" ? crossOriginHidden : 0;
+  const crossOriginHiddenValue = data?.crossOriginHidden;
+  const crossOriginHiddenNote =
+    typeof crossOriginHiddenValue === "string"
+      ? crossOriginHiddenValue
+      : typeof crossOriginHiddenValue === "number" && crossOriginHiddenValue > 0
+        ? `${crossOriginHiddenValue} request(s) were hidden due to cross-origin constraints; payload may be a lower-bound estimate.`
+        : crossOriginHiddenValue === true
+          ? "Some requests were hidden due to cross-origin constraints; payload may be a lower-bound estimate."
+          : "";
 
-  const successfulCount = Math.max(
-    0,
-    totalRequestsCount - failedCount - redirectsCount,
-  );
-
-  const resourceTypesObj =
-    resourceTypes && typeof resourceTypes === "object" ? resourceTypes : null;
-  const resourceTypeEntries = resourceTypesObj
-    ? Object.entries(resourceTypesObj)
-        .filter(([, v]) => v && typeof v === "object")
-        .sort((a, b) => (b[1].count || 0) - (a[1].count || 0))
+  const breakdownEntries = requestBreakdown
+    ? Object.entries(requestBreakdown).filter(([, value]) =>
+        ["number", "string"].includes(typeof value),
+      )
     : [];
-
-  const chartData = {
-    labels: ["Successful", "Failed", "Redirects"],
-    datasets: [
-      {
-        data: [successfulCount, failedCount, redirectsCount],
-        // Brand-aware, semantic colors
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.8)", // Successful - muted slate
-          "rgba(239, 68, 68, 0.9)", // Failed - red
-          "rgba(234, 179, 8, 0.9)", // Redirects - brand yellow
-        ],
-        borderColor: [
-          "rgba(148, 163, 184, 1)",
-          "rgba(239, 68, 68, 1)",
-          "rgba(234, 179, 8, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const chartOptions = useMemo(() => {
-    const ticks = isDark ? "rgba(255,255,255,0.78)" : "rgba(55,65,81,0.9)";
-    const grid = isDark ? "rgba(255,255,255,0.10)" : "rgba(17,24,39,0.10)";
-
-    return {
-      ...commonOptions,
-      plugins: {
-        ...commonOptions.plugins,
-        legend: {
-          ...commonOptions.plugins?.legend,
-          labels: {
-            ...(commonOptions.plugins?.legend?.labels || {}),
-            color: ticks,
-          },
-        },
-        tooltip: {
-          ...commonOptions.plugins?.tooltip,
-          backgroundColor: isDark ? "#111827" : "white",
-          titleColor: isDark ? "#F9FAFB" : "#111827",
-          bodyColor: isDark ? "#E5E7EB" : "#374151",
-          borderColor: isDark ? "rgba(255,255,255,0.18)" : "#E5E7EB",
-        },
-      },
-      // Pie doesn't use scales, but keeping grid color avoids regressions if chart.js expands config
-      scales: commonOptions.scales
-        ? commonOptions.scales
-        : {
-            x: { ticks: { color: ticks }, grid: { color: grid, drawBorder: false } },
-            y: { ticks: { color: ticks }, grid: { color: grid, drawBorder: false } },
-          },
-    };
-  }, [isDark]);
 
   return (
     <BaseCard
@@ -117,125 +53,103 @@ export default function NetworkRequestsCard({
       status={status}
       isFocused={isFocused}
       onFocus={onFocus}
-      title="Network Requests"
+      title="Network & Payload"
       icon={iconMapping["network-requests"]}
       analysis={analysis}
     >
       <div className="space-y-4">
-        <div className="h-[200px] w-full">
-          <Pie data={chartData} options={chartOptions} />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="">
-            <div className="flex items-center gap-2 mb-2">
-              <Download className="w-4 h-4 text-blue-500" />
-              <span className="text-sm font-medium">Requests</span>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Download className="w-4 h-4 text-blue-500" />
+            <span className="text-sm font-medium">Overview</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
+              <p className="text-xs text-muted-foreground">Total payload</p>
+              <p className="text-sm font-semibold dark:text-foreground">
+                {totalPayloadLabel}
+              </p>
             </div>
-            <div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium">Total:</span>
-                <p> {totalRequestsCount}</p>
-              </div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium">Size:</span>
-                <p> {(totalSizeBytes / 1024).toFixed(2)} KB</p>
-              </div>
+            <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
+              <p className="text-xs text-muted-foreground">Total requests</p>
+              <p className="text-sm font-semibold dark:text-foreground">
+                {totalRequestsValue}
+              </p>
             </div>
-            <div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium">Total Time:</span>{" "}
-                <p>{totalTimeMs.toFixed(2)}ms</p>
-              </div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium">Redirects:</span>{" "}
-                <p>{redirectsCount}</p>
-              </div>
+            <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg">
+              <p className="text-xs text-muted-foreground">Total time</p>
+              <p className="text-sm font-semibold dark:text-foreground">
+                {totalTimeLabel}
+              </p>
             </div>
           </div>
         </div>
 
-        {crossOriginHiddenCount > 0 && (
-          <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg flex items-start gap-2">
-            <RefreshCw className="w-5 h-5 text-gray-500 mt-0.5" />
-            <div>
-              <p className="text-sm font-medium dark:text-foreground">
-                Cross-origin excluded
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {crossOriginHiddenCount} resource(s) excluded from size totals
-                (CORS)
-              </p>
+        {bars.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Payload distribution</p>
+            <div className="space-y-3">
+              {bars.map((item, idx) => {
+                const percent = Math.max(
+                  0,
+                  Math.min(100, Number(item?.percentOfPayload) || 0),
+                );
+                return (
+                  <div
+                    key={`${item?.label || "item"}-${idx}`}
+                    className="space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-2 text-xs">
+                      <span className="font-medium dark:text-foreground">
+                        {item?.label || "Unknown"}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {(Number(item?.bytes) || 0).toLocaleString()} bytes
+                        {" • "}
+                        {Number(item?.count) || 0} req
+                      </span>
+                    </div>
+                    <div className="h-2 rounded-full bg-gray-200 dark:bg-accent overflow-hidden">
+                      <div
+                        className="h-full bg-blue-500 rounded-full transition-all duration-500"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      {percent.toFixed(1)}% of payload
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {resourceTypeEntries.length > 0 && (
+        {breakdownEntries.length > 0 && (
           <div className="space-y-2">
-            <p className="text-sm font-medium">By resource type</p>
-            <div className="space-y-2">
-              {resourceTypeEntries.slice(0, 6).map(([type, stats]) => (
-                <div
-                  key={type}
-                  className="p-3 bg-gray-50 dark:bg-accent rounded-lg space-y-1"
+            <p className="text-sm font-medium">Request breakdown</p>
+            <div className="flex flex-wrap gap-2">
+              {breakdownEntries.map(([key, value]) => (
+                <span
+                  key={key}
+                  className="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-accent text-foreground/80"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium dark:text-foreground">
-                      {type}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      {stats.count ?? 0} req
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Time</span>
-                    <span>
-                      {typeof stats.totalTime === "number"
-                        ? `${stats.totalTime.toFixed(1)}ms`
-                        : "—"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Size</span>
-                    <span>
-                      {typeof stats.totalSize === "number"
-                        ? `${(stats.totalSize / 1024).toFixed(1)} KB`
-                        : "—"}
-                    </span>
-                  </div>
-                  {Array.isArray(stats.slowest) && stats.slowest.length > 0 && (
-                    <div className="pt-2 border-t border-foreground/10">
-                      <div className="text-xs font-medium text-muted-foreground mb-1">
-                        Slowest
-                      </div>
-                      {stats.slowest.slice(0, 1).map((s, idx) => (
-                        <div
-                          key={idx}
-                          className="text-xs text-muted-foreground break-words"
-                        >
-                          {s?.name || "Unknown"}
-                          {typeof s?.duration === "number"
-                            ? ` (${Math.round(s.duration)}ms)`
-                            : ""}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                  {key}: {String(value)}
+                </span>
               ))}
             </div>
           </div>
         )}
 
-        {failedCount > 0 && (
-          <div className="p-3 bg-red-50 dark:bg-accent rounded-lg flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-red-500 mt-0.5" />
+        {crossOriginHiddenNote && (
+          <div className="p-3 bg-gray-50 dark:bg-accent rounded-lg flex items-start gap-2">
+            <RefreshCw className="w-5 h-5 text-gray-500 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-red-700">
-                Failed Requests
+              <p className="text-sm font-medium dark:text-foreground">
+                Cross-origin visibility
               </p>
-              <p className="text-sm text-red-600">
-                {failedCount} requests failed
+              <p className="text-sm text-muted-foreground">
+                {crossOriginHiddenNote}
               </p>
             </div>
           </div>

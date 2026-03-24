@@ -124,28 +124,6 @@ export default function StructuredDataCard({
           </div>
         )}
 
-        {openGraph?.present && openGraph?.tags && (
-          <div className="bg-muted/40 rounded-md p-3 space-y-2 overflow-hidden">
-            <div className="text-xs font-medium text-muted-foreground">
-              OpenGraph tags
-            </div>
-            <div className="grid grid-cols-[minmax(90px,140px)_1fr] gap-x-3 gap-y-1 text-xs">
-              {Object.entries(openGraph.tags)
-                .slice(0, 10)
-                .map(([k, v]) => (
-                  <React.Fragment key={k}>
-                    <div className="text-muted-foreground truncate" title={k}>
-                      {k}
-                    </div>
-                    <div className="text-foreground break-words overflow-hidden">
-                      {String(v)}
-                    </div>
-                  </React.Fragment>
-                ))}
-            </div>
-          </div>
-        )}
-
         {jsonLdList.length > 0 && (
           <div className="space-y-2 overflow-hidden">
             <div className="text-xs font-medium text-muted-foreground">
@@ -212,7 +190,7 @@ export default function StructuredDataCard({
                 </button>
               </div>
               {expandedIndex === selectedJsonLdIndex && (
-                <pre className="px-3 pb-3 text-[11px] leading-relaxed overflow-auto max-h-60 whitespace-pre-wrap break-words text-foreground/80">
+                <pre className="px-3 pb-3 text-[11px] leading-relaxed overflow-auto max-h-36 whitespace-pre-wrap break-words text-foreground/80">
                   {formattedSelectedJson}
                 </pre>
               )}

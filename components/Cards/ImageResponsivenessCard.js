@@ -22,6 +22,7 @@ export default function ImageResponsivenessCard({
     skippedSvgs,
     score,
     details,
+    hiddenImages,
   } = data || {};
 
   const detailsList = Array.isArray(details) ? details : [];
@@ -115,6 +116,7 @@ export default function ImageResponsivenessCard({
       icon={iconMapping["image-responsiveness"]}
       analysis={analysis}
     >
+      {/* {JSON.stringify({ data, status, analysis }, null, 2)} */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
           <div className="flex flex-wrap gap-3 items-center">
@@ -128,6 +130,14 @@ export default function ImageResponsivenessCard({
                 Evaluated:{" "}
                 <span className="font-medium text-foreground">
                   {evaluatedImages}
+                </span>
+              </span>
+            )}
+            {typeof hiddenImages === "number" && (
+              <span className="text-muted-foreground text-xs sm:text-sm">
+                Hidden:{" "}
+                <span className="font-medium text-foreground">
+                  {hiddenImages}
                 </span>
               </span>
             )}

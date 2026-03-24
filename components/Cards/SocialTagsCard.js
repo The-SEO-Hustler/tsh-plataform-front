@@ -9,14 +9,32 @@ export default function SocialTagsCard({
   onFocus,
   analysis,
 }) {
-  const renderSocialTag = (tag, value) => (
-    <div key={tag} className="flex justify-between items-start py-1 gap-1">
-      <span className="font-medium">{JSON.stringify(tag)}:</span>
-      <span className="break-words text-right truncate">
-        {JSON.stringify(value)}
-      </span>
-    </div>
-  );
+  const renderSocialTag = (tag, value) => {
+    // Safely extract the string if the backend passed an object
+    let displayValue = value;
+    if (typeof value === "object" && value !== null) {
+      // Look for common keys your backend uses, fallback to stringify if it's completely unknown
+      displayValue =
+        value.content ||
+        value.description ||
+        value.property ||
+        JSON.stringify(value);
+    }
+
+    return (
+      <div key={tag} className="flex justify-between items-start py-1 gap-2">
+        <span className="font-medium text-gray-700 dark:text-foreground">
+          {tag}:
+        </span>
+        <span
+          className="break-all text-right truncate text-gray-500 dark:text-foreground/60"
+          title={displayValue}
+        >
+          {displayValue}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <BaseCard
@@ -33,7 +51,7 @@ export default function SocialTagsCard({
           <h4 className="font-semibold mb-2">Open Graph Tags</h4>
           <div className="">
             {Object.entries(data.openGraph.present).map(([tag, value]) =>
-              renderSocialTag(tag, value)
+              renderSocialTag(tag, value),
             )}
           </div>
         </div>
@@ -41,7 +59,7 @@ export default function SocialTagsCard({
           <h4 className="font-semibold mb-2">Twitter Card Tags</h4>
           <div className="">
             {Object.entries(data.twitterCard.present).map(([tag, value]) =>
-              renderSocialTag(tag, value)
+              renderSocialTag(tag, value),
             )}
           </div>
         </div>

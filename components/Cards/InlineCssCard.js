@@ -31,6 +31,7 @@ export default function InlineCssCard({
       icon={iconMapping.inlineCss}
       analysis={analysis}
     >
+      {/* {JSON.stringify({ data, status, analysis }, null, 2)} */}
       <div className="space-y-4">
         <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-accent rounded-lg">
           <span className="text-sm dark:text-foreground">
