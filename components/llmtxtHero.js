@@ -11,13 +11,14 @@ import { getPathname } from "@/lib/getpathname";
 import { useUsage } from "@/lib/usage-context";
 import Link from "next/link";
 import HeroTemplate from "./HeroTemplate";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 function LLMTxtHero() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { trackAnalysis, currentAnalysis, clearAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, clearAnalysis, user } = useFirebase();
   const { usage, setUsage } = useUsage();
   const [maxUrls, setMaxUrls] = useState(1);
 
@@ -72,6 +73,7 @@ function LLMTxtHero() {
         url: url,
         mode: "firecrawl",
         maxUrls: maxUrls,
+        userId: user?.uid,
       };
 
       const response = await fetch("/api/llmstxt-native", {
@@ -183,6 +185,7 @@ function LLMTxtHero() {
                   {loading ? "Initializing..." : "Generate Text"}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
+                <AuthHistoryTooltip isLoggedIn={!!user} />
               </form>
               {error && (
                 <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">

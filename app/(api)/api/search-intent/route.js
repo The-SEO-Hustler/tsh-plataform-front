@@ -5,7 +5,7 @@ import { db } from "@/lib/firebase";
 export async function POST(request) {
   try {
     const ip = request.headers.get("x-forwarded-for");
-    const { url, keyword, token, sendToEmail, email } = await request.json();
+    const { url, keyword, token, sendToEmail, email, userId } = await request.json();
     // Verify reCAPTCHA token
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
     const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
@@ -32,6 +32,7 @@ export async function POST(request) {
     const docRef = await addDoc(collection(db, "searchIntent"), {
       url,
       keyword,
+      ...(userId ? { userId } : {}),
       // sendToEmail,
       // email,
       status: "pending",
@@ -47,6 +48,7 @@ export async function POST(request) {
       url: url,
       keyword: keyword,
       docId: docRef.id,
+      ...(userId ? { userId } : {}),
     });
 
     // console.log("will request with ", body);

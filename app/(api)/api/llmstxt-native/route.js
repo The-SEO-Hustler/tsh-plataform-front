@@ -19,7 +19,7 @@ export async function POST(request) {
 
     // Read JSON data from the request
     const body = await request.json();
-    const { url, mode, maxUrls } = body;
+    const { url, mode, maxUrls, userId } = body;
 
     // Validate required fields
     if (!url) {
@@ -53,6 +53,7 @@ export async function POST(request) {
       url,
       mode,
       maxUrls,
+      ...(userId ? { userId } : {}),
       type: "llmstxt",
       status: "pending",
       createdAt: new Date(),
@@ -65,6 +66,7 @@ export async function POST(request) {
       docId: docRef.id,
       mode: mode,
       maxUrls: maxUrls,
+      ...(userId ? { userId } : {}),
     };
 
     // Forward the request to your dedicated Node.js service endpoint

@@ -19,6 +19,7 @@ import Image from "next/image";
 import RotatingText from "./RotatingText";
 import { useTheme } from "next-themes";
 import SpotlightCard from "./SpotlighCard";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 function SeoCheckHeroContent() {
   const { resolvedTheme } = useTheme();
@@ -30,7 +31,7 @@ function SeoCheckHeroContent() {
     setMounted(true);
   }, []);
   const router = useRouter();
-  const { trackAnalysis, currentAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, user } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
 
@@ -93,14 +94,14 @@ function SeoCheckHeroContent() {
     console.log("Executing reCAPTCHA...");
     const token = await executeRecaptcha("contact_form");
     console.log("reCAPTCHA token:", token);
-
+    console.log("userId: ", user?.uid);
     try {
       const response = await fetch("/api/seo-check", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: normalizedUrl, token }),
+        body: JSON.stringify({ url: normalizedUrl, token, userId: user?.uid }),
       });
 
       const data = await response.json();
@@ -146,6 +147,7 @@ function SeoCheckHeroContent() {
           <Container id="hero">
             <section className="min-h-[calc(100vh-10px)] flex items-center relative">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* {JSON.stringify({ user }, null, 2)} */}
                 {/* Left Column - URL Input */}
                 <div className="space-y-8">
                   <h1 className="text-4xl md:text-5xl font-bold text-foreground">
@@ -221,6 +223,7 @@ function SeoCheckHeroContent() {
                       </span>{" "}
                       free scans remaining today
                     </p>
+                    <AuthHistoryTooltip isLoggedIn={!!user} />
                     {formError && <p className="text-red-500">{formError}</p>}
                   </form>
                   <div className="flex gap-2 flex-col">

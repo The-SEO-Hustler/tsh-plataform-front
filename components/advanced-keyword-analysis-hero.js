@@ -32,6 +32,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useUsage } from "@/lib/usage-context";
 import { getPathname } from "@/lib/getpathname";
 import HeroTemplate from "./HeroTemplate";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 function AdvancedKeywordAnalysisHero() {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,7 @@ function AdvancedKeywordAnalysisHero() {
     currentAnalysis,
     trackAnalysis,
     clearAnalysis,
+    user,
   } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -91,6 +93,7 @@ function AdvancedKeywordAnalysisHero() {
     try {
       const formData = new FormData();
       formData.append("keyword", keyword);
+      if (user?.uid) formData.append("userId", user.uid);
 
       const response = await fetch("/api/advanced-keyword-analysis", {
         method: "POST",
@@ -170,6 +173,7 @@ function AdvancedKeywordAnalysisHero() {
                     <label htmlFor="keyword" className="text-xs text-foreground/80 top-0 left-2 bg-background px-2 py-1 absolute translate-y-[-50%]">Keyword</label>
                   </div>
                 </form>
+                  <AuthHistoryTooltip isLoggedIn={!!user} />
                 {error && (
                   <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
                     <p>{error}</p>

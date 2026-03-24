@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import HeroTemplate from "./HeroTemplate";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 const options = [
   { value: "blog_post", label: "Blog Post" },
@@ -40,6 +41,7 @@ function ContentPlanningHero() {
     currentAnalysis,
     trackAnalysis,
     clearAnalysis,
+    user,
   } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -95,6 +97,7 @@ function ContentPlanningHero() {
       const formData = new FormData();
       formData.append("keyword", keyword);
       formData.append("content_type", contentType);
+      if (user?.uid) formData.append("userId", user.uid);
 
       const response = await fetch("/api/content-planning", {
         method: "POST",
@@ -197,6 +200,7 @@ function ContentPlanningHero() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
+                <AuthHistoryTooltip isLoggedIn={!!user} />
                 {error && (
                   <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
                     <p>{error}</p>

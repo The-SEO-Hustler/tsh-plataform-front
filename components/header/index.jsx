@@ -24,23 +24,20 @@ import {
 } from "@/components/ui/navigation-menu";
 import useScrollDirection from "./scroll";
 
-import {
-  Menu,
-  ChartArea,
-  NotebookPen,
-  FileCode,
-  ScanSearch,
-} from "lucide-react";
+import { Menu, LogIn, UserCircle2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import ThemeSwitch from "../ThemeSwitch";
 import { useTheme } from "next-themes";
 import styles from "./style.module.css";
+import { useFirebase } from "@/lib/firebase-context";
+import { toast } from "sonner";
 function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const { resolvedTheme } = useTheme();
+  const { user, loginWithGoogle } = useFirebase();
   const [mounted, setMounted] = useState(false);
   // Add scroll listener to apply elevation to header on scroll
   useEffect(() => {
@@ -96,6 +93,16 @@ function Header() {
   const isSpecialPath = checkPathname();
   const isScrollPath = checkScrollPath();
   const scrollDirection = useScrollDirection();
+  const userLabel = user?.displayName || user?.email || "Account";
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await loginWithGoogle();
+      toast.success("Logged in successfully");
+    } catch (error) {
+      toast.error(error?.message || "Google login failed");
+    }
+  };
 
   return (
     <header
@@ -204,7 +211,37 @@ function Header() {
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
-          <ThemeSwitch />
+          <div className="flex items-center gap-2">
+            {user ? (
+              <Link
+                href="/account"
+                className="hidden xl:flex items-center gap-1 text-xs text-foreground/80 max-w-[220px] truncate !no-underline border border-border rounded-md px-3 py-1.5 hover:bg-accent/60 transition-colors"
+              >
+                <UserCircle2 className="w-4 h-4" />
+                <span className="truncate">{userLabel}</span>
+              </Link>
+            ) : (
+              <button
+                variant="outline"
+                size="sm"
+                onClick={handleGoogleSignIn}
+                className={`h-8 px-3 text-foreground flex items-center gap-1 text-sm !font-bold !no-underline  cursor-pointer  rounded-md ${styles.loginButton}`}
+              >
+                <LogIn className="w-4 h-4 mr-1" />
+                Login
+              </button>
+            )}
+            {user && (
+              <Link
+                href="/account"
+                className="xl:hidden inline-flex items-center gap-1 text-xs text-foreground/80 border border-border rounded-md px-2 py-1.5 hover:bg-accent/60 transition-colors !no-underline"
+              >
+                <UserCircle2 className="w-4 h-4" />
+                <span>Account</span>
+              </Link>
+            )}
+            <ThemeSwitch />
+          </div>
         </NavigationMenu>
 
         {/* Auth Buttons */}
@@ -286,6 +323,28 @@ function Header() {
                   About
                 </Link>
               </SheetClose>
+              {user && (
+                <SheetClose asChild>
+                  <Link
+                    href="/account"
+                    className="text-sm !text-foreground !no-underline !font-bold inline-flex items-center gap-2"
+                  >
+                    <UserCircle2 className="w-4 h-4" />
+                    {userLabel}
+                  </Link>
+                </SheetClose>
+              )}
+              {!user && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGoogleSignIn}
+                  className="w-full"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login with Google
+                </Button>
+              )}
             </div>
             <SheetFooter className="flex justify-center">
               {/* Theme Switch */}

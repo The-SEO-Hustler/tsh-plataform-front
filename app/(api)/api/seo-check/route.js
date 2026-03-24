@@ -5,7 +5,9 @@ import { db } from "@/lib/firebase";
 export async function POST(request) {
   try {
     const ip = request.headers.get("x-forwarded-for");
-    const { url, token } = await request.json();
+    const { url, token, userId } = await request.json();
+
+    console.log("userId: ", userId);
     // Verify reCAPTCHA token
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
     const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
@@ -20,17 +22,18 @@ export async function POST(request) {
     if (!recaptchaData.success) {
       console.error(
         "reCAPTCHA verification failed:",
-        recaptchaData["error-codes"]
+        recaptchaData["error-codes"],
       );
       return NextResponse.json(
         { error: "reCAPTCHA verification failed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Create document in Firebase
     const docRef = await addDoc(collection(db, "seoAnalyses"), {
       url,
+      ...(userId ? { userId } : {}),
       status: "pending",
       type: "seo-check",
       createdAt: new Date(),
@@ -42,6 +45,7 @@ export async function POST(request) {
     const body = JSON.stringify({
       url: url,
       docId: docRef.id,
+      ...(userId ? { userId } : {}),
     });
 
     // console.log("will request with ", body);
@@ -58,7 +62,7 @@ export async function POST(request) {
           "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
           "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
         },
-      }
+      },
     );
 
     const response = await backendResponse.json();
@@ -71,7 +75,7 @@ export async function POST(request) {
     console.error("Error in analyze route:", error);
     return NextResponse.json(
       { success: false, error: "Failed to start analysis" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -20,6 +20,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useUsage } from "@/lib/usage-context";
 import { getPathname } from "@/lib/getpathname";
 import HeroTemplate from "../HeroTemplate";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 function SearchIntentHeroContent() {
   const [url, setUrl] = useState("");
@@ -29,7 +30,7 @@ function SearchIntentHeroContent() {
   const [sendToEmail, setSendToEmail] = useState(false);
   const [email, setEmail] = useState("");
   const router = useRouter();
-  const { currentAnalysis, trackAnalysis, clearAnalysis } = useFirebase();
+  const { currentAnalysis, trackAnalysis, clearAnalysis, user } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -99,6 +100,7 @@ function SearchIntentHeroContent() {
           keyword,
           token,
           ...(sendToEmail && email && { email }),
+          userId: user?.uid,
         }),
       });
 
@@ -256,6 +258,7 @@ function SearchIntentHeroContent() {
                       </span>
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
+                    <AuthHistoryTooltip isLoggedIn={!!user} />
                     {formError && <p className="text-red-500">{formError}</p>}
                   </form>
                   <div className="flex gap-2 flex-col">

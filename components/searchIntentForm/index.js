@@ -8,6 +8,7 @@ import RecaptchaProvider from "@/components/RecaptchaProvider";
 import { useUsage } from "@/lib/usage-context";
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 function SearchIntentEmbbed() {
   return (
@@ -22,7 +23,7 @@ function SearchIntentForm() {
   const [keyword, setKeyword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState('');
-  const { trackAnalysis, currentAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, user } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
 
@@ -79,7 +80,7 @@ function SearchIntentForm() {
           url,
           keyword,
           token,
-          ...(sendToEmail && email && { email })
+          userId: user?.uid,
         }),
       });
 
@@ -199,6 +200,7 @@ function SearchIntentForm() {
           </span>
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
+        <AuthHistoryTooltip isLoggedIn={!!user} />
         {formError && <p className="text-red-500">{formError}</p>}
       </form>
       {formError && <p className="!text-red-500 !py-1 !my-1">{formError}</p>}

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { getPathname } from "@/lib/getpathname";
 import HeroTemplate from "../HeroTemplate";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 const options = [
   { value: "english", label: "English" },
@@ -45,6 +46,7 @@ function EEATCheckerHero() {
     currentAnalysis,
     trackAnalysis,
     clearAnalysis,
+    user,
   } = useFirebase();
   const { usage, setUsage } = useUsage();
   const handleSubmit = async (e) => {
@@ -94,6 +96,7 @@ function EEATCheckerHero() {
       formData.append("query", query);
       formData.append("userLocation", userLocation);
       formData.append("taskLocale", taskLocale);
+      if (user?.uid) formData.append("userId", user.uid);
 
       const response = await fetch("/api/eeat-checker", {
         method: "POST",
@@ -223,6 +226,7 @@ function EEATCheckerHero() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
+                <AuthHistoryTooltip isLoggedIn={!!user} />
                 {error && (
                   <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
                     <p>{error}</p>

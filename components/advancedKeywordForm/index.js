@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useUsage } from "@/lib/usage-context";
 import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 
 function AdvancedKeywordForm() {
   const [keyword, setKeyword] = useState("");
@@ -13,6 +14,7 @@ function AdvancedKeywordForm() {
   const {
     trackAnalysis,
     currentAnalysis,
+    user,
   } = useFirebase();
   const [error, setError] = useState(null);
 
@@ -50,6 +52,7 @@ function AdvancedKeywordForm() {
     try {
       const formData = new FormData();
       formData.append("keyword", keyword);
+      if (user?.uid) formData.append("userId", user.uid);
 
       const response = await fetch("/api/advanced-keyword-analysis", {
         method: "POST",
@@ -114,6 +117,7 @@ function AdvancedKeywordForm() {
           </Button>
         </div>
       </form>
+      <AuthHistoryTooltip isLoggedIn={!!user} />
       {error && (
         <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
           <p>{error}</p>

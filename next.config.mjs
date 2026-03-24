@@ -38,6 +38,25 @@ const nextConfig = {
       permanent: true,
     },
   ],
+  rewrites: async () => {
+    const firebaseAuthHelperDomain =
+      process.env.FIREBASE_AUTH_HELPER_DOMAIN ||
+      `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`;
+
+    return {
+      beforeFiles: [
+        // Firebase Auth helper endpoints required when using a custom authDomain.
+        {
+          source: "/__/auth/:path*",
+          destination: `https://${firebaseAuthHelperDomain}/__/auth/:path*`,
+        },
+        {
+          source: "/__/firebase/init.json",
+          destination: `https://${firebaseAuthHelperDomain}/__/firebase/init.json`,
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;

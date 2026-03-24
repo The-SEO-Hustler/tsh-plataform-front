@@ -15,6 +15,7 @@ export async function POST(request) {
     // Read JSON data from the request
     const formData = await request.formData();
     const url = formData.get("url");
+    const userId = formData.get("userId");
 
     // Validate required fields if needed
     if (!url) {
@@ -27,6 +28,7 @@ export async function POST(request) {
 
     const docRef = await addDoc(collection(db, "llmstxt"), {
       url,
+      ...(userId ? { userId } : {}),
       type: "llmstxt",
       status: "pending",
       createdAt: new Date(),
@@ -48,6 +50,7 @@ export async function POST(request) {
         body: JSON.stringify({
           url: url,
           docId: docRef.id,
+          ...(userId ? { userId } : {}),
         }),
       }
     );

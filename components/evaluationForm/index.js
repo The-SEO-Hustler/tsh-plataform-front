@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import { useUsage } from '@/lib/usage-context'
 import { useFirebase } from '@/lib/firebase-context'
 import { toast } from 'sonner'
+import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
 import {
   Select,
   SelectContent,
@@ -36,7 +37,7 @@ function EvaluationForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { usage, setUsage } = useUsage();
-  const { trackAnalysis, currentAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, user } = useFirebase();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -71,6 +72,7 @@ function EvaluationForm() {
       formData.append("query", query);
       formData.append("userLocation", userLocation);
       formData.append("taskLocale", taskLocale);
+      if (user?.uid) formData.append("userId", user.uid);
 
       const response = await fetch("/api/eeat-checker", {
         method: "POST",
@@ -186,6 +188,7 @@ function EvaluationForm() {
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </form>
+      <AuthHistoryTooltip isLoggedIn={!!user} />
       {error && (
         <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-md">
           <p>{error}</p>

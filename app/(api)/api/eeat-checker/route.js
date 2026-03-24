@@ -18,6 +18,7 @@ export async function POST(request) {
     const query = formData.get("query");
     const userLocation = formData.get("userLocation")
     const taskLocale = formData.get("taskLocale")
+    const userId = formData.get("userId");
 
     // Validate required fields if needed
     if (!url) {
@@ -44,6 +45,7 @@ export async function POST(request) {
       query,
       userLocation,
       taskLocale,
+      ...(userId ? { userId } : {}),
       type: "evaluation",
       status: "pending",
       createdAt: new Date(),
@@ -68,6 +70,7 @@ export async function POST(request) {
           userLocation: userLocation,
           taskLocale: taskLocale,
           docId: docRef.id,
+          ...(userId ? { userId } : {}),
         }),
       }
     );

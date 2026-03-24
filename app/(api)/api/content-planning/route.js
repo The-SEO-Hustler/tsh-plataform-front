@@ -16,6 +16,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const keyword = formData.get("keyword");
     const contentType = formData.get("content_type");
+    const userId = formData.get("userId");
 
     // Validate required fields if needed
     if (!keyword) {
@@ -34,6 +35,7 @@ export async function POST(request) {
     const docRef = await addDoc(collection(db, "contentPlanning"), {
       keyword,
       contentType,
+      ...(userId ? { userId } : {}),
       type: "content-planning",
       status: "pending",
       createdAt: new Date(),
@@ -56,6 +58,7 @@ export async function POST(request) {
           keyword: keyword,
           content_type: contentType,
           docId: docRef.id,
+          ...(userId ? { userId } : {}),
         }),
       }
     );

@@ -15,6 +15,7 @@ export async function POST(request) {
     // Read JSON data from the request
     const formData = await request.formData();
     const keyword = formData.get("keyword");
+    const userId = formData.get("userId");
 
     // Validate required fields if needed
     if (!keyword) {
@@ -26,6 +27,7 @@ export async function POST(request) {
 
     const docRef = await addDoc(collection(db, "keywordAnalysis"), {
       keyword,
+      ...(userId ? { userId } : {}),
       type: "advanced-keyword-analysis",
       preview: false,
       status: "pending",
@@ -50,6 +52,7 @@ export async function POST(request) {
         body: JSON.stringify({
           keyword: keyword,
           docId: docRef.id,
+          ...(userId ? { userId } : {}),
         }),
       }
     );

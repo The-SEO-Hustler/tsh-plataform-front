@@ -53,7 +53,7 @@ function SEOAudit({ blogPosts }) {
   const [layout, setLayout] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [cost, setCost] = useState({});
-  const { trackAnalysis, currentAnalysis } = useFirebase();
+  const { trackAnalysis, currentAnalysis, user } = useFirebase();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
   const [status, setStatus] = useState(
@@ -278,7 +278,7 @@ function SEOAudit({ blogPosts }) {
       const response = await fetch("/api/seo-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, token }),
+        body: JSON.stringify({ url, token, userId: user?.uid }),
       });
 
       const data = await response.json();
