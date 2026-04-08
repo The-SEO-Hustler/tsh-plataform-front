@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-export default function HeroTemplate({ children, className, noBg = false }) {
+export default function HeroTemplate({ children, className, noBg = false, bgClassName }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -123,12 +123,14 @@ export default function HeroTemplate({ children, className, noBg = false }) {
   return (
     <div
       ref={heroRef}
-      className={`pt-24 pb-16 md:pt-32 md:pb-24 ${noBg ? '' : 'bg-gradient-to-br from-[#4e503a] to-black'} relative overflow-hidden ${className}`}
+      className={`pt-24 pb-16 md:pt-32 md:pb-24 ${noBg ? '' : (bgClassName || 'bg-gradient-to-br from-[#4e503a] to-black')} relative overflow-hidden ${className}`}
     >
       {/* Background pattern */}
-      <div className="absolute inset-0 opacity-30">
-        {isClient ? generateGridPattern() : generateStaticPattern()}
-      </div>
+      {!noBg && (
+        <div className="absolute inset-0 opacity-30">
+          {isClient ? generateGridPattern() : generateStaticPattern()}
+        </div>
+      )}
 
       {/* Yellow accent shapes */}
       {/* <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full opacity-10 -translate-y-1/2 translate-x-1/2"></div>

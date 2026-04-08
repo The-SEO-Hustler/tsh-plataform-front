@@ -7,7 +7,11 @@ import { toast } from "sonner";
 import Image from "next/image";
 import tocStyle from "@/components/TocItem/TocItem.module.css";
 import Container from "@/components/container";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import TocItem from "@/components/TocItem";
 import { replaceComponents } from "@/lib/replaceComponents";
 import useScrollDirection from "@/components/header/scroll";
@@ -15,14 +19,106 @@ import HeroTemplate from "@/components/HeroTemplate";
 import MoveUpButton from "../MoveUpButton";
 function ResourceContentPage({ post, toc }) {
   const scrollDirection = useScrollDirection();
-  const tocRef = useRef(null)
-  const contentRef = useRef(null)
-  const mobileTocRef = useRef(null)
+  const tocRef = useRef(null);
+  const contentRef = useRef(null);
+  const mobileTocRef = useRef(null);
   const [isTocOpen, setIsTocOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Auto-close drawer when TOC item is clicked
   const handleTocItemClick = () => {
     setIsTocOpen(false);
+  };
+
+  const downloadResource = async () => {
+    try {
+      setIsDownloading(true);
+
+      const title = String(post?.title || "resource").trim() || "resource";
+      const safeName = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/(^-|-$)+/g, "")
+        .slice(0, 80);
+
+      const featuredImageHtml = post?.featuredImage
+        ? `<figure style="margin: 24px 0 0 0;">
+            <img src="${post.featuredImage}" alt="${String(post?.featuredImageAlt || title).replace(/"/g, "&quot;")}" style="width:100%; height:auto; border-radius:14px; border:1px solid rgba(0,0,0,0.12);" />
+          </figure>`
+        : "";
+
+      const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</title>
+    <meta name="description" content="${String(post?.excerpt || "")
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 180)
+      .replace(/"/g, "&quot;")}" />
+    <style>
+      :root { color-scheme: light; }
+      body { margin:0; background:#ffffff; color:#111827; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 64px; }
+      .kicker { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: rgba(17,24,39,.60); }
+      h1 { font-size: 40px; line-height: 1.06; letter-spacing: -0.03em; margin: 10px 0 14px; }
+      .meta { display:flex; gap:12px; flex-wrap:wrap; font-size: 14px; color: rgba(17,24,39,.70); }
+      .meta b { color: rgba(17,24,39,.92); }
+      hr { border:0; border-top:1px solid rgba(17,24,39,.12); margin: 22px 0 26px; }
+      article { font-size: 18px; line-height: 1.72; }
+      article h2 { margin-top: 32px; }
+      article h3 { margin-top: 24px; }
+      article img { max-width: 100%; height: auto; }
+      article a { color: #b45309; }
+      .note { margin-top: 34px; font-size: 12px; color: rgba(17,24,39,.55); }
+      @media print { .note { display:none; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="kicker">${String(post?.category || "Resource")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")}</div>
+      <h1>${title.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</h1>
+      <div class="meta">
+        <div><b>By</b> ${String(post?.author || "The SEO Hustler")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")}</div>
+        <div><b>Date</b> ${String(post?.date || "")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")}</div>
+        <div><b>Read</b> ${String(post?.readTime || "")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")} min</div>
+        <div><b>Source</b> ${typeof window !== "undefined" ? window.location.href : ""}</div>
+      </div>
+      ${featuredImageHtml}
+      <hr />
+      <article>
+        ${String(post?.content || "")}
+      </article>
+      <p class="note">Downloaded from The SEO Hustler. Images are referenced by URL; print to PDF if you need a single-file archive.</p>
+    </div>
+  </body>
+</html>`;
+
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${safeName || "resource"}.html`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      toast.error("Couldn't download this resource. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleShare = (platform) => {
@@ -34,17 +130,17 @@ function ResourceContentPage({ post, toc }) {
     switch (platform) {
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          url
+          url,
         )}`;
         break;
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-          url
+          url,
         )}&text=${encodeURIComponent(title)}`;
         break;
       case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          url
+          url,
         )}`;
         break;
       case "copy":
@@ -62,43 +158,44 @@ function ResourceContentPage({ post, toc }) {
     const contentElement = contentRef.current;
     const tocElement = tocRef.current;
     const mobileTocElement = mobileTocRef.current;
-    const headings = contentElement?.querySelectorAll('h2, h3') ?? [];
+    const headings = contentElement?.querySelectorAll("h2, h3") ?? [];
     const observerOptions = {
-      rootMargin: '0px',
+      rootMargin: "0px",
       threshold: 0,
     };
-    if (!tocElement) return
-
+    if (!tocElement) return;
 
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
-
         if (entry.isIntersecting) {
           const targetId = entry.target.id;
           const activeLink = tocElement.querySelector(`[href="#${targetId}"]`);
-          const mobileActiveLink = mobileTocElement.querySelector(`[href="#${targetId}"]`);
+          const mobileActiveLink = mobileTocElement.querySelector(
+            `[href="#${targetId}"]`,
+          );
           if (activeLink || mobileActiveLink) {
-
-            tocElement?.querySelectorAll('a')?.forEach(link => link.classList.remove(tocStyle.active));
-            mobileTocElement?.querySelectorAll('a')?.forEach(link => link.classList.remove(tocStyle.active));
+            tocElement
+              ?.querySelectorAll("a")
+              ?.forEach((link) => link.classList.remove(tocStyle.active));
+            mobileTocElement
+              ?.querySelectorAll("a")
+              ?.forEach((link) => link.classList.remove(tocStyle.active));
             activeLink?.classList.add(tocStyle.active);
             mobileActiveLink?.classList.add(tocStyle.active);
           }
-
         }
-
-      })
-    }, observerOptions)
+      });
+    }, observerOptions);
 
     headings.forEach((heading) => {
       observer.observe(heading);
-    })
+    });
     return () => {
       headings.forEach((heading) => {
-        observer.unobserve(heading)
-      })
-    }
-  }, [toc, tocRef, contentRef, mobileTocRef])
+        observer.unobserve(heading);
+      });
+    };
+  }, [toc, tocRef, contentRef, mobileTocRef]);
 
   return (
     <>
@@ -110,7 +207,7 @@ function ResourceContentPage({ post, toc }) {
               <span className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium">
                 {post.category}
               </span>
-              <span className=" text-foreground/70 dark:text-foreground/70 flex items-center text-sm">
+              <span className=" text-white dark:text-foreground/70 flex items-center text-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-1"
@@ -126,16 +223,46 @@ function ResourceContentPage({ post, toc }) {
                 </svg>
                 {post.readTime} min read
               </span>
-              <span className=" text-foreground/70 dark:text-foreground/70 text-sm">
+              <span className=" text-white dark:text-foreground/70 text-sm">
                 {post.date}
               </span>
             </div>
 
             <h1
-              className={`text-3xl md:text-4xl lg:text-5xl font-black !text-foreground dark:!text-foreground mb-6 leading-tight ${styles.title}`}
+              className={`text-3xl md:text-4xl lg:text-5xl font-black !text-white dark:!text-foreground mb-6 leading-tight ${styles.title}`}
             >
               {post.title}
             </h1>
+
+            <div className="mt-4 mb-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={downloadResource}
+                disabled={isDownloading}
+                className={`inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-4 py-2 font-bold transition-colors hover:bg-primary/90 cursor-pointer disabled:cursor-not-allowed ${isDownloading ? "animate-pulse" : ""}`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                {isDownloading ? "Preparing download…" : "Download"}
+              </button>
+              <span className="text-xs text-white/60 dark:text-foreground/60">
+                Downloads this resource as an HTML file you can save or print to
+                PDF.
+              </span>
+            </div>
 
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden mr-3 relative">
@@ -162,10 +289,10 @@ function ResourceContentPage({ post, toc }) {
                 </svg>
               </div>
               <div>
-                <p className="text-foreground dark:text-foreground font-medium">
+                <p className="text-white dark:text-foreground font-medium">
                   {post.author}
                 </p>
-                <p className="text-foreground/60 dark:text-foreground/60 text-sm">
+                <p className="text-white/60 dark:text-foreground/60 text-sm">
                   SEO Consultant & Founder
                 </p>
               </div>
@@ -176,15 +303,11 @@ function ResourceContentPage({ post, toc }) {
 
       <MoveUpButton />
       <Container>
-
         <div className="flex flex-col md:flex-row flex-wrap w-full pt-16 max-w-full relative py-12 bg-background">
-
-
           {/* Article Content */}
-          <section className='flex flex-col md:pr-4 lg:pr-6 w-full md:w-[65%]'>
+          <section className="flex flex-col md:pr-4 lg:pr-6 w-full md:w-[65%]">
             <div className="container lg:max-w-4xl mx-auto">
               <div className="max-w-4xl mx-auto">
-
                 <div className="md:hidden mb-6">
                   <button
                     onClick={() => setIsTocOpen(true)}
@@ -197,10 +320,11 @@ function ResourceContentPage({ post, toc }) {
 
                 {/* Social Sharing */}
 
-
                 {/* Main Article Content */}
-                <article className={`${styles.content} wp-article`} ref={contentRef}>
-
+                <article
+                  className={`${styles.content} wp-article`}
+                  ref={contentRef}
+                >
                   {replaceComponents(post.content)}
                 </article>
                 {/* {content && <Content html={content} />} */}
@@ -218,18 +342,18 @@ function ResourceContentPage({ post, toc }) {
                     ))}
                   </div>
                 </div>
-
-
               </div>
             </div>
           </section>
           {/* Toc */}
           <div className="w-full md:w-[35%] hidden  md:flex flex-col lg:pl-10 xl:items-start xl:pl-20 ">
-
-
-            <div className={`${scrollDirection === "up" ? "sticky top-[70px] md:h-[calc(100vh-88px)]" : "sticky top-[8px] md:h-[calc(100vh-18px)]"} transition-all duration-300  overflow-auto`}>
-
-              <h3 className='mb-2 text-lg dark:text-primary text-foreground flex items-center font-semibold'><AlignLeft strokeWidth={1.5} className='mr-1' /> On This Resource</h3>
+            <div
+              className={`${scrollDirection === "up" ? "sticky top-[70px] md:h-[calc(100vh-88px)]" : "sticky top-[8px] md:h-[calc(100vh-18px)]"} transition-all duration-300  overflow-auto`}
+            >
+              <h3 className="mb-2 text-lg dark:text-primary text-foreground flex items-center font-semibold">
+                <AlignLeft strokeWidth={1.5} className="mr-1" /> On This
+                Resource
+              </h3>
               <ul ref={tocRef} className="">
                 {toc.map(({ id: h2Id, title: h2Title, children, tag }) => (
                   <TocItem h2Id={h2Id} h2Title={h2Title} key={h2Id} tag={tag}>
@@ -244,7 +368,6 @@ function ResourceContentPage({ post, toc }) {
           <div className="fixed xl:right-4 right-4 top-[50%] translate-y-[-50%] hidden md:block">
             <div className="flex flex-col items-center gap-4">
               <Tooltip>
-
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => handleShare("facebook")}
@@ -265,14 +388,10 @@ function ResourceContentPage({ post, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Share on Facebook
-                </TooltipContent>
-
+                <TooltipContent>Share on Facebook</TooltipContent>
               </Tooltip>
 
               <Tooltip>
-
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => handleShare("twitter")}
@@ -293,9 +412,7 @@ function ResourceContentPage({ post, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Share on Twitter
-                </TooltipContent>
+                <TooltipContent>Share on Twitter</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -320,9 +437,7 @@ function ResourceContentPage({ post, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Share on LinkedIn
-                </TooltipContent>
+                <TooltipContent>Share on LinkedIn</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -353,18 +468,13 @@ function ResourceContentPage({ post, toc }) {
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  Copy Link
-                </TooltipContent>
+                <TooltipContent>Copy Link</TooltipContent>
               </Tooltip>
-
             </div>
           </div>
         </div>
         {/* Author Bio */}
         <div className="pb-10">
-
-
           <div className="mt-12 p-6 bg-card rounded-lg border border-border shadow-sm text-foreground max-w-xl mx-auto">
             <div className="flex items-center">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center overflow-hidden mr-4 relative">
@@ -402,10 +512,10 @@ function ResourceContentPage({ post, toc }) {
               </div>
             </div>
             <p className="mt-4 text-foreground">
-              Zac is an SEO consultant with over 10 years of experience
-              helping businesses achieve measurable growth through search. He
-              specializes in technical SEO audits, content strategy, and
-              driving e-commerce conversions.
+              Zac is an SEO consultant with over 10 years of experience helping
+              businesses achieve measurable growth through search. He
+              specializes in technical SEO audits, content strategy, and driving
+              e-commerce conversions.
             </p>
             <div className="mt-4 flex items-center space-x-4">
               <a
@@ -490,7 +600,9 @@ function ResourceContentPage({ post, toc }) {
       </div>
 
       {/* Mobile TOC Bottom Drawer */}
-      <div className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${isTocOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      <div
+        className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${isTocOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      >
         {/* Backdrop */}
         <div
           className="absolute inset-0 bg-black/50"
@@ -498,7 +610,9 @@ function ResourceContentPage({ post, toc }) {
         />
 
         {/* Drawer */}
-        <div className={`absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-2xl transition-transform duration-300 ${isTocOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-2xl transition-transform duration-300 ${isTocOpen ? "translate-y-0" : "translate-y-full"}`}
+        >
           {/* Drawer Handle */}
           <div className="flex justify-center pt-3 pb-2">
             <div className="w-12 h-1 bg-muted-foreground/30 rounded-full"></div>
@@ -536,7 +650,6 @@ function ResourceContentPage({ post, toc }) {
           </div>
         </div>
       </div>
-
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { dispatchBackendJob } from "@/lib/dispatchBackendJob";
 
 export async function POST(request) {
   try {
@@ -53,10 +54,9 @@ export async function POST(request) {
 
     // console.log("will request with ", body);
 
-    const backendResponse = await fetch(
+    const dispatchResult = await dispatchBackendJob(
       `${process.env.API_ENDPOINT}/search-intent`,
       {
-        method: "POST",
         body,
         headers: {
           "Content-Type": "application/json",
@@ -65,14 +65,22 @@ export async function POST(request) {
           "CF-Access-Client-Id": process.env.CF_Access_Client_Id,
           "CF-Access-Client-Secret": process.env.CF_Access_Client_Secret,
         },
+        timeoutMs: 10000,
       }
     );
 
-    const response = await backendResponse.json();
-    // console.log("response from back ", response);
+    if (!dispatchResult.accepted) {
+      console.warn("search-intent dispatch not confirmed", dispatchResult);
+    }
+
     return NextResponse.json({
+      success: true,
+      queued: true,
       docId: docRef.id,
-      ...response,
+      dispatch: {
+        accepted: dispatchResult.accepted,
+        status: dispatchResult.status,
+      },
     });
   } catch (error) {
     console.error("Error in analyze route:", error);

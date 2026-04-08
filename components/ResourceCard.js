@@ -76,9 +76,10 @@ export default function ResourceCard({
   const imageAlt = featuredImage?.node?.altText || title;
 
   const sanitizedExcerpt = excerpt ? excerpt.replace(/<[^>]*>/g, '') : '';
+  const href = `/${resourceType}/${slug}`;
 
   return (
-    <Link href={`/${resourceType}/${slug}`} className="rounded-lg overflow-hidden bg-card shadow-sm hover:shadow-md transition-all h-full border border-border !no-underline">
+    <div className="rounded-lg overflow-hidden bg-card shadow-sm hover:shadow-md transition-all h-full border border-border">
       {/* Header */}
       <div className={cn(
         "p-4 flex items-center",
@@ -120,7 +121,9 @@ export default function ResourceCard({
       {/* Content */}
       <div className="p-6">
         <h3 className="text-lg font-bold mb-2 text-foreground">
-          {title}
+          <Link href={href} className="!no-underline hover:text-primary transition-colors">
+            {title}
+          </Link>
         </h3>
 
         <p className="text-sm text-muted-foreground mb-4 dark:text-foreground/70" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }}>
@@ -129,16 +132,22 @@ export default function ResourceCard({
         {/* Author info */}
         <div className="flex items-center mb-4">
           {authorAvatar && (
-            <img
-              src={authorAvatar}
-              alt={authorName}
-              className="w-6 h-6 rounded-full mr-2"
-            />
+            <span className="relative w-6 h-6 rounded-full overflow-hidden mr-2 bg-muted">
+              <Image
+                src={authorAvatar}
+                alt={authorName}
+                fill
+                sizes="24px"
+                className="object-cover"
+              />
+            </span>
           )}
           <span className="text-xs text-muted-foreground dark:text-foreground/50">{authorName}</span>
         </div>
 
-        <div
+        <Link
+          href={href}
+          aria-label={title}
           className={cn(
             "inline-flex items-center text-sm font-medium transition-colors",
             premium
@@ -148,8 +157,8 @@ export default function ResourceCard({
         >
           {premium ? 'Purchase Now' : 'View Resource'}
 
-        </div>
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }

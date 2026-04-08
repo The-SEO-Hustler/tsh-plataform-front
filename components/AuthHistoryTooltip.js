@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { Info } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function AuthHistoryTooltip({ isLoggedIn }) {
   if (isLoggedIn) return null;
@@ -21,11 +25,14 @@ export default function AuthHistoryTooltip({ isLoggedIn }) {
           </button>
         </TooltipTrigger>
         <TooltipContent side="top" sideOffset={6}>
-          Sign in with Google to link runs to your account and access them later in
-          My Runs.
+          Sign in with Google to link runs to your account and access them later
+          in My Runs.
         </TooltipContent>
       </Tooltip>
-      <Link href="/login" className="underline text-primary">
+      <Link
+        href="/login"
+        className="underline dark:text-primary text-foreground"
+      >
         Login
       </Link>
     </div>

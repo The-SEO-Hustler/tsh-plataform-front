@@ -1,7 +1,14 @@
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_FRONT_URL,
   generateRobotsTxt: true,
+  autoLastmod: false,
   exclude: ['/content-planning/result', '/advanced-keyword-analysis/result', '/seo-check/result', '/blog/*', '/playbooks/*', '/spreadsheets/*', '/ebooks/*', '/llms-txt-generator/result', '/eeat-check/result', '/search-intent/result'],
+  transform: async (config, path) => {
+    const normalizedPath = path === "/" ? "" : path;
+    return {
+      loc: `${config.siteUrl}${normalizedPath}`,
+    };
+  },
   robotsTxtOptions: {
     policies: [
       {

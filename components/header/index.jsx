@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import useScrollDirection from "./scroll";
 
-import { Menu, LogIn, UserCircle2 } from "lucide-react";
+import { Menu, LogIn, UserCircle2, Search as SearchIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -61,7 +61,6 @@ function Header() {
 
   const checkPathname = () => {
     if (
-      pathname === "/" ||
       pathname === "/free-tools" ||
       pathname === "/blog" ||
       pathname === "/resources" ||
@@ -94,6 +93,7 @@ function Header() {
   const isScrollPath = checkScrollPath();
   const scrollDirection = useScrollDirection();
   const userLabel = user?.displayName || user?.email || "Account";
+  const userAvatarUrl = user?.photoURL || null;
 
   const handleGoogleSignIn = async () => {
     try {
@@ -115,24 +115,42 @@ function Header() {
     >
       <Container className="h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 h-full relative">
+        <Link
+          href="/"
+          className="flex items-center space-x-2 relative w-[180px] h-[42px] shrink-0"
+        >
+          {/* Default logo in HTML for SSR and no-JS crawlers (theme unknown until mount). */}
+          {!mounted && (
+            <Image
+              src="/the-seo-hustler-horizontal-black.png"
+              alt="The SEO Hustler logo"
+              priority
+              width={180}
+              height={42}
+              className="h-[42px] w-[180px] object-contain object-left"
+              sizes="180px"
+            />
+          )}
           {mounted &&
             ((isSpecialPath && !scrolled) || resolvedTheme === "dark" ? (
               <Image
                 src="/the-seo-hustler-horizontal-white-logo.png"
                 alt="The SEO Hustler logo"
-                priority={true}
-                className=""
+                priority
                 width={180}
-                height={41.25}
+                height={42}
+                className="h-[42px] w-[180px] object-contain object-left"
+                sizes="180px"
               />
             ) : (
               <Image
                 src="/the-seo-hustler-horizontal-black.png"
                 alt="The SEO Hustler logo"
-                priority={true}
+                priority
                 width={180}
-                height={41.25}
+                height={42}
+                className="h-[42px] w-[180px] object-contain object-left"
+                sizes="180px"
               />
             ))}
         </Link>
@@ -212,13 +230,45 @@ function Header() {
             </NavigationMenuItem>
           </NavigationMenuList>
           <div className="flex items-center gap-2">
+            <form
+              action="/search"
+              method="get"
+              role="search"
+              className="hidden xl:flex items-center"
+            >
+              <label htmlFor="site-search" className="sr-only">
+                Search
+              </label>
+              <div className="relative">
+                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
+                <input
+                  id="site-search"
+                  name="q"
+                  type="search"
+                  placeholder="Search…"
+                  className="h-9 w-[150px] rounded-md border border-border dark:border-foreground/30 bg-background/5 dark:bg-background/30 backdrop-blur-md pl-9 pr-3 text-sm text-foreground placeholder:text-black dark:placeholder:text-foreground  focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 "
+                />
+              </div>
+            </form>
             {user ? (
               <Link
                 href="/account"
-                className="hidden xl:flex items-center gap-1 text-xs text-foreground/80 max-w-[220px] truncate !no-underline border border-border rounded-md px-3 py-1.5 hover:bg-accent/60 transition-colors"
+                aria-label="Account"
+                className="hidden xl:inline-flex items-center justify-center !no-underline  rounded-full  hover:bg-accent/60 transition-colors"
               >
-                <UserCircle2 className="w-4 h-4" />
-                <span className="truncate">{userLabel}</span>
+                <span className="relative w-9 h-9 rounded-full overflow-hidden bg-muted">
+                  {userAvatarUrl ? (
+                    <Image
+                      src={userAvatarUrl}
+                      alt={userLabel}
+                      fill
+                      sizes="28px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <UserCircle2 className="w-7 h-7 text-muted-foreground" />
+                  )}
+                </span>
               </Link>
             ) : (
               <button
@@ -234,10 +284,22 @@ function Header() {
             {user && (
               <Link
                 href="/account"
-                className="xl:hidden inline-flex items-center gap-1 text-xs text-foreground/80 border border-border rounded-md px-2 py-1.5 hover:bg-accent/60 transition-colors !no-underline"
+                aria-label="Account"
+                className="xl:hidden inline-flex items-center justify-center text-xs text-foreground/80 border border-border rounded-md p-1.5 hover:bg-accent/60 transition-colors !no-underline"
               >
-                <UserCircle2 className="w-4 h-4" />
-                <span>Account</span>
+                <span className="relative w-6 h-6 rounded-full overflow-hidden bg-muted">
+                  {userAvatarUrl ? (
+                    <Image
+                      src={userAvatarUrl}
+                      alt={userLabel}
+                      fill
+                      sizes="24px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <UserCircle2 className="w-6 h-6 text-muted-foreground" />
+                  )}
+                </span>
               </Link>
             )}
             <ThemeSwitch />
@@ -267,6 +329,26 @@ function Header() {
               <SheetTitle className="!text-foreground">Menu</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col space-y-4 mt-4 px-4">
+              <form
+                action="/search"
+                method="get"
+                role="search"
+                className="w-full"
+              >
+                <label htmlFor="mobile-site-search" className="sr-only">
+                  Search
+                </label>
+                <div className="relative">
+                  <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    id="mobile-site-search"
+                    name="q"
+                    type="search"
+                    placeholder="Search…"
+                    className="h-10 w-full rounded-md border border-border/40 bg-background/60 dark:bg-background/30 backdrop-blur-md pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground/70 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40"
+                  />
+                </div>
+              </form>
               <SheetClose asChild>
                 <Link
                   href="/free-tools"
@@ -329,8 +411,20 @@ function Header() {
                     href="/account"
                     className="text-sm !text-foreground !no-underline !font-bold inline-flex items-center gap-2"
                   >
-                    <UserCircle2 className="w-4 h-4" />
-                    {userLabel}
+                    <span className="relative w-7 h-7 rounded-full overflow-hidden bg-muted">
+                      {userAvatarUrl ? (
+                        <Image
+                          src={userAvatarUrl}
+                          alt={userLabel}
+                          fill
+                          sizes="28px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <UserCircle2 className="w-7 h-7 text-muted-foreground" />
+                      )}
+                    </span>
+                    <span>Account</span>
                   </Link>
                 </SheetClose>
               )}

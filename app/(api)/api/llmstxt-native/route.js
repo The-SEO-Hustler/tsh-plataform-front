@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { dispatchBackendJob } from "@/lib/dispatchBackendJob";
 
 export async function POST(request) {
   let docRef;
@@ -70,8 +71,7 @@ export async function POST(request) {
     };
 
     // Forward the request to your dedicated Node.js service endpoint
-    const response = await fetch(`${process.env.API_ENDPOINT}/llmstxt-native`, {
-      method: "POST",
+    const dispatchResult = await dispatchBackendJob(`${process.env.API_ENDPOINT}/llmstxt-native`, {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.BACK_API_KEY,
@@ -80,12 +80,22 @@ export async function POST(request) {
         "x-ip": ip,
       },
       body: JSON.stringify(requestBody),
+      timeoutMs: 12000,
     });
 
-    const data = await response.json();
+    if (!dispatchResult.accepted) {
+      console.warn("llmstxt-native dispatch not confirmed", dispatchResult);
+    }
 
-    // Return the response from your Node.js service
-    return NextResponse.json({ ...data, docId: docRef.id, success: true });
+    return NextResponse.json({
+      success: true,
+      queued: true,
+      docId: docRef.id,
+      dispatch: {
+        accepted: dispatchResult.accepted,
+        status: dispatchResult.status,
+      },
+    });
   } catch (error) {
     console.error("Error in llmstxt-native API route:", error);
 

@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import ToolCard from "@/components/ToolCard";
 import BlogCard from "@/components/BlogCard";
 import ResourceCard from "@/components/ResourceCard";
 import FeatureSection from "@/components/FeatureSection";
@@ -8,22 +7,20 @@ import Hero from "@/components/Hero";
 import { getAllPostsForHome } from "@/lib/wordpress/posts/getHomeCategories";
 import Image from "next/image";
 import Container from "@/components/container";
-import { getAllResourcePage } from "@/lib/wordpress/resources/getAllResourcePage";
+import { getLatestResourcesForHome } from "@/lib/wordpress/resources/getAllResourcePage";
 import Link from "next/link";
+import HomeFaq from "@/components/HomeFaq";
 export const revalidate = 3600;
 import getMetadata from "@/lib/getMetadata";
 import SEO_DATA from "@/lib/seo-data";
-import { tools } from "@/lib/toolsMetaData";
 import { homepageSchema } from "@/lib/schemas/homepage-schema";
 export const metadata = getMetadata(SEO_DATA.index);
 
-export default async function Home() {
+export default async function Home({ searchParams }) {
   const latestPosts = await getAllPostsForHome();
-  let latestResources = await getAllResourcePage();
-  latestResources = latestResources.playbooks.concat(
-    latestResources.spreadsheets,
-    latestResources.ebooks
-  );
+  const latestResources = await getLatestResourcesForHome(3);
+  const initialTool =
+    typeof searchParams?.tool === "string" ? searchParams.tool : undefined;
 
   // console.log('latestResources', latestResources);
   // const latestPosts = [];
@@ -38,6 +35,7 @@ export default async function Home() {
       category: node.categories?.edges[0]?.node?.name || "Uncategorized",
       categorySlug: node.categories?.edges[0]?.node?.slug || "uncategorized",
       slug: node.slug,
+      authorName: node.author?.node?.name || "The SEO Hustler",
       date: new Date(node.date).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -50,187 +48,198 @@ export default async function Home() {
     };
   });
 
-
-
-  // Features list
-  const features = [
-    {
-      title: "Free SEO Tools",
-      description:
-        "Access powerful tools to research keywords, analyze competitors, optimize content, and more.",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-primary"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-      ),
-      href: "/free-tools",
-    },
-    {
-      title: "In-Depth Guides",
-      description:
-        "Learn SEO from the ground up with comprehensive guides covering every aspect of search optimization.",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-primary"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-        </svg>
-      ),
-      href: "/resources",
-    },
-    {
-      title: "Actionable Resources",
-      description:
-        "Download templates, checklists, and cheatsheets to streamline your SEO workflow.",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-primary"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-      ),
-      href: false,
-    },
-    {
-      title: "Expert Courses",
-      description:
-        "Take your skills to the next level with our premium courses taught by industry professionals.",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-12 w-12 text-primary"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
-          <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
-          <line x1="6" y1="6" x2="6.01" y2="6"></line>
-          <line x1="6" y1="18" x2="6.01" y2="18"></line>
-        </svg>
-      ),
-      href: false,
-    },
-  ];
-
   return (
     <>
       <script type="application/ld+json">
         {JSON.stringify(homepageSchema)}
       </script>
       {/* Hero Section */}
-      <Hero />
+      <Hero initialTool={initialTool} />
 
-      {/* Features Overview */}
-      <FeatureSection
-        centered={true}
-        background="light"
-        title="Everything You Need to Dominate SEO"
-        description="The SEO Hustler provides all the tools and resources you need to grow your organic traffic, without the fluff or technical jargon."
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          {features.map((feature, idx) => {
-            const content = (
-              <div
-                key={idx}
-                className="flex flex-col items-center text-center p-6 rounded-shape-large bg-card shadow-lg m3-transition rounded-lg relative"
-              >
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-2 text-on-surface">
-                  {feature.title}
-                </h3>
-                <p className="text-foreground">{feature.description}</p>
+      {/* Bento Value Prop */}
+      <section className="py-20 bg-background">
+        <Container>
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
+              Bypass paywalls. Get enterprise data.
+            </h2>
+            <p className="mt-3 text-lg text-foreground/70 max-w-2xl">
+              Run technical audits and E&#8209;E&#8209;A&#8209;T checks without
+              a credit card, then ship fixes with confidence.
+            </p>
 
-                {!feature.href && (
-                  <span className="absolute top-3 right-3 bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">
-                    Coming Soon
-                  </span>
-                )}
+            <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <article className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-md shadow-elevation-1 lg:col-span-2 lg:row-span-2">
+                <div className="p-6 md:p-8">
+                  <p className="text-xs font-mono text-foreground/60">
+                    seo.audit
+                  </p>
+                  <h3 className="mt-3 text-2xl md:text-3xl font-black text-foreground">
+                    Fast technical audits, zero fluff
+                  </h3>
+                  <p className="mt-3 text-foreground/70 max-w-2xl">
+                    Diagnose crawlability, content signals, and on-page issues
+                    in minutes—then get prioritized fixes.
+                  </p>
+
+                  <div className="mt-6 rounded-xl border border-border bg-background/40 p-4">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-mono text-foreground/60">
+                        report.json
+                      </p>
+                      <span className="text-xs font-mono text-primary">ok</span>
+                    </div>
+                    <pre className="mt-3 text-xs md:text-sm leading-relaxed text-foreground/80 overflow-x-auto">
+                      {`{
+  "target_url": "https://scenic.com/",
+  "health_score": 86,
+  "core_web_vitals": {
+    "lcp_ms": 688,
+    "tbt_ms": 213,
+    "status": "needs_improvement"
+  },
+  "critical_issues": [
+    "dom_size_exceeded (1340 nodes)",
+    "missing_open_graph_tags",
+    "oversized_images (payload: 881KB)"
+  ],
+  "time_to_run": "1.2s"
+}`}
+                    </pre>
+                  </div>
+                  <Link
+                    href="/seo-check"
+                    className="dark:text-primary text-foreground underline underline-offset-4 mt-4 block text-sm"
+                  >
+                    SEO audit tool
+                  </Link>
+                </div>
+              </article>
+
+              <article className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-md shadow-elevation-1">
+                <div className="p-6 md:p-7">
+                  <p className="text-xs font-mono text-foreground/60">
+                    ai.search
+                  </p>
+                  <h3 className="mt-3 text-xl font-black text-foreground">
+                    Optimize for AI search
+                  </h3>
+                  <p className="mt-2 text-foreground/70">
+                    Generate a clean `llms.txt` so your content is easier to
+                    parse, cite, and surface.
+                  </p>
+                  <div className="mt-4">
+                    <h4 className="text-sm font-semibold">
+                      <Link
+                        href="/llms-txt-generator"
+                        className="dark:text-primary text-foreground underline underline-offset-4"
+                      >
+                        LLMs.txt generator
+                      </Link>
+                    </h4>
+                  </div>
+                </div>
+              </article>
+
+              <article className="relative overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-md shadow-elevation-1">
+                <div className="p-6 md:p-7">
+                  <p className="text-xs font-mono text-foreground/60">
+                    serp.intent
+                  </p>
+                  <h3 className="mt-3 text-xl font-black text-foreground">
+                    Reverse-engineer the SERPs
+                  </h3>
+                  <p className="mt-2 text-foreground/70">
+                    Map intent patterns and content expectations so you stop
+                    writing “maybes”.
+                  </p>
+                  <div className="mt-4">
+                    <h4 className="text-sm font-semibold">
+                      <Link
+                        href="/search-intent"
+                        className="dark:text-primary text-foreground underline underline-offset-4"
+                      >
+                        Search intent tool
+                      </Link>
+                    </h4>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Authority Content Hub */}
+      <section className="py-20 bg-background">
+        <Container>
+          <div className="max-w-8xl mx-auto">
+            <div className="flex items-end justify-between gap-6 flex-wrap">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
+                  DIY SEO playbooks &amp; technical guides
+                </h2>
+                <p className="mt-3 text-lg text-foreground/70">
+                  Actionable, BS-free blueprints to scale your organic traffic.
+                </p>
               </div>
-            );
-
-            return feature.href ? (
-              <Link
-                key={idx}
-                href={feature.href}
-                className="no-underline hover:outline outline-foreground rounded-lg overflow-hidden block"
+              <Button
+                variant="secondary"
+                href="/blog"
+                className="cursor-pointer"
               >
-                {content}
-              </Link>
-            ) : (
-              content
-            );
-          })}
-        </div>
-      </FeatureSection>
+                Browse our Articles
+              </Button>
+            </div>
 
-      {/* SEO Tools Section */}
-      <FeatureSection
-        background="dark"
-        title="Powerful SEO Tools, Completely Free"
-        description="Access professional-grade SEO tools that help you research, analyze, and optimize without spending a dime."
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {tools.filter(tool => tool.featured).map((tool, index) => (
-            <ToolCard
-              key={index}
-              title={tool.title}
-              description={tool.description}
-              Icon={tool.Icon}
-              href={tool.href}
-              category={tool.category}
-              featured={tool.featured}
-            />
-          ))}
-        </div>
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {blogPosts.slice(0, 3).map((post) => (
+                <article
+                  key={post.slug}
+                  className="relative rounded-2xl border border-border bg-card/60 backdrop-blur-md shadow-elevation-1 overflow-hidden"
+                >
+                  <div className="relative aspect-[16/9] bg-foreground/5">
+                    <Image
+                      src={post.featuredImage}
+                      alt={post.featuredImageAlt}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <p className="text-xs font-mono text-foreground/60">
+                      {post.category}
+                    </p>
+                    <h3 className="mt-3 text-xl font-black text-foreground leading-snug">
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="no-underline after:content-[''] after:absolute after:inset-0"
+                      >
+                        {post.title}
+                      </Link>
+                    </h3>
+                    <div
+                      className="mt-3 text-foreground/70 line-clamp-3"
+                      dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                    />
+                    <p className="mt-5 text-sm text-foreground/60">
+                      By {post.authorName}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
 
-        <div className="mt-10 text-center">
-          <Button
-            variant="secondary"
-            size="lg"
-            href="/free-tools"
-            className="cursor-pointer"
-          >
-            View All Tools
-          </Button>
-        </div>
-      </FeatureSection>
+      <Container>
+        <HomeFaq />
+      </Container>
 
       {/* Blog Section */}
-      {blogPosts.length > 0 && (
+      {/* {blogPosts.length > 0 && (
         <FeatureSection
           background="light"
           title="Latest from Our Blog"
@@ -248,7 +257,7 @@ export default async function Home() {
             </Button>
           </div>
         </FeatureSection>
-      )}
+      )} */}
 
       {/* Resources Section */}
       <FeatureSection
@@ -256,10 +265,154 @@ export default async function Home() {
         title="Free Resources & Templates"
         description="Download actionable resources to streamline your SEO workflow and get results faster."
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {latestResources.slice(0, 3).map((resource, index) => (
-            <ResourceCard key={index} {...resource} />
-          ))}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+          {(() => {
+            const cleanExcerpt = (html) =>
+              String(html || "")
+                .replace(/<[^>]*>/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+
+            const toHook = (html, fallbackTitle) => {
+              const text = cleanExcerpt(html);
+              if (!text) return "";
+              // Avoid “heading + paragraph jam”: cut at first sentence-ish boundary.
+              const match = text.match(/^(.{60,180}?[.!?])\s/);
+              const first = match ? match[1] : text.slice(0, 160).trim();
+              return first.endsWith(".") ||
+                first.endsWith("!") ||
+                first.endsWith("?")
+                ? first
+                : `${first}.`;
+            };
+
+            const getResourceType = (r) =>
+              r?.resourceTypes?.edges?.[0]?.node?.name || "resource";
+            const getHref = (r) => `/${getResourceType(r)}/${r?.slug}`;
+
+            const featured = latestResources?.[0];
+            const secondary = (latestResources || []).slice(1, 3);
+
+            if (!featured) return null;
+
+            const featuredType = getResourceType(featured);
+            const featuredHref = getHref(featured);
+            const featuredImage =
+              featured?.featuredImage?.node?.sourceUrl || null;
+            const featuredAlt =
+              featured?.featuredImage?.node?.altText || featured?.title;
+
+            return (
+              <>
+                <article className="relative rounded-2xl border border-border bg-card/40 backdrop-blur-md shadow-elevation-2 overflow-hidden lg:col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-0 h-full md:h-full">
+                    <div className="relative h-full md:h-full">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-transparent to-transparent pointer-events-none h-full md:h-full" />
+                      {featuredImage ? (
+                        <div className="relative h-full md:h-full">
+                          <Image
+                            src={featuredImage}
+                            alt={featuredAlt}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 1024px) 40vw, 100vw"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-[220px] md:h-full bg-foreground/10" />
+                      )}
+                      {/* “Productized” cover treatment */}
+                      <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
+                    </div>
+
+                    <div className="p-6 md:p-7">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold tracking-wide uppercase text-black dark:text-primary">
+                          {featuredType}
+                        </span>
+                        <p className="text-xs text-foreground/60">
+                          By {featured?.author?.node?.name || "The SEO Hustler"}
+                        </p>
+                      </div>
+
+                      <h3 className="mt-4 text-2xl md:text-3xl font-black text-foreground leading-tight">
+                        <Link href={featuredHref} className="no-underline">
+                          {featured?.title}
+                        </Link>
+                      </h3>
+
+                      <div
+                        className="mt-3 text-foreground/70 max-w-2xl"
+                        dangerouslySetInnerHTML={{
+                          __html: toHook(featured?.excerpt, featured?.title),
+                        }}
+                      />
+
+                      <div className="mt-6 flex items-center gap-4">
+                        <Link
+                          href={featuredHref}
+                          className="inline-flex items-center font-semibold text-primary underline underline-offset-4"
+                        >
+                          Access resource →
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+
+                <div className="flex flex-col gap-6">
+                  {secondary.map((r) => {
+                    const type = getResourceType(r);
+                    const href = getHref(r);
+                    const img = r?.featuredImage?.node?.sourceUrl || null;
+                    const alt = r?.featuredImage?.node?.altText || r?.title;
+                    return (
+                      <article
+                        key={r?.slug}
+                        className="relative rounded-2xl border border-border bg-card/40 backdrop-blur-md shadow-elevation-1 overflow-hidden"
+                      >
+                        <div className="flex gap-4 p-5">
+                          <div className="relative w-[86px] h-[86px] rounded-xl overflow-hidden bg-foreground/10 shrink-0">
+                            {img ? (
+                              <Image
+                                src={img}
+                                alt={alt}
+                                fill
+                                sizes="86px"
+                                className="object-cover"
+                              />
+                            ) : null}
+                            <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide uppercase text-black dark:text-primary">
+                                {type}
+                              </span>
+                              <span className="text-[11px] text-foreground/60">
+                                By {r?.author?.node?.name || "The SEO Hustler"}
+                              </span>
+                            </div>
+                            <h3 className="mt-2 text-lg font-black text-foreground leading-snug">
+                              <Link href={href} className="no-underline">
+                                {r?.title}
+                              </Link>
+                            </h3>
+                            <div
+                              className="mt-2 text-sm text-foreground/70 line-clamp-2"
+                              dangerouslySetInnerHTML={{
+                                __html: toHook(r?.excerpt, r?.title),
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </>
+            );
+          })()}
         </div>
 
         <div className="mt-10 text-center">
@@ -270,48 +423,59 @@ export default async function Home() {
       </FeatureSection>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary to-[#ecefc7] dark:to-[#48483c] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="smallGrid"
-                width="20"
-                height="20"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 20 0 L 0 0 0 20"
-                  fill="none"
-                  stroke="#000000"
-                  strokeWidth="0.5"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#smallGrid)" />
-          </svg>
+      <section className="py-20 bg-background relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 opacity-60">
+          <div className="absolute -top-40 -right-40 h-[520px] w-[520px] rounded-full bg-primary/20 blur-3xl" />
+          <div className="absolute -bottom-48 -left-40 h-[520px] w-[520px] rounded-full bg-foreground/10 blur-3xl dark:bg-foreground/5" />
         </div>
 
         <Container>
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">
-              Ready to Take Your SEO to the Next Level?
-            </h2>
-            <p className="text-xl mb-8 text-black">
-              Join thousands of website owners who are growing their traffic
-              with The SEO Hustler&apos;s free tools and resources.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" href="/free-tools">
-                Start with Free Tools
-              </Button>
+          <div className="max-w-4xl mx-auto relative z-10">
+            <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-md shadow-elevation-2 overflow-hidden">
+              <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-border bg-foreground/[0.03]">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
+                </div>
+                <p className="text-xs font-mono text-foreground/60">
+                  toolkit.init
+                </p>
+              </div>
+
+              <div className="px-6 py-10 md:px-10 md:py-12 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
+                    Stop guessing. Start auditing.
+                  </h2>
+                  <p className="mt-4 text-lg text-foreground/70 max-w-2xl">
+                    Execute technical SEO audits, map E&#8209;E&#8209;A&#8209;T
+                    signals, and reverse-engineer search intent without leaving
+                    the browser.
+                  </p>
+                  <div className="mt-6 flex items-center gap-2 text-sm font-mono text-foreground/60">
+                    <span className="text-primary">›</span>
+                    <span>no paywalls</span>
+                    <span className="opacity-40">/</span>
+                    <span>fast results</span>
+                    <span className="opacity-40">/</span>
+                    <span>ship fixes</span>
+                  </div>
+                </div>
+
+                <div className="flex md:justify-end">
+                  <Button size="lg" href="/free-tools" className="font-mono">
+                    Initialize Toolkit_
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
       {/* Testimonials Section */}
-      <FeatureSection
+      {/* <FeatureSection
         background="light"
         centered={true}
         title="What Our Members Say"
@@ -388,7 +552,7 @@ export default async function Home() {
             </div>
           ))}
         </div>
-      </FeatureSection>
+      </FeatureSection> */}
     </>
   );
 }

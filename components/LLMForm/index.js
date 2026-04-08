@@ -1,15 +1,18 @@
-'use client'
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
-import { useUsage } from '@/lib/usage-context'
-import { useFirebase } from '@/lib/firebase-context'
-import { toast } from 'sonner'
+"use client";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { useUsage } from "@/lib/usage-context";
+import { useFirebase } from "@/lib/firebase-context";
+import { toast } from "sonner";
 import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
+import { useRouter } from "next/navigation";
+import { getPathname } from "@/lib/getpathname";
 
 function LLMForm() {
-  const [url, setUrl] = useState('');
-  const [advancedText, setAdvancedText] = useState('');
+  const router = useRouter();
+  const [url, setUrl] = useState("");
+  const [advancedText, setAdvancedText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { usage, setUsage } = useUsage();
@@ -18,10 +21,16 @@ function LLMForm() {
     e.preventDefault();
 
     if (usage?.remaining <= 0) {
-      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      toast.error(
+        "You have reached your daily limit. Please try again tomorrow.",
+      );
       return;
     }
-    if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
+    if (
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
+    ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
@@ -43,7 +52,7 @@ function LLMForm() {
     setLoading(true);
     setError(null);
     // setAnalysisData(null);
-    console.log('url', url);
+    console.log("url", url);
     try {
       const formData = new FormData();
       formData.append("url", url);
@@ -69,14 +78,15 @@ function LLMForm() {
             url: url,
           },
         });
-        setUsage(prevUsage => ({
+        router.push(`${getPathname("llmstxt")}/result?id=${data.docId}`);
+        setUsage((prevUsage) => ({
           ...prevUsage,
-          remaining: prevUsage.remaining - 1
+          remaining: prevUsage.remaining - 1,
         }));
       }
     } catch (err) {
       setError(
-        err.message || "An error occurred while fetching content analysis"
+        err.message || "An error occurred while fetching content analysis",
       );
       setLoading(false);
     }
@@ -91,7 +101,7 @@ function LLMForm() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Enter a URL..."
-            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-border dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
             required
             disabled={loading}
           />
@@ -113,7 +123,7 @@ function LLMForm() {
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default LLMForm
+export default LLMForm;

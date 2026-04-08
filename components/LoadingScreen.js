@@ -403,10 +403,12 @@ export default function LoadingScreen({
               <h3 className="text-sm font-semibold mb-2">SEO console</h3>
               <div
                 ref={seoConsoleContainerRef}
-                className="h-52 overflow-y-auto rounded-lg border border-border bg-zinc-950 p-3 text-xs font-mono"
+                className="h-52 overflow-y-auto rounded-lg border border-border bg-white p-3 text-xs font-mono text-foreground shadow-sm dark:bg-zinc-950 dark:text-zinc-100"
               >
                 {seoConsoleLines.length === 0 ? (
-                  <p className="text-zinc-400">[INFO] Waiting for events...</p>
+                  <p className="text-foreground/60 dark:text-zinc-400">
+                    [INFO] Waiting for events...
+                  </p>
                 ) : (
                   seoConsoleLines.map((line) => {
                     const level =
@@ -414,10 +416,10 @@ export default function LoadingScreen({
                     return (
                       <div
                         key={line.id}
-                        className="mb-1 text-zinc-100 break-words"
+                        className="mb-1 break-words text-foreground dark:text-zinc-100"
                       >
                         <span className={level.color}>{level.prefix}</span>{" "}
-                        <span className="text-muted-foreground/80">
+                        <span className="text-foreground/70 dark:text-muted-foreground/80">
                           {line.message}
                         </span>
                       </div>

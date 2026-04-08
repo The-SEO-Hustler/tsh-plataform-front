@@ -23,7 +23,7 @@ export default function BaseCard({
     <div
       className={`${s.card} ${statusClasses[status]} ${
         isFocused ? s.focused : ""
-      } ${className} bg-card text-foreground md:max-h-[600px] md:min-h-[600px] overflow-y-auto rounded-lg pr-2 
+      } ${className} bg-card text-foreground md:max-h-[600px] md:min-h-[600px] overflow-y-auto rounded-lg 
   [&::-webkit-scrollbar]:w-1.5 
   [&::-webkit-scrollbar-track]:bg-transparent 
   [&::-webkit-scrollbar-thumb]:bg-white/10 

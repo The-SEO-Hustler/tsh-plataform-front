@@ -9,6 +9,8 @@ import { useUsage } from "@/lib/usage-context";
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
+import { useRouter } from "next/navigation";
+import { getPathname } from "@/lib/getpathname";
 
 function SearchIntentEmbbed() {
   return (
@@ -19,6 +21,7 @@ function SearchIntentEmbbed() {
 }
 
 function SearchIntentForm() {
+  const router = useRouter();
   const [url, setUrl] = useState('');
   const [keyword, setKeyword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +102,7 @@ function SearchIntentForm() {
             preview: false,
           }
         });
-        // router.push(`${getPathname("search-intent")}/result?id=${data.docId}`);
+        router.push(`${getPathname("search-intent")}/result?id=${data.docId}`);
         setIsLoading(false);
         setUsage((prevUsage) => ({
           ...prevUsage,

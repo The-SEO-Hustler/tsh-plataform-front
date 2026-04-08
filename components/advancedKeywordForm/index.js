@@ -6,8 +6,11 @@ import { useUsage } from "@/lib/usage-context";
 import { useFirebase } from "@/lib/firebase-context";
 import { toast } from "sonner";
 import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
+import { useRouter } from "next/navigation";
+import { getPathname } from "@/lib/getpathname";
 
 function AdvancedKeywordForm() {
+  const router = useRouter();
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
   const { usage, setUsage } = useUsage();
@@ -74,7 +77,7 @@ function AdvancedKeywordForm() {
             keyword: keyword,
           },
         });
-        // router.push(`/advanced-keyword-analysis/result?id=${data.docId}`);
+        router.push(`${getPathname("advanced-keyword-analysis")}/result?id=${data.docId}`);
         setUsage((prevUsage) => ({
           ...prevUsage,
           remaining: prevUsage.remaining - 1,

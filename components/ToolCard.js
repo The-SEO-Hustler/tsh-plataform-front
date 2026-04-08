@@ -14,11 +14,9 @@ import { cn } from "@/lib/utils";
  */
 export default function ToolCard({ title, description, Icon, href, featured = false, category }) {
   return (
-    <Link
-      href={href}
+    <article
       className={cn(
-        "block group rounded-lg overflow-hidden h-full transition-all !no-underline bg-card text-foreground shadow-sm hover:shadow-md",
-
+        "block group rounded-lg overflow-hidden h-full transition-all bg-card text-foreground shadow-sm hover:shadow-md",
       )}
     >
       <div className="p-6">
@@ -55,7 +53,9 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
           "text-lg font-bold mb-2",
           'text-foreground'
         )}>
-          {title}
+          <Link href={href} className="!no-underline">
+            {title}
+          </Link>
         </h3>
 
         <p className={cn(
@@ -66,21 +66,25 @@ export default function ToolCard({ title, description, Icon, href, featured = fa
         </p>
 
         <div className="mt-4 flex items-center">
-          <span className={cn(
-            "text-sm font-medium",
-            'text-primary'
-          )}>
+          <Link
+            href={href}
+            aria-label={title}
+            className={cn(
+              "text-sm font-medium flex items-center !no-underline",
+              'text-primary'
+            )}
+          >
             Try now
-          </span>
-          <svg xmlns="http://www.w3.org/2000/svg" className={cn(
-            "w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform text-primary",
+            <svg xmlns="http://www.w3.org/2000/svg" className={cn(
+              "w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform text-primary",
 
-          )} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
+            )} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </Link>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

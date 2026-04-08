@@ -40,17 +40,17 @@ function BlogContentPage({ post, blogPostsData, toc }) {
     switch (platform) {
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          url
+          url,
         )}`;
         break;
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-          url
+          url,
         )}&text=${encodeURIComponent(title)}`;
         break;
       case "linkedin":
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          url
+          url,
         )}`;
         break;
       case "copy":
@@ -81,7 +81,7 @@ function BlogContentPage({ post, blogPostsData, toc }) {
           const targetId = entry.target.id;
           const activeLink = tocElement.querySelector(`[href="#${targetId}"]`);
           const mobileActiveLink = mobileTocElement.querySelector(
-            `[href="#${targetId}"]`
+            `[href="#${targetId}"]`,
           );
           if (activeLink || mobileActiveLink) {
             tocElement
@@ -109,7 +109,17 @@ function BlogContentPage({ post, blogPostsData, toc }) {
   return (
     <>
       {/* Article Header */}
-      <HeroTemplate className="!md:pt-32 !pb-10 !md:pb-10 ">
+      <HeroTemplate
+        className="!pt-16 !pb-14 md:!pt-20 md:!pb-20"
+        bgClassName="bg-black"
+      >
+        {/* Professional background treatment (no layout impact) */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(700px_420px_at_22%_25%,rgba(255,221,0,0.22),rgba(255,221,0,0.06)_50%,rgba(0,0,0,0)_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(520px_360px_at_78%_35%,rgba(255,255,255,0.06),rgba(0,0,0,0)_68%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.15),rgba(0,0,0,0.85))]" />
+        </div>
+
         <div className="container lg:max-w-4xl mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="flex md:items-center mb-5 flex-col md:flex-row items-start gap-4">
@@ -132,8 +142,32 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                 </svg>
                 <span className="text-white dark:text-foreground/70">{`${post.readTime}  min read`}</span>
               </span>
-              <span className=" text-white dark:text-foreground/70 text-sm">
-                {post.date}
+              <span className="text-white/90 dark:text-foreground/70 text-sm">
+                {post.modifiedIso &&
+                post.publishedIso &&
+                String(post.modifiedIso).slice(0, 10) !==
+                  String(post.publishedIso).slice(0, 10) ? (
+                  <>
+                    <span className="text-white/70 dark:text-foreground/60">
+                      Published:
+                    </span>{" "}
+                    {post.publishedDate}
+                    <span className="mx-2 text-white/40 dark:text-foreground/40">
+                      •
+                    </span>
+                    <span className="text-white/70 dark:text-foreground/60">
+                      Updated:
+                    </span>{" "}
+                    {post.updatedDate}
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white/70 dark:text-foreground/60">
+                      Updated:
+                    </span>{" "}
+                    {post.updatedDate || post.publishedDate || post.date}
+                  </>
+                )}
               </span>
             </div>
 
@@ -181,7 +215,7 @@ function BlogContentPage({ post, blogPostsData, toc }) {
       </HeroTemplate>
 
       <Container>
-        <div className="flex flex-col md:flex-row flex-wrap w-full pt-16 max-w-full relative py-12 bg-background">
+        <div className="flex flex-col md:flex-row flex-wrap w-full pt-10 max-w-full relative py-12 bg-background">
           {/* Article Content */}
           <section className="flex flex-col md:pr-4 lg:pr-6 w-full md:w-[65%]">
             <div className="container lg:max-w-4xl mx-auto">
@@ -281,20 +315,17 @@ function BlogContentPage({ post, blogPostsData, toc }) {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
+                      width="18"
+                      height="18"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      fill="currentColor"
+                      aria-hidden="true"
                     >
-                      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                      <path d="M18.901 2H22l-6.77 7.73L23.5 22h-6.44l-5.04-6.92L5.95 22H2.85l7.25-8.29L.5 2h6.6l4.56 6.2L18.9 2Zm-1.13 18h1.8L6.06 3.93H4.14L17.77 20Z" />
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Share on Twitter</TooltipContent>
+                <TooltipContent>Share on X</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>

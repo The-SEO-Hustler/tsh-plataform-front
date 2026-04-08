@@ -7,6 +7,8 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import RecaptchaProvider from "@/components/RecaptchaProvider";
 import { useUsage } from "@/lib/usage-context";
 import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
+import { useRouter } from "next/navigation";
+import { getPathname } from "@/lib/getpathname";
 function SeoCheckEmbbed() {
   return (
     <RecaptchaProvider>
@@ -16,6 +18,7 @@ function SeoCheckEmbbed() {
 }
 
 function SeoCheckForm() {
+  const router = useRouter();
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState("");
@@ -23,9 +26,25 @@ function SeoCheckForm() {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { usage, setUsage } = useUsage();
 
+  const normalizeUrl = (raw) => {
+    const input = String(raw || "").trim();
+    if (!input) return "";
+    const withScheme = /^https?:\/\//i.test(input) ? input : `https://${input}`;
+    try {
+      const u = new URL(withScheme);
+      return u.toString();
+    } catch {
+      return "";
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!url) return;
+    const normalizedUrl = normalizeUrl(url);
+    if (!normalizedUrl) {
+      setFormError("Please enter a valid website (e.g. example.com).");
+      return;
+    }
     if (usage?.remaining <= 0) {
       toast.error(
         "You have reached your daily limit. Please try again tomorrow.",
@@ -60,7 +79,7 @@ function SeoCheckForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url, token, userId: user?.uid }),
+        body: JSON.stringify({ url: normalizedUrl, token, userId: user?.uid }),
       });
 
       const data = await response.json();
@@ -71,10 +90,10 @@ function SeoCheckForm() {
           docId: data.docId,
           collection: "seoAnalyses",
           meta: {
-            url: url,
+            url: normalizedUrl,
           },
         });
-        // router.push(`/seo-check/result?id=${data.docId}`);
+        router.push(`${getPathname("seo-check")}/result?id=${data.docId}`);
         setIsLoading(false);
         setUsage((prevUsage) => ({
           ...prevUsage,
@@ -93,25 +112,34 @@ function SeoCheckForm() {
 
   return (
     <div>
-      {JSON.stringify({ user }, null, 2)}
-
-      <form onSubmit={handleSubmit} className="flex flex-col md:flex-row">
-        <input
-          className="bg-card text-foreground px-4 py-3 rounded-md w-full md:w-3/4 mb-3 md:mb-0 md:mr-3 focus:outline-none border border-foreground/10 focus:ring-2 focus:ring-black dark:focus:ring-foreground"
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter your website URL"
-          required
-          disabled={isLoading}
-        />
-        <button
-          type="submit"
-          className={`bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-md transition-all w-full md:w-1/4  cursor-pointer ${isLoading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
-          disabled={isLoading || usage?.remaining <= 0 || usage === null}
-        >
-          {isLoading ? "Analyzing..." : "Analyze My Site Now"}
-        </button>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="relative">
+          <input
+            className="w-full px-4 sm:px-6 sm:pr-[260px] pr-[60px] py-4 text-lg border-2 border-border/70 dark:border-foreground/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
+            type="text"
+            inputMode="url"
+            autoCapitalize="none"
+            autoCorrect="off"
+            value={url}
+            onChange={(e) => {
+              setFormError("");
+              setUrl(e.target.value);
+            }}
+            placeholder="example.com"
+            required
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            className={`absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-6 rounded-md transition-all ${isLoading ? "animate-pulse" : ""} disabled:opacity-100 disabled:cursor-not-allowed disabled:bg-gray-300 dark:disabled:bg-foreground/80`}
+            disabled={isLoading || usage?.remaining <= 0 || usage === null}
+          >
+            <span className="sm:block hidden">
+              {isLoading ? "Analyzing..." : "Analyze My Site Now"}
+            </span>
+            <span className="sm:hidden block">→</span>
+          </button>
+        </div>
       </form>
       <AuthHistoryTooltip isLoggedIn={!!user} />
       {formError && <p className="!text-red-500 !py-1 !my-1">{formError}</p>}

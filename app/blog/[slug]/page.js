@@ -43,7 +43,8 @@ export async function generateMetadata({ params }) {
         "The article you're looking for doesn't exist or has been moved.",
     };
   }
-  const excerptText = cleanExcerpt(data.post.excerpt)
+  const wpSeoDescription = data.post.seo?.metaDesc;
+  const excerptText = cleanExcerpt(wpSeoDescription || data.post.excerpt)
   // 1. Construct the proxied OG image URL
   const rawUrl = data.post.featuredImage?.node?.sourceUrl
   const ogImageUrl = rawUrl
@@ -122,17 +123,32 @@ export default async function BlogPost({ params }) {
     content: new_content,
     toc: newList,
     excerpt: data.post.excerpt,
+    featuredImage: data.post.featuredImage?.node?.sourceUrl || null,
+    featuredImageAlt: data.post.featuredImage?.node?.altText || data.post.title,
     date: new Date(data.post.date).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
     }),
+    publishedDate: new Date(data.post.date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+    publishedIso: data.post.date,
+    updatedDate: data.post.modified
+      ? new Date(data.post.modified).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : null,
+    modifiedIso: data.post.modified || null,
     author: data.post.author?.node?.name || "Unknown Author",
     category: data.post.categories?.edges[0]?.node?.name || "Uncategorized",
     categories:
       data.post.categories?.edges?.map((edge) => edge.node.name) || [],
     readTime: Math.ceil(data.post.content.split(" ").length / 250), // Rough estimate: 200 words per minute
-    author: data.post.author?.node?.name,
     authorAvatar: data.post.author?.node?.avatar?.url,
     tags: data.post.tags?.edges?.map((edge) => edge.node.name) || [],
     relatedPosts: data.post.relatedArticle?.relatedArticles || [],

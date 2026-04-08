@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useFirebase } from "@/lib/firebase-context";
 import { LogOut, UserCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -45,7 +46,19 @@ export default function AccountPage() {
       <Container className="max-w-2xl space-y-6">
         <div className="bg-card border border-border rounded-xl p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <UserCircle2 className="w-8 h-8 text-primary" />
+            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+              {user?.photoURL ? (
+                <Image
+                  src={user.photoURL}
+                  alt={user?.displayName || user?.email || "User"}
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                />
+              ) : (
+                <UserCircle2 className="w-8 h-8 text-primary" />
+              )}
+            </div>
             <div>
               <h1 className="text-2xl font-bold">My Account</h1>
               <p className="text-sm text-foreground/80">
@@ -61,8 +74,12 @@ export default function AccountPage() {
             >
               View My Runs
             </Link>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="text-foreground"
+            >
+              <LogOut className="w-4 h-4 mr-2 text-foreground" />
               Logout
             </Button>
           </div>

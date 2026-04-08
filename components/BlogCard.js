@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import Link from "next/link";
 import { cn } from "@/lib/utils";
-import Image from 'next/image';
+import Image from "next/image";
 /**
  * Blog Post Card Component
- * 
+ *
  * @param {Object} props - Component props
  * @param {string} props.title - Blog post title
  * @param {string} props.excerpt - Blog post excerpt
@@ -14,28 +14,38 @@ import Image from 'next/image';
  * @param {string} props.imageUrl - Featured image URL (optional)
  * @param {boolean} props.featured - Whether this is a featured post
  */
-export default function BlogCard({
-  post
-}) {
-  const { title, excerpt, category, date, readTime, slug, featuredImage, featuredImageAlt, featured } = post;
+export default function BlogCard({ post }) {
+  const {
+    title,
+    excerpt,
+    category,
+    date,
+    readTime,
+    slug,
+    featuredImage,
+    featuredImageAlt,
+    featured,
+  } = post;
 
   // Sanitize excerpt to ensure consistent rendering
-  const sanitizedExcerpt = excerpt ? excerpt.replace(/<[^>]*>/g, '') : '';
+  const sanitizedExcerpt = excerpt ? excerpt.replace(/<[^>]*>/g, "") : "";
 
   return (
-    <Link
-      href={`/blog/${slug}`}
-      className="block group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all h-full !no-underline bg-card"
-    >
+    <div className="block group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all h-full bg-card">
       {/* Image Container */}
       {featuredImage && (
         <div className="relative h-48 w-full bg-muted overflow-hidden">
-          <Image src={featuredImage} alt={featuredImageAlt} fill className="object-cover" />
+          <Image
+            src={featuredImage}
+            alt={featuredImageAlt}
+            fill
+            className="object-cover"
+          />
 
           <div
             className={cn(
               "absolute inset-0 bg-gradient-to-t from-black/60 to-transparent",
-              featured && "from-primary/80"
+              featured && "from-primary/80",
             )}
           ></div>
           {featured && (
@@ -66,26 +76,42 @@ export default function BlogCard({
 
         {/* Title */}
         <h3 className="text-lg font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
-          {title}
+          <Link href={`/blog/${slug}`} className="!no-underline">
+            {title}
+          </Link>
         </h3>
 
         {/* Excerpt */}
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-3 dark:text-foreground/70" dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }} />
+        <p
+          className="text-sm text-muted-foreground mb-4 line-clamp-3 dark:text-foreground/70"
+          dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }}
+        />
 
         {/* Date and Read More */}
         <div className="flex items-center text-sm">
-          <span className="text-foreground/80">
-            {date}
-          </span>
-          <span className="ml-auto text-primary font-medium flex items-center">
-            Read More
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <span className="text-foreground/80">{date}</span>
+          <Link
+            href={`/blog/${slug}`}
+            aria-label={title}
+            className="ml-auto text-primary font-medium flex items-center !no-underline"
+          >
+            Read Post
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
-          </span>
+          </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

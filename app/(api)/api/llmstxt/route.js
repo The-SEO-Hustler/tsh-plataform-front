@@ -3,8 +3,10 @@
 import { NextResponse } from "next/server";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { dispatchBackendJob } from "@/lib/dispatchBackendJob";
 
 export async function POST(request) {
+  let docRef;
   try {
     let ip;
     if (process.env.NODE_ENV === "development") {
@@ -26,7 +28,7 @@ export async function POST(request) {
     }
 
 
-    const docRef = await addDoc(collection(db, "llmstxt"), {
+    docRef = await addDoc(collection(db, "llmstxt"), {
       url,
       ...(userId ? { userId } : {}),
       type: "llmstxt",
@@ -36,10 +38,9 @@ export async function POST(request) {
     });
 
     // Forward the request to your dedicated Node.js service endpoint
-    const response = await fetch(
+    const dispatchResult = await dispatchBackendJob(
       `${process.env.API_ENDPOINT}/llmstxt`,
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": process.env.BACK_API_KEY,
@@ -52,24 +53,33 @@ export async function POST(request) {
           docId: docRef.id,
           ...(userId ? { userId } : {}),
         }),
+        timeoutMs: 10000,
       }
     );
 
-    const data = await response.json();
-    // const response = { ok: true, status: "ok" };
-    // const data = { keyword, contentType };
-    // console.log("data", data);
+    if (!dispatchResult.accepted) {
+      console.warn("llmstxt dispatch not confirmed", dispatchResult);
+    }
 
-    // Return the response from your Node.js service
-    return NextResponse.json({ ...data, docId: docRef.id });
+    return NextResponse.json({
+      success: true,
+      queued: true,
+      docId: docRef.id,
+      dispatch: {
+        accepted: dispatchResult.accepted,
+        status: dispatchResult.status,
+      },
+    });
   } catch (error) {
     console.error("Error in analysis API route:", error);
 
-    await updateDoc(doc(db, "llmstxt", docRef.id), {
-      status: "failed",
-      error: error.message,
-      updatedAt: new Date(),
-    });
+    if (docRef?.id) {
+      await updateDoc(doc(db, "llmstxt", docRef.id), {
+        status: "failed",
+        error: error.message,
+        updatedAt: new Date(),
+      });
+    }
 
     return NextResponse.json(
       { error: "Internal server error" },

@@ -2,7 +2,10 @@
   color: rgb(var(--foreground)) !important;
 }
 
-.isSpecialPath.notScrolled a {
+.isSpecialPath.notScrolled a,
+.isSpecialPath.notScrolled form[role="search"] input::placeholder,
+.isSpecialPath.notScrolled form[role="search"] input:focus::placeholder,
+.isSpecialPath.notScrolled form[role="search"] svg {
   color: rgb(var(--primary)) !important;
 }
 .isSpecialPath.notScrolled button {
@@ -32,6 +35,9 @@
 .isSpecialPath.notScrolled button:focus svg,
 .isSpecialPath.notScrolled button:focus svg {
   color: rgb(var(--primary-foreground)) !important;
+}
+.isSpecialPath.notScrolled form input {
+  color: #fcf6d4 !important;
 }
 
 .scrollHeader {

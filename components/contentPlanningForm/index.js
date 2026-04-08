@@ -1,18 +1,20 @@
-'use client'
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
-import { useUsage } from '@/lib/usage-context'
-import { useFirebase } from '@/lib/firebase-context'
-import { toast } from 'sonner'
+"use client";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { useUsage } from "@/lib/usage-context";
+import { useFirebase } from "@/lib/firebase-context";
+import { toast } from "sonner";
 import AuthHistoryTooltip from "@/components/AuthHistoryTooltip";
+import { useRouter } from "next/navigation";
+import { getPathname } from "@/lib/getpathname";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 const options = [
   { value: "blog_post", label: "Blog Post" },
@@ -24,11 +26,12 @@ const options = [
   { value: "list_post", label: "List Post" },
   { value: "tutorial", label: "Tutorial/How-To" },
   { value: "faq_page", label: "FAQ Page" },
-]
+];
 
 function ContentPlanningForm() {
-  const [keyword, setKeyword] = useState('');
-  const [contentType, setContentType] = useState('');
+  const router = useRouter();
+  const [keyword, setKeyword] = useState("");
+  const [contentType, setContentType] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { usage, setUsage } = useUsage();
@@ -37,10 +40,16 @@ function ContentPlanningForm() {
     e.preventDefault();
 
     if (usage?.remaining <= 0) {
-      toast.error("You have reached your daily limit. Please try again tomorrow.");
+      toast.error(
+        "You have reached your daily limit. Please try again tomorrow.",
+      );
       return;
     }
-    if (currentAnalysis && (currentAnalysis?.status !== "completed" && currentAnalysis?.status !== "failed")) {
+    if (
+      currentAnalysis &&
+      currentAnalysis?.status !== "completed" &&
+      currentAnalysis?.status !== "failed"
+    ) {
       toast.error("Please wait for the previous analysis to complete.");
       return;
     }
@@ -62,7 +71,7 @@ function ContentPlanningForm() {
     setLoading(true);
     setError(null);
     // setAnalysisData(null);
-    console.log('keyword', keyword, 'contentType', contentType);
+    console.log("keyword", keyword, "contentType", contentType);
     try {
       const formData = new FormData();
       formData.append("keyword", keyword);
@@ -89,14 +98,15 @@ function ContentPlanningForm() {
             keyword: keyword,
           },
         });
-        setUsage(prevUsage => ({
+        router.push(`${getPathname("content-planning")}/result?id=${data.docId}`);
+        setUsage((prevUsage) => ({
           ...prevUsage,
-          remaining: prevUsage.remaining - 1
+          remaining: prevUsage.remaining - 1,
         }));
       }
     } catch (err) {
       setError(
-        err.message || "An error occurred while fetching content analysis"
+        err.message || "An error occurred while fetching content analysis",
       );
       setLoading(false);
     }
@@ -111,7 +121,7 @@ function ContentPlanningForm() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="Enter a keyword..."
-            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            className="w-full px-4 sm:px-6 py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
             required
             disabled={loading}
           />
@@ -122,7 +132,10 @@ function ContentPlanningForm() {
             onValueChange={setContentType}
             disabled={loading}
           >
-            <SelectTrigger size="lg" className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200">
+            <SelectTrigger
+              size="lg"
+              className="w-full px-4 sm:px-6 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg bg-transparent focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+            >
               <SelectValue placeholder="Select content type" />
             </SelectTrigger>
             <SelectContent className="bg-card text-foreground border border-border rounded-lg shadow-lg">
@@ -155,7 +168,7 @@ function ContentPlanningForm() {
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default ContentPlanningForm
+export default ContentPlanningForm;

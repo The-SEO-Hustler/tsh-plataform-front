@@ -188,6 +188,7 @@ function SeoCheckHeroContent() {
                         onChange={(e) => setUrl(e.target.value)}
                         placeholder="example.com"
                         required
+                        id="url"
                         disabled={isLoading}
                         className="w-full px-4 sm:px-6 sm:pr-[160px] pr-[60px] py-4 text-lg border-2 border-gray-300 dark:border-foreground/80 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 bg-transparent text-foreground placeholder:text-foreground/50"
                       />
