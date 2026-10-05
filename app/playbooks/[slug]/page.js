@@ -12,7 +12,7 @@ import Script from 'next/script';
 import { resourcePostSchema } from '@/lib/schemas/resource-post-schema';
 import { indexContent } from '@/lib/indexContent'
 import organizeToc from '@/lib/organizeToc'
-import { fetchWordPressStyles } from '@/lib/wordpress/api';
+import { fetchWordPressStyles, loadForStaticPage } from '@/lib/wordpress/api';
 export const revalidate = 3600;
 
 
@@ -88,7 +88,19 @@ async function Page({ params }) {
   const param = await params
   if (!param?.slug) notFound();
 
-  const resource = await getResourceBySlug(param.slug);
+  const { value: resource, failed } = await loadForStaticPage(
+    `Playbook ${param.slug}`,
+    () => getResourceBySlug(param.slug),
+    null
+  );
+
+  if (failed) {
+    return (
+      <div className="bg-background px-6 py-24 text-center text-foreground">
+        <p>This playbook could not be generated just now. Refresh to try again.</p>
+      </div>
+    );
+  }
 
   if (!resource?.slug) {
     notFound();

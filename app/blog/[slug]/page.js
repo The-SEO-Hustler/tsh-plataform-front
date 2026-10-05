@@ -14,7 +14,7 @@ import {
   createPostSchema,
 } from "@/lib/wordpress/utils";
 import { blogPostSchema } from "@/lib/schemas/blog-post-schema";
-import { fetchWordPressStyles } from "@/lib/wordpress/api";
+import { fetchWordPressStyles, loadForStaticPage } from "@/lib/wordpress/api";
 // import getReactContentWithLazyBlocks from "@/lib/get-react-content-with-lazy-blocks";
 import BlogContentPage from "@/components/BlogContent";
 import MoveUpButton from "@/components/MoveUpButton";
@@ -40,7 +40,13 @@ export async function generateMetadata({ params }) {
   const param = await params;
   if (!param?.slug) return {};
 
-  const data = await getPostAndMorePosts(param.slug);
+  let data = null;
+  try {
+    data = await getPostAndMorePosts(param.slug);
+  } catch (error) {
+    console.error(`Blog metadata fetch failed for ${param.slug}:`, error?.message || error);
+    return { title: "Article" };
+  }
 
   if (!data?.post) {
     return {
@@ -94,7 +100,19 @@ export async function generateMetadata({ params }) {
 export default async function BlogPost({ params }) {
   const param = await params;
 
-  const data = await getPostAndMorePosts(param.slug);
+  const { value: data, failed } = await loadForStaticPage(
+    `Blog ${param.slug}`,
+    () => getPostAndMorePosts(param.slug),
+    null
+  );
+
+  if (failed) {
+    return (
+      <div className="bg-background px-6 py-24 text-center text-foreground">
+        <p>This article could not be generated just now. Refresh to try again.</p>
+      </div>
+    );
+  }
 
   if (!data?.post) {
     notFound();

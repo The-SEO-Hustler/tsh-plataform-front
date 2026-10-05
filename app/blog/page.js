@@ -4,28 +4,37 @@ import BlogClient from '@/components/BlogClient';
 import getMetadata from '@/lib/getMetadata';
 import SEO_DATA from '@/lib/seo-data';
 import { blogSchema } from '@/lib/schemas/blog-schema';
+import { loadForStaticPage } from '@/lib/wordpress/api';
 export const metadata = getMetadata(SEO_DATA.blog);
 
 
 
 export default async function Blog() {
   // Fetch all posts
-  const allPosts = await GET_POSTS();
-
-  // Fetch all categories
-  const allCategories = await getAllCategories();
+  const { value: allPosts } = await loadForStaticPage(
+    "Blog index",
+    () => GET_POSTS(),
+    []
+  );
+  const { value: allCategories } = await loadForStaticPage(
+    "Blog categories",
+    () => getAllCategories(),
+    []
+  );
 
   // Format categories for the client component
   const categories = [
     { id: "all", label: "All Posts" },
-    ...allCategories.map(category => ({
+    ...(allCategories || []).map(category => ({
       id: category.slug,
       label: category.name,
     })),
   ];
 
   // Format blog posts for the client component
-  const blogPosts = allPosts.map(({ node }) => {
+  const blogPosts = (allPosts || [])
+    .filter(({ node }) => node)
+    .map(({ node }) => {
     // Sanitize excerpt to ensure consistent rendering
     const excerpt = node.excerpt ? node.excerpt.replace(/<[^>]*>/g, '') : '';
 

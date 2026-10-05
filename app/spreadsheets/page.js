@@ -4,6 +4,7 @@ import ResourceCard from '@/components/ResourceCard';
 import Container from '@/components/container';
 import getMetadata from '@/lib/getMetadata';
 import SEO_DATA from '@/lib/seo-data';
+import { loadForStaticPage } from '@/lib/wordpress/api';
 
 
 export const metadata = getMetadata(SEO_DATA.spreadsheets);
@@ -12,8 +13,14 @@ export const metadata = getMetadata(SEO_DATA.spreadsheets);
 export const revalidate = 3600;
 
 async function SpreadsheetsPage() {
-  const resources = await getAllResourcePage();
-  const spreadsheets = resources.spreadsheets || [];
+  const { value: resources } = await loadForStaticPage(
+    "Spreadsheets page",
+    () => getAllResourcePage(),
+    { spreadsheets: [] }
+  );
+  const spreadsheets = (resources?.spreadsheets || []).filter(
+    (spreadsheet) => spreadsheet?.slug
+  );
 
   return (
     <Container className="!py-16">

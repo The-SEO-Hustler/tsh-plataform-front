@@ -9,8 +9,13 @@ export const metadata = getMetadata({ ...SEO_DATA.contentPlanningResult });
 
 async function Page() {
 
-  const latestPosts = await getAllPostsForHome();
-  const blogPosts = latestPosts.map(({ node }) => {
+  let latestPosts = [];
+  try {
+    latestPosts = (await getAllPostsForHome()) || [];
+  } catch (error) {
+    console.error("Content planning related posts unavailable:", error?.message || error);
+  }
+  const blogPosts = latestPosts.filter((edge) => edge?.node).map(({ node }) => {
     // Sanitize excerpt to ensure consistent rendering
     const excerpt = node.excerpt ? node.excerpt.replace(/<[^>]*>/g, "") : "";
 

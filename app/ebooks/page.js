@@ -4,6 +4,7 @@ import ResourceCard from '@/components/ResourceCard';
 import Container from '@/components/container';
 import getMetadata from '@/lib/getMetadata';
 import SEO_DATA from '@/lib/seo-data';
+import { loadForStaticPage } from '@/lib/wordpress/api';
 
 export const metadata = getMetadata(SEO_DATA.ebooks);
 
@@ -11,8 +12,12 @@ export const metadata = getMetadata(SEO_DATA.ebooks);
 export const revalidate = 3600;
 
 async function EbooksPage() {
-  const resources = await getAllResourcePage();
-  const ebooks = resources.ebooks || [];
+  const { value: resources } = await loadForStaticPage(
+    "Ebooks page",
+    () => getAllResourcePage(),
+    { ebooks: [] }
+  );
+  const ebooks = (resources?.ebooks || []).filter((ebook) => ebook?.slug);
 
   return (
     <Container className="!py-16">
