@@ -14,18 +14,48 @@ export const revalidate = 3600;
 import getMetadata from "@/lib/getMetadata";
 import SEO_DATA from "@/lib/seo-data";
 import { homepageSchema } from "@/lib/schemas/homepage-schema";
+import { unstable_noStore as noStore } from "next/cache";
 export const metadata = getMetadata(SEO_DATA.index);
 
 export default async function Home({ searchParams }) {
-  const latestPosts = await getAllPostsForHome();
-  const latestResources = await getLatestResourcesForHome(3);
+  const resolvedSearchParams = await searchParams;
+  let latestPosts = [];
+  let latestResources = [];
+  let wordpressFailed = false;
+
+  const [postsResult, resourcesResult] = await Promise.allSettled([
+    getAllPostsForHome(),
+    getLatestResourcesForHome(3),
+  ]);
+
+  if (postsResult.status === "fulfilled") {
+    latestPosts = postsResult.value || [];
+  } else {
+    wordpressFailed = true;
+    console.error("Homepage posts fetch failed:", postsResult.reason);
+  }
+
+  if (resourcesResult.status === "fulfilled") {
+    latestResources = resourcesResult.value || [];
+  } else {
+    wordpressFailed = true;
+    console.error("Homepage resources fetch failed:", resourcesResult.reason);
+  }
+
+  // A failed WordPress read must not be cached for the full revalidate window.
+  if (wordpressFailed) noStore();
+
   const initialTool =
-    typeof searchParams?.tool === "string" ? searchParams.tool : undefined;
+    typeof resolvedSearchParams?.tool === "string"
+      ? resolvedSearchParams.tool
+      : undefined;
 
   // console.log('latestResources', latestResources);
   // const latestPosts = [];
 
-  const blogPosts = latestPosts.map(({ node }) => {
+  const blogPosts = (latestPosts || [])
+    .filter((edge) => edge?.node)
+    .map(({ node }) => {
     // Sanitize excerpt to ensure consistent rendering
     const excerpt = node.excerpt ? node.excerpt.replace(/<[^>]*>/g, "") : "";
 

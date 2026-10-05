@@ -14,6 +14,7 @@ import {
   createPostSchema,
 } from "@/lib/wordpress/utils";
 import { blogPostSchema } from "@/lib/schemas/blog-post-schema";
+import { fetchWordPressStyles } from "@/lib/wordpress/api";
 // import getReactContentWithLazyBlocks from "@/lib/get-react-content-with-lazy-blocks";
 import BlogContentPage from "@/components/BlogContent";
 import MoveUpButton from "@/components/MoveUpButton";
@@ -21,12 +22,17 @@ export const revalidate = 3600;
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
-  const allPosts = await getAllPostsWithSlug();
-  // console.log('allPosts', allPosts);
-
-  return allPosts.map(({ node }) => ({
-    slug: node.slug,
-  }));
+  try {
+    const allPosts = await getAllPostsWithSlug();
+    return (allPosts || [])
+      .filter(({ node }) => node?.slug)
+      .map(({ node }) => ({
+        slug: node.slug,
+      }));
+  } catch (error) {
+    console.error("Failed to generate blog params:", error);
+    return [];
+  }
 }
 
 // Generate metadata for the page
@@ -148,7 +154,7 @@ export default async function BlogPost({ params }) {
     category: data.post.categories?.edges[0]?.node?.name || "Uncategorized",
     categories:
       data.post.categories?.edges?.map((edge) => edge.node.name) || [],
-    readTime: Math.ceil(data.post.content.split(" ").length / 250), // Rough estimate: 200 words per minute
+    readTime: Math.ceil((data.post.content || "").split(" ").length / 250),
     authorAvatar: data.post.author?.node?.avatar?.url,
     tags: data.post.tags?.edges?.map((edge) => edge.node.name) || [],
     relatedPosts: data.post.relatedArticle?.relatedArticles || [],
@@ -156,7 +162,9 @@ export default async function BlogPost({ params }) {
   };
 
   // Format blog posts data for related posts
-  const blogPostsData = data.posts.edges.map(({ node }) => {
+  const blogPostsData = (data.posts?.edges || [])
+    .filter(({ node }) => node)
+    .map(({ node }) => {
     return {
       ...node,
       date: new Date(node.date).toLocaleDateString("en-US", {
@@ -166,16 +174,9 @@ export default async function BlogPost({ params }) {
       }),
     };
   });
-  const response = await fetch(
-    String(`${process.env.BACK_SITE_URL}/blog/${param.slug}?no_redirect=true`)
+  const styles = await fetchWordPressStyles(
+    `/blog/${encodeURIComponent(param.slug)}?no_redirect=true`
   );
-  const html = await response.text();
-  const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
-  const styles = styleMatches
-    ? styleMatches
-      .map((styleTag) => styleTag.replace(/<\/?style[^>]*>/g, ""))
-      .join("\n")
-    : "";
 
   return (
     <>

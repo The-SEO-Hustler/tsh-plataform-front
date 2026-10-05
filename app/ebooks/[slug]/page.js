@@ -12,19 +12,25 @@ import Script from 'next/script';
 import { resourcePostSchema } from '@/lib/schemas/resource-post-schema';
 import { indexContent } from '@/lib/indexContent'
 import organizeToc from '@/lib/organizeToc'
+import { fetchWordPressStyles } from '@/lib/wordpress/api';
 
 export const revalidate = 3600;
 
 
 export async function generateStaticParams() {
-  const allResources = await getAllResourcePage();
+  try {
+    const allResources = await getAllResourcePage();
+    const ebookResources = allResources?.ebooks || [];
 
-  // Filter only ebook resources
-  const ebookResources = allResources.ebooks || [];
-
-  return ebookResources.map((resource) => ({
-    slug: resource.slug,
-  }));
+    return ebookResources
+      .filter((resource) => resource?.slug)
+      .map((resource) => ({
+        slug: resource.slug,
+      }));
+  } catch (error) {
+    console.error("Failed to generate ebook params:", error);
+    return [];
+  }
 }
 
 // Generate metadata for the page
@@ -32,7 +38,13 @@ export async function generateMetadata({ params }) {
   const param = await params;
   if (!param?.slug) return {};
 
-  const resource = await getResourceBySlug(param.slug);
+  let resource = null;
+  try {
+    resource = await getResourceBySlug(param.slug);
+  } catch (error) {
+    console.error(`Ebook metadata fetch failed for ${param.slug}:`, error);
+    return { title: "Ebook" };
+  }
 
   if (!resource) {
     return {
@@ -40,7 +52,7 @@ export async function generateMetadata({ params }) {
       description: 'The resource you\'re looking for doesn\'t exist or has been moved.',
     };
   }
-  const rawUrl = resource.featuredImage?.node?.sourceUrl
+  const rawUrl = resource.featuredImage || null
   const ogImageUrl = rawUrl
     ? `${process.env.NEXT_PUBLIC_FRONT_URL}/_next/image` +
     `?url=${encodeURIComponent(rawUrl)}` +
@@ -65,9 +77,7 @@ export async function generateMetadata({ params }) {
         ? [
           {
             url: ogImageUrl,
-            alt:
-              resource.featuredImage.node.altText ||
-              resource.title,
+            alt: resource.featuredImageAlt || resource.title,
           },
         ]
         : [],
@@ -76,9 +86,12 @@ export async function generateMetadata({ params }) {
 }
 
 async function Page({ params }) {
-  const resource = await getResourceBySlug(params.slug);
+  const param = await params;
+  if (!param?.slug) notFound();
 
-  if (!resource) {
+  const resource = await getResourceBySlug(param.slug);
+
+  if (!resource?.slug) {
     notFound();
   }
   let faqSchema = null;
@@ -88,21 +101,22 @@ async function Page({ params }) {
     faqSchema = getFaqSchema(resource.content);
   }
   const { new_content, list } = indexContent(resource.content)
-  const newList = organizeToc(list)
+  const newList = organizeToc(list || [])
+  resource.content = new_content
 
   const schema = resourcePostSchema(resource, 'ebooks', 'Ebook');
-
-  const response = await fetch(String(`${process.env.BACK_SITE_URL}/blog/resources/${param.slug}?no_redirect=true`));
-  const html = await response.text();
-  const styleMatches = html.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
-  const styles = styleMatches ? styleMatches.map((styleTag) => styleTag.replace(/<\/?style[^>]*>/g, '')).join('\n') : '';
+  const styles = await fetchWordPressStyles(
+    `/blog/resources/${encodeURIComponent(param.slug)}?no_redirect=true`
+  );
 
   return (
     <>
       {styles && (
         <style dangerouslySetInnerHTML={{ __html: styles }} />
       )}
-      <script type="application/ld+json" id="schema-markup">{JSON.stringify(schema)}</script>
+      {schema && (
+        <script type="application/ld+json" id="schema-markup">{JSON.stringify(schema)}</script>
+      )}
       {faqSchema && (
         <Script
           id="faq-schema"
